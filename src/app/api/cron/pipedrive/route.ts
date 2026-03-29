@@ -26,7 +26,9 @@ function coreNombre(nombre: string): string {
     .trim();
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fetchAllDeals(): Promise<any[]> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const all: any[] = [];
   let start = 0;
   while (true) {
