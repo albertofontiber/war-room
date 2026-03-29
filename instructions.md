@@ -1,7 +1,7 @@
 # Fontiber War Room — Instrucciones para Claude
 
 Documento de contexto para continuar el desarrollo entre conversaciones.
-Actualizado: 2026-03-29
+Actualizado: 2026-03-29 (sesión 2)
 
 ---
 
@@ -13,7 +13,8 @@ Actualizado: 2026-03-29
 - Stack: Next.js 14 App Router · TypeScript · Prisma · PostgreSQL (Supabase) · Zustand · react-map-gl / Mapbox GL JS · Tailwind CSS
 - Tema visual: oscuro, estilo "war room"
 - Auth: NextAuth (credentials — alberto/gabriel)
-- Deploy: Vercel
+- Deploy: Vercel → **https://warroom.fontiber.com** (dominio propio, activo)
+- Repo: https://github.com/albertofontiber/war-room (privado, CI/CD automático)
 
 ---
 
@@ -50,6 +51,7 @@ scripts/
   borme-buscar-empresa.ts           # Buscar empresa en historial BORME
   borme-crossref.ts                 # Cross-referencing de personas en BORME
   pipedrive-sync.ts                 # Sync Pipedrive → CrmEstado (idempotente)
+  import-grupos-perimetro.ts        # Importa grupos y perímetro desde Excel (29/03/2026)
   find-empresa.ts                   # Buscar empresa en DB por nombre
 
 vercel.json                         # Crons: Pipedrive 10:00 UTC + BORME 11:00 UTC L-V
@@ -69,6 +71,10 @@ vercel.json                         # Crons: Pipedrive 10:00 UTC + BORME 11:00 U
 - BORME: backfill 6 meses completado (1.223 alertas), cron diario configurado
 - BORME: lista "Alertas BORME recientes" en sidebar con puntos pulsantes
 - **Pipedrive sync: 148 empresas sincronizadas con dealStage y owner** ✅
+- **Deploy en producción: https://warroom.fontiber.com** ✅ (Vercel + GitHub CI/CD + dominio GoDaddy)
+- **Grupos actualizados**: 4 grupos reales (Grupo Fire 18, Plana Fabrega 12, Eurofesa 5, IC Seguridad 2) + 4.320 standalone ✅
+- **Perímetro actualizado**: 1.552 in perimeter / 2.805 out of perimeter (desde Excel 29/03/2026) ✅
+- **Toggle perímetro** en PanelEmpresa persiste en BD vía `PATCH /api/empresas/[id]/perimetro` ✅
 
 ---
 
@@ -192,22 +198,30 @@ model BormeAlerta {
 ## 8. Roadmap
 
 ### Alta prioridad — próximos pasos
-- [ ] **Deploy + vars en Vercel**: añadir `CRON_SECRET` y `PIPEDRIVE_API_KEY` → desplegar → verificar crons
-- [ ] **Cross-referencing sistemático de personas BORME**:
+
+- [ ] **A — Importar empresas de seguridad electrónica** (Excel pendiente)
+  - Campo nuevo `ambitoServicio` en schema: `"autonomico" | "estatal"`
+  - Solo PCI es siempre nacional; seg. electrónica puede ser autonómica o estatal
+  - Una empresa puede tener PCI nacional + seg. electrónica autonómica simultáneamente
+- [ ] **D — Editar grupo desde panel lateral**
+  - Input editable en PanelEmpresa para cambiar `grupoId`
+  - Endpoint `PATCH /api/empresas/[id]/grupo`
+  - Útil especialmente combinado con cross-referencing BORME
+- [ ] **E — Matchear ~10 empresas Pipedrive sin CRM**
+  - Pendientes: Sercoin, Protech-PCI, Segufoc, PRODEIN, IFI, Gesticon, etc.
+- [ ] **F — Cross-referencing sistemático de personas BORME**
   - Script que recorra todos los `BormeAlerta.descripcion`, extraiga nombres de personas
   - Cruce: personas en ≥2 empresas de la DB = señal de grupo común
   - Vista en dashboard de grupos inferidos (distinto de grupos declarados)
   - Añadir `tipoActo: "nombramiento"` en el clasificador
 
 ### Media prioridad
-- [ ] **Mejoras UX alertas BORME**: limpiar texto crudo, color diferenciado por tipo (fusión=rojo, nombramiento=ámbar)
-- [ ] **Web enrichment** — logos, descripciones, LinkedIn URLs
-- [ ] **Sector assignment** — todas son "PCI" ahora; añadir seguridad_electronica/mixto
-- [ ] **Import Excel 2** — seguridad electrónica cuando esté disponible
+- [ ] **G — Mejoras UX alertas BORME**: limpiar texto crudo, color diferenciado por tipo
+- [ ] **H — Web enrichment** — logos, descripciones, LinkedIn URLs
 
 ### Baja prioridad
 - [ ] **Exportar a Excel** desde la tabla
-- [ ] **Grupos empresariales** — visualización del árbol de grupo
+- [ ] **Visualización árbol de grupos** empresariales
 - [ ] **Modo presentación** — ya existe el toggle, refinar
 
 ---
@@ -220,7 +234,7 @@ DATABASE_URL=postgresql://...
 DIRECT_URL=postgresql://...
 NEXT_PUBLIC_MAPBOX_TOKEN=...
 NEXTAUTH_SECRET=...
-NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_URL=http://localhost:3000   # Producción: https://warroom.fontiber.com
 ADMIN_USER_1=alberto
 ADMIN_PASS_1=warroom2024
 ADMIN_USER_2=gabriel
@@ -243,6 +257,7 @@ npx tsx scripts/borme-buscar-empresa.ts "NOMBRE" 6      # Buscar empresa en BORM
 npx tsx scripts/borme-backfill.ts                       # Backfill 6 meses (idempotente)
 npx tsx scripts/borme-crossref.ts "APELLIDO" [dias]     # Cross-ref persona en BORME
 npx tsx scripts/pipedrive-sync.ts                       # Sync Pipedrive → DB (idempotente)
+npx tsx scripts/import-grupos-perimetro.ts              # Re-importar grupos y perímetro desde Excel
 npx next build                                          # Build producción
 ```
 
