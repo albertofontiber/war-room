@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import type { EmpresaDetalle, TipoActividad, TipoActo } from "@/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -291,6 +291,10 @@ export default function PanelEmpresa() {
   const [empresa, setEmpresa] = useState<EmpresaDetalle | null>(null);
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState(false);
+  const [editingGrupo, setEditingGrupo] = useState(false);
+  const [grupoInput, setGrupoInput] = useState("");
+  const [savingGrupo, setSavingGrupo] = useState(false);
+  const grupoInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch detail when selected empresa changes
   useEffect(() => {
@@ -302,6 +306,33 @@ export default function PanelEmpresa() {
       .catch(() => setEmpresa(null))
       .finally(() => setLoading(false));
   }, [empresaSeleccionadaId]);
+
+  // Open grupo editor
+  const startEditGrupo = useCallback(() => {
+    setGrupoInput(empresa?.grupo?.nombre ?? "");
+    setEditingGrupo(true);
+    setTimeout(() => grupoInputRef.current?.select(), 50);
+  }, [empresa]);
+
+  // Save grupo
+  const saveGrupo = useCallback(async () => {
+    if (!empresa || savingGrupo) return;
+    setSavingGrupo(true);
+    try {
+      const res = await fetch(`/api/empresas/${empresa.id}/grupo`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ grupoNombre: grupoInput }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setEmpresa((prev) => prev ? { ...prev, grupo: data.grupo } : prev);
+      }
+    } finally {
+      setSavingGrupo(false);
+      setEditingGrupo(false);
+    }
+  }, [empresa, grupoInput, savingGrupo]);
 
   // Toggle perímetro
   const togglePerimetro = useCallback(async () => {
@@ -452,14 +483,6 @@ export default function PanelEmpresa() {
                 Aerme
               </Badge>
             )}
-            {empresa.grupo && (
-              <Badge
-                variant="outline"
-                className="text-[10px] bg-wr-surface2 text-wr-muted border-wr-border"
-              >
-                Grupo: {empresa.grupo.nombre}
-              </Badge>
-            )}
           </div>
 
           {/* Toggle en perímetro */}
@@ -552,6 +575,40 @@ export default function PanelEmpresa() {
             <SectionLabel>Datos generales</SectionLabel>
             <div className="space-y-0.5">
               <KpiRow label="CIF" value={empresa.cif} />
+              {/* Grupo editable */}
+              <div className="flex items-center justify-between py-1">
+                <span className="text-wr-hint text-xs">Grupo</span>
+                {editingGrupo ? (
+                  <div className="flex items-center gap-1">
+                    <input
+                      ref={grupoInputRef}
+                      value={grupoInput}
+                      onChange={(e) => setGrupoInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") saveGrupo();
+                        if (e.key === "Escape") setEditingGrupo(false);
+                      }}
+                      onBlur={saveGrupo}
+                      placeholder="Sin grupo"
+                      className="text-xs bg-wr-surface border border-wr-blue/50 rounded px-1.5 py-0.5 text-wr-text w-32 focus:outline-none focus:border-wr-blue"
+                    />
+                    {savingGrupo && (
+                      <div className="w-3 h-3 border border-wr-blue border-t-transparent rounded-full animate-spin" />
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    onClick={startEditGrupo}
+                    className="text-xs text-wr-text hover:text-wr-blue transition-colors flex items-center gap-1 group"
+                  >
+                    <span>{empresa.grupo?.nombre ?? <span className="text-wr-hint italic">Sin grupo</span>}</span>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-0 group-hover:opacity-60 transition-opacity">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                  </button>
+                )}
+              </div>
               <KpiRow label="Empleados" value={fmt(empresa.empleados)} />
               {empresa.servicios.length > 0 && (
                 <div className="py-1">
