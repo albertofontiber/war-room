@@ -546,7 +546,7 @@ export default function PanelEmpresa() {
           </div>
 
           {/* ── Sección GESTIÓN ─────────────────────────────────────────── */}
-          <div className="rounded-lg border border-wr-amber/20 bg-wr-amber/5 overflow-hidden">
+          <div className="rounded-lg border border-wr-amber/20 bg-wr-amber/5">
             <p className="text-[9px] font-semibold text-wr-amber/70 uppercase tracking-widest px-3 pt-2 pb-1">
               Gestión
             </p>
