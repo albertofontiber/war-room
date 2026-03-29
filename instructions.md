@@ -1,7 +1,7 @@
 # Fontiber War Room — Instrucciones para Claude
 
 Documento de contexto para continuar el desarrollo entre conversaciones.
-Actualizado: 2026-03-29 (sesión 2)
+Actualizado: 2026-03-29 (sesión 3)
 
 ---
 
@@ -9,7 +9,7 @@ Actualizado: 2026-03-29 (sesión 2)
 
 **War Room** es un dashboard interno de M&A para Fontiber, orientado al sector de PCI (protección contra incendios) y seguridad electrónica en España.
 
-- Universo actual: **4.357 empresas** importadas de Excel
+- Universo actual: **5.023 empresas** (4.357 PCI + 666 seg. electrónica nuevas)
 - Stack: Next.js 14 App Router · TypeScript · Prisma · PostgreSQL (Supabase) · Zustand · react-map-gl / Mapbox GL JS · Tailwind CSS
 - Tema visual: oscuro, estilo "war room"
 - Auth: NextAuth (credentials — alberto/gabriel)
@@ -28,6 +28,8 @@ src/
       empresas/route.ts             # GET — GeoJSON de todas las empresas
       empresas/[id]/route.ts        # GET — detalle de empresa
       empresas/[id]/perimetro/      # PATCH — toggle enPerimetro
+      empresas/[id]/grupo/          # PATCH — asigna/crea grupo
+      grupos/route.ts               # GET — lista todos los grupos (para autocomplete)
       cron/borme/route.ts           # GET — cron diario BORME (L-V 11:00 UTC)
       cron/pipedrive/route.ts       # GET — cron diario Pipedrive (L-V 10:00 UTC)
   components/
@@ -52,6 +54,7 @@ scripts/
   borme-crossref.ts                 # Cross-referencing de personas en BORME
   pipedrive-sync.ts                 # Sync Pipedrive → CrmEstado (idempotente)
   import-grupos-perimetro.ts        # Importa grupos y perímetro desde Excel (29/03/2026)
+  import-seg-electronica.ts         # Importa empresas seg. electrónica (29/03/2026 — 666 nuevas)
   find-empresa.ts                   # Buscar empresa en DB por nombre
 
 vercel.json                         # Crons: Pipedrive 10:00 UTC + BORME 11:00 UTC L-V
@@ -72,9 +75,13 @@ vercel.json                         # Crons: Pipedrive 10:00 UTC + BORME 11:00 U
 - BORME: lista "Alertas BORME recientes" en sidebar con puntos pulsantes
 - **Pipedrive sync: 148 empresas sincronizadas con dealStage y owner** ✅
 - **Deploy en producción: https://warroom.fontiber.com** ✅ (Vercel + GitHub CI/CD + dominio GoDaddy)
-- **Grupos actualizados**: 4 grupos reales (Grupo Fire 18, Plana Fabrega 12, Eurofesa 5, IC Seguridad 2) + 4.320 standalone ✅
+- **Grupos actualizados**: 3 grupos reales (Grupo Fire 18, Plana Fabrega 12, Eurofesa 5) + resto standalone ✅
 - **Perímetro actualizado**: 1.552 in perimeter / 2.805 out of perimeter (desde Excel 29/03/2026) ✅
 - **Toggle perímetro** en PanelEmpresa persiste en BD vía `PATCH /api/empresas/[id]/perimetro` ✅
+- **Seguridad electrónica importada**: 666 nuevas + 399 mixtas (PCI+seg.elec.), total 5.023 empresas ✅
+- **Grupos editables desde panel**: sección GESTIÓN (ámbar) con autocomplete + "Crear nuevo" ✅
+  - Grupos activos: Grupo Fire (18), Plana Fabrega (12), Eurofesa (5)
+  - `GET /api/grupos` · `PATCH /api/empresas/[id]/grupo`
 
 ---
 
@@ -197,32 +204,34 @@ model BormeAlerta {
 
 ## 8. Roadmap
 
-### Alta prioridad — próximos pasos
+### Estado sesión 29/03/2026
 
-- [ ] **A — Importar empresas de seguridad electrónica** (Excel pendiente)
-  - Campo nuevo `ambitoServicio` en schema: `"autonomico" | "estatal"`
-  - Solo PCI es siempre nacional; seg. electrónica puede ser autonómica o estatal
-  - Una empresa puede tener PCI nacional + seg. electrónica autonómica simultáneamente
-- [ ] **D — Editar grupo desde panel lateral**
-  - Input editable en PanelEmpresa para cambiar `grupoId`
-  - Endpoint `PATCH /api/empresas/[id]/grupo`
-  - Útil especialmente combinado con cross-referencing BORME
-- [ ] **E — Matchear ~10 empresas Pipedrive sin CRM**
-  - Pendientes: Sercoin, Protech-PCI, Segufoc, PRODEIN, IFI, Gesticon, etc.
-- [ ] **F — Cross-referencing sistemático de personas BORME**
-  - Script que recorra todos los `BormeAlerta.descripcion`, extraiga nombres de personas
-  - Cruce: personas en ≥2 empresas de la DB = señal de grupo común
-  - Vista en dashboard de grupos inferidos (distinto de grupos declarados)
-  - Añadir `tipoActo: "nombramiento"` en el clasificador
+| # | Tarea | Prioridad | Estado | Notas |
+|---|---|---|---|---|
+| A | Importar seg. electrónica | Alta | ✅ Completado | 666 nuevas + 399 mixtas. `ambitoGeo: "A"\|"E"` ya en schema |
+| B | Actualizar grupos desde Excel | Alta | ✅ Completado | 3 grupos reales (Fire 18, Plana 12, Eurofesa 5) |
+| C | Actualizar perímetro desde Excel | Alta | ✅ Completado | 1.552 in / 2.805 out |
+| D | Editar grupo desde panel lateral | Alta | ✅ Completado | Sección GESTIÓN + autocomplete |
+| E | Matchear ~10 empresas Pipedrive | Media | ⏳ Pendiente | Sercoin, Protech-PCI, Segufoc, PRODEIN, IFI, Gesticon… |
+| F | Cross-referencing BORME (personas) | Alta | ⏳ Pendiente | Script sistemático + vista dashboard "grupos inferidos" |
+| G | Mejoras UX alertas BORME | Media | ⏳ Pendiente | Texto limpio, colores por tipo, extracción visual nombres |
+| H | Web enrichment | Media | ⏳ Pendiente | Logos, descripciones, LinkedIn de empresas en funnel |
+| I | Exportar tabla a Excel | Baja | ⏳ Pendiente | — |
+| J | Visualización árbol de grupos | Baja | ⏳ Pendiente | — |
+| K | Modo presentación | Baja | ⏳ Pendiente | Toggle ya existe, refinar |
 
-### Media prioridad
-- [ ] **G — Mejoras UX alertas BORME**: limpiar texto crudo, color diferenciado por tipo
-- [ ] **H — Web enrichment** — logos, descripciones, LinkedIn URLs
+### Detalle tareas pendientes
 
-### Baja prioridad
-- [ ] **Exportar a Excel** desde la tabla
-- [ ] **Visualización árbol de grupos** empresariales
-- [ ] **Modo presentación** — ya existe el toggle, refinar
+**E — Matchear empresas Pipedrive sin CRM**
+- Pendientes: Sercoin, Protech-PCI, Segufoc, PRODEIN, IFI, Gesticon, y otras ~10
+- Requiere CIFs para hacer upsert directo como en sesión anterior
+
+**F — Cross-referencing BORME**
+- Script que recorra todos los `BormeAlerta.descripcion`, extraiga nombres de personas
+- Cruce: persona en ≥2 empresas = señal de grupo / rollup en curso
+- Vista en dashboard de "grupos inferidos" (distinto de grupos declarados en BD)
+- Añadir `tipoActo: "nombramiento"` separado de `"otros"` en el clasificador
+- Caso validado: Luciano Villén Marta → 5 empresas Grupo Fire en 5 días
 
 ---
 
@@ -258,6 +267,8 @@ npx tsx scripts/borme-backfill.ts                       # Backfill 6 meses (idem
 npx tsx scripts/borme-crossref.ts "APELLIDO" [dias]     # Cross-ref persona en BORME
 npx tsx scripts/pipedrive-sync.ts                       # Sync Pipedrive → DB (idempotente)
 npx tsx scripts/import-grupos-perimetro.ts              # Re-importar grupos y perímetro desde Excel
+npx tsx scripts/import-seg-electronica.ts               # Re-importar empresas seg. electrónica
+npx tsx scripts/geocoding.ts                            # Geocodificar empresas sin lat/lng
 npx next build                                          # Build producción
 ```
 
