@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Grupo {
+  id         Int       @id @default(autoincrement())
+  nombre     String
+  tipo       String    // "nacional"|"PE"|"familiar"|"multinacional"
+  paisOrigen String?
+  notas      String?
+  empresas   Empresa[]
+}
+
+model Empresa {
+  id               Int           @id @default(autoincrement())
+  cif              String        @unique
+  nombre           String
+  direccion        String?
+  localidad        String?
+  provincia        String?       // null hasta geocoding
+  ccaa             String?       // null hasta geocoding
+  lat              Float?
+  lng              Float?
+  sector           String?       // "PCI"|"seguridad_electronica"|"mixto" — asignar manualmente
+  servicios        String?       // JSON array
+  grupoId          Int?
+  grupo            Grupo?        @relation(fields: [grupoId], references: [id])
+  // fuente: Excel — no sobreescribir desde otras fuentes
+  empleados        Int?
+  // Enriquecimiento: web y linkedin desde Excel (empresas conocidas) o fuentes web
+  web              String?     // fuente: Excel para grupos grandes; web para resto
+  linkedin         String?
+  logoUrl          String?
+  descripcion      String?
+  cepreven         Boolean       @default(false)
+  aerme            Boolean       @default(false)
+  ambitoGeo        String?       // "E" = estatal | "A" = autonómico — solo seg. electrónica
+  // Perímetro y scoring
+  enPerimetro      Boolean       @default(true)
+  enPerimetroAt    DateTime?
+  scoreInicial     Float?
+  score            Float?
+  // Control
+  fuente           String        @default("excel_seed")
+  updatedAt        DateTime      @updatedAt
+  // Relaciones
+  financieros      Financiero[]
+  bormeAlertas     BormeAlerta[]
+  crmEstado        CrmEstado?
+  actividades      Actividad[]
+}
+
+model Financiero {
+  id             Int      @id @default(autoincrement())
+  empresaId      Int
+  empresa        Empresa  @relation(fields: [empresaId], references: [id])
+  anio          Int
+  // Valores absolutos € — vienen del Excel, nunca calculados
+  ingresos      Float?
+  margenBruto   Float?   // absoluto €; margenBrutoPct = margenBruto/ingresos*100 (API)
+  ebitda        Float?   // absoluto €; ebitdaPct = ebitda/ingresos*100 (API)
+  resultadoNeto Float?
+  fuente         String?
+  updatedAt      DateTime @updatedAt
+
+  @@unique([empresaId, anio])
+}
+
+model BormeAlerta {
+  id          Int      @id @default(autoincrement())
+  empresaId   Int
+  empresa     Empresa  @relation(fields: [empresaId], references: [id])
+  fecha       DateTime
+  tipoActo    String   // "adquisicion"|"disolucion"|"cambio_titular"|"fusion"|"otros"
+  descripcion String?
+  urlBorme    String?
+  leido       Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model CrmEstado {
+  id             Int      @id @default(autoincrement())
+  empresaId      Int      @unique
+  empresa        Empresa  @relation(fields: [empresaId], references: [id])
+  pipedriveOrgId String?
+  dealStage      String?  // "prospecto"|"contactado"|"NBO"|"exclusividad"|"muerto"|"portfolio"
+  owner          String?
+  updatedAt      DateTime @updatedAt
+}
+
+model Actividad {
+  id             Int      @id @default(autoincrement())
+  empresaId      Int
+  empresa        Empresa  @relation(fields: [empresaId], references: [id])
+  pipedriveId    String   @unique
+  tipo           String   // "nota"|"llamada"|"email"|"reunion"
+  texto          String?
+  autor          String?
+  fecha          DateTime
+  sincronizadoAt DateTime @default(now())
+}
