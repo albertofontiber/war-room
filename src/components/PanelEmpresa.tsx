@@ -508,7 +508,7 @@ export default function PanelEmpresa() {
       </div>
 
       {/* ── Scrollable content ──────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="p-4 space-y-4">
           {/* Badges */}
           <div className="flex flex-wrap gap-1.5">
