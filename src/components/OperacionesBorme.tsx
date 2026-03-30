@@ -500,22 +500,12 @@ export default function OperacionesBorme() {
 
   // ── Filtered personas (flat rows) ────────────────────────────────────────────
   const filteredPersonaRows = useMemo((): PersonaRow[] => {
-    // Apply store filters to each empresa row
-    let filtered = personas.map((p) => ({
-      ...p,
-      empresas: applyStoreFilters(
-        p.empresas.map((e) => ({
-          ...e,
-          // adapt shape for applyStoreFilters (flat, not nested)
-          enPerimetro: e.enPerimetro,
-          ccaa: e.ccaa,
-          provincia: e.provincia,
-          sector: e.sector,
-          grupoId: e.grupoId,
-          ingresos: e.ingresos,
-        }))
-      ),
-    })).filter((p) => p.empresas.length >= 2); // must still have 2+ empresas after filter
+    // Filtrar personas: mantener las que tienen AL MENOS UNA empresa que pase
+    // los filtros del sidebar. Se muestran TODAS las empresas de esa persona
+    // (incluyendo las que no pasan el filtro) para conservar el contexto cruzado.
+    let filtered = personas.filter((p) =>
+      applyStoreFilters(p.empresas).length >= 1
+    );
 
     // Date filter on ultimaAparicion
     if (fechaDesde) filtered = filtered.filter((p) => p.ultimaAparicion >= fechaDesde);
@@ -533,7 +523,7 @@ export default function OperacionesBorme() {
       return personaSortDir === "asc" ? av - bv : bv - av;
     });
 
-    // Flatten to rows
+    // Flatten to rows — always all empresas for each persona
     const rows: PersonaRow[] = [];
     for (const p of filtered) {
       p.empresas.forEach((emp, idx) => {
