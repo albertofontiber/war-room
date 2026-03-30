@@ -370,6 +370,7 @@ export default function MapaEspana() {
     mapViewState,
     setMapViewState,
     setMapBounds,
+    panelAbierto,
   } = useWarRoomStore();
 
   const [rawGeoJSON, setRawGeoJSON] = useState<GeoJSONFC | null>(null);
@@ -385,6 +386,12 @@ export default function MapaEspana() {
   const [seleccionArea, setSeleccionArea] = useState<Props[] | null>(null);
 
   useEffect(() => { setMounted(true); }, []);
+
+  // Resize map when panel opens/closes so it fills the available width
+  useEffect(() => {
+    const t = setTimeout(() => { mapRef.current?.getMap().resize(); }, 50);
+    return () => clearTimeout(t);
+  }, [panelAbierto]);
 
   // Fetch GeoJSON once on mount — share raw features with the store for Sidebar
   useEffect(() => {
