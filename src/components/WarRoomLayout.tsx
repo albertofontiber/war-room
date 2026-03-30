@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import TablaEmpresas from "@/components/TablaEmpresas";
 import PanelEmpresa from "@/components/PanelEmpresa";
+import OperacionesBorme from "@/components/OperacionesBorme";
 
 const MapaEspana = dynamic(() => import("@/components/MapaEspana"), {
   ssr: false,
@@ -30,14 +31,16 @@ export default function WarRoomLayout() {
         {/* Navbar 44px fijo */}
         <Navbar />
 
-        {/* Contenido principal: mapa o tabla */}
+        {/* Contenido principal: mapa, tabla u operaciones */}
         <main className="flex-1 overflow-hidden">
-          {vistaActual === "mapa" ? <MapaEspana /> : <TablaEmpresas />}
+          {vistaActual === "mapa" && <MapaEspana />}
+          {vistaActual === "tabla" && <TablaEmpresas />}
+          {vistaActual === "operaciones" && <OperacionesBorme />}
         </main>
       </div>
 
-      {/* ── Panel lateral derecho 340px — condicional ── */}
-      {panelAbierto && <PanelEmpresa />}
+      {/* ── Panel lateral derecho 340px — solo en mapa/tabla ── */}
+      {panelAbierto && vistaActual !== "operaciones" && <PanelEmpresa />}
     </div>
   );
 }

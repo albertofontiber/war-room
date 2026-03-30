@@ -17,7 +17,7 @@ export type TipoActo =
 export type TipoActividad = "nota" | "llamada" | "email" | "reunion";
 export type Tendencia = "up" | "flat" | "down";
 export type SizeMetric = "ingresos" | "ebitda";
-export type Vista = "mapa" | "tabla";
+export type Vista = "mapa" | "tabla" | "operaciones";
 
 // ─── Financiero enriquecido (API response) ────────────────────────────────
 

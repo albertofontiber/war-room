@@ -156,7 +156,7 @@ export default function Navbar() {
         </span>
       )}
 
-      {/* Toggle Mapa / Tabla */}
+      {/* Toggle Mapa / Tabla / Operaciones */}
       <div className="flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5">
         <button
           onClick={() => setVista("mapa")}
@@ -177,6 +177,16 @@ export default function Navbar() {
           }`}
         >
           Tabla
+        </button>
+        <button
+          onClick={() => setVista("operaciones")}
+          className={`px-3 py-1 text-xs rounded transition-colors ${
+            vistaActual === "operaciones"
+              ? "bg-wr-blue text-white"
+              : "text-wr-muted hover:text-wr-text"
+          }`}
+        >
+          Operaciones
         </button>
       </div>
 
