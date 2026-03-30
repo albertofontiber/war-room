@@ -166,6 +166,7 @@ export async function GET() {
       if (empresasMap.size < 2) return;
 
       const empresas: PersonaEnEmpresa[] = [];
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       empresasMap.forEach(({ fechaDate: _fd, ...rest }) => {
         empresas.push(rest);
       });
