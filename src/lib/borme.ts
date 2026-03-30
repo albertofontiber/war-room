@@ -16,6 +16,7 @@
 
 import { PDFParse } from "pdf-parse";
 import { prisma } from "./prisma";
+import { detectarGrupo } from "./borme-senales";
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -40,9 +41,9 @@ interface BormeItem {
 
 interface EntradaBorme {
   numeroRegistro: string;
-  nombreEmpresa: string;    // tal cual aparece en el PDF
-  textoActo: string;        // texto completo del acto (sin la cabecera de empresa)
-  tipoActo: string;         // clasificado por keywords
+  nombreEmpresa: string;      // tal cual aparece en el PDF
+  textoActo: string;          // texto completo del acto (sin la cabecera de empresa)
+  clasificacion: ClasificacionActo;
 }
 
 // ─── Normalización de nombres ─────────────────────────────────────────────────
@@ -98,21 +99,78 @@ function coreNombre(normalized: string): string {
 
 // ─── Clasificación del tipo de acto ──────────────────────────────────────────
 
-function classifyActo(
-  texto: string
-): "adquisicion" | "disolucion" | "cambio_titular" | "fusion" | "otros" {
+export type TipoActoBorme =
+  | "fusion"
+  | "adquisicion"
+  | "cambio_denominacion"
+  | "nombramiento_grupo"
+  | "nombramiento"
+  | "disolucion"
+  | "otros";
+
+export interface ClasificacionActo {
+  tipoActo: TipoActoBorme;
+  grupoNombre: string | null;
+  personaDetectada: string | null;
+}
+
+function classifyActo(texto: string): ClasificacionActo {
   const t = texto
     .toUpperCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
 
-  if (/DISOLUCION|LIQUIDACION|EXTINCION|CANCELACION|BAJA DEFINITIVA|CESE DE ACTIVIDAD/.test(t))
-    return "disolucion";
-  if (/FUSION|ABSORCION|ESCISION/.test(t)) return "fusion";
-  if (/ADQUISICION|COMPRAVENTA|CESION.*PARTICIPACION/.test(t)) return "adquisicion";
-  if (/CAMBIO.*TITULAR|TRANSMISION.*PARTICIPACION|MODIFICACION.*SOCIOS/.test(t))
-    return "cambio_titular";
-  return "otros";
+  // ── 1. Actos estructurales (prioridad máxima) ─────────────────────────────
+  if (/FUSION|ABSORCION|ESCISION/.test(t)) {
+    return { tipoActo: "fusion", grupoNombre: null, personaDetectada: null };
+  }
+
+  // Adquisición directa: socio único es una empresa / cambio de unipersonalidad
+  if (/SOCIO.UNICO|UNIPERSONAL|COMPRAVENTA|CESION.*PARTICIPACION|ADQUISICION/.test(t)) {
+    const deteccion = detectarGrupo(texto);
+    return {
+      tipoActo: "adquisicion",
+      grupoNombre: deteccion?.grupoNombre ?? null,
+      personaDetectada: deteccion?.personaDetectada ?? null,
+    };
+  }
+
+  // Cambio de denominación
+  if (/DENOMINACION|DENOMINACIÓ/.test(t)) {
+    const deteccion = detectarGrupo(texto);
+    return {
+      tipoActo: "cambio_denominacion",
+      grupoNombre: deteccion?.grupoNombre ?? null,
+      personaDetectada: null,
+    };
+  }
+
+  // Disolución / extinción (sin fusión previa)
+  if (/DISOLUCION|LIQUIDACION|EXTINCION|CANCELACION|BAJA DEFINITIVA/.test(t)) {
+    return { tipoActo: "disolucion", grupoNombre: null, personaDetectada: null };
+  }
+
+  // ── 2. Nombramientos / revocaciones ───────────────────────────────────────
+  if (/NOMBRAMIENTO|NOMBRAMIENTOS|CESES|DIMISIONES|REVOCACION|APODERADO|ADMINISTRADOR/.test(t)) {
+    const deteccion = detectarGrupo(texto);
+    if (deteccion) {
+      return {
+        tipoActo: "nombramiento_grupo",
+        grupoNombre: deteccion.grupoNombre,
+        personaDetectada: deteccion.personaDetectada,
+      };
+    }
+    return { tipoActo: "nombramiento", grupoNombre: null, personaDetectada: null };
+  }
+
+  // ── 3. Resto ──────────────────────────────────────────────────────────────
+  // Último intento: detectar grupo aunque no encaje en categorías anteriores
+  const deteccionFinal = detectarGrupo(texto);
+  return {
+    tipoActo: "otros",
+    grupoNombre: deteccionFinal?.grupoNombre ?? null,
+    personaDetectada: deteccionFinal?.personaDetectada ?? null,
+  };
 }
 
 // ─── Fetch del sumario ────────────────────────────────────────────────────────
@@ -213,7 +271,7 @@ function parsePdfEntradas(text: string, pdfUrl: string): EntradaBorme[] {
       numeroRegistro: numero,
       nombreEmpresa: nombre,
       textoActo,
-      tipoActo: classifyActo(textoActo + " " + nombre),
+      clasificacion: classifyActo(textoActo + " " + nombre),
     });
 
     void pdfUrl; // usado por el caller para urlBorme
@@ -275,6 +333,15 @@ export async function processBormeDate(
     select: { id: true, nombre: true },
   });
 
+  // Caché de grupos por nombre
+  const grupoCache = new Map<string, number>();
+  const getGrupoId = async (nombre: string): Promise<number | null> => {
+    if (grupoCache.has(nombre)) return grupoCache.get(nombre)!;
+    const g = await prisma.grupo.findFirst({ where: { nombre }, select: { id: true } });
+    if (g) { grupoCache.set(nombre, g.id); return g.id; }
+    return null;
+  };
+
   // Map principal: nombre completo normalizado → id
   const nombreToId = new Map<string, number>();
   // Map fallback: nombre core (sin SL/SA) → id
@@ -311,12 +378,24 @@ export async function processBormeDate(
         if (!empresaId) continue;
         result.empresasEncontradas++;
 
-        // Idempotencia: evitar duplicar (empresaId, fecha, tipoActo, numeroRegistro)
+        const { tipoActo, grupoNombre, personaDetectada } = entrada.clasificacion;
+
+        // Resolver grupoInferidoId
+        const grupoInferidoId = grupoNombre ? await getGrupoId(grupoNombre) : null;
+
+        // Si hay grupo detectado, asignar a la empresa si aún no tiene grupo
+        if (grupoInferidoId) {
+          await prisma.empresa.updateMany({
+            where: { id: empresaId, grupoId: null },
+            data: { grupoId: grupoInferidoId },
+          });
+        }
+
+        // Idempotencia: evitar duplicar (empresaId, fecha, numeroRegistro)
         const yaExiste = await prisma.bormeAlerta.findFirst({
           where: {
             empresaId,
             fecha,
-            // Usamos urlBorme + descripción como clave de unicidad práctica
             urlBorme: item.url_pdf,
             descripcion: { startsWith: entrada.numeroRegistro },
           },
@@ -328,13 +407,21 @@ export async function processBormeDate(
             data: {
               empresaId,
               fecha,
-              tipoActo: entrada.tipoActo,
+              tipoActo,
               descripcion: `${entrada.numeroRegistro} — ${entrada.textoActo}`.slice(0, 500),
               urlBorme: item.url_pdf,
               leido: false,
+              grupoInferidoId,
+              personaDetectada,
             },
           });
           result.alertasCreadas++;
+        } else if (grupoInferidoId || personaDetectada) {
+          // Si ya existía pero ahora detectamos grupo/persona, actualizamos
+          await prisma.bormeAlerta.update({
+            where: { id: yaExiste.id },
+            data: { tipoActo, grupoInferidoId, personaDetectada },
+          });
         }
       }
     } catch (err) {

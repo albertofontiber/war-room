@@ -9,12 +9,13 @@ datasource db {
 }
 
 model Grupo {
-  id         Int       @id @default(autoincrement())
-  nombre     String
-  tipo       String    // "nacional"|"PE"|"familiar"|"multinacional"
-  paisOrigen String?
-  notas      String?
-  empresas   Empresa[]
+  id            Int            @id @default(autoincrement())
+  nombre        String
+  tipo          String         // "nacional"|"PE"|"familiar"|"multinacional"
+  paisOrigen    String?
+  notas         String?
+  empresas      Empresa[]
+  bormeAlertas  BormeAlerta[]
 }
 
 model Empresa {
@@ -52,6 +53,7 @@ model Empresa {
   // Relaciones
   financieros      Financiero[]
   bormeAlertas     BormeAlerta[]
+  bormePersonas    BormePersona[]
   crmEstado        CrmEstado?
   actividades      Actividad[]
 }
@@ -73,15 +75,36 @@ model Financiero {
 }
 
 model BormeAlerta {
-  id          Int      @id @default(autoincrement())
+  id               Int            @id @default(autoincrement())
+  empresaId        Int
+  empresa          Empresa        @relation(fields: [empresaId], references: [id])
+  fecha            DateTime
+  tipoActo         String         // "fusion"|"adquisicion"|"cambio_denominacion"|"nombramiento_grupo"|"nombramiento"|"disolucion"|"otros"
+  descripcion      String?
+  urlBorme         String?
+  leido            Boolean        @default(false)
+  // Grupo inference
+  grupoInferidoId  Int?
+  grupoInferido    Grupo?         @relation(fields: [grupoInferidoId], references: [id])
+  personaDetectada String?        // nombre normalizado de la persona clave detectada
+  createdAt        DateTime       @default(now())
+  personas         BormePersona[]
+}
+
+model BormePersona {
+  id          Int         @id @default(autoincrement())
+  alertaId    Int
+  alerta      BormeAlerta @relation(fields: [alertaId], references: [id])
   empresaId   Int
-  empresa     Empresa  @relation(fields: [empresaId], references: [id])
+  empresa     Empresa     @relation(fields: [empresaId], references: [id])
+  nombreNorm  String      // MAYUSCULAS sin diacríticos — clave de agrupación
+  rol         String?     // "apoderado"|"administrador"|"consejero"|etc.
   fecha       DateTime
-  tipoActo    String   // "adquisicion"|"disolucion"|"cambio_titular"|"fusion"|"otros"
-  descripcion String?
-  urlBorme    String?
-  leido       Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  createdAt   DateTime    @default(now())
+
+  @@index([nombreNorm])
+  @@index([empresaId])
+  @@index([alertaId])
 }
 
 model CrmEstado {
