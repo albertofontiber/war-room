@@ -21,6 +21,7 @@ const TIPOS_OPERACIONALES = [
   "adquisicion",
   "cambio_denominacion",
   "nombramiento_grupo",
+  "nombramiento",
 ];
 
 // Prioridad para deduplicación (mayor número = más fuerte)
@@ -29,6 +30,7 @@ const TIPO_PRIORITY: Record<string, number> = {
   adquisicion: 5,
   posible_adquisicion: 4,
   cambio_denominacion: 3,
+  nombramiento: 2,
   nombramiento_interno: 1,
 };
 

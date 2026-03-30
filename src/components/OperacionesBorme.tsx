@@ -110,13 +110,14 @@ function fmtFechaShort(iso: string): string {
 // ─── Badge config ─────────────────────────────────────────────────────────────
 
 const TIPO_CONFIG: Record<string, { label: string; pill: string }> = {
-  fusion:              { label: "Fusión",       pill: "bg-purple-500/20 text-purple-300 border-purple-500/30" },
-  adquisicion:         { label: "Adquisición",  pill: "bg-wr-blue/20 text-wr-blue border-wr-blue/30" },
-  posible_adquisicion: { label: "Posible adq.", pill: "bg-orange-500/20 text-orange-300 border-orange-500/30" },
-  cambio_denominacion: { label: "Rebranding",   pill: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" },
+  fusion:              { label: "Fusión",        pill: "bg-purple-500/20 text-purple-300 border-purple-500/30" },
+  adquisicion:         { label: "Adquisición",   pill: "bg-wr-blue/20 text-wr-blue border-wr-blue/30" },
+  posible_adquisicion: { label: "Posible adq.",  pill: "bg-orange-500/20 text-orange-300 border-orange-500/30" },
+  nombramiento:        { label: "Nombramiento",  pill: "bg-green-500/20 text-green-300 border-green-500/30" },
+  cambio_denominacion: { label: "Rebranding",    pill: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" },
 };
 
-const FILTER_TIPOS = ["fusion", "adquisicion", "posible_adquisicion", "cambio_denominacion"] as const;
+const FILTER_TIPOS = ["fusion", "adquisicion", "posible_adquisicion", "nombramiento", "cambio_denominacion"] as const;
 
 function TipoPill({ tipo }: { tipo: string }) {
   const cfg = TIPO_CONFIG[tipo] ?? { label: tipo, pill: "bg-wr-surface2 text-wr-muted border-wr-border" };
