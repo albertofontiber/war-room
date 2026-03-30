@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type TipoVista = "cronologica" | "grupos";
+type SubVista = "senales" | "alertas_personas";
 
 interface Adquirente {
   tipo: "grupo_conocido" | "empresa_extraida" | "desconocido";
@@ -21,6 +21,10 @@ interface EmpresaOp {
   cif: string;
   web: string | null;
   grupoId: number | null;
+  enPerimetro: boolean;
+  ccaa: string | null;
+  provincia: string | null;
+  sector: string | null;
   ingresos: number | null;
   ebitda: number | null;
   ebitdaPct: number | null;
@@ -33,11 +37,27 @@ interface OperacionItem {
   id: number;
   fecha: string;
   tipoActo: string;
+  efectiveTipo: string;
   descripcion: string | null;
   urlBorme: string | null;
   leido: boolean;
   empresa: EmpresaOp;
   adquirente: Adquirente;
+}
+
+interface PersonaEnEmpresa {
+  empresaId: number;
+  empresaNombre: string;
+  grupoNombre: string | null;
+  rol: string | null;
+  ultimaFecha: string;
+}
+
+interface PersonaCompartida {
+  nombreNorm: string;
+  numEmpresas: number;
+  ultimaAparicion: string;
+  empresas: PersonaEnEmpresa[];
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -54,379 +74,303 @@ function fmtPct(v: number | null): string {
   return `${v.toFixed(1)}%`;
 }
 
-function fmtFecha(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" });
+function ebitdaColor(v: number | null): string {
+  if (v === null) return "text-wr-muted";
+  if (v >= 15) return "text-green-400";
+  if (v >= 5) return "text-wr-text";
+  if (v >= 0) return "text-yellow-400";
+  return "text-red-400";
 }
 
-function fmtMes(iso: string): string {
+function fmtFechaShort(iso: string): string {
   const d = new Date(iso);
-  return d.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
+  return d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "2-digit" });
 }
 
-// ─── Badge tipoActo ───────────────────────────────────────────────────────────
+function fmtFechaFull(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+}
 
-const TIPO_CONFIG: Record<string, { label: string; color: string }> = {
-  fusion:              { label: "Fusión",           color: "bg-purple-500/20 text-purple-300 border-purple-500/30" },
-  adquisicion:         { label: "Adquisición",      color: "bg-wr-blue/20 text-wr-blue border-wr-blue/30" },
-  cambio_denominacion: { label: "Rebranding",       color: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" },
-  nombramiento_grupo:  { label: "Nombramiento",     color: "bg-green-500/20 text-green-300 border-green-500/30" },
+// ─── Badge configuración ──────────────────────────────────────────────────────
+
+const TIPO_CONFIG: Record<string, { label: string; pill: string }> = {
+  fusion:              { label: "Fusión",          pill: "bg-purple-500/20 text-purple-300 border-purple-500/30" },
+  adquisicion:         { label: "Adquisición",     pill: "bg-wr-blue/20 text-wr-blue border-wr-blue/30" },
+  posible_adquisicion: { label: "Posible adq.",    pill: "bg-orange-500/20 text-orange-300 border-orange-500/30" },
+  cambio_denominacion: { label: "Rebranding",      pill: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" },
+  nombramiento_grupo:  { label: "Nombramiento",    pill: "bg-green-500/20 text-green-300 border-green-500/30" },
 };
 
-function TipoBadge({ tipo }: { tipo: string }) {
-  const cfg = TIPO_CONFIG[tipo] ?? { label: tipo, color: "bg-wr-surface2 text-wr-muted border-wr-border" };
+const FILTER_TIPOS = ["fusion", "adquisicion", "posible_adquisicion", "cambio_denominacion"] as const;
+
+function TipoPill({ tipo }: { tipo: string }) {
+  const cfg = TIPO_CONFIG[tipo] ?? { label: tipo, pill: "bg-wr-surface2 text-wr-muted border-wr-border" };
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold border ${cfg.color}`}>
+    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold border whitespace-nowrap ${cfg.pill}`}>
       {cfg.label}
     </span>
   );
 }
 
-// ─── Adquirente badge ─────────────────────────────────────────────────────────
+// ─── Adquirente cell ──────────────────────────────────────────────────────────
 
-function AdquirenteBadge({ adquirente }: { adquirente: Adquirente }) {
+function AdquirenteCell({ adquirente }: { adquirente: Adquirente }) {
   if (adquirente.tipo === "grupo_conocido") {
     return (
-      <div className="flex items-center gap-1.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-wr-blue flex-shrink-0" />
-        <span className="text-xs font-semibold text-wr-blue">{adquirente.grupoNombre}</span>
+      <span className="text-wr-blue font-medium">
+        {adquirente.grupoNombre}
         {adquirente.personaDetectada && (
-          <span className="text-[10px] text-wr-muted">via {adquirente.personaDetectada.split(" ").slice(0, 2).join(" ")}</span>
+          <span className="text-wr-hint font-normal ml-1 text-[9px]">
+            via {adquirente.personaDetectada.split(" ").slice(0, 2).join(" ")}
+          </span>
         )}
-      </div>
+      </span>
     );
   }
   if (adquirente.tipo === "empresa_extraida") {
+    return <span className="text-wr-amber text-[10px]">{adquirente.empresaNombre}</span>;
+  }
+  return <span className="text-wr-hint italic text-[10px]">—</span>;
+}
+
+// ─── Row detail drawer (expandable) ──────────────────────────────────────────
+
+function RowDetail({
+  item,
+  onClose,
+}: {
+  item: OperacionItem;
+  onClose: () => void;
+}) {
+  return (
+    <tr>
+      <td colSpan={8} className="bg-wr-surface2 border-b border-wr-border px-4 py-3">
+        <div className="flex items-start gap-6">
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] text-wr-muted leading-relaxed break-words">
+              {item.descripcion ?? "Sin descripción"}
+            </p>
+          </div>
+          <div className="flex items-center gap-3 flex-shrink-0 text-[10px] text-wr-hint">
+            {item.empresa.ccaa && <span>{item.empresa.ccaa}</span>}
+            {item.empresa.sector && <span>{item.empresa.sector}</span>}
+            {item.urlBorme && (
+              <a href={item.urlBorme} target="_blank" rel="noopener noreferrer"
+                className="text-wr-blue hover:underline">
+                Ver BORME ↗
+              </a>
+            )}
+            <button onClick={onClose} className="text-wr-hint hover:text-wr-text ml-2">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+// ─── Main table row ───────────────────────────────────────────────────────────
+
+function OperacionRow({
+  item,
+  isExpanded,
+  onToggle,
+  onVerPerfil,
+}: {
+  item: OperacionItem;
+  isExpanded: boolean;
+  onToggle: () => void;
+  onVerPerfil: (id: number) => void;
+}) {
+  const isPosible = item.efectiveTipo === "posible_adquisicion";
+
+  return (
+    <>
+      <tr
+        onClick={onToggle}
+        className={`group border-b transition-colors cursor-pointer text-xs ${
+          isExpanded
+            ? "bg-wr-surface2 border-wr-muted/30"
+            : isPosible
+            ? "border-wr-border bg-orange-500/5 hover:bg-orange-500/10"
+            : "border-wr-border hover:bg-wr-surface2"
+        }`}
+      >
+        {/* Fecha */}
+        <td className="px-3 py-2.5 text-[11px] text-wr-hint whitespace-nowrap">
+          {fmtFechaShort(item.fecha)}
+        </td>
+
+        {/* Tipo */}
+        <td className="px-3 py-2.5">
+          <TipoPill tipo={item.efectiveTipo} />
+        </td>
+
+        {/* Empresa */}
+        <td className="px-3 py-2.5 max-w-[220px]">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <button
+              onClick={(e) => { e.stopPropagation(); onVerPerfil(item.empresa.id); }}
+              className="font-medium text-wr-text hover:text-wr-blue transition-colors truncate text-left"
+              title={item.empresa.nombre}
+            >
+              {item.empresa.nombre}
+            </button>
+            {item.empresa.enPerimetro && (
+              <span className="w-1.5 h-1.5 rounded-full bg-wr-blue flex-shrink-0" title="En perímetro" />
+            )}
+            {item.empresa.web && (
+              <a
+                href={item.empresa.web.startsWith("http") ? item.empresa.web : `https://${item.empresa.web}`}
+                target="_blank" rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="text-wr-hint hover:text-wr-blue transition-colors flex-shrink-0"
+                title="Web"
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+              </a>
+            )}
+          </div>
+        </td>
+
+        {/* Adquirente */}
+        <td className="px-3 py-2.5 max-w-[180px]">
+          <AdquirenteCell adquirente={item.adquirente} />
+        </td>
+
+        {/* Ingresos */}
+        <td className="px-3 py-2.5 text-right tabular-nums text-wr-text">
+          {fmtM(item.empresa.ingresos)}
+          {item.empresa.anioFinanciero && (
+            <span className="text-wr-hint text-[9px] ml-1">{String(item.empresa.anioFinanciero).slice(2)}</span>
+          )}
+        </td>
+
+        {/* EBITDA */}
+        <td className={`px-3 py-2.5 text-right tabular-nums ${ebitdaColor(item.empresa.ebitdaPct)}`}>
+          {fmtM(item.empresa.ebitda)}
+          {item.empresa.ebitdaPct !== null && (
+            <span className="ml-1 text-[9px] opacity-70">({fmtPct(item.empresa.ebitdaPct)})</span>
+          )}
+        </td>
+
+        {/* MB% */}
+        <td className="px-3 py-2.5 text-right tabular-nums text-wr-muted text-[10px]">
+          {fmtPct(item.empresa.margenBrutoPct)}
+        </td>
+
+        {/* BORME link */}
+        <td className="px-3 py-2.5 text-center">
+          {item.urlBorme ? (
+            <a
+              href={item.urlBorme}
+              target="_blank" rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="text-wr-hint hover:text-wr-blue text-[10px]"
+              title="Abrir BORME"
+            >↗</a>
+          ) : (
+            <span className="text-wr-border">—</span>
+          )}
+        </td>
+      </tr>
+
+      {isExpanded && (
+        <RowDetail item={item} onClose={onToggle} />
+      )}
+    </>
+  );
+}
+
+// ─── Alertas personas ─────────────────────────────────────────────────────────
+
+function AlertasPersonas({
+  personas,
+  loading,
+  error,
+  onVerPerfil,
+}: {
+  personas: PersonaCompartida[];
+  loading: boolean;
+  error: string | null;
+  onVerPerfil: (id: number) => void;
+}) {
+  if (loading) {
     return (
-      <div className="flex items-center gap-1.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-wr-amber flex-shrink-0" />
-        <span className="text-xs text-wr-amber font-medium">{adquirente.empresaNombre}</span>
+      <div className="flex items-center justify-center h-40">
+        <p className="text-wr-muted text-sm animate-pulse">Analizando personas…</p>
       </div>
     );
   }
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <p className="text-red-400 text-sm">{error}</p>
+      </div>
+    );
+  }
+  if (personas.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-40 gap-2">
+        <p className="text-wr-muted text-sm">No se han detectado personas compartidas entre empresas.</p>
+        <p className="text-wr-hint text-xs">Las alertas aparecen cuando una persona no identificada aparece en 2+ sociedades distintas.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex items-center gap-1.5">
-      <span className="w-1.5 h-1.5 rounded-full bg-wr-hint flex-shrink-0" />
-      <span className="text-xs text-wr-hint italic">Comprador no identificado</span>
-    </div>
-  );
-}
-
-// ─── Tarjeta de operación ─────────────────────────────────────────────────────
-
-function OperacionCard({ item, onVerPerfil }: { item: OperacionItem; onVerPerfil: (id: number) => void }) {
-  const [expanded, setExpanded] = useState(false);
-  const desc = item.descripcion;
-  const shortDesc = desc && desc.length > 140 ? desc.slice(0, 140) + "…" : desc;
-
-  return (
-    <div className="bg-wr-surface border border-wr-border rounded-lg p-4 hover:border-wr-muted/40 transition-colors">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <div className="flex items-center gap-2 flex-wrap">
-          <TipoBadge tipo={item.tipoActo} />
-          <span className="text-[11px] text-wr-hint">{fmtFecha(item.fecha)}</span>
-        </div>
-        {item.urlBorme && (
-          <a
-            href={item.urlBorme}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[10px] text-wr-muted hover:text-wr-blue transition-colors flex-shrink-0"
-          >
-            BORME ↗
-          </a>
-        )}
+    <div className="max-w-3xl mx-auto px-6 py-6 space-y-4">
+      <div className="text-[11px] text-wr-hint bg-wr-surface border border-wr-border/60 rounded-lg px-4 py-2.5">
+        <span className="font-semibold text-wr-amber">⚠ {personas.length} persona{personas.length !== 1 ? "s" : ""} detectada{personas.length !== 1 ? "s" : ""}</span>
+        {" "}en 2+ sociedades distintas (excluidas personas ya identificadas en grupos conocidos).
+        Pueden indicar un nuevo grupo consolidador no catalogado aún.
       </div>
 
-      {/* Target empresa */}
-      <div className="mb-2">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => onVerPerfil(item.empresa.id)}
-            className="text-sm font-semibold text-wr-text hover:text-wr-blue transition-colors text-left"
-          >
-            {item.empresa.nombre}
-          </button>
-          {item.empresa.web && (
-            <a
-              href={item.empresa.web.startsWith("http") ? item.empresa.web : `https://${item.empresa.web}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-wr-hint hover:text-wr-blue transition-colors"
-              title="Web"
-            >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-              </svg>
-            </a>
-          )}
-        </div>
-      </div>
-
-      {/* Adquirente */}
-      <div className="mb-3">
-        <span className="text-[10px] text-wr-hint uppercase tracking-wide mr-2">Adquirente:</span>
-        <AdquirenteBadge adquirente={item.adquirente} />
-      </div>
-
-      {/* Financials */}
-      {(item.empresa.ingresos !== null || item.empresa.ebitda !== null) && (
-        <div className="flex items-center gap-4 mb-3 p-2 bg-wr-surface2 rounded-md">
-          {item.empresa.ingresos !== null && (
+      {personas.map((persona) => (
+        <div key={persona.nombreNorm} className="bg-wr-surface border border-wr-border rounded-lg overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-wr-border bg-wr-surface2">
             <div>
-              <p className="text-[9px] text-wr-hint uppercase tracking-wide">Ingresos {item.empresa.anioFinanciero ?? ""}</p>
-              <p className="text-xs font-semibold text-wr-text">{fmtM(item.empresa.ingresos)}</p>
+              <span className="text-sm font-semibold text-wr-text tracking-wide">{persona.nombreNorm}</span>
+              <span className="ml-3 text-[10px] text-wr-hint bg-wr-border/30 px-2 py-0.5 rounded-full">
+                {persona.numEmpresas} sociedades
+              </span>
             </div>
-          )}
-          {item.empresa.ebitda !== null && (
-            <div>
-              <p className="text-[9px] text-wr-hint uppercase tracking-wide">EBITDA</p>
-              <p className="text-xs font-semibold text-wr-text">
-                {fmtM(item.empresa.ebitda)}
-                {item.empresa.ebitdaPct !== null && (
-                  <span className="text-wr-muted font-normal ml-1">({fmtPct(item.empresa.ebitdaPct)})</span>
-                )}
-              </p>
-            </div>
-          )}
-          {item.empresa.margenBruto !== null && (
-            <div>
-              <p className="text-[9px] text-wr-hint uppercase tracking-wide">Margen bruto</p>
-              <p className="text-xs font-semibold text-wr-text">
-                {fmtPct(item.empresa.margenBrutoPct)}
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Descripción */}
-      {desc && (
-        <div>
-          <p className="text-[11px] text-wr-muted leading-relaxed">
-            {expanded ? desc : shortDesc}
-          </p>
-          {desc.length > 140 && (
-            <button
-              onClick={() => setExpanded((v) => !v)}
-              className="text-[10px] text-wr-blue mt-1 hover:underline"
-            >
-              {expanded ? "Ver menos" : "Ver más"}
-            </button>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── Vista cronológica ────────────────────────────────────────────────────────
-
-function VistaCronologica({ items, onVerPerfil }: { items: OperacionItem[]; onVerPerfil: (id: number) => void }) {
-  // Group by month
-  const grouped = useMemo(() => {
-    const map = new Map<string, OperacionItem[]>();
-    for (const item of items) {
-      const mes = fmtMes(item.fecha);
-      if (!map.has(mes)) map.set(mes, []);
-      map.get(mes)!.push(item);
-    }
-    return Array.from(map.entries());
-  }, [items]);
-
-  return (
-    <div className="space-y-6">
-      {grouped.map(([mes, ops]) => (
-        <div key={mes}>
-          <h3 className="text-[11px] font-semibold text-wr-muted uppercase tracking-widest mb-3 capitalize">
-            {mes}
-          </h3>
-          <div className="space-y-3">
-            {ops.map((item) => (
-              <OperacionCard key={item.id} item={item} onVerPerfil={onVerPerfil} />
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ─── Vista por grupos ─────────────────────────────────────────────────────────
-
-function VistaGrupos({ items, onVerPerfil }: { items: OperacionItem[]; onVerPerfil: (id: number) => void }) {
-  const { grupos, desconocidos } = useMemo(() => {
-    const grupoMap = new Map<string, { grupoId: number; ops: OperacionItem[] }>();
-    const descMap = new Map<string, OperacionItem[]>();
-    const sinIdentificar: OperacionItem[] = [];
-
-    for (const item of items) {
-      if (item.adquirente.tipo === "grupo_conocido") {
-        const nombre = item.adquirente.grupoNombre!;
-        if (!grupoMap.has(nombre)) {
-          grupoMap.set(nombre, { grupoId: item.adquirente.grupoId!, ops: [] });
-        }
-        grupoMap.get(nombre)!.ops.push(item);
-      } else if (item.adquirente.tipo === "empresa_extraida") {
-        const nombre = item.adquirente.empresaNombre!;
-        if (!descMap.has(nombre)) descMap.set(nombre, []);
-        descMap.get(nombre)!.push(item);
-      } else {
-        sinIdentificar.push(item);
-      }
-    }
-
-    const grupos = Array.from(grupoMap.entries())
-      .map(([nombre, { grupoId, ops }]) => ({ nombre, grupoId, ops }))
-      .sort((a, b) => b.ops.length - a.ops.length);
-
-    const desconocidos = {
-      porEmpresa: Array.from(descMap.entries())
-        .map(([nombre, ops]) => ({ nombre, ops }))
-        .sort((a, b) => b.ops.length - a.ops.length),
-      sinIdentificar,
-    };
-
-    return { grupos, desconocidos };
-  }, [items]);
-
-  return (
-    <div className="space-y-8">
-      {/* Grupos conocidos */}
-      {grupos.map(({ nombre, ops }) => (
-        <section key={nombre}>
-          <div className="flex items-center gap-3 mb-3">
-            <span className="w-2 h-2 rounded-full bg-wr-blue" />
-            <h3 className="text-sm font-semibold text-wr-text">{nombre}</h3>
-            <span className="text-[10px] text-wr-hint bg-wr-surface2 border border-wr-border px-2 py-0.5 rounded-full">
-              {ops.length} señal{ops.length !== 1 ? "es" : ""}
+            <span className="text-[10px] text-wr-hint">
+              Última aparición: {fmtFechaFull(persona.ultimaAparicion)}
             </span>
           </div>
-          <div className="space-y-3">
-            {ops.map((item) => (
-              <OperacionCard key={item.id} item={item} onVerPerfil={onVerPerfil} />
-            ))}
-          </div>
-        </section>
-      ))}
-
-      {/* Compradores no identificados con nombre extraído */}
-      {desconocidos.porEmpresa.length > 0 && (
-        <section>
-          <div className="flex items-center gap-3 mb-4">
-            <span className="w-2 h-2 rounded-full bg-wr-amber" />
-            <h3 className="text-sm font-semibold text-wr-text">Compradores externos identificados</h3>
-            <span className="text-[10px] text-wr-hint bg-wr-surface2 border border-wr-border px-2 py-0.5 rounded-full">
-              {desconocidos.porEmpresa.reduce((s, e) => s + e.ops.length, 0)} señales
-            </span>
-          </div>
-          <div className="space-y-4">
-            {desconocidos.porEmpresa.map(({ nombre, ops }) => (
-              <div key={nombre} className="border border-wr-border rounded-lg overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-2.5 bg-wr-surface2 border-b border-wr-border">
-                  <span className="text-xs font-semibold text-wr-amber">{nombre}</span>
-                  <span className="text-[10px] text-wr-hint">{ops.length} adquisición{ops.length !== 1 ? "es" : ""}</span>
+          <div className="divide-y divide-wr-border/40">
+            {persona.empresas.map((emp) => (
+              <div key={emp.empresaId} className="flex items-center justify-between px-4 py-2.5 hover:bg-wr-surface2 transition-colors">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => onVerPerfil(emp.empresaId)}
+                    className="text-xs font-medium text-wr-text hover:text-wr-blue transition-colors"
+                  >
+                    {emp.empresaNombre}
+                  </button>
+                  {emp.grupoNombre && (
+                    <span className="text-[9px] text-wr-blue border border-wr-blue/30 px-1.5 py-0.5 rounded">
+                      {emp.grupoNombre}
+                    </span>
+                  )}
                 </div>
-                <div className="p-3 space-y-3">
-                  {ops.map((item) => (
-                    <OperacionCard key={item.id} item={item} onVerPerfil={onVerPerfil} />
-                  ))}
+                <div className="flex items-center gap-3 text-[10px] text-wr-hint">
+                  {emp.rol && <span>{emp.rol.replace(/_/g, " ")}</span>}
+                  <span>{fmtFechaShort(emp.ultimaFecha)}</span>
                 </div>
               </div>
             ))}
           </div>
-        </section>
-      )}
-
-      {/* Sin identificar */}
-      {desconocidos.sinIdentificar.length > 0 && (
-        <section>
-          <div className="flex items-center gap-3 mb-3">
-            <span className="w-2 h-2 rounded-full bg-wr-hint" />
-            <h3 className="text-sm font-semibold text-wr-muted">Comprador no identificado</h3>
-            <span className="text-[10px] text-wr-hint bg-wr-surface2 border border-wr-border px-2 py-0.5 rounded-full">
-              {desconocidos.sinIdentificar.length} señales
-            </span>
-          </div>
-          <div className="space-y-3">
-            {desconocidos.sinIdentificar.map((item) => (
-              <OperacionCard key={item.id} item={item} onVerPerfil={onVerPerfil} />
-            ))}
-          </div>
-        </section>
-      )}
-    </div>
-  );
-}
-
-// ─── Stats bar ────────────────────────────────────────────────────────────────
-
-function StatsBar({ items }: { items: OperacionItem[] }) {
-  const stats = useMemo(() => {
-    const porTipo = items.reduce<Record<string, number>>((acc, i) => {
-      acc[i.tipoActo] = (acc[i.tipoActo] ?? 0) + 1;
-      return acc;
-    }, {});
-    const gruposActivos = new Set(
-      items
-        .filter((i) => i.adquirente.tipo === "grupo_conocido")
-        .map((i) => i.adquirente.grupoNombre)
-    ).size;
-    const desconocidos = items.filter((i) => i.adquirente.tipo !== "grupo_conocido").length;
-    return { porTipo, gruposActivos, desconocidos };
-  }, [items]);
-
-  return (
-    <div className="flex items-center gap-4 px-6 py-2.5 border-b border-wr-border bg-wr-surface/50 text-[11px] text-wr-muted flex-wrap">
-      <span className="font-semibold text-wr-text">{items.length} operaciones</span>
-      <span className="text-wr-border">·</span>
-      {Object.entries(stats.porTipo).map(([tipo, n]) => (
-        <span key={tipo}>
-          <span className="font-medium text-wr-text">{n}</span>{" "}
-          {TIPO_CONFIG[tipo]?.label ?? tipo}
-        </span>
+        </div>
       ))}
-      <span className="text-wr-border">·</span>
-      <span>
-        <span className="font-medium text-wr-blue">{stats.gruposActivos}</span> grupos activos
-      </span>
-      <span>
-        <span className="font-medium text-wr-amber">{stats.desconocidos}</span> compradores a investigar
-      </span>
-    </div>
-  );
-}
-
-// ─── Filtros de tipo ──────────────────────────────────────────────────────────
-
-const TODOS_TIPOS = ["fusion", "adquisicion", "cambio_denominacion", "nombramiento_grupo"] as const;
-
-function FiltrosTipo({
-  activos,
-  toggle,
-}: {
-  activos: Set<string>;
-  toggle: (t: string) => void;
-}) {
-  return (
-    <div className="flex items-center gap-2 flex-wrap">
-      {TODOS_TIPOS.map((t) => {
-        const cfg = TIPO_CONFIG[t];
-        const on = activos.has(t);
-        return (
-          <button
-            key={t}
-            onClick={() => toggle(t)}
-            className={`px-2.5 py-1 rounded text-[10px] font-semibold border transition-colors ${
-              on ? cfg.color : "bg-transparent border-wr-border text-wr-hint hover:border-wr-muted hover:text-wr-muted"
-            }`}
-          >
-            {cfg.label}
-          </button>
-        );
-      })}
     </div>
   );
 }
@@ -436,122 +380,335 @@ function FiltrosTipo({
 export default function OperacionesBorme() {
   const seleccionarEmpresa = useWarRoomStore((s) => s.seleccionarEmpresa);
   const setVista = useWarRoomStore((s) => s.setVista);
+  const filtros = useWarRoomStore((s) => s.filtros);
 
   const [items, setItems] = useState<OperacionItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [tipoVista, setTipoVista] = useState<TipoVista>("cronologica");
-  const [tiposActivos, setTiposActivos] = useState<Set<string>>(
-    new Set(TODOS_TIPOS)
-  );
 
+  const [personas, setPersonas] = useState<PersonaCompartida[]>([]);
+  const [loadingPersonas, setLoadingPersonas] = useState(false);
+  const [errorPersonas, setErrorPersonas] = useState<string | null>(null);
+
+  const [subVista, setSubVista] = useState<SubVista>("senales");
+  const [tiposActivos, setTiposActivos] = useState<Set<string>>(
+    new Set(FILTER_TIPOS)
+  );
+  const [fechaDesde, setFechaDesde] = useState("");
+  const [fechaHasta, setFechaHasta] = useState("");
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [sortKey, setSortKey] = useState<string>("fecha");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+
+  // Fetch operaciones
   useEffect(() => {
     setLoading(true);
     fetch("/api/borme/operaciones")
       .then((r) => r.json())
-      .then((d) => {
-        setItems(d.items ?? []);
-        setLoading(false);
-      })
-      .catch((e) => {
-        setError(String(e));
-        setLoading(false);
-      });
+      .then((d) => { setItems(d.items ?? []); setLoading(false); })
+      .catch((e) => { setError(String(e)); setLoading(false); });
   }, []);
 
-  const filteredItems = useMemo(
-    () => items.filter((i) => tiposActivos.has(i.tipoActo)),
-    [items, tiposActivos]
-  );
+  // Fetch personas compartidas (lazy — solo cuando se abre la tab)
+  useEffect(() => {
+    if (subVista !== "alertas_personas" || personas.length > 0 || loadingPersonas) return;
+    setLoadingPersonas(true);
+    fetch("/api/borme/personas-compartidas")
+      .then((r) => r.json())
+      .then((d) => { setPersonas(d.personas ?? []); setLoadingPersonas(false); })
+      .catch((e) => { setErrorPersonas(String(e)); setLoadingPersonas(false); });
+  }, [subVista, personas.length, loadingPersonas]);
+
+  const handleVerPerfil = useCallback((id: number) => {
+    seleccionarEmpresa(id);
+    setVista("mapa");
+  }, [seleccionarEmpresa, setVista]);
 
   const toggleTipo = (t: string) => {
     setTiposActivos((prev) => {
       const next = new Set(prev);
-      if (next.has(t)) {
-        if (next.size > 1) next.delete(t); // keep at least one
-      } else {
-        next.add(t);
-      }
+      if (next.has(t)) { if (next.size > 1) next.delete(t); }
+      else next.add(t);
       return next;
     });
   };
 
-  const handleVerPerfil = (id: number) => {
-    seleccionarEmpresa(id);
-    setVista("mapa");
+  const toggleSort = (key: string) => {
+    if (sortKey === key) setSortDir((d) => d === "asc" ? "desc" : "asc");
+    else { setSortKey(key); setSortDir("desc"); }
   };
+
+  const SortIcon = ({ k }: { k: string }) => {
+    if (sortKey !== k) return <span className="text-wr-border ml-0.5">↕</span>;
+    return <span className="text-wr-blue ml-0.5">{sortDir === "asc" ? "↑" : "↓"}</span>;
+  };
+
+  // Aplicar filtros del sidebar + tipo + fecha
+  const filteredItems = useMemo(() => {
+    let result = items.filter((item) => tiposActivos.has(item.efectiveTipo));
+
+    // Filtros de store
+    if (filtros.enPerimetro !== null) {
+      result = result.filter((i) => i.empresa.enPerimetro === filtros.enPerimetro);
+    }
+    if (filtros.ccaa.length) {
+      result = result.filter((i) => i.empresa.ccaa && filtros.ccaa.includes(i.empresa.ccaa));
+    }
+    if (filtros.provincia.length) {
+      result = result.filter((i) => i.empresa.provincia && filtros.provincia.includes(i.empresa.provincia));
+    }
+    if (filtros.sector.length) {
+      result = result.filter((i) => i.empresa.sector && (filtros.sector as string[]).includes(i.empresa.sector));
+    }
+    if (filtros.grupoId.length) {
+      result = result.filter((i) => i.empresa.grupoId !== null && filtros.grupoId.includes(i.empresa.grupoId));
+    }
+    if (filtros.ingresosMin > 0) {
+      result = result.filter((i) => i.empresa.ingresos !== null && i.empresa.ingresos >= filtros.ingresosMin);
+    }
+    if (filtros.ingresosMax < Infinity) {
+      result = result.filter((i) => i.empresa.ingresos !== null && i.empresa.ingresos <= filtros.ingresosMax);
+    }
+
+    // Filtro fecha
+    if (fechaDesde) {
+      result = result.filter((i) => i.fecha >= fechaDesde);
+    }
+    if (fechaHasta) {
+      result = result.filter((i) => i.fecha <= fechaHasta + "T23:59:59");
+    }
+
+    // Ordenar
+    result = [...result].sort((a, b) => {
+      let av: number, bv: number;
+      switch (sortKey) {
+        case "fecha":
+          av = new Date(a.fecha).getTime();
+          bv = new Date(b.fecha).getTime();
+          break;
+        case "ingresos":
+          av = a.empresa.ingresos ?? -Infinity;
+          bv = b.empresa.ingresos ?? -Infinity;
+          break;
+        case "ebitda":
+          av = a.empresa.ebitdaPct ?? -Infinity;
+          bv = b.empresa.ebitdaPct ?? -Infinity;
+          break;
+        default:
+          return 0;
+      }
+      return sortDir === "asc" ? av - bv : bv - av;
+    });
+
+    return result;
+  }, [items, tiposActivos, filtros, fechaDesde, fechaHasta, sortKey, sortDir]);
+
+  // Stats
+  const stats = useMemo(() => {
+    const porTipo: Record<string, number> = {};
+    for (const i of filteredItems) {
+      porTipo[i.efectiveTipo] = (porTipo[i.efectiveTipo] ?? 0) + 1;
+    }
+    const gruposActivos = new Set(
+      filteredItems
+        .filter((i) => i.adquirente.tipo === "grupo_conocido")
+        .map((i) => i.adquirente.grupoNombre)
+    ).size;
+    return { porTipo, gruposActivos };
+  }, [filteredItems]);
+
+  // Active sidebar filters chip
+  const filtrosAplicados = useMemo(() => {
+    const chips: string[] = [];
+    if (filtros.enPerimetro !== null) chips.push(filtros.enPerimetro ? "En perímetro" : "Fuera perímetro");
+    if (filtros.ccaa.length) chips.push(`CCAA: ${filtros.ccaa.join(", ")}`);
+    if (filtros.provincia.length) chips.push(`Prov: ${filtros.provincia.join(", ")}`);
+    if (filtros.sector.length) chips.push(`Sector: ${filtros.sector.join(", ")}`);
+    if (filtros.grupoId.length) chips.push(`${filtros.grupoId.length} grupo(s)`);
+    if (filtros.ingresosMin > 0 || filtros.ingresosMax < Infinity) chips.push("Ingresos");
+    return chips;
+  }, [filtros]);
 
   return (
     <div className="h-full flex flex-col overflow-hidden bg-wr-bg">
       {/* ── Top bar ── */}
-      <div className="flex-shrink-0 px-6 py-3 border-b border-wr-border bg-wr-surface flex items-center gap-4 flex-wrap">
-        {/* Title */}
-        <div>
-          <h2 className="text-sm font-semibold text-wr-text">Operaciones M&amp;A</h2>
-          <p className="text-[10px] text-wr-hint">Señales BORME — fusiones, adquisiciones y movimientos corporativos</p>
+      <div className="flex-shrink-0 px-4 py-2.5 border-b border-wr-border bg-wr-surface flex items-center gap-3 flex-wrap">
+        {/* Title + sub-tabs */}
+        <div className="flex items-center gap-1 bg-wr-surface2 border border-wr-border rounded-md p-0.5">
+          <button
+            onClick={() => setSubVista("senales")}
+            className={`px-3 py-1 text-xs rounded transition-colors ${
+              subVista === "senales" ? "bg-wr-blue text-white" : "text-wr-muted hover:text-wr-text"
+            }`}
+          >
+            Señales M&A
+          </button>
+          <button
+            onClick={() => setSubVista("alertas_personas")}
+            className={`px-3 py-1 text-xs rounded transition-colors flex items-center gap-1.5 ${
+              subVista === "alertas_personas" ? "bg-wr-blue text-white" : "text-wr-muted hover:text-wr-text"
+            }`}
+          >
+            Alertas personas
+            {personas.length > 0 && (
+              <span className={`text-[9px] font-bold px-1 rounded ${subVista === "alertas_personas" ? "bg-white/20" : "bg-wr-amber/20 text-wr-amber"}`}>
+                {personas.length}
+              </span>
+            )}
+          </button>
         </div>
 
         <div className="flex-1" />
 
-        {/* Tipo filters */}
-        <FiltrosTipo activos={tiposActivos} toggle={toggleTipo} />
+        {subVista === "senales" && (
+          <>
+            {/* Sidebar filter chips */}
+            {filtrosAplicados.length > 0 && (
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] text-wr-hint">Filtros:</span>
+                {filtrosAplicados.map((f) => (
+                  <span key={f} className="text-[10px] bg-wr-blue/10 text-wr-blue border border-wr-blue/20 px-1.5 py-0.5 rounded">
+                    {f}
+                  </span>
+                ))}
+              </div>
+            )}
 
-        {/* View toggle */}
-        <div className="flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5">
-          <button
-            onClick={() => setTipoVista("cronologica")}
-            className={`px-3 py-1 text-xs rounded transition-colors ${
-              tipoVista === "cronologica"
-                ? "bg-wr-blue text-white"
-                : "text-wr-muted hover:text-wr-text"
-            }`}
-          >
-            Cronológico
-          </button>
-          <button
-            onClick={() => setTipoVista("grupos")}
-            className={`px-3 py-1 text-xs rounded transition-colors ${
-              tipoVista === "grupos"
-                ? "bg-wr-blue text-white"
-                : "text-wr-muted hover:text-wr-text"
-            }`}
-          >
-            Por grupos
-          </button>
-        </div>
+            {/* Tipo pills */}
+            <div className="flex items-center gap-1">
+              {FILTER_TIPOS.map((t) => {
+                const cfg = TIPO_CONFIG[t];
+                const on = tiposActivos.has(t);
+                return (
+                  <button
+                    key={t}
+                    onClick={() => toggleTipo(t)}
+                    className={`px-2 py-0.5 rounded text-[9px] font-bold border transition-colors ${
+                      on ? cfg.pill : "bg-transparent border-wr-border text-wr-hint hover:border-wr-muted"
+                    }`}
+                  >
+                    {cfg.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Date range */}
+            <div className="flex items-center gap-1.5 text-[10px] text-wr-hint">
+              <span>Desde</span>
+              <input
+                type="date"
+                value={fechaDesde}
+                onChange={(e) => setFechaDesde(e.target.value)}
+                className="bg-wr-surface2 border border-wr-border rounded px-2 py-0.5 text-[10px] text-wr-text focus:outline-none focus:border-wr-blue"
+              />
+              <span>hasta</span>
+              <input
+                type="date"
+                value={fechaHasta}
+                onChange={(e) => setFechaHasta(e.target.value)}
+                className="bg-wr-surface2 border border-wr-border rounded px-2 py-0.5 text-[10px] text-wr-text focus:outline-none focus:border-wr-blue"
+              />
+              {(fechaDesde || fechaHasta) && (
+                <button
+                  onClick={() => { setFechaDesde(""); setFechaHasta(""); }}
+                  className="text-wr-hint hover:text-wr-text"
+                  title="Quitar filtro de fechas"
+                >×</button>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
-      {/* ── Stats bar ── */}
-      {!loading && !error && <StatsBar items={filteredItems} />}
+      {/* ── Stats bar (senales only) ── */}
+      {subVista === "senales" && !loading && !error && (
+        <div className="flex-shrink-0 flex items-center gap-4 px-4 py-1.5 border-b border-wr-border bg-wr-surface/50 text-[10px] text-wr-muted flex-wrap">
+          <span className="font-semibold text-wr-text">{filteredItems.length} señales</span>
+          <span className="text-wr-border">·</span>
+          {Object.entries(stats.porTipo).map(([tipo, n]) => (
+            <span key={tipo}>
+              <span className="font-medium text-wr-text">{n}</span>{" "}
+              {TIPO_CONFIG[tipo]?.label ?? tipo}
+            </span>
+          ))}
+          <span className="text-wr-border">·</span>
+          <span><span className="font-medium text-wr-blue">{stats.gruposActivos}</span> grupos activos</span>
+          {filtrosAplicados.length > 0 && (
+            <span className="text-wr-amber">⬡ Filtros del panel activos</span>
+          )}
+        </div>
+      )}
 
       {/* ── Content ── */}
       <div className="flex-1 min-h-0 overflow-y-auto">
-        {loading && (
-          <div className="flex items-center justify-center h-40">
-            <p className="text-wr-muted text-sm animate-pulse">Cargando operaciones…</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="flex items-center justify-center h-40">
-            <p className="text-red-400 text-sm">Error: {error}</p>
-          </div>
-        )}
-
-        {!loading && !error && filteredItems.length === 0 && (
-          <div className="flex items-center justify-center h-40">
-            <p className="text-wr-muted text-sm">No hay operaciones para los filtros seleccionados.</p>
-          </div>
-        )}
-
-        {!loading && !error && filteredItems.length > 0 && (
-          <div className="max-w-3xl mx-auto px-6 py-6">
-            {tipoVista === "cronologica" ? (
-              <VistaCronologica items={filteredItems} onVerPerfil={handleVerPerfil} />
-            ) : (
-              <VistaGrupos items={filteredItems} onVerPerfil={handleVerPerfil} />
+        {subVista === "alertas_personas" ? (
+          <AlertasPersonas
+            personas={personas}
+            loading={loadingPersonas}
+            error={errorPersonas}
+            onVerPerfil={handleVerPerfil}
+          />
+        ) : (
+          <>
+            {loading && (
+              <div className="flex items-center justify-center h-40">
+                <p className="text-wr-muted text-sm animate-pulse">Cargando señales…</p>
+              </div>
             )}
-          </div>
+            {error && (
+              <div className="flex items-center justify-center h-40">
+                <p className="text-red-400 text-sm">Error: {error}</p>
+              </div>
+            )}
+            {!loading && !error && filteredItems.length === 0 && (
+              <div className="flex items-center justify-center h-40">
+                <p className="text-wr-muted text-sm">Sin señales para los filtros seleccionados.</p>
+              </div>
+            )}
+            {!loading && !error && filteredItems.length > 0 && (
+              <table className="w-full text-xs border-collapse">
+                <thead className="sticky top-0 z-10">
+                  <tr className="bg-wr-surface border-b border-wr-border text-wr-hint">
+                    <th
+                      className="px-3 py-2 text-left font-medium cursor-pointer hover:text-wr-text whitespace-nowrap"
+                      onClick={() => toggleSort("fecha")}
+                    >
+                      Fecha <SortIcon k="fecha" />
+                    </th>
+                    <th className="px-3 py-2 text-left font-medium">Tipo</th>
+                    <th className="px-3 py-2 text-left font-medium">Empresa</th>
+                    <th className="px-3 py-2 text-left font-medium">Adquirente</th>
+                    <th
+                      className="px-3 py-2 text-right font-medium cursor-pointer hover:text-wr-text whitespace-nowrap"
+                      onClick={() => toggleSort("ingresos")}
+                    >
+                      Ingresos <SortIcon k="ingresos" />
+                    </th>
+                    <th
+                      className="px-3 py-2 text-right font-medium cursor-pointer hover:text-wr-text whitespace-nowrap"
+                      onClick={() => toggleSort("ebitda")}
+                    >
+                      EBITDA <SortIcon k="ebitda" />
+                    </th>
+                    <th className="px-3 py-2 text-right font-medium text-[9px]">MB%</th>
+                    <th className="px-3 py-2 text-center font-medium w-8"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredItems.map((item) => (
+                    <OperacionRow
+                      key={item.id}
+                      item={item}
+                      isExpanded={expandedId === item.id}
+                      onToggle={() => setExpandedId(expandedId === item.id ? null : item.id)}
+                      onVerPerfil={handleVerPerfil}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </>
         )}
       </div>
     </div>

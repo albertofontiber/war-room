@@ -72,7 +72,7 @@ export const GRUPOS_SENALES: GrupoSenales[] = [
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /** Normaliza texto para comparación: mayúsculas sin diacríticos */
-function norm(s: string): string {
+export function norm(s: string): string {
   return s
     .toUpperCase()
     .normalize("NFD")
