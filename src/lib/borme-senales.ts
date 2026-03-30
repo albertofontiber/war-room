@@ -47,7 +47,9 @@ export const GRUPOS_SENALES: GrupoSenales[] = [
     grupoNombre: "Scutum",
     personas: [
       "THIERRY PASCAL HENRI BABULE",
+      "BABULE THIERRY PASCAL HENRI",
       "TURCHI PASCAL LUCIEN ELIO ARTHUR",
+      "PASCAL TURCHI",
     ],
     keywordsDenominacion: ["SCUTUM"],
     keywordsSocioUnico: ["SCUTUM"],

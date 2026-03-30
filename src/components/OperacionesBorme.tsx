@@ -475,8 +475,8 @@ export default function OperacionesBorme() {
       if (filtros.provincia.length && (!e.provincia || !filtros.provincia.includes(e.provincia))) return false;
       if (filtros.sector.length && (!e.sector || !(filtros.sector as string[]).includes(e.sector))) return false;
       if (filtros.grupoId.length && (e.grupoId === null || !filtros.grupoId.includes(e.grupoId!))) return false;
-      if (filtros.ingresosMin > 0 && (e.ingresos === null || e.ingresos < filtros.ingresosMin)) return false;
-      if (filtros.ingresosMax < Infinity && (e.ingresos === null || e.ingresos > filtros.ingresosMax)) return false;
+      if (filtros.ingresosMin > 0 && (e.ingresos == null || e.ingresos < filtros.ingresosMin)) return false;
+      if (filtros.ingresosMax < Infinity && (e.ingresos == null || e.ingresos > filtros.ingresosMax)) return false;
       return true;
     });
   }
