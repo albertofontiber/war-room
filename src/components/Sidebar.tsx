@@ -55,7 +55,7 @@ function RangeSliderFiltro({
         min={0}
         max={displayMax}
         step={step}
-        minStepsBetweenValues={step}
+        minStepsBetweenValues={1}
         thumbAlignment="edge"
         onValueChange={(vals) => {
           const [newMin, newMax] = vals as readonly number[];

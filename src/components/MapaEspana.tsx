@@ -172,6 +172,11 @@ function fmtMLocal(n: unknown): string {
   return `${v.toLocaleString("es-ES")}€`;
 }
 
+function fmtPctLocal(n: unknown): string {
+  if (n === null || n === undefined) return "—";
+  return `${(n as number).toFixed(1)}%`;
+}
+
 function SeleccionAreaPanel({
   empresas,
   onClose,
@@ -180,6 +185,44 @@ function SeleccionAreaPanel({
   onClose: () => void;
 }) {
   const { seleccionarEmpresa, modoPresentacion } = useWarRoomStore();
+  const [sortKey, setSortKey] = useState<string>("ingresos");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+
+  const toggleSort = useCallback(
+    (key: string) => {
+      if (sortKey === key) {
+        setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+      } else {
+        setSortKey(key);
+        setSortDir("desc");
+      }
+    },
+    [sortKey]
+  );
+
+  const sorted = useMemo(
+    () =>
+      [...empresas].sort((a, b) => {
+        const av = (a[sortKey] as number | null) ?? -Infinity;
+        const bv = (b[sortKey] as number | null) ?? -Infinity;
+        return sortDir === "asc" ? av - bv : bv - av;
+      }),
+    [empresas, sortKey, sortDir]
+  );
+
+  const SortTh = ({ col, children }: { col: string; children: React.ReactNode }) => (
+    <th
+      className="text-right px-3 py-2 cursor-pointer hover:text-wr-text select-none whitespace-nowrap"
+      onClick={() => toggleSort(col)}
+    >
+      <span className="inline-flex items-center justify-end gap-0.5">
+        {children}
+        <span className={sortKey === col ? "text-wr-blue ml-0.5" : "opacity-30 ml-0.5"}>
+          {sortKey === col ? (sortDir === "desc" ? "↓" : "↑") : "↕"}
+        </span>
+      </span>
+    </th>
+  );
 
   return (
     <div className="absolute bottom-0 left-0 right-0 z-20 animate-slide-up">
@@ -223,12 +266,17 @@ function SeleccionAreaPanel({
                   <th className="text-left px-3 py-2">Sector</th>
                   <th className="text-left px-3 py-2">CRM</th>
                   {!modoPresentacion && (
-                    <th className="text-right px-4 py-2">Ingresos</th>
+                    <>
+                      <SortTh col="ingresos">Ingresos</SortTh>
+                      <SortTh col="margenBrutoPct">MB%</SortTh>
+                      <SortTh col="ebitdaPct">EBITDA%</SortTh>
+                      <SortTh col="ebitda">EBITDA</SortTh>
+                    </>
                   )}
                 </tr>
               </thead>
               <tbody>
-                {empresas.map((r) => (
+                {sorted.map((r) => (
                   <tr
                     key={r.id as number}
                     onClick={() => seleccionarEmpresa(r.id as number)}
@@ -266,9 +314,20 @@ function SeleccionAreaPanel({
                       )}
                     </td>
                     {!modoPresentacion && (
-                      <td className="px-4 py-2 text-right text-wr-text whitespace-nowrap">
-                        {fmtMLocal(r.ingresos)}
-                      </td>
+                      <>
+                        <td className="px-3 py-2 text-right text-wr-text whitespace-nowrap">
+                          {fmtMLocal(r.ingresos)}
+                        </td>
+                        <td className="px-3 py-2 text-right text-wr-muted whitespace-nowrap">
+                          {fmtPctLocal(r.margenBrutoPct)}
+                        </td>
+                        <td className="px-3 py-2 text-right text-wr-muted whitespace-nowrap">
+                          {fmtPctLocal(r.ebitdaPct)}
+                        </td>
+                        <td className="px-3 py-2 text-right text-wr-muted whitespace-nowrap">
+                          {fmtMLocal(r.ebitda)}
+                        </td>
+                      </>
                     )}
                   </tr>
                 ))}
@@ -475,8 +534,8 @@ export default function MapaEspana() {
       setDrawPoints((prev) => {
         // dblclick fires two clicks first → remove last erroneous point
         const pts = prev.length > 1 ? prev.slice(0, -1) : prev;
-        if (pts.length >= 3 && rawGeoJSON) {
-          const inside = rawGeoJSON.features
+        if (pts.length >= 3 && geojson) {
+          const inside = geojson.features
             .filter((f) =>
               pointInPolygon(
                 [f.geometry.coordinates[0], f.geometry.coordinates[1]],
@@ -492,7 +551,7 @@ export default function MapaEspana() {
       setDrawMouse(null);
       setTimeout(() => { closingRef.current = false; }, 300);
     },
-    [drawMode, rawGeoJSON]
+    [drawMode, geojson]
   );
 
   // Helpers para activar/cancelar el modo dibujo

@@ -4,6 +4,20 @@ import { calcTendencia } from "@/lib/tendencia";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
+// Deterministic coordinate jitter based on CIF — prevents pins from stacking exactly
+// Range: ±0.0004° ≈ ±44m (well within same-city accuracy, eliminates overlap)
+function hashInt(str: string, salt: number): number {
+  let h = salt;
+  for (let i = 0; i < str.length; i++) {
+    h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+  }
+  return h;
+}
+function getJitter(cif: string, axis: 0 | 1): number {
+  const h = hashInt(cif, axis === 0 ? 0x12345678 : 0x87654321);
+  return ((h & 0x7fffffff) / 0x7fffffff - 0.5) * 0.0008;
+}
+
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -51,7 +65,7 @@ export async function GET() {
         type: "Feature" as const,
         geometry: {
           type: "Point" as const,
-          coordinates: [empresa.lng!, empresa.lat!],
+          coordinates: [empresa.lng! + getJitter(empresa.cif, 0), empresa.lat! + getJitter(empresa.cif, 1)],
         },
         properties: {
           id: empresa.id,

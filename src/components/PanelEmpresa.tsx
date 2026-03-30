@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import type { EmpresaDetalle, TipoActividad, TipoActo } from "@/types";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -509,7 +508,7 @@ export default function PanelEmpresa() {
       </div>
 
       {/* ── Scrollable content ──────────────────────────────────────────── */}
-      <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-4">
           {/* Badges */}
           <div className="flex flex-wrap gap-1.5">
@@ -862,7 +861,7 @@ export default function PanelEmpresa() {
           {/* Spacer bottom */}
           <div className="h-4" />
         </div>
-      </ScrollArea>
+      </div>
     </aside>
   );
 }
