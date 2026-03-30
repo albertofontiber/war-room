@@ -4,14 +4,6 @@
  * Detecta personas que aparecen en cargos de 2+ empresas distintas
  * extrayendo nombres de los textos de BormeAlerta, excluyendo las
  * personas ya conocidas en GRUPOS_SENALES.
- *
- * Criterio de "posible nuevo grupo": la misma persona (nombre normalizado)
- * aparece en actos de nombramiento de 2+ empresas distintas.
- *
- * Limitaciones conocidas:
- *  - Solo detecta nombres explícitos en el texto (patrón "Rol: NOMBRE")
- *  - No distingue ceses de nombramientos (posible mejora futura)
- *  - Puede haber homonimia en nombres comunes
  */
 
 import { NextResponse } from "next/server";
@@ -25,12 +17,57 @@ const KNOWN_PERSONS_NORM = new Set(
   GRUPOS_SENALES.flatMap((g) => g.personas).map((p) => norm(p))
 );
 
-interface PersonaEnEmpresa {
+// Palabras que NO pueden formar parte de un nombre de persona
+// (son términos estructurales del BORME o preposiciones)
+const REJECT_WORDS = new Set([
+  "A", "Y", "O", "E",                              // conjunciones / preposición
+  "SOLIDARIOS", "SOLIDARIO", "SOLIDARIAS", "SOLIDARIA",
+  "MANCOMUNADOS", "MANCOMUNADO", "MANCOMUNADAS", "MANCOMUNADA",
+  "ADMINISTRADORES", "ADMINISTRADOR", "APODERADOS", "APODERADO",
+  "CONSEJEROS", "CONSEJERO", "LIQUIDADORES", "LIQUIDADOR",
+  "UNICO", "UNICOS", "UNICA", "UNICAS",
+  "UNIPERSONAL", "UNIPERSONALIDAD",
+  "SUSTITUTO", "SUSTITUTOS",
+  "DELEGADO", "DELEGADOS",
+  "DATOS", "REGISTRALES", "REGISTRAL",
+  "TOMO", "FOLIO", "HOJA", "SECCION", "INSCRIPCION",
+]);
+
+/** Devuelve true si el candidato tiene forma de nombre de persona */
+function isLikelyPersonName(name: string): boolean {
+  const words = name.split(/\s+/);
+  // Debe tener entre 2 y 5 palabras
+  if (words.length < 2 || words.length > 5) return false;
+  // Sin palabras de 1 carácter (A, Y, O…)
+  if (words.some((w) => w.length === 1)) return false;
+  // Sin keywords estructurales del BORME
+  if (words.some((w) => REJECT_WORDS.has(w))) return false;
+  // Todas las palabras deben ser solo letras mayúsculas (sin dígitos)
+  if (words.some((w) => /\d/.test(w))) return false;
+  return true;
+}
+
+interface EmpresaFinanciero {
+  ingresos: number | null;
+  ebitda: number | null;
+  ebitdaPct: number | null;
+  margenBruto: number | null;
+  margenBrutoPct: number | null;
+  anioFinanciero: number | null;
+}
+
+interface PersonaEnEmpresa extends EmpresaFinanciero {
   empresaId: number;
   empresaNombre: string;
   grupoNombre: string | null;
+  grupoId: number | null;
   rol: string | null;
   ultimaFecha: string;
+  enPerimetro: boolean;
+  ccaa: string | null;
+  provincia: string | null;
+  sector: string | null;
+  web: string | null;
 }
 
 interface PersonaCompartida {
@@ -57,8 +94,8 @@ function extractPersonasFromDesc(
 
   const result: Array<{ nombreNorm: string; rol: string | null }> = [];
 
-  // Patrón: rol_abreviado ":" nombre_en_caps (terminado en ";", "." o fin de contexto)
-  // Captura roles típicos del Registro Mercantil español
+  // Patrón: rol_abreviado seguido de ":" y un nombre en CAPS
+  // El ":?" hace el colon opcional para cubrir "Adm. Solid. NOMBRE" sin ":"
   const ROL_RE =
     /\b(ADM\.?\s*(?:SOLID\.?|MANCOM\.?|UNICO\.?|SUSTITUT\.?)?|ADMINISTRADOR(?:\s+(?:SOLIDARIO|MANCOMUNADO|UNICO|SUSTITUTO))?|APODERADO|CONSEJERO(?:\s+DELEGADO)?|LIQUIDADOR|DIRECTOR(?:\s+GENERAL)?|SECRETARIO)\s*:?\s*([A-Z][A-Z ]{4,60}?)(?=\s*[;.,()\d]|$)/g;
 
@@ -71,17 +108,7 @@ function extractPersonasFromDesc(
     const names = namesPart.split(";").map((n) => n.trim());
     for (const rawName of names) {
       const name = rawName.replace(/[.,;]+$/, "").trim();
-      const words = name.split(/\s+/).filter((w) => w.length >= 2);
-
-      // Validar: 2–5 palabras, sin palabras clave de BORME
-      if (
-        words.length < 2 ||
-        words.length > 5 ||
-        /^(DATOS|REGISTRAL|TOMO|FOLIO|HOJA|INSCRIPCION|SECC)/.test(name)
-      ) {
-        continue;
-      }
-
+      if (!isLikelyPersonName(name)) continue;
       result.push({ nombreNorm: name, rol: normalizeRol(rolRaw) });
     }
   }
@@ -105,7 +132,7 @@ function normalizeRol(raw: string): string | null {
 
 export async function GET() {
   try {
-    // Solo alertas de nombramiento — donde personas adquieren cargos
+    // Solo alertas de nombramiento
     const alertas = await prisma.bormeAlerta.findMany({
       where: {
         tipoActo: { in: ["nombramiento", "nombramiento_grupo"] },
@@ -120,7 +147,17 @@ export async function GET() {
             id: true,
             nombre: true,
             grupoId: true,
+            enPerimetro: true,
+            ccaa: true,
+            provincia: true,
+            sector: true,
+            web: true,
             grupo: { select: { nombre: true } },
+            financieros: {
+              orderBy: { anio: "desc" },
+              take: 1,
+              select: { anio: true, ingresos: true, ebitda: true, margenBruto: true },
+            },
           },
         },
       },
@@ -136,7 +173,6 @@ export async function GET() {
     for (const alerta of alertas) {
       const personas = extractPersonasFromDesc(alerta.descripcion ?? "");
       for (const { nombreNorm, rol } of personas) {
-        // Excluir personas ya identificadas en grupos conocidos
         if (KNOWN_PERSONS_NORM.has(nombreNorm)) continue;
 
         if (!personaMap.has(nombreNorm)) {
@@ -146,15 +182,36 @@ export async function GET() {
 
         const eid = alerta.empresa.id;
         const existing = empresasMap.get(eid);
-        // Guardar solo la aparición más reciente por empresa
         if (!existing || alerta.fecha > existing.fechaDate) {
+          const fin = alerta.empresa.financieros[0] ?? null;
+          const ingresos = fin?.ingresos ?? null;
+          const ebitda = fin?.ebitda ?? null;
+          const margenBruto = fin?.margenBruto ?? null;
           empresasMap.set(eid, {
             empresaId: eid,
             empresaNombre: alerta.empresa.nombre,
             grupoNombre: alerta.empresa.grupo?.nombre ?? null,
+            grupoId: alerta.empresa.grupoId,
+            enPerimetro: alerta.empresa.enPerimetro,
+            ccaa: alerta.empresa.ccaa,
+            provincia: alerta.empresa.provincia,
+            sector: alerta.empresa.sector,
+            web: alerta.empresa.web,
             rol,
             ultimaFecha: alerta.fecha.toISOString(),
             fechaDate: alerta.fecha,
+            ingresos,
+            ebitda,
+            ebitdaPct:
+              ingresos && ebitda
+                ? Math.round((ebitda / ingresos) * 1000) / 10
+                : null,
+            margenBruto,
+            margenBrutoPct:
+              ingresos && margenBruto
+                ? Math.round((margenBruto / ingresos) * 1000) / 10
+                : null,
+            anioFinanciero: fin?.anio ?? null,
           });
         }
       }
@@ -183,7 +240,6 @@ export async function GET() {
       });
     });
 
-    // Ordenar: más empresas primero, luego más reciente
     results.sort(
       (a, b) =>
         b.numEmpresas - a.numEmpresas ||
