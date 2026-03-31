@@ -10,6 +10,7 @@ import {
 import Map, {
   Source,
   Layer,
+  Marker,
   type MapRef,
   type MapMouseEvent,
 } from "react-map-gl/mapbox";
@@ -35,17 +36,6 @@ const CRM_COLOR = [
   "#94a3b8",  // slate — sin CRM / identificado
 ] as const;
 
-// Cluster color based on aggregated maxPriority (1=identificado … 7=portfolio)
-const CLUSTER_COLOR = [
-  "case",
-  [">=", ["get", "maxPriority"], 7], "#22c55e",
-  [">=", ["get", "maxPriority"], 6], "#f97316",
-  [">=", ["get", "maxPriority"], 5], "#f59e0b",
-  [">=", ["get", "maxPriority"], 4], "#8b5cf6",
-  [">=", ["get", "maxPriority"], 3], "#3b82f6",
-  [">=", ["get", "maxPriority"], 2], "#38bdf8",
-  "#94a3b8",
-] as const;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _OPACITY_EXPR = [
@@ -178,6 +168,97 @@ const STAGE_CLR: Record<string, string> = {
   portfolio:       "#22c55e",
   muerto:          "#ef4444",
 };
+
+// ─── Cluster pie chart ────────────────────────────────────────────────────────
+
+// Stage order and colors for the pie chart (gray = sin CRM / identificado)
+const PIE_STAGES: { key: string; color: string }[] = [
+  { key: "identificado",    color: "#64748b" },
+  { key: "contactado",      color: "#38bdf8" },
+  { key: "primera_reunion", color: "#3b82f6" },
+  { key: "analisis",        color: "#8b5cf6" },
+  { key: "LOI enviada",     color: "#f59e0b" },
+  { key: "execution",       color: "#f97316" },
+  { key: "portfolio",       color: "#22c55e" },
+  { key: "muerto",          color: "#ef4444" },
+];
+
+const STAGE_PROP_KEY: Record<string, string> = {
+  identificado:    "s_id",
+  contactado:      "s_ct",
+  primera_reunion: "s_pr",
+  analisis:        "s_an",
+  "LOI enviada":   "s_lo",
+  execution:       "s_ex",
+  portfolio:       "s_po",
+  muerto:          "s_mu",
+};
+
+interface ClusterMarker {
+  id: number;
+  lng: number;
+  lat: number;
+  count: number;
+  stageCounts: Record<string, number>;
+}
+
+function donutPath(cx: number, cy: number, R: number, r: number, startAngle: number, endAngle: number): string {
+  const x1 = cx + R * Math.cos(startAngle), y1 = cy + R * Math.sin(startAngle);
+  const x2 = cx + R * Math.cos(endAngle),   y2 = cy + R * Math.sin(endAngle);
+  const ix1 = cx + r * Math.cos(endAngle),  iy1 = cy + r * Math.sin(endAngle);
+  const ix2 = cx + r * Math.cos(startAngle), iy2 = cy + r * Math.sin(startAngle);
+  const large = endAngle - startAngle > Math.PI ? 1 : 0;
+  return `M ${x1} ${y1} A ${R} ${R} 0 ${large} 1 ${x2} ${y2} L ${ix1} ${iy1} A ${r} ${r} 0 ${large} 0 ${ix2} ${iy2} Z`;
+}
+
+function ClusterPie({ marker, onClick }: { marker: ClusterMarker; onClick: () => void }) {
+  const R = marker.count > 100 ? 24 : marker.count > 20 ? 20 : 16;
+  const r = R * 0.55;
+  const cx = R + 2, cy = R + 2;
+  const size = (R + 2) * 2;
+
+  const segments = PIE_STAGES.map((s) => ({ color: s.color, n: marker.stageCounts[s.key] ?? 0 }))
+    .filter((s) => s.n > 0);
+  const total = segments.reduce((a, s) => a + s.n, 0) || 1;
+
+  // If all are "sin CRM" (gray), just draw a full circle
+  const paths: React.ReactElement[] = [];
+  if (segments.length === 1) {
+    paths.push(
+      <circle key="full" cx={cx} cy={cy} r={R} fill={segments[0].color} />,
+      <circle key="hole" cx={cx} cy={cy} r={r} fill="#0f1117" />
+    );
+  } else {
+    let angle = -Math.PI / 2;
+    for (const seg of segments) {
+      const sweep = (seg.n / total) * 2 * Math.PI;
+      paths.push(
+        <path key={seg.color} d={donutPath(cx, cy, R, r, angle, angle + sweep)} fill={seg.color} />
+      );
+      angle += sweep;
+    }
+  }
+
+  const fontSize = R < 18 ? 8 : R < 22 ? 9 : 10;
+
+  return (
+    <div onClick={onClick} style={{ cursor: "pointer", transform: "translate(-50%, -50%)" }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} overflow="visible">
+        {/* Shadow ring */}
+        <circle cx={cx} cy={cy} r={R + 1.5} fill="rgba(0,0,0,0.4)" />
+        {paths}
+        <text
+          x={cx} y={cy}
+          textAnchor="middle" dominantBaseline="central"
+          fontSize={fontSize} fontWeight="bold" fill="#ffffff"
+          style={{ pointerEvents: "none", fontFamily: "system-ui" }}
+        >
+          {marker.count > 999 ? `${(marker.count / 1000).toFixed(1)}k` : marker.count}
+        </text>
+      </svg>
+    </div>
+  );
+}
 
 function fmtMLocal(n: unknown): string {
   if (n === null || n === undefined) return "n.a.";
@@ -392,6 +473,7 @@ export default function MapaEspana() {
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
   const [iconsReady, setIconsReady] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [clusterMarkers, setClusterMarkers] = useState<ClusterMarker[]>([]);
 
   // ── Draw-polygon state ─────────────────────────────────────────────────
   const closingRef = useRef(false);
@@ -459,6 +541,31 @@ export default function MapaEspana() {
 
   // Load custom shape icons when map loads
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // ── Cluster pie markers ────────────────────────────────────────────────────
+  const updateClusterMarkers = useCallback(() => {
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+    const features = map.querySourceFeatures("empresas", { filter: ["has", "point_count"] });
+    const seen = new Set<number>();
+    const markers: ClusterMarker[] = [];
+    for (const f of features) {
+      const id = f.id as number;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      const p = f.properties as Record<string, number>;
+      const coords = (f.geometry as GeoJSON.Point).coordinates;
+      const stageCounts: Record<string, number> = {};
+      for (const [stage, propKey] of Object.entries(STAGE_PROP_KEY)) {
+        stageCounts[stage] = p[propKey] ?? 0;
+      }
+      // sin CRM = total - all known stages
+      const knownSum = Object.values(stageCounts).reduce((a, v) => a + v, 0);
+      stageCounts["identificado"] = (stageCounts["identificado"] ?? 0) + Math.max(0, p.point_count - knownSum);
+      markers.push({ id, lng: coords[0], lat: coords[1], count: p.point_count, stageCounts });
+    }
+    setClusterMarkers(markers);
+  }, []);
+
   const handleMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap();
     if (!map) return;
@@ -635,6 +742,7 @@ export default function MapaEspana() {
             zoom: e.viewState.zoom,
           });
           saveBounds();
+          updateClusterMarkers();
         }}
         style={{ width: "100%", height: "100%" }}
         mapStyle="mapbox://styles/mapbox/dark-v11"
@@ -645,6 +753,7 @@ export default function MapaEspana() {
         onClick={handleClick}
         onDblClick={handleDblClick}
         cursor={drawMode ? "crosshair" : tooltip ? "pointer" : "default"}
+        onIdle={updateClusterMarkers}
         reuseMaps
       >
         <Source
@@ -655,50 +764,30 @@ export default function MapaEspana() {
             clusterMaxZoom={10}
             clusterRadius={50}
             clusterProperties={{
-              maxPriority: [
-                "max",
-                [
-                  "case",
-                  ["==", ["get", "dealStage"], "portfolio"],       7,
-                  ["==", ["get", "dealStage"], "execution"],       6,
-                  ["==", ["get", "dealStage"], "LOI enviada"],     5,
-                  ["==", ["get", "dealStage"], "analisis"],        4,
-                  ["==", ["get", "dealStage"], "primera_reunion"], 3,
-                  ["==", ["get", "dealStage"], "contactado"],      2,
-                  ["==", ["get", "dealStage"], "identificado"],    1,
-                  0,
-                ],
-              ],
+              s_id: ["+", ["case", ["==", ["get", "dealStage"], "identificado"],    1, 0]],
+              s_ct: ["+", ["case", ["==", ["get", "dealStage"], "contactado"],      1, 0]],
+              s_pr: ["+", ["case", ["==", ["get", "dealStage"], "primera_reunion"], 1, 0]],
+              s_an: ["+", ["case", ["==", ["get", "dealStage"], "analisis"],        1, 0]],
+              s_lo: ["+", ["case", ["==", ["get", "dealStage"], "LOI enviada"],     1, 0]],
+              s_ex: ["+", ["case", ["==", ["get", "dealStage"], "execution"],       1, 0]],
+              s_po: ["+", ["case", ["==", ["get", "dealStage"], "portfolio"],       1, 0]],
+              s_mu: ["+", ["case", ["==", ["get", "dealStage"], "muerto"],          1, 0]],
             }}
           >
-            {/* ── Cluster circles ── */}
+            {/* ── Cluster circles — hidden, kept for click interaction detection ── */}
             <Layer
               id="clusters"
               type="circle"
               filter={["has", "point_count"]}
               paint={{
-                "circle-color": CLUSTER_COLOR as unknown as string,
+                "circle-color": "rgba(0,0,0,0)",
                 "circle-radius": [
                   "step", ["get", "point_count"],
                   16, 5, 22, 20, 28,
                 ],
-                "circle-stroke-width": 2,
-                "circle-stroke-color": "#0f1117",
-                "circle-opacity": 0.9,
+                "circle-stroke-width": 0,
+                "circle-opacity": 0,
               }}
-            />
-
-            {/* ── Cluster count labels ── */}
-            <Layer
-              id="cluster-count"
-              type="symbol"
-              filter={["has", "point_count"]}
-              layout={{
-                "text-field": "{point_count_abbreviated}",
-                "text-size": 11,
-                "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-              }}
-              paint={{ "text-color": "#ffffff" }}
             />
 
             {/* ── BORME pulsing ring (amber) ── */}
@@ -805,6 +894,27 @@ export default function MapaEspana() {
             }}
           />
         </Source>
+
+        {/* ── Cluster pie chart markers ── */}
+        {clusterMarkers.map((marker) => (
+          <Marker
+            key={marker.id}
+            longitude={marker.lng}
+            latitude={marker.lat}
+            anchor="center"
+          >
+            <ClusterPie
+              marker={marker}
+              onClick={() => {
+                mapRef.current?.getMap().easeTo({
+                  center: [marker.lng, marker.lat],
+                  zoom: (mapRef.current.getMap().getZoom() ?? 8) + 2,
+                  duration: 400,
+                });
+              }}
+            />
+          </Marker>
+        ))}
 
         {/* ── Draw polygon layers ── */}
         {drawFillData && (
