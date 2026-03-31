@@ -86,7 +86,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-type PillColor = "blue" | "green" | "amber" | "red" | "gray";
+type PillColor = "blue" | "sky" | "violet" | "green" | "amber" | "orange" | "red" | "gray";
 
 function TogglePill({
   active,
@@ -112,11 +112,14 @@ function TogglePill({
 
   // Fully explicit class strings — Tailwind scanner can statically detect all of these
   const activeClass =
-    color === "green" ? "bg-wr-green/20 text-wr-green border-wr-green/40" :
-    color === "amber" ? "bg-wr-amber/20 text-wr-amber border-wr-amber/40" :
-    color === "red"   ? "bg-wr-red/20 text-wr-red border-wr-red/40" :
-    color === "gray"  ? "bg-wr-surface2 text-wr-muted border-wr-muted" :
-                        "bg-wr-blue/20 text-wr-blue border-wr-blue/40"; // blue (default)
+    color === "green"   ? "bg-wr-green/20 text-wr-green border-wr-green/40" :
+    color === "amber"   ? "bg-wr-amber/20 text-wr-amber border-wr-amber/40" :
+    color === "orange"  ? "bg-orange-500/20 text-orange-400 border-orange-500/40" :
+    color === "red"     ? "bg-wr-red/20 text-wr-red border-wr-red/40" :
+    color === "gray"    ? "bg-wr-surface2 text-wr-muted border-wr-muted" :
+    color === "sky"     ? "bg-sky-400/20 text-sky-400 border-sky-400/40" :
+    color === "violet"  ? "bg-violet-500/20 text-violet-400 border-violet-500/40" :
+                          "bg-wr-blue/20 text-wr-blue border-wr-blue/40"; // blue (default)
 
   return (
     <button onClick={onClick} className={`${base} ${activeClass}`}>
@@ -495,14 +498,14 @@ export default function Sidebar() {
             <div className="grid grid-cols-2 gap-1.5">
               {(
                 [
-                  { value: "identificado",    label: "Identificado", color: "gray"  },
-                  { value: "contactado",      label: "Contactado",   color: "blue"  },
-                  { value: "primera_reunion", label: "1ª reunión",   color: "blue"  },
-                  { value: "analisis",        label: "Análisis",     color: "blue"  },
-                  { value: "LOI enviada",     label: "LOI enviada",  color: "amber" },
-                  { value: "execution",       label: "Ejecución",    color: "amber" },
-                  { value: "portfolio",       label: "Portfolio",    color: "green" },
-                  { value: "muerto",          label: "Muerto",       color: "red"   },
+                  { value: "identificado",    label: "Identificado", color: "gray"   },
+                  { value: "contactado",      label: "Contactado",   color: "sky"    },
+                  { value: "primera_reunion", label: "1ª reunión",   color: "blue"   },
+                  { value: "analisis",        label: "Análisis",     color: "violet" },
+                  { value: "LOI enviada",     label: "LOI enviada",  color: "amber"  },
+                  { value: "execution",       label: "Ejecución",    color: "orange" },
+                  { value: "portfolio",       label: "Portfolio",    color: "green"  },
+                  { value: "muerto",          label: "Muerto",       color: "red"    },
                 ] as { value: DealStage; label: string; color: PillColor }[]
               ).map(({ value, label, color }) => (
                 <TogglePill
