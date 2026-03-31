@@ -31,25 +31,30 @@ const SECTOR_LABEL: Record<string, string> = {
 };
 
 const STAGE_LABEL: Record<string, string> = {
-  prospecto: "Prospecto",
-  contactado: "Contactado",
-  NBO: "NBO",
-  exclusividad: "Exclusividad",
-  muerto: "Muerto",
-  portfolio: "Portfolio",
+  identificado:    "Identificado",
+  contactado:      "Contactado",
+  primera_reunion: "1ª reunión",
+  analisis:        "Análisis",
+  "LOI enviada":   "LOI enviada",
+  execution:       "Ejecución",
+  portfolio:       "Portfolio",
+  muerto:          "Muerto",
 };
 
 const STAGE_COLOR: Record<string, string> = {
-  prospecto: "text-[#94a3b8]",
-  contactado: "text-wr-blue",
-  NBO: "text-wr-amber",
-  exclusividad: "text-wr-amber",
-  portfolio: "text-wr-green",
-  muerto: "text-wr-red",
+  identificado:    "text-[#94a3b8]",
+  contactado:      "text-wr-blue",
+  primera_reunion: "text-sky-400",
+  analisis:        "text-violet-400",
+  "LOI enviada":   "text-wr-amber",
+  execution:       "text-orange-400",
+  portfolio:       "text-wr-green",
+  muerto:          "text-wr-red",
 };
 
 type SortKey =
   | "nombre"
+  | "cif"
   | "localidad"
   | "provincia"
   | "sector"
@@ -168,6 +173,7 @@ export default function TablaEmpresas() {
     const data = rows.map((r) => {
       const row: Record<string, unknown> = {
         Empresa: r.nombre,
+        CIF: r.cif ?? "",
         Ciudad: r.localidad ?? "",
         Provincia: r.provincia,
         Sector: SECTOR_LABEL[r.sector as string] ?? r.sector,
@@ -236,7 +242,7 @@ export default function TablaEmpresas() {
     );
   }
 
-  const colSpanTotal = modoPresentacion ? 6 : 9;
+  const colSpanTotal = modoPresentacion ? 7 : 10;
 
   return (
     <div className="flex flex-col h-full bg-wr-bg">
@@ -284,6 +290,7 @@ export default function TablaEmpresas() {
           <thead className="sticky top-0 bg-wr-surface border-b border-wr-border z-10">
             <tr>
               <Th col="nombre">Empresa</Th>
+              <Th col="cif">CIF</Th>
               <Th col="localidad">Ciudad</Th>
               <Th col="provincia">Provincia</Th>
               <Th col="sector">Sector</Th>
@@ -353,6 +360,13 @@ export default function TablaEmpresas() {
                         ) : null}
                       </div>
                     </div>
+                  </td>
+
+                  {/* CIF */}
+                  <td className="px-3 py-2.5 text-wr-hint whitespace-nowrap font-mono text-[11px]">
+                    {(r.cif as string | null) ?? (
+                      <span className="text-wr-hint">—</span>
+                    )}
                   </td>
 
                   {/* Ciudad */}
