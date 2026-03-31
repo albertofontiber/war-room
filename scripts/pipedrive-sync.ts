@@ -21,13 +21,13 @@ const DEALFLOW_PIPELINE_ID = 1;
 
 // Mapa stage_id → dealStage interno
 const STAGE_MAP: Record<number, string> = {
-  6: "identificado",  // Identificado
-  7: "contactado",    // Contactado
-  8: "contactado",    // 1a reunión realizada
-  9: "contactado",    // Análisis
-  10: "LOI enviada",  // LOI enviada
-  11: "execution",    // Execution
-  12: "portfolio",    // Portfolio (antes Closed)
+  6: "identificado",    // Identificado
+  7: "contactado",      // Contactado
+  8: "primera_reunion", // 1ª reunión realizada
+  9: "analisis",        // Análisis
+  10: "LOI enviada",    // LOI enviada
+  11: "execution",      // Ejecución
+  12: "portfolio",      // Portfolio
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
