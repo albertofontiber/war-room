@@ -816,6 +816,7 @@ export default function MapaEspana() {
                 "all",
                 ["!", ["has", "point_count"]],
                 ["==", ["get", "sector"], "PCI"],
+                ["boolean", ["get", "enFiltro"], true],
               ]}
               paint={{
                 "circle-color": CRM_COLOR as unknown as string,
@@ -836,6 +837,7 @@ export default function MapaEspana() {
                   "all",
                   ["!", ["has", "point_count"]],
                   ["==", ["get", "sector"], "seguridad_electronica"],
+                  ["boolean", ["get", "enFiltro"], true],
                 ]}
                 layout={{
                   "icon-image": "shape-square",
@@ -859,6 +861,7 @@ export default function MapaEspana() {
                   "all",
                   ["!", ["has", "point_count"]],
                   ["==", ["get", "sector"], "mixto"],
+                  ["boolean", ["get", "enFiltro"], true],
                 ]}
                 layout={{
                   "icon-image": "shape-hexagon",
@@ -886,11 +889,11 @@ export default function MapaEspana() {
             type="circle"
             paint={{
               "circle-color": "#64748b",
-              "circle-radius": 6,
-              "circle-opacity": 0.4,
+              "circle-radius": sizeExpr as unknown as number,
+              "circle-opacity": 0.35,
               "circle-stroke-width": 1,
               "circle-stroke-color": "#1e293b",
-              "circle-stroke-opacity": 0.5,
+              "circle-stroke-opacity": 0.4,
             }}
           />
         </Source>
