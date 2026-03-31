@@ -416,14 +416,17 @@ export default function OperacionesBorme() {
   const [personaSortKey, setPersonaSortKey] = useState<string>("ultimaAparicion");
   const [personaSortDir, setPersonaSortDir] = useState<"asc" | "desc">("desc");
 
+  const [refreshKey, setRefreshKey] = useState(0);
+
   // Fetch señales
   useEffect(() => {
     setLoading(true);
+    setError(null);
     fetch("/api/borme/operaciones")
       .then((r) => r.json())
       .then((d) => { setItems(d.items ?? []); setLoading(false); })
       .catch((e) => { setError(String(e)); setLoading(false); });
-  }, []);
+  }, [refreshKey]);
 
   // Fetch personas (lazy)
   useEffect(() => {
@@ -592,6 +595,20 @@ export default function OperacionesBorme() {
             )}
           </button>
         </div>
+
+        {/* Refresh */}
+        <button
+          onClick={() => { setRefreshKey((k) => k + 1); setPersonas([]); }}
+          disabled={loading}
+          className="text-wr-hint hover:text-wr-text transition-colors disabled:opacity-40"
+          title="Actualizar datos"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+            className={loading ? "animate-spin" : ""}>
+            <path d="M23 4v6h-6" /><path d="M1 20v-6h6" />
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+          </svg>
+        </button>
 
         <div className="flex-1" />
 
