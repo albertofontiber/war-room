@@ -233,8 +233,6 @@ export default function Sidebar() {
     resetFiltros,
     empresasGeoJSON,
     setEmpresasGeoJSON,
-    seleccionarEmpresa,
-    setFlyToEmpresaId,
     getVisiblesCount,
     getAvailableCCAA,
     getAvailableProvincias,
@@ -276,17 +274,6 @@ export default function Sidebar() {
 
   const visiblesCount = getVisiblesCount();
 
-  // ── Empresas con BORME reciente (para lista sidebar) ──────────────────
-  const bormeEmpresas = useMemo(() => {
-    if (!empresasGeoJSON) return [];
-    return empresasGeoJSON
-      .filter((f) => f.properties.hasBormeReciente)
-      .map((f) => ({
-        id: f.properties.id as number,
-        nombre: f.properties.nombre as string,
-        provincia: f.properties.provincia as string,
-      }));
-  }, [empresasGeoJSON]);
 
   // ── Chips para filtros activos ────────────────────────────────────────
   const activeChips = useMemo(() => {
@@ -593,32 +580,6 @@ export default function Sidebar() {
             </div>
           </div>
 
-          {/* ── BORME alert list ── */}
-          {bormeEmpresas.length > 0 && (
-            <div>
-              <SectionLabel>Alertas BORME recientes</SectionLabel>
-              <div className="space-y-0.5">
-                {bormeEmpresas.map((e) => (
-                  <button
-                    key={e.id}
-                    onClick={() => {
-                      setFlyToEmpresaId(e.id);
-                      seleccionarEmpresa(e.id);
-                    }}
-                    className="w-full flex items-center gap-2 px-2 py-1.5 rounded text-left hover:bg-wr-surface2 group transition-colors"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-wr-amber flex-shrink-0 animate-pulse" />
-                    <div className="min-w-0">
-                      <p className="text-wr-text text-xs truncate group-hover:text-wr-blue transition-colors">
-                        {e.nombre}
-                      </p>
-                      <p className="text-wr-hint text-[10px]">{e.provincia}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
 
         </div>
       </div>

@@ -5,7 +5,7 @@ import { useWarRoomStore } from "@/store/useWarRoomStore";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type SubVista = "senales" | "alertas_personas";
+type SubVista = "senales" | "alertas_personas" | "actividad";
 
 interface Adquirente {
   tipo: "grupo_conocido" | "empresa_extraida" | "desconocido";
@@ -72,6 +72,29 @@ interface PersonaCompartida {
   empresas: PersonaEnEmpresa[];
 }
 
+// Actividad reciente (todos los tipos)
+interface RecienteItem {
+  id: number;
+  fecha: string;
+  tipoActo: string;
+  descripcion: string | null;
+  urlBorme: string | null;
+  grupoNombre: string | null;
+  empresa: {
+    id: number;
+    nombre: string;
+    cif: string;
+    web: string | null;
+    grupoId: number | null;
+    enPerimetro: boolean;
+    ccaa: string | null;
+    provincia: string | null;
+    sector: string | null;
+    ingresos: number | null;
+    anioFinanciero: number | null;
+  };
+}
+
 // Flat row for the personas table
 interface PersonaRow {
   nombreNorm: string;
@@ -113,8 +136,11 @@ const TIPO_CONFIG: Record<string, { label: string; pill: string }> = {
   fusion:              { label: "Fusión",        pill: "bg-purple-500/20 text-purple-300 border-purple-500/30" },
   adquisicion:         { label: "Adquisición",   pill: "bg-wr-blue/20 text-wr-blue border-wr-blue/30" },
   posible_adquisicion: { label: "Posible adq.",  pill: "bg-orange-500/20 text-orange-300 border-orange-500/30" },
+  nombramiento_grupo:  { label: "Nombramiento",  pill: "bg-green-500/20 text-green-300 border-green-500/30" },
   nombramiento:        { label: "Nombramiento",  pill: "bg-green-500/20 text-green-300 border-green-500/30" },
   cambio_denominacion: { label: "Rebranding",    pill: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" },
+  disolucion:          { label: "Disolución",    pill: "bg-red-500/20 text-red-300 border-red-500/30" },
+  otros:               { label: "Otro acto",     pill: "bg-wr-surface2 text-wr-muted border-wr-border" },
 };
 
 const FILTER_TIPOS = ["fusion", "adquisicion", "posible_adquisicion", "nombramiento", "cambio_denominacion"] as const;
@@ -406,6 +432,10 @@ export default function OperacionesBorme() {
   const [loadingPersonas, setLoadingPersonas] = useState(false);
   const [errorPersonas, setErrorPersonas] = useState<string | null>(null);
 
+  const [recientes, setRecientes] = useState<RecienteItem[]>([]);
+  const [loadingRecientes, setLoadingRecientes] = useState(false);
+  const [errorRecientes, setErrorRecientes] = useState<string | null>(null);
+
   const [subVista, setSubVista] = useState<SubVista>("senales");
   const [tiposActivos, setTiposActivos] = useState<Set<string>>(new Set(FILTER_TIPOS));
   const [fechaDesde, setFechaDesde] = useState("");
@@ -437,6 +467,16 @@ export default function OperacionesBorme() {
       .then((d) => { setPersonas(d.personas ?? []); setLoadingPersonas(false); })
       .catch((e) => { setErrorPersonas(String(e)); setLoadingPersonas(false); });
   }, [subVista, personas.length, loadingPersonas]);
+
+  // Fetch actividad reciente (lazy)
+  useEffect(() => {
+    if (subVista !== "actividad" || recientes.length > 0 || loadingRecientes) return;
+    setLoadingRecientes(true);
+    fetch("/api/borme/recientes")
+      .then((r) => r.json())
+      .then((d) => { setRecientes(d.items ?? []); setLoadingRecientes(false); })
+      .catch((e) => { setErrorRecientes(String(e)); setLoadingRecientes(false); });
+  }, [subVista, recientes.length, loadingRecientes]);
 
   const handleVerPerfil = useCallback((id: number) => {
     seleccionarEmpresa(id);
@@ -548,6 +588,15 @@ export default function OperacionesBorme() {
     [filteredPersonaRows]
   );
 
+  // ── Filtered actividad reciente ──────────────────────────────────────────────
+  const filteredRecientes = useMemo(() => {
+    let result = applyStoreFilters(recientes);
+    if (fechaDesde) result = result.filter((i) => i.fecha >= fechaDesde);
+    if (fechaHasta) result = result.filter((i) => i.fecha <= fechaHasta + "T23:59:59");
+    return result;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recientes, filtros, fechaDesde, fechaHasta]);
+
   // Stats señales
   const stats = useMemo(() => {
     const porTipo: Record<string, number> = {};
@@ -594,11 +643,22 @@ export default function OperacionesBorme() {
               </span>
             )}
           </button>
+          <button
+            onClick={() => setSubVista("actividad")}
+            className={`px-3 py-1 text-xs rounded transition-colors flex items-center gap-1.5 ${subVista === "actividad" ? "bg-wr-blue text-white" : "text-wr-muted hover:text-wr-text"}`}
+          >
+            Actividad reciente
+            {recientes.length > 0 && (
+              <span className={`text-[9px] font-bold px-1 rounded ${subVista === "actividad" ? "bg-white/20" : "bg-wr-surface2 text-wr-muted"}`}>
+                {recientes.length}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* Refresh */}
         <button
-          onClick={() => { setRefreshKey((k) => k + 1); setPersonas([]); }}
+          onClick={() => { setRefreshKey((k) => k + 1); setPersonas([]); setRecientes([]); }}
           disabled={loading}
           className="text-wr-hint hover:text-wr-text transition-colors disabled:opacity-40"
           title="Actualizar datos"
@@ -681,11 +741,16 @@ export default function OperacionesBorme() {
             Las filas en <span className="text-orange-300">naranja</span> (<span className="text-orange-300 font-medium">Posible adq.</span>) indican que una persona clave de un <span className="font-medium text-wr-text">grupo conocido</span> (Grupo Fire, Eurofesa, Scutum…) aparece en una empresa aún no mapeada a ese grupo — posible nueva adquisición en curso.
             Haz clic en una fila para ver la descripción completa del acto.
           </p>
-        ) : (
+        ) : subVista === "alertas_personas" ? (
           <p className="text-[10px] text-wr-hint">
             <span className="font-medium text-wr-muted">Alertas personas</span>
             {" "}— Personas detectadas en actos de nombramiento de 2 o más sociedades distintas, no incluidas en los grupos ya identificados.
             Pueden indicar un consolidador activo no catalogado. Cada bloque agrupa las sociedades donde aparece la misma persona.
+          </p>
+        ) : (
+          <p className="text-[10px] text-wr-hint">
+            <span className="font-medium text-wr-muted">Actividad reciente</span>
+            {" "}— Todos los actos BORME de los últimos 90 días para empresas de nuestro universo, incluyendo nombramientos genéricos, disoluciones y otros actos societarios. A diferencia de «Señales M&A», muestra la actividad completa sin filtrar por relevancia.
           </p>
         )}
       </div>
@@ -708,6 +773,17 @@ export default function OperacionesBorme() {
             <span className="font-semibold text-wr-text">{numPersonasFiltradas} personas</span>
             <span className="text-wr-border">·</span>
             <span><span className="font-medium text-wr-text">{filteredPersonaRows.length}</span> apariciones en empresas</span>
+          </>
+        )}
+        {subVista === "actividad" && !loadingRecientes && !errorRecientes && (
+          <>
+            <span className="font-semibold text-wr-text">{filteredRecientes.length} actos</span>
+            <span className="text-wr-border">·</span>
+            {Object.entries(
+              filteredRecientes.reduce((acc, i) => { acc[i.tipoActo] = (acc[i.tipoActo] ?? 0) + 1; return acc; }, {} as Record<string, number>)
+            ).map(([tipo, n]) => (
+              <span key={tipo}><span className="font-medium text-wr-text">{n}</span> {TIPO_CONFIG[tipo]?.label ?? tipo}</span>
+            ))}
           </>
         )}
         {filtrosAplicados.length > 0 && (
@@ -774,6 +850,74 @@ export default function OperacionesBorme() {
             )}
             {!loadingPersonas && !errorPersonas && filteredPersonaRows.length > 0 && (
               <AlertasPersonasTable rows={filteredPersonaRows} onVerPerfil={handleVerPerfil} />
+            )}
+          </>
+        )}
+
+        {/* Actividad reciente */}
+        {subVista === "actividad" && (
+          <>
+            {loadingRecientes && <div className="flex items-center justify-center h-40"><p className="text-wr-muted text-sm animate-pulse">Cargando actividad…</p></div>}
+            {errorRecientes && <div className="flex items-center justify-center h-40"><p className="text-red-400 text-sm">Error: {errorRecientes}</p></div>}
+            {!loadingRecientes && !errorRecientes && filteredRecientes.length === 0 && (
+              <div className="flex items-center justify-center h-40"><p className="text-wr-muted text-sm">Sin actividad para los filtros seleccionados.</p></div>
+            )}
+            {!loadingRecientes && !errorRecientes && filteredRecientes.length > 0 && (
+              <table className="w-full text-xs border-collapse">
+                <thead className="sticky top-0 z-10">
+                  <tr className="bg-wr-surface border-b border-wr-border text-wr-hint">
+                    <th className="px-3 py-2 text-left font-medium whitespace-nowrap">Fecha</th>
+                    <th className="px-3 py-2 text-left font-medium">Tipo</th>
+                    <th className="px-3 py-2 text-left font-medium">Empresa</th>
+                    <th className="px-3 py-2 text-left font-medium">Provincia</th>
+                    <th className="px-3 py-2 text-left font-medium">Grupo</th>
+                    <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Ingresos</th>
+                    <th className="px-3 py-2 text-center font-medium w-8"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredRecientes.map((item, idx) => (
+                    <tr key={item.id}
+                      className={`border-b border-wr-border text-xs transition-colors hover:bg-wr-surface2 ${idx % 2 === 0 ? "" : "bg-wr-surface/30"}`}
+                    >
+                      <td className="px-3 py-2 text-[11px] text-wr-hint whitespace-nowrap">{fmtFechaShort(item.fecha)}</td>
+                      <td className="px-3 py-2"><TipoPill tipo={item.tipoActo} /></td>
+                      <td className="px-3 py-2 max-w-[260px]">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <button
+                            onClick={() => handleVerPerfil(item.empresa.id)}
+                            className="font-medium text-wr-text hover:text-wr-blue transition-colors truncate text-left"
+                            title={item.empresa.nombre}
+                          >
+                            {item.empresa.nombre}
+                          </button>
+                          {item.empresa.enPerimetro && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-wr-blue flex-shrink-0" title="En perímetro" />
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-3 py-2 text-[11px] text-wr-muted whitespace-nowrap">{item.empresa.provincia ?? "—"}</td>
+                      <td className="px-3 py-2">
+                        {item.grupoNombre ? (
+                          <span className="text-[9px] text-wr-blue border border-wr-blue/30 px-1.5 py-0.5 rounded whitespace-nowrap">{item.grupoNombre}</span>
+                        ) : <span className="text-wr-border">—</span>}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-wr-text">
+                        {fmtM(item.empresa.ingresos)}
+                        {item.empresa.anioFinanciero && (
+                          <span className="text-wr-hint text-[9px] ml-1">{String(item.empresa.anioFinanciero).slice(2)}</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-center">
+                        {item.urlBorme ? (
+                          <a href={item.urlBorme} target="_blank" rel="noopener noreferrer"
+                            className="text-wr-hint hover:text-wr-blue text-[10px]">↗</a>
+                        ) : <span className="text-wr-border">—</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
           </>
         )}
