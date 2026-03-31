@@ -6,8 +6,6 @@
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const TO = process.env.SUMMARY_EMAIL_TO ?? "alberto@fontiber.com";
 const FROM = process.env.SUMMARY_EMAIL_FROM ?? "warroom@fontiber.com";
 const BASE_URL = "https://warroom.fontiber.com";
@@ -66,6 +64,7 @@ function pill(text: string, color: string): string {
 export async function sendDailySummary(): Promise<{ sent: boolean; reason?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return { sent: false, reason: "RESEND_API_KEY not set" };
+  const resend = new Resend(apiKey);
 
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
