@@ -34,6 +34,7 @@ const STAGE_MAP: Record<number, string> = {
 
 function coreNombre(nombre: string): string {
   return nombre
+    .replace(/\s*\(.*?\)\s*/g, " ")  // elimina sufijos entre paréntesis, ej: "(Prodein)"
     .replace(
       /\b(SOCIEDAD\s+ANONIMA|SOCIEDAD\s+LIMITADA|SOCIEDAD\s+LIMITADA\s+UNIPERSONAL|SOCIEDAD\s+ANONIMA\s+UNIPERSONAL)\b/g,
       ""
@@ -123,7 +124,9 @@ async function main() {
 
     // Match: 1) por pipedriveOrgId ya conocido, 2) por nombre normalizado
     const byOrgId = orgId != null ? orgIdToEmpresaId.get(String(orgId)) : null;
-    const normOrg = normalizeNombre(orgName);
+    // Limpiar sufijos entre paréntesis antes de normalizar, ej: "Prodein SL (Prodein)" → "Prodein SL"
+    const orgNameClean = orgName.replace(/\s*\(.*?\)\s*/g, " ").trim();
+    const normOrg = normalizeNombre(orgNameClean);
     const coreOrg = coreNombre(normOrg);
     const byName = nombreToId.get(normOrg) ?? coreToId.get(coreOrg) ?? null;
 

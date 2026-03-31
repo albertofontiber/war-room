@@ -21,6 +21,7 @@ const STAGE_MAP: Record<number, string> = {
 
 function coreNombre(nombre: string): string {
   return nombre
+    .replace(/\s*\(.*?\)\s*/g, " ")  // elimina sufijos entre paréntesis, ej: "(Prodein)"
     .replace(/\b(SAU|SLU|SLL|SRL|SCL|SLNE|SLP|AIE|UTE|CB|SC|SA|SL)\b/g, "")
     .replace(/\s+/g, " ")
     .trim();
@@ -105,7 +106,9 @@ export async function GET(req: NextRequest) {
       }
 
       const byOrgId = orgId != null ? orgIdToEmpresaId.get(String(orgId)) : null;
-      const normOrg = normalizeNombre(orgName);
+      // Limpiar sufijos entre paréntesis antes de normalizar, ej: "Empresa SL (Alias)" → "Empresa SL"
+      const orgNameClean = orgName.replace(/\s*\(.*?\)\s*/g, " ").trim();
+      const normOrg = normalizeNombre(orgNameClean);
       const coreOrg = coreNombre(normOrg);
       const empresaId = byOrgId ?? nombreToId.get(normOrg) ?? coreToId.get(coreOrg) ?? null;
 
