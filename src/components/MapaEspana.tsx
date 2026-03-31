@@ -25,11 +25,13 @@ const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
 const CRM_COLOR = [
   "case",
-  ["==", ["get", "dealStage"], "contactado"],  "#3b82f6",
-  ["==", ["get", "dealStage"], "LOI enviada"], "#f59e0b",
-  ["==", ["get", "dealStage"], "execution"],   "#f59e0b",
-  ["==", ["get", "dealStage"], "portfolio"],   "#22c55e",
-  ["==", ["get", "dealStage"], "muerto"],      "#ef4444",
+  ["==", ["get", "dealStage"], "contactado"],      "#3b82f6",
+  ["==", ["get", "dealStage"], "primera_reunion"], "#3b82f6",
+  ["==", ["get", "dealStage"], "analisis"],        "#3b82f6",
+  ["==", ["get", "dealStage"], "LOI enviada"],     "#f59e0b",
+  ["==", ["get", "dealStage"], "execution"],       "#f59e0b",
+  ["==", ["get", "dealStage"], "portfolio"],       "#22c55e",
+  ["==", ["get", "dealStage"], "muerto"],          "#ef4444",
   "#94a3b8",  // slate-400 — más visible sobre fondo oscuro
 ] as const;
 
@@ -155,13 +157,23 @@ const SECTOR_LBL: Record<string, string> = {
   mixto: "Mixto",
 };
 const STAGE_LBL: Record<string, string> = {
-  identificado: "Identificado", contactado: "Contactado",
-  "LOI enviada": "LOI enviada", execution: "Execution",
-  portfolio: "Portfolio", muerto: "Muerto",
+  identificado:    "Identificado",
+  contactado:      "Contactado",
+  primera_reunion: "1ª reunión",
+  analisis:        "Análisis",
+  "LOI enviada":   "LOI enviada",
+  execution:       "Ejecución",
+  portfolio:       "Portfolio",
+  muerto:          "Muerto",
 };
 const STAGE_CLR: Record<string, string> = {
-  contactado: "#3b82f6", "LOI enviada": "#f59e0b", execution: "#f59e0b",
-  portfolio: "#22c55e", muerto: "#ef4444",
+  contactado:      "#3b82f6",
+  primera_reunion: "#3b82f6",
+  analisis:        "#3b82f6",
+  "LOI enviada":   "#f59e0b",
+  execution:       "#f59e0b",
+  portfolio:       "#22c55e",
+  muerto:          "#ef4444",
 };
 
 function fmtMLocal(n: unknown): string {
@@ -644,11 +656,13 @@ export default function MapaEspana() {
                 "max",
                 [
                   "case",
-                  ["==", ["get", "dealStage"], "portfolio"],    5,
-                  ["==", ["get", "dealStage"], "execution"],    4,
-                  ["==", ["get", "dealStage"], "LOI enviada"],  3,
-                  ["==", ["get", "dealStage"], "contactado"],   2,
-                  ["==", ["get", "dealStage"], "identificado"], 1,
+                  ["==", ["get", "dealStage"], "portfolio"],       5,
+                  ["==", ["get", "dealStage"], "execution"],       4,
+                  ["==", ["get", "dealStage"], "LOI enviada"],     4,
+                  ["==", ["get", "dealStage"], "analisis"],        3,
+                  ["==", ["get", "dealStage"], "primera_reunion"], 2,
+                  ["==", ["get", "dealStage"], "contactado"],      2,
+                  ["==", ["get", "dealStage"], "identificado"],    1,
                   0,
                 ],
               ],
@@ -918,8 +932,8 @@ export default function MapaEspana() {
           <p className="text-wr-hint uppercase tracking-wider mb-1">CRM</p>
           {[
             ["#64748b", "Sin CRM / Identificado"],
-            ["#3b82f6", "Contactado"],
-            ["#f59e0b", "LOI enviada / Execution"],
+            ["#3b82f6", "Contactado / 1ª reunión / Análisis"],
+            ["#f59e0b", "LOI enviada / Ejecución"],
             ["#22c55e", "Portfolio"],
             ["#ef4444", "Muerto"],
           ].map(([color, label]) => (
