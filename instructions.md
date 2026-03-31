@@ -122,9 +122,12 @@ El campo `efectiveTipo` se calcula en el API de operaciones a partir de `tipoAct
 
 ```
 posible_adquisicion  — nombramiento_grupo en empresa NO mapeada al grupo → señal fuerte ⭐
-nombramiento_interno — nombramiento_grupo en empresa YA mapeada al grupo → rutina, se excluye
+                       (persona clave de un grupo conocido detectada fuera de ese grupo)
+nombramiento         — nombramiento genérico O nombramiento_grupo en empresa YA mapeada al grupo
 (resto)              — igual que tipoActo
 ```
+
+> **«Posible adq.»** se refiere exclusivamente a adquisiciones potenciales por parte de **grupos conocidos** catalogados en `borme-senales.ts` (Grupo Fire, Eurofesa, Scutum, Attlon, Plana Fàbrega). No debe confundirse con adquisiciones por agentes externos.
 
 ### Catálogo de señales por grupo (`src/lib/borme-senales.ts`)
 
@@ -166,9 +169,8 @@ Vista accesible desde el botón **"Operaciones"** en la Navbar (junto a Mapa y T
 - **API**: `GET /api/borme/operaciones`
   - Devuelve señales operacionales (fusion + adquisicion + cambio_denominacion + nombramiento_grupo)
   - Enriquecidas con: financieros del año más reciente, grupoInferido, adquirente extraído del texto
-  - Calcula `efectiveTipo` (posible_adquisicion / nombramiento_interno)
+  - Calcula `efectiveTipo` (posible_adquisicion / nombramiento)
   - Deduplicación por (empresaId, día): conserva el tipo de mayor prioridad
-  - Excluye `nombramiento_interno` (empresa ya mapeada al grupo → sin interés operacional)
 - **Tabla compacta** sortable por fecha / ingresos / EBITDA%
   - Columnas: Fecha | Tipo | Empresa (⊕ perímetro, link web) | Adquirente | Ingresos | EBITDA | MB% | BORME↗
   - Click en fila → expande descripción inline
@@ -289,6 +291,7 @@ model CrmEstado {
 | J | Dashboard Operaciones — Opción B | Baja | ⏳ Pendiente | Integrar señales BORME en PanelEmpresa |
 | K | Exportar tabla a Excel | Baja | ⏳ Pendiente | — |
 | L | Visualización árbol de grupos | Baja | ⏳ Pendiente | — |
+| M | Nombramientos como señal de adquisición | Baja | ⏳ Pendiente | Ver detalle abajo |
 
 ### Detalle tareas pendientes
 
@@ -297,6 +300,14 @@ model CrmEstado {
 - Para cobertura total: añadir extracción de personas en `borme.ts` y crear registros BormePersona
 - Requiere backfill sobre alertas existentes con `extractPersonasFromDesc()`
 - La tabla y el schema ya existen, solo falta la lógica de inserción
+
+**M — Nombramientos como señal de adquisición (consolidadores no catalogados)**
+- Actualmente los `nombramiento` tienen fuerza de señal insuficiente para inferir adquisición (cualquier empresa puede nombrar un administrador sin relación con M&A)
+- La señal se vuelve relevante si se combina con enriquecimiento externo, por ejemplo:
+  - **Scraping web / LinkedIn**: verificar si el nuevo administrador tiene historial en empresas del sector PCI
+  - **Prensa económica**: buscar noticias de adquisición asociadas al nombre o empresa
+  - **Repetición geográfica**: misma persona nombrada en varias empresas de la misma provincia en poco tiempo (ya parcialmente cubierto por "Alertas personas")
+- Next step concreto: cuando `alertas_personas` detecte una persona en 3+ empresas, clasificarla automáticamente como "posible consolidador emergente" y añadirla al catálogo `GRUPOS_SENALES` para seguimiento
 
 **E — Matchear empresas Pipedrive sin CRM**
 - Pendientes: Sercoin, Protech-PCI, Segufoc, PRODEIN, IFI, Gesticon, y otras ~10
@@ -347,7 +358,7 @@ npx next build                                          # Build producción (tsc
 
 - **Vercel build**: trata los errores ESLint como errores de compilación. Verificar siempre con `npx next lint` antes de hacer push. El warning preexistente de `react-hooks/exhaustive-deps` en MapaEspana.tsx no bloquea el build.
 - **Vista type**: `"mapa" | "tabla" | "operaciones"` en `src/types/index.ts`. El store usa `setVista()`.
-- **efectiveTipo**: campo calculado en `/api/borme/operaciones` (no en BD). `posible_adquisicion` = nombramiento de persona conocida en empresa NO ya mapeada al grupo.
+- **efectiveTipo**: campo calculado en `/api/borme/operaciones` (no en BD). `posible_adquisicion` = nombramiento de persona clave de un **grupo conocido** (GRUPOS_SENALES) en empresa NO ya mapeada a ese grupo. Los `nombramiento_grupo` en empresa ya mapeada se tratan simplemente como `nombramiento`.
 - **Jitter coordenadas**: `getJitter(cif, axis)` en `empresas/route.ts` — hash deterministico por CIF, ±0.0004° (~44m). Mismo CIF siempre da el mismo offset.
 - **Filtros personas tab**: cuando hay filtros activos, una persona se incluye si ≥1 de sus empresas pasa el filtro. Se muestran TODAS sus empresas (no solo las que pasan) para conservar contexto cruzado.
 - **pdf-parse v2**: `new PDFParse({ data: buffer }).getText()` — NO es `pdfParse(buffer)` de v1

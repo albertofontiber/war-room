@@ -55,6 +55,7 @@ model Empresa {
   bormeAlertas     BormeAlerta[]
   bormePersonas    BormePersona[]
   crmEstado        CrmEstado?
+  crmLogs          CrmLog[]
   actividades      Actividad[]
 }
 
@@ -115,6 +116,20 @@ model CrmEstado {
   dealStage      String?  // "prospecto"|"contactado"|"NBO"|"exclusividad"|"muerto"|"portfolio"
   owner          String?
   updatedAt      DateTime @updatedAt
+}
+
+model CrmLog {
+  id         Int      @id @default(autoincrement())
+  empresaId  Int
+  empresa    Empresa  @relation(fields: [empresaId], references: [id])
+  event      String   // "new_deal" | "stage_changed"
+  fromStage  String?
+  toStage    String?
+  owner      String?
+  createdAt  DateTime @default(now())
+
+  @@index([empresaId])
+  @@index([createdAt])
 }
 
 model Actividad {

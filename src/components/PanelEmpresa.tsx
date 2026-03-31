@@ -27,21 +27,25 @@ const SECTOR_LABEL: Record<string, string> = {
 };
 
 const STAGE_LABEL: Record<string, string> = {
-  identificado: "Identificado",
-  contactado: "Contactado",
-  "LOI enviada": "LOI enviada",
-  execution: "Execution",
-  muerto: "Muerto",
-  portfolio: "Portfolio",
+  identificado:    "Identificado",
+  contactado:      "Contactado",
+  primera_reunion: "1ª reunión",
+  analisis:        "Análisis",
+  "LOI enviada":   "LOI enviada",
+  execution:       "Ejecución",
+  portfolio:       "Portfolio",
+  muerto:          "Muerto",
 };
 
 const STAGE_COLOR: Record<string, string> = {
-  identificado: "bg-[#64748b]/20 text-[#94a3b8] border-[#64748b]/30",
-  contactado: "bg-wr-blue/20 text-wr-blue border-wr-blue/30",
-  "LOI enviada": "bg-wr-amber/20 text-wr-amber border-wr-amber/30",
-  execution: "bg-wr-amber/20 text-wr-amber border-wr-amber/30",
-  portfolio: "bg-wr-green/20 text-wr-green border-wr-green/30",
-  muerto: "bg-wr-red/20 text-wr-red border-wr-red/30",
+  identificado:    "bg-[#64748b]/20 text-[#94a3b8] border-[#64748b]/30",
+  contactado:      "bg-wr-blue/20 text-wr-blue border-wr-blue/30",
+  primera_reunion: "bg-wr-blue/20 text-wr-blue border-wr-blue/30",
+  analisis:        "bg-wr-blue/20 text-wr-blue border-wr-blue/30",
+  "LOI enviada":   "bg-wr-amber/20 text-wr-amber border-wr-amber/30",
+  execution:       "bg-wr-amber/20 text-wr-amber border-wr-amber/30",
+  portfolio:       "bg-wr-green/20 text-wr-green border-wr-green/30",
+  muerto:          "bg-wr-red/20 text-wr-red border-wr-red/30",
 };
 
 const ACTIVIDAD_ICON: Record<TipoActividad, string> = {

@@ -31,7 +31,6 @@ const TIPO_PRIORITY: Record<string, number> = {
   posible_adquisicion: 4,
   cambio_denominacion: 3,
   nombramiento: 2,
-  nombramiento_interno: 1,
 };
 
 /** Extrae el nombre del adquirente del texto BORME para casos sin grupo conocido */
@@ -141,7 +140,7 @@ export async function GET() {
       let efectiveTipo = a.tipoActo;
       if (a.tipoActo === "nombramiento_grupo" && adquirente.tipo === "grupo_conocido") {
         const yaEnGrupo = a.empresa.grupoId === adquirente.grupoId;
-        efectiveTipo = yaEnGrupo ? "nombramiento_interno" : "posible_adquisicion";
+        efectiveTipo = yaEnGrupo ? "nombramiento" : "posible_adquisicion";
       }
 
       return {
@@ -176,7 +175,6 @@ export async function GET() {
     // ── Deduplicar por (empresaId, día): conservar el tipo de mayor prioridad ─
     const dedupMap = new Map<string, (typeof enriched)[0]>();
     for (const item of enriched) {
-      if (item.efectiveTipo === "nombramiento_interno") continue; // excluir rutinas internas
       const day = item.fecha.slice(0, 10);
       const key = `${item.empresa.id}-${day}`;
       const existing = dedupMap.get(key);

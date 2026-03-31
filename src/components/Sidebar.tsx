@@ -243,7 +243,7 @@ export default function Sidebar() {
   // ── Stats derivados del GeoJSON (sin filtro) ──────────────────────────
   const stats = useMemo(() => {
     if (!empresasGeoJSON) return { total: 0, enPipeline: 0, enPerimetro: 0, bormeAlertas: 0 };
-    const PIPELINE = new Set(["contactado", "LOI enviada", "execution"]);
+    const PIPELINE = new Set(["contactado", "primera_reunion", "analisis", "LOI enviada", "execution"]);
     let enPipeline = 0, enPerimetro = 0, bormeAlertas = 0;
     for (const f of empresasGeoJSON) {
       const p = f.properties;
@@ -307,8 +307,14 @@ export default function Sidebar() {
     });
     filtros.crmStage.forEach((v) => {
       const lbls: Record<string, string> = {
-        identificado: "Identificado", contactado: "Contactado", "LOI enviada": "LOI enviada",
-        execution: "Execution", portfolio: "Portfolio", muerto: "Muerto",
+        identificado:    "Identificado",
+        contactado:      "Contactado",
+        primera_reunion: "1ª reunión",
+        analisis:        "Análisis",
+        "LOI enviada":   "LOI enviada",
+        execution:       "Ejecución",
+        portfolio:       "Portfolio",
+        muerto:          "Muerto",
       };
       chips.push({ label: `CRM: ${lbls[v] ?? v}`, remove: () => toggleFiltroArray("crmStage", v) });
     });
@@ -489,12 +495,14 @@ export default function Sidebar() {
             <div className="grid grid-cols-2 gap-1.5">
               {(
                 [
-                  { value: "identificado", label: "Identificado", color: "gray"  },
-                  { value: "contactado",   label: "Contactado",   color: "blue"  },
-                  { value: "LOI enviada",  label: "LOI enviada",  color: "amber" },
-                  { value: "execution",    label: "Execution",    color: "amber" },
-                  { value: "portfolio",    label: "Portfolio",    color: "green" },
-                  { value: "muerto",       label: "Muerto",       color: "red"   },
+                  { value: "identificado",    label: "Identificado", color: "gray"  },
+                  { value: "contactado",      label: "Contactado",   color: "blue"  },
+                  { value: "primera_reunion", label: "1ª reunión",   color: "blue"  },
+                  { value: "analisis",        label: "Análisis",     color: "blue"  },
+                  { value: "LOI enviada",     label: "LOI enviada",  color: "amber" },
+                  { value: "execution",       label: "Ejecución",    color: "amber" },
+                  { value: "portfolio",       label: "Portfolio",    color: "green" },
+                  { value: "muerto",          label: "Muerto",       color: "red"   },
                 ] as { value: DealStage; label: string; color: PillColor }[]
               ).map(({ value, label, color }) => (
                 <TogglePill

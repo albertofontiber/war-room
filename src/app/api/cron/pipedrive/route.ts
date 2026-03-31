@@ -12,8 +12,8 @@ const DEALFLOW_PIPELINE_ID = 1;
 const STAGE_MAP: Record<number, string> = {
   6: "identificado",
   7: "contactado",
-  8: "contactado",
-  9: "contactado",
+  8: "primera_reunion",
+  9: "analisis",
   10: "LOI enviada",
   11: "execution",
   12: "portfolio",
@@ -80,6 +80,14 @@ export async function GET(req: NextRequest) {
       if (c.pipedriveOrgId) orgIdToEmpresaId.set(c.pipedriveOrgId, c.empresaId);
     }
 
+    // Load existing CRM state for change detection
+    const existingStates = await prisma.crmEstado.findMany({
+      select: { empresaId: true, dealStage: true },
+    });
+    const existingStageMap = new Map<number, string | null>(
+      existingStates.map((e) => [e.empresaId, e.dealStage])
+    );
+
     let matched = 0, skipped = 0;
 
     for (const deal of deals) {
@@ -103,11 +111,28 @@ export async function GET(req: NextRequest) {
 
       if (!empresaId) { skipped++; continue; }
 
+      const prevStage = existingStageMap.get(empresaId);
+      const isNew = prevStage === undefined;
+      const stageChanged = !isNew && prevStage !== dealStage;
+
       await prisma.crmEstado.upsert({
         where: { empresaId },
         create: { empresaId, pipedriveOrgId: orgId != null ? String(orgId) : null, dealStage, owner },
         update: { pipedriveOrgId: orgId != null ? String(orgId) : null, dealStage, owner },
       });
+
+      if (isNew || stageChanged) {
+        await prisma.crmLog.create({
+          data: {
+            empresaId,
+            event: isNew ? "new_deal" : "stage_changed",
+            fromStage: isNew ? null : (prevStage ?? null),
+            toStage: dealStage,
+            owner,
+          },
+        });
+      }
+
       matched++;
     }
 

@@ -661,7 +661,7 @@ export default function OperacionesBorme() {
           <p className="text-[10px] text-wr-hint">
             <span className="font-medium text-wr-muted">Señales M&A</span>
             {" "}— Fusiones, adquisiciones y movimientos societarios detectados en el BORME para empresas del perímetro.
-            Las filas en <span className="text-orange-300">naranja</span> indican posibles nuevas adquisiciones (persona conocida de un grupo detectada en empresa no mapeada aún).
+            Las filas en <span className="text-orange-300">naranja</span> (<span className="text-orange-300 font-medium">Posible adq.</span>) indican que una persona clave de un <span className="font-medium text-wr-text">grupo conocido</span> (Grupo Fire, Eurofesa, Scutum…) aparece en una empresa aún no mapeada a ese grupo — posible nueva adquisición en curso.
             Haz clic en una fila para ver la descripción completa del acto.
           </p>
         ) : (

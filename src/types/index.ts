@@ -4,10 +4,12 @@ export type Sector = "PCI" | "seguridad_electronica" | "mixto";
 export type DealStage =
   | "identificado"
   | "contactado"
+  | "primera_reunion"
+  | "analisis"
   | "LOI enviada"
   | "execution"
-  | "muerto"
-  | "portfolio";
+  | "portfolio"
+  | "muerto";
 export type TipoActo =
   | "adquisicion"
   | "disolucion"
