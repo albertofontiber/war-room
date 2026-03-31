@@ -566,6 +566,26 @@ export default function MapaEspana() {
     setClusterMarkers(markers);
   }, []);
 
+  // ── onIdle: re-ensure custom icons (lost on reuseMaps remount) + update clusters ──
+  // With reuseMaps, onLoad does NOT fire after a tab-switch remount, so iconsReady
+  // stays false and symbol markers (segelec/mixto) disappear. Fix: re-add icons on
+  // the first idle after remount (hasImage guard prevents duplicate uploads).
+  const handleIdle = useCallback(() => {
+    const map = mapRef.current?.getMap();
+    if (map) {
+      if (!map.hasImage("shape-square")) {
+        const sq = createShapeIcon("square");
+        if (sq) map.addImage("shape-square", sq, { sdf: true });
+      }
+      if (!map.hasImage("shape-hexagon")) {
+        const hex = createShapeIcon("hexagon");
+        if (hex) map.addImage("shape-hexagon", hex, { sdf: true });
+      }
+      setIconsReady(true);
+    }
+    updateClusterMarkers();
+  }, [updateClusterMarkers]);
+
   const handleMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap();
     if (!map) return;
@@ -753,7 +773,7 @@ export default function MapaEspana() {
         onClick={handleClick}
         onDblClick={handleDblClick}
         cursor={drawMode ? "crosshair" : tooltip ? "pointer" : "default"}
-        onIdle={updateClusterMarkers}
+        onIdle={handleIdle}
         reuseMaps
       >
         <Source
