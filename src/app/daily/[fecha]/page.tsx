@@ -63,7 +63,7 @@ export default async function DailyPage({
   }
 
   const dayStart = new Date(`${params.fecha}T00:00:00`);
-  const dayEnd   = new Date(`${params.fecha}T23:59:59`);
+  const dayEnd   = new Date(); // hasta ahora (cubre desde la fecha hasta hoy)
 
   // ── Fetch BORME alerts ──────────────────────────────────────────────────────
   const bormeAlertas = await prisma.bormeAlerta.findMany({
@@ -164,12 +164,10 @@ export default async function DailyPage({
   }
 
   // ── Date label ──────────────────────────────────────────────────────────────
-  const dateLabel = dayStart.toLocaleDateString("es-ES", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const isToday = dayStart.toDateString() === new Date().toDateString();
+  const dateLabel = isToday
+    ? dayStart.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
+    : `${dayStart.toLocaleDateString("es-ES", { day: "numeric", month: "short" })} – ${new Date().toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}`;
   const dateCapitalized = dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1);
 
   // ── Render ──────────────────────────────────────────────────────────────────

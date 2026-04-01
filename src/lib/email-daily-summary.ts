@@ -80,7 +80,7 @@ export async function sendDailySummary(
   }).length;
 
   // ── Date strings ───────────────────────────────────────────────────────────
-  const today = new Date();
+  const today = todayStart;
   const fechaParam = today.toISOString().slice(0, 10); // YYYY-MM-DD
   const dateLabel = today.toLocaleDateString("es-ES", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
