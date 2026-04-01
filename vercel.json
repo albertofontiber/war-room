@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/pipedrive",
-      "schedule": "0 19 * * 1-5"
+      "schedule": "0 20 * * 1-5"
     },
     {
       "path": "/api/cron/borme",
