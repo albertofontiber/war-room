@@ -10,6 +10,8 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { GRUPOS_SENALES, norm } from "@/lib/borme-senales";
 
+export const dynamic = "force-dynamic";
+
 const prisma = new PrismaClient();
 
 // Personas ya conocidas — se excluyen del análisis
