@@ -140,7 +140,7 @@ export async function sendDailySummary(
     todayPersonaAlertas.map((a) => a.personaDetectada).filter(Boolean) as string[]
   ));
 
-  let alertaPersonas: Array<{
+  const alertaPersonas: Array<{
     nombre: string;
     empresas: Array<{ empresaNombre: string; enPerimetro: boolean; rol: string | null; fecha: Date; ingresos: number | null }>;
   }> = [];
