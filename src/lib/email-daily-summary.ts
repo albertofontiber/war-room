@@ -21,8 +21,10 @@ export async function sendDailySummary(
   if (!apiKey) return { sent: false, reason: "RESEND_API_KEY not set" };
   const resend = new Resend(apiKey);
 
+  // By default query from yesterday midnight — the cron runs at 08:00 (06:00 UTC)
+  // the morning after BORME and Pipedrive have updated (previous evening).
   const todayStart = options?.since ?? (() => {
-    const d = new Date(); d.setHours(0, 0, 0, 0); return d;
+    const d = new Date(); d.setDate(d.getDate() - 1); d.setHours(0, 0, 0, 0); return d;
   })();
 
   // ── 1. BORME alerts ────────────────────────────────────────────────────────
