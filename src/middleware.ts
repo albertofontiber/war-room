@@ -14,6 +14,6 @@ export const config = {
      * - /api/auth/* (callbacks de NextAuth)
      * - /_next/static, /_next/image, /favicon.ico
      */
-    "/((?!login|daily|api/auth|_next/static|_next/image|favicon.ico).*)",
+    "/((?!login|daily|api/auth|api/cron|_next/static|_next/image|favicon.ico).*)",
   ],
 };
