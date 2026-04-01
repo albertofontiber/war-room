@@ -1,14 +1,14 @@
 /**
  * /api/cron/borme
- * Vercel cron job — runs every weekday at 11:00 UTC.
- * Processes the previous working day's BORME section A and creates
+ * Vercel cron job — runs every weekday at 20:00 UTC (22:00 CEST).
+ * Processes TODAY's BORME section A (published during the day) and creates
  * BormeAlerta records for companies in our database.
  *
  * Secured with CRON_SECRET env variable (set in Vercel dashboard).
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { processBormeDate, lastWorkdays } from "@/lib/borme";
+import { processBormeDate } from "@/lib/borme";
 
 // Vercel allows up to 300s for cron jobs on Pro plan
 export const maxDuration = 300;
@@ -25,9 +25,13 @@ export async function GET(req: NextRequest) {
   }
 
   // ── Date selection ────────────────────────────────────────────────────────
-  // Allow manual override via ?date=YYYYMMDD query param
+  // Allow manual override via ?date=YYYYMMDD query param.
+  // By default use today's date — the cron runs at 22:00 CEST when BORME is fully published.
   const qDate = req.nextUrl.searchParams.get("date");
-  const dateStr = qDate ?? lastWorkdays(1)[0];
+  const dateStr = qDate ?? (() => {
+    const d = new Date();
+    return `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, "0")}${String(d.getUTCDate()).padStart(2, "0")}`;
+  })();
 
   console.log(`[BORME cron] Processing date: ${dateStr}`);
 
