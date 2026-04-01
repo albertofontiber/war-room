@@ -16,7 +16,9 @@ async function main() {
   console.log(`📧 Sending test email (data desde ${since.toLocaleDateString("es-ES")})...`);
   const result = await sendDailySummary({ since, force: true });
   if (result.sent) {
+    const fecha = since.toISOString().slice(0, 10);
     console.log("✅ Email enviado correctamente a alberto@fontiber.com");
+    console.log(`🔗 Ver resumen en: https://warroom.fontiber.com/daily/${fecha}`);
   } else {
     console.log("⚠️  Error:", result.reason);
   }
