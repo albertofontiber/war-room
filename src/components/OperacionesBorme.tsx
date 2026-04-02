@@ -95,7 +95,7 @@ interface RecienteItem {
   };
 }
 
-// Flat row for the personas table
+// (PersonaRow no longer used — table works directly with PersonaCompartida[])
 interface PersonaRow {
   nombreNorm: string;
   isFirstForPersona: boolean;
@@ -296,120 +296,159 @@ function OperacionRow({
 // ─── Alertas personas table ───────────────────────────────────────────────────
 
 function AlertasPersonasTable({
-  rows,
+  personas,
   onVerPerfil,
 }: {
-  rows: PersonaRow[];
+  personas: PersonaCompartida[];
   onVerPerfil: (id: number) => void;
 }) {
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+
+  const toggle = (nombre: string) =>
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      next.has(nombre) ? next.delete(nombre) : next.add(nombre);
+      return next;
+    });
+
   return (
     <table className="w-full text-xs border-collapse">
       <thead className="sticky top-0 z-10">
         <tr className="bg-wr-surface border-b border-wr-border text-wr-hint">
+          <th className="px-3 py-2 text-left font-medium w-6" />
           <th className="px-3 py-2 text-left font-medium">Persona</th>
-          <th className="px-3 py-2 text-left font-medium">Empresa</th>
-          <th className="px-3 py-2 text-left font-medium">Rol</th>
-          <th className="px-3 py-2 text-left font-medium whitespace-nowrap">Fecha</th>
-          <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Ingresos</th>
-          <th className="px-3 py-2 text-right font-medium">EBITDA</th>
-          <th className="px-3 py-2 text-right font-medium text-[9px]">MB%</th>
-          <th className="px-3 py-2 text-left font-medium">Grupo</th>
+          <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Empresas</th>
+          <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Ingresos totales</th>
+          <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Última incorporación</th>
         </tr>
       </thead>
       <tbody>
-        {rows.map((row, idx) => {
-          const isGroupStart = row.isFirstForPersona;
-          const isOdd = idx % 2 === 0;
+        {personas.map((p) => {
+          const isOpen = expanded.has(p.nombreNorm);
+          const totalIngresos = p.empresas.reduce(
+            (sum, e) => sum + (e.ingresos ?? 0), 0
+          );
           return (
-            <tr
-              key={`${row.nombreNorm}-${row.empresa.empresaId}`}
-              className={`border-b transition-colors text-xs ${
-                isGroupStart
-                  ? "border-t-2 border-t-wr-muted/20 border-b-wr-border"
-                  : "border-wr-border/50"
-              } ${isOdd ? "bg-wr-surface/30" : ""} hover:bg-wr-surface2`}
-            >
-              {/* Persona — shown only on first row of the group */}
-              <td className="px-3 py-2 max-w-[160px]">
-                {isGroupStart ? (
-                  <div>
-                    <span className="font-semibold text-wr-text text-[10px] tracking-wide">
-                      {row.nombreNorm}
-                    </span>
-                    <span className="ml-2 text-[9px] text-wr-hint">
-                      {row.numEmpresas} soc.
-                    </span>
-                  </div>
-                ) : null}
-              </td>
-              {/* Empresa */}
-              <td className="px-3 py-2 max-w-[200px]">
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <button
-                    onClick={() => onVerPerfil(row.empresa.empresaId)}
-                    className="font-medium text-wr-text hover:text-wr-blue transition-colors truncate text-left"
-                    title={row.empresa.empresaNombre}
+            <>
+              {/* ── Collapsed header row ── */}
+              <tr
+                key={p.nombreNorm}
+                onClick={() => toggle(p.nombreNorm)}
+                className="border-b border-wr-border hover:bg-wr-surface2 cursor-pointer select-none"
+              >
+                <td className="pl-3 py-2.5 text-wr-hint">
+                  <svg
+                    width="10" height="10" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2.5"
+                    className={`transition-transform ${isOpen ? "rotate-90" : ""}`}
                   >
-                    {row.empresa.empresaNombre}
-                  </button>
-                  {row.empresa.enPerimetro && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-wr-blue flex-shrink-0" title="En perímetro" />
-                  )}
-                  {row.empresa.web && (
-                    <a
-                      href={row.empresa.web.startsWith("http") ? row.empresa.web : `https://${row.empresa.web}`}
-                      target="_blank" rel="noopener noreferrer"
-                      className="text-wr-hint hover:text-wr-blue transition-colors flex-shrink-0"
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </td>
+                <td className="px-3 py-2.5">
+                  <span className="font-semibold text-wr-text text-[10px] tracking-wide">
+                    {p.nombreNorm}
+                  </span>
+                </td>
+                <td className="px-3 py-2.5 text-right tabular-nums text-wr-muted">
+                  {p.numEmpresas}
+                </td>
+                <td className="px-3 py-2.5 text-right tabular-nums text-wr-text">
+                  {totalIngresos > 0 ? fmtM(totalIngresos) : "—"}
+                </td>
+                <td className="px-3 py-2.5 text-right text-wr-hint whitespace-nowrap">
+                  {fmtFechaShort(p.ultimaAparicion)}
+                </td>
+              </tr>
+
+              {/* ── Expanded detail rows ── */}
+              {isOpen && (
+                <>
+                  {/* Sub-header */}
+                  <tr className="bg-wr-surface2/60 border-b border-wr-border/50">
+                    <td />
+                    <td className="px-3 py-1 text-[9px] text-wr-hint font-medium">Empresa</td>
+                    <td className="px-3 py-1 text-[9px] text-wr-hint font-medium text-right">Rol</td>
+                    <td className="px-3 py-1 text-[9px] text-wr-hint font-medium text-right">Ingresos</td>
+                    <td className="px-3 py-1 text-[9px] text-wr-hint font-medium text-right">EBITDA · GM%</td>
+                  </tr>
+                  {p.empresas.map((emp) => (
+                    <tr
+                      key={`${p.nombreNorm}-${emp.empresaId}`}
+                      className="border-b border-wr-border/40 bg-wr-surface/40 hover:bg-wr-surface2/60"
                     >
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                      </svg>
-                    </a>
-                  )}
-                </div>
-              </td>
-              {/* Rol */}
-              <td className="px-3 py-2 text-wr-muted text-[10px] whitespace-nowrap">
-                {row.empresa.rol ? row.empresa.rol.replace(/_/g, " ") : "—"}
-              </td>
-              {/* Fecha */}
-              <td className="px-3 py-2 text-[11px] text-wr-hint whitespace-nowrap">
-                {fmtFechaShort(row.empresa.ultimaFecha)}
-              </td>
-              {/* Ingresos */}
-              <td className="px-3 py-2 text-right tabular-nums text-wr-text">
-                {fmtM(row.empresa.ingresos)}
-                {row.empresa.anioFinanciero && (
-                  <span className="text-wr-hint text-[9px] ml-1">
-                    {String(row.empresa.anioFinanciero).slice(2)}
-                  </span>
-                )}
-              </td>
-              {/* EBITDA */}
-              <td className={`px-3 py-2 text-right tabular-nums ${ebitdaColor(row.empresa.ebitdaPct)}`}>
-                {fmtM(row.empresa.ebitda)}
-                {row.empresa.ebitdaPct !== null && (
-                  <span className="ml-1 text-[9px] opacity-70">
-                    ({fmtPct(row.empresa.ebitdaPct)})
-                  </span>
-                )}
-              </td>
-              {/* MB% */}
-              <td className="px-3 py-2 text-right tabular-nums text-wr-muted text-[10px]">
-                {fmtPct(row.empresa.margenBrutoPct)}
-              </td>
-              {/* Grupo */}
-              <td className="px-3 py-2">
-                {row.empresa.grupoNombre ? (
-                  <span className="text-[9px] text-wr-blue border border-wr-blue/30 px-1.5 py-0.5 rounded whitespace-nowrap">
-                    {row.empresa.grupoNombre}
-                  </span>
-                ) : (
-                  <span className="text-wr-border text-[10px]">—</span>
-                )}
-              </td>
-            </tr>
+                      <td />
+                      {/* Empresa */}
+                      <td className="px-3 py-2 max-w-[260px]">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); onVerPerfil(emp.empresaId); }}
+                            className="font-medium text-wr-text hover:text-wr-blue transition-colors truncate text-left"
+                            title={emp.empresaNombre}
+                          >
+                            {emp.empresaNombre}
+                          </button>
+                          {emp.enPerimetro && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-wr-blue flex-shrink-0" title="En perímetro" />
+                          )}
+                          {emp.grupoNombre && (
+                            <span className="text-[9px] text-wr-blue border border-wr-blue/30 px-1.5 py-0.5 rounded whitespace-nowrap flex-shrink-0">
+                              {emp.grupoNombre}
+                            </span>
+                          )}
+                          {emp.web && (
+                            <a
+                              href={emp.web.startsWith("http") ? emp.web : `https://${emp.web}`}
+                              target="_blank" rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-wr-hint hover:text-wr-blue transition-colors flex-shrink-0"
+                            >
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                              </svg>
+                            </a>
+                          )}
+                        </div>
+                        <div className="text-[9px] text-wr-hint mt-0.5">
+                          {fmtFechaShort(emp.ultimaFecha)}
+                          {emp.provincia ? ` · ${emp.provincia}` : ""}
+                        </div>
+                      </td>
+                      {/* Rol */}
+                      <td className="px-3 py-2 text-wr-muted text-[10px] whitespace-nowrap text-right">
+                        {emp.rol ? emp.rol.replace(/_/g, " ") : "—"}
+                      </td>
+                      {/* Ingresos */}
+                      <td className="px-3 py-2 text-right tabular-nums text-wr-text">
+                        {fmtM(emp.ingresos)}
+                        {emp.anioFinanciero && (
+                          <span className="text-wr-hint text-[9px] ml-1">
+                            {String(emp.anioFinanciero).slice(2)}
+                          </span>
+                        )}
+                      </td>
+                      {/* EBITDA + GM% */}
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        <span className={ebitdaColor(emp.ebitdaPct)}>
+                          {fmtM(emp.ebitda)}
+                          {emp.ebitdaPct !== null && (
+                            <span className="ml-1 text-[9px] opacity-70">
+                              ({fmtPct(emp.ebitdaPct)})
+                            </span>
+                          )}
+                        </span>
+                        {emp.margenBrutoPct !== null && (
+                          <span className="text-wr-hint text-[9px] ml-2">
+                            GM: {fmtPct(emp.margenBrutoPct)}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </>
+              )}
+            </>
           );
         })}
       </tbody>
@@ -542,11 +581,10 @@ export default function OperacionesBorme() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, tiposActivos, filtros, fechaDesde, fechaHasta, sortKey, sortDir]);
 
-  // ── Filtered personas (flat rows) ────────────────────────────────────────────
-  const filteredPersonaRows = useMemo((): PersonaRow[] => {
-    // Filtrar personas: mantener las que tienen AL MENOS UNA empresa que pase
-    // los filtros del sidebar. Se muestran TODAS las empresas de esa persona
-    // (incluyendo las que no pasan el filtro) para conservar el contexto cruzado.
+  // ── Filtered personas ────────────────────────────────────────────────────────
+  const filteredPersonas = useMemo((): PersonaCompartida[] => {
+    // Mantener personas con AL MENOS UNA empresa que pase los filtros del sidebar.
+    // Se muestran TODAS las empresas de esa persona para conservar el contexto cruzado.
     let filtered = personas.filter((p) =>
       applyStoreFilters(p.empresas).length >= 1
     );
@@ -555,8 +593,8 @@ export default function OperacionesBorme() {
     if (fechaDesde) filtered = filtered.filter((p) => p.ultimaAparicion >= fechaDesde);
     if (fechaHasta) filtered = filtered.filter((p) => p.ultimaAparicion <= fechaHasta + "T23:59:59");
 
-    // Sort personas
-    filtered = [...filtered].sort((a, b) => {
+    // Sort
+    return [...filtered].sort((a, b) => {
       let av: number, bv: number;
       if (personaSortKey === "ultimaAparicion") {
         av = new Date(a.ultimaAparicion).getTime();
@@ -566,26 +604,12 @@ export default function OperacionesBorme() {
       } else return 0;
       return personaSortDir === "asc" ? av - bv : bv - av;
     });
-
-    // Flatten to rows — always all empresas for each persona
-    const rows: PersonaRow[] = [];
-    for (const p of filtered) {
-      p.empresas.forEach((emp, idx) => {
-        rows.push({
-          nombreNorm: p.nombreNorm,
-          isFirstForPersona: idx === 0,
-          numEmpresas: p.empresas.length,
-          empresa: emp,
-        });
-      });
-    }
-    return rows;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [personas, filtros, fechaDesde, fechaHasta, personaSortKey, personaSortDir]);
 
-  const numPersonasFiltradas = useMemo(
-    () => new Set(filteredPersonaRows.map((r) => r.nombreNorm)).size,
-    [filteredPersonaRows]
+  const totalApariciones = useMemo(
+    () => filteredPersonas.reduce((sum, p) => sum + p.numEmpresas, 0),
+    [filteredPersonas]
   );
 
   // ── Filtered actividad reciente ──────────────────────────────────────────────
@@ -770,9 +794,9 @@ export default function OperacionesBorme() {
         )}
         {subVista === "alertas_personas" && !loadingPersonas && !errorPersonas && (
           <>
-            <span className="font-semibold text-wr-text">{numPersonasFiltradas} personas</span>
+            <span className="font-semibold text-wr-text">{filteredPersonas.length} personas</span>
             <span className="text-wr-border">·</span>
-            <span><span className="font-medium text-wr-text">{filteredPersonaRows.length}</span> apariciones en empresas</span>
+            <span><span className="font-medium text-wr-text">{totalApariciones}</span> apariciones en empresas</span>
           </>
         )}
         {subVista === "actividad" && !loadingRecientes && !errorRecientes && (
@@ -843,13 +867,13 @@ export default function OperacionesBorme() {
           <>
             {loadingPersonas && <div className="flex items-center justify-center h-40"><p className="text-wr-muted text-sm animate-pulse">Analizando personas…</p></div>}
             {errorPersonas && <div className="flex items-center justify-center h-40"><p className="text-red-400 text-sm">{errorPersonas}</p></div>}
-            {!loadingPersonas && !errorPersonas && filteredPersonaRows.length === 0 && (
+            {!loadingPersonas && !errorPersonas && filteredPersonas.length === 0 && (
               <div className="flex flex-col items-center justify-center h-40 gap-2">
                 <p className="text-wr-muted text-sm">No se detectaron personas compartidas con los filtros actuales.</p>
               </div>
             )}
-            {!loadingPersonas && !errorPersonas && filteredPersonaRows.length > 0 && (
-              <AlertasPersonasTable rows={filteredPersonaRows} onVerPerfil={handleVerPerfil} />
+            {!loadingPersonas && !errorPersonas && filteredPersonas.length > 0 && (
+              <AlertasPersonasTable personas={filteredPersonas} onVerPerfil={handleVerPerfil} />
             )}
           </>
         )}
