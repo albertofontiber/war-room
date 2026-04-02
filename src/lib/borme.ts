@@ -101,6 +101,7 @@ function coreNombre(normalized: string): string {
 export type TipoActoBorme =
   | "fusion"
   | "adquisicion"
+  | "posible_adquisicion"
   | "cambio_denominacion"
   | "nombramiento_grupo"
   | "nombramiento"
@@ -381,10 +382,22 @@ export async function processBormeDate(
         if (!empresaId) continue;
         result.empresasEncontradas++;
 
-        const { tipoActo, grupoNombre, personaDetectada } = entrada.clasificacion;
+        const { tipoActo: tipoActoBase, grupoNombre, personaDetectada } = entrada.clasificacion;
 
         // Resolver grupoInferidoId
         const grupoInferidoId = grupoNombre ? await getGrupoId(grupoNombre) : null;
+
+        // Elevar nombramiento_grupo a posible_adquisicion si la empresa no pertenece aún al grupo
+        let tipoActo = tipoActoBase;
+        if (tipoActoBase === "nombramiento_grupo" && grupoInferidoId) {
+          const empresa = await prisma.empresa.findUnique({
+            where: { id: empresaId },
+            select: { grupoId: true },
+          });
+          if (empresa && empresa.grupoId !== grupoInferidoId) {
+            tipoActo = "posible_adquisicion";
+          }
+        }
 
         // Si hay grupo detectado, asignar a la empresa si aún no tiene grupo
         if (grupoInferidoId) {
