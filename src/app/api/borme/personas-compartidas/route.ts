@@ -82,13 +82,13 @@ interface PersonaCompartida {
 }
 
 /**
- * Extrae pares (nombre_normalizado, rol) de un texto de BormeAlerta.
- * Solo extrae personas de secciones de NOMBRAMIENTO — ignora las de
- * REVOCACION, CESE o DIMISION para evitar falsos positivos.
+ * Extrae pares (nombre_normalizado, rol, isRevocacion) de un texto de BormeAlerta.
+ * Extrae personas tanto de secciones de NOMBRAMIENTO (isRevocacion=false)
+ * como de REVOCACION/CESE/DIMISION (isRevocacion=true).
  */
 function extractPersonasFromDesc(
   desc: string
-): Array<{ nombreNorm: string; rol: string | null }> {
+): Array<{ nombreNorm: string; rol: string | null; isRevocacion: boolean }> {
   if (!desc) return [];
 
   const t = desc
@@ -108,18 +108,18 @@ function extractPersonasFromDesc(
   while ((mx = NEGATIVE_RE.exec(t)) !== null) markers.push({ pos: mx.index, positive: false });
   markers.sort((a, b) => a.pos - b.pos);
 
-  /** Devuelve true si la posición está en un bloque de nombramiento (no revocación) */
-  function isPositiveContext(pos: number): boolean {
-    if (markers.length === 0) return true; // sin marcadores → incluir todo
+  /** Devuelve el contexto de la posición: true=nombramiento, false=revocación, null=sin marcadores */
+  function getContext(pos: number): boolean | null {
+    if (markers.length === 0) return null; // sin marcadores → contexto desconocido
     let last: typeof markers[0] | null = null;
     for (const marker of markers) {
       if (marker.pos < pos) last = marker;
       else break;
     }
-    return last === null ? true : last.positive;
+    return last === null ? null : last.positive;
   }
 
-  const result: Array<{ nombreNorm: string; rol: string | null }> = [];
+  const result: Array<{ nombreNorm: string; rol: string | null; isRevocacion: boolean }> = [];
 
   // Patrón: rol_abreviado seguido de ":" y un nombre en CAPS
   const ROL_RE =
@@ -127,8 +127,10 @@ function extractPersonasFromDesc(
 
   let m: RegExpExecArray | null;
   while ((m = ROL_RE.exec(t)) !== null) {
-    // Ignorar si este match está dentro de una sección de revocación/cese
-    if (!isPositiveContext(m.index)) continue;
+    const ctx = getContext(m.index);
+    // ctx=null → sin marcadores → asumir nombramiento (comportamiento anterior)
+    // ctx=true → nombramiento, ctx=false → revocación
+    const isRevocacion = ctx === false;
 
     const rolRaw = m[1].trim();
     const namesPart = m[2];
@@ -137,7 +139,7 @@ function extractPersonasFromDesc(
     for (const rawName of names) {
       const name = rawName.replace(/[.,;]+$/, "").trim();
       if (!isLikelyPersonName(name)) continue;
-      result.push({ nombreNorm: name, rol: normalizeRol(rolRaw) });
+      result.push({ nombreNorm: name, rol: normalizeRol(rolRaw), isRevocacion });
     }
   }
 
@@ -160,10 +162,10 @@ function normalizeRol(raw: string): string | null {
 
 export async function GET() {
   try {
-    // Solo alertas de nombramiento
+    // Alertas de nombramiento Y de otros (que contienen revocaciones/ceses)
     const alertas = await prisma.bormeAlerta.findMany({
       where: {
-        tipoActo: { in: ["nombramiento", "nombramiento_grupo"] },
+        tipoActo: { in: ["nombramiento", "nombramiento_grupo", "otros"] },
         descripcion: { not: null },
       },
       select: {
@@ -189,18 +191,21 @@ export async function GET() {
           },
         },
       },
-      orderBy: { fecha: "desc" },
+      orderBy: { fecha: "asc" }, // asc: procesar cronológicamente para "latest wins"
     });
 
-    // Acumular personas → Map<nombreNorm, Map<empresaId, PersonaEnEmpresa>>
-    const personaMap = new Map<
-      string,
-      Map<number, PersonaEnEmpresa & { fechaDate: Date }>
-    >();
+    // Acumular personas → Map<nombreNorm, Map<empresaId, PersonaEnEmpresa & estado>>
+    // Para cada (persona, empresa): guardamos el evento más reciente y si está activo
+    type EmpresaEntry = PersonaEnEmpresa & {
+      fechaDate: Date;
+      isActive: boolean;
+    };
+
+    const personaMap = new Map<string, Map<number, EmpresaEntry>>();
 
     for (const alerta of alertas) {
       const personas = extractPersonasFromDesc(alerta.descripcion ?? "");
-      for (const { nombreNorm, rol } of personas) {
+      for (const { nombreNorm, rol, isRevocacion } of personas) {
         if (KNOWN_PERSONS_NORM.has(nombreNorm)) continue;
 
         if (!personaMap.has(nombreNorm)) {
@@ -210,12 +215,17 @@ export async function GET() {
 
         const eid = alerta.empresa.id;
         const existing = empresasMap.get(eid);
-        if (!existing || alerta.fecha > existing.fechaDate) {
+
+        // "Latest event wins": actualizar si este evento es más reciente
+        if (!existing || alerta.fecha >= existing.fechaDate) {
           const fin = alerta.empresa.financieros[0] ?? null;
           const ingresos = fin?.ingresos ?? null;
           const ebitda = fin?.ebitda ?? null;
           const margenBruto = fin?.margenBruto ?? null;
-          empresasMap.set(eid, {
+
+          // Para revocaciones mantenemos los datos de la empresa pero marcamos inactivo
+          // Para nombramientos actualizamos rol y marcamos activo
+          const base = existing ?? {
             empresaId: eid,
             empresaNombre: alerta.empresa.nombre,
             grupoNombre: alerta.empresa.grupo?.nombre ?? null,
@@ -225,9 +235,6 @@ export async function GET() {
             provincia: alerta.empresa.provincia,
             sector: alerta.empresa.sector,
             web: alerta.empresa.web,
-            rol,
-            ultimaFecha: alerta.fecha.toISOString(),
-            fechaDate: alerta.fecha,
             ingresos,
             ebitda,
             ebitdaPct:
@@ -240,31 +247,40 @@ export async function GET() {
                 ? Math.round((margenBruto / ingresos) * 1000) / 10
                 : null,
             anioFinanciero: fin?.anio ?? null,
+          };
+
+          empresasMap.set(eid, {
+            ...base,
+            rol: isRevocacion ? (existing?.rol ?? rol) : rol,
+            ultimaFecha: alerta.fecha.toISOString(),
+            fechaDate: alerta.fecha,
+            isActive: !isRevocacion, // revocación → inactivo, nombramiento → activo
           });
         }
       }
     }
 
-    // Filtrar: solo personas en 2+ empresas distintas
+    // Filtrar: solo (persona, empresa) con isActive=true, y solo personas en 2+ empresas activas
     const results: PersonaCompartida[] = [];
     personaMap.forEach((empresasMap, nombreNorm) => {
-      if (empresasMap.size < 2) return;
-
-      const empresas: PersonaEnEmpresa[] = [];
+      const empresasActivas: PersonaEnEmpresa[] = [];
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      empresasMap.forEach(({ fechaDate: _fd, ...rest }) => {
-        empresas.push(rest);
+      empresasMap.forEach(({ fechaDate: _fd, isActive, ...rest }) => {
+        if (isActive) empresasActivas.push(rest);
       });
-      empresas.sort(
+
+      if (empresasActivas.length < 2) return;
+
+      empresasActivas.sort(
         (a, b) =>
           new Date(b.ultimaFecha).getTime() - new Date(a.ultimaFecha).getTime()
       );
 
       results.push({
         nombreNorm,
-        numEmpresas: empresas.length,
-        ultimaAparicion: empresas[0].ultimaFecha,
-        empresas,
+        numEmpresas: empresasActivas.length,
+        ultimaAparicion: empresasActivas[0].ultimaFecha,
+        empresas: empresasActivas,
       });
     });
 
