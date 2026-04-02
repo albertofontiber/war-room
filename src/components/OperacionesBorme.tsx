@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -95,13 +95,6 @@ interface RecienteItem {
   };
 }
 
-// (PersonaRow no longer used — table works directly with PersonaCompartida[])
-interface PersonaRow {
-  nombreNorm: string;
-  isFirstForPersona: boolean;
-  numEmpresas: number;
-  empresa: PersonaEnEmpresa;
-}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -307,7 +300,7 @@ function AlertasPersonasTable({
   const toggle = (nombre: string) =>
     setExpanded((prev) => {
       const next = new Set(prev);
-      next.has(nombre) ? next.delete(nombre) : next.add(nombre);
+      if (next.has(nombre)) { next.delete(nombre); } else { next.add(nombre); }
       return next;
     });
 
@@ -329,10 +322,9 @@ function AlertasPersonasTable({
             (sum, e) => sum + (e.ingresos ?? 0), 0
           );
           return (
-            <>
+            <React.Fragment key={p.nombreNorm}>
               {/* ── Collapsed header row ── */}
               <tr
-                key={p.nombreNorm}
                 onClick={() => toggle(p.nombreNorm)}
                 className="border-b border-wr-border hover:bg-wr-surface2 cursor-pointer select-none"
               >
@@ -448,7 +440,7 @@ function AlertasPersonasTable({
                   ))}
                 </>
               )}
-            </>
+            </React.Fragment>
           );
         })}
       </tbody>
