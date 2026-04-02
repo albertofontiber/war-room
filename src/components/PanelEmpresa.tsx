@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
-import type { EmpresaDetalle, TipoActividad, TipoActo } from "@/types";
+import type { EmpresaDetalle, TipoActividad } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
