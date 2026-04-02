@@ -222,6 +222,24 @@ async function fetchPdfText(url: string): Promise<string> {
   if (!res.ok) throw new Error(`HTTP ${res.status} al descargar PDF ${url}`);
   const buf = Buffer.from(await res.arrayBuffer());
 
+  // pdfjs-dist v5 requires DOMMatrix (browser API). Polyfill for Node.js.
+  if (typeof globalThis.DOMMatrix === "undefined") {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (globalThis as any).DOMMatrix = class DOMMatrix {
+      m11=1;m12=0;m21=0;m22=1;m41=0;m42=0;
+      is2D=true; isIdentity=true;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      constructor(_init?: any) {}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      multiply(_o?: any) { return this; }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      translate(_x=0,_y=0,_z=0) { return this; }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      transformPoint(_p?: any) { return { x:0, y:0, z:0, w:1 }; }
+      toString() { return "matrix(1,0,0,1,0,0)"; }
+    };
+  }
+
   // Use pdfjs-dist directly (pure JS, no native binaries) via dynamic import
   // to avoid Next.js bundler issues with the top-level module graph.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
