@@ -222,45 +222,13 @@ async function fetchPdfText(url: string): Promise<string> {
   if (!res.ok) throw new Error(`HTTP ${res.status} al descargar PDF ${url}`);
   const buf = Buffer.from(await res.arrayBuffer());
 
-  // pdfjs-dist v5 requires DOMMatrix (browser API). Polyfill for Node.js.
-  if (typeof globalThis.DOMMatrix === "undefined") {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (globalThis as any).DOMMatrix = class DOMMatrix {
-      m11=1;m12=0;m21=0;m22=1;m41=0;m42=0;
-      is2D=true; isIdentity=true;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-      constructor(...args: any[]) {}
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-      multiply(...args: any[]) { return this; }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-      translate(...args: any[]) { return this; }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-      transformPoint(...args: any[]) { return { x:0, y:0, z:0, w:1 }; }
-      toString() { return "matrix(1,0,0,1,0,0)"; }
-    };
-  }
-
-  // Use pdfjs-dist directly (pure JS, no native binaries) via dynamic import
-  // to avoid Next.js bundler issues with the top-level module graph.
+  // pdf-parse@1.1.1: pure JS, no native deps, works in Node.js and Vercel.
+  // Dynamic import avoids Next.js bundler issues (the package reads a test
+  // file at module load time that doesn't exist in the build sandbox).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const pdfjsLib = await import("pdfjs-dist") as any;
-  pdfjsLib.GlobalWorkerOptions.workerSrc = "";
-
-  const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buf) });
-  const pdf = await loadingTask.promise;
-
-  let text = "";
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    text += content.items
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((item: any) => ("str" in item ? item.str : ""))
-      .join(" ");
-    text += "\n";
-  }
-  await loadingTask.destroy();
-  return text;
+  const pdfParse = (await import("pdf-parse")).default as any;
+  const result = await pdfParse(buf);
+  return result.text as string;
 }
 
 /**
