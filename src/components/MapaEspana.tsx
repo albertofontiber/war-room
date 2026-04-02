@@ -913,9 +913,9 @@ export default function MapaEspana() {
             id="markers-bg"
             type="circle"
             paint={{
-              "circle-color": "#1e2a3a",
+              "circle-color": "#2d2d2d",
               "circle-radius": sizeExpr as unknown as number,
-              "circle-opacity": 0.6,
+              "circle-opacity": 0.7,
               "circle-stroke-width": 0,
               "circle-stroke-opacity": 0,
             }}
