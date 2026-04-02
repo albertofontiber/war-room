@@ -188,6 +188,16 @@ export default function Navbar() {
         >
           Operaciones
         </button>
+        <button
+          onClick={() => setVista("grupos")}
+          className={`px-3 py-1 text-xs rounded transition-colors ${
+            vistaActual === "grupos"
+              ? "bg-wr-blue text-white"
+              : "text-wr-muted hover:text-wr-text"
+          }`}
+        >
+          Grupos
+        </button>
       </div>
 
       {/* Toggle métrica tamaño */}

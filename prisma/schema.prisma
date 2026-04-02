@@ -23,6 +23,8 @@ model Empresa {
   cif              String        @unique
   nombre           String
   direccion        String?
+  codigoPostal     String?
+  telefono         String?
   localidad        String?
   provincia        String?       // null hasta geocoding
   ccaa             String?       // null hasta geocoding
