@@ -151,7 +151,13 @@ function classifyActo(texto: string): ClasificacionActo {
   }
 
   // ── 2. Nombramientos / revocaciones ───────────────────────────────────────
-  if (/NOMBRAMIENTO|NOMBRAMIENTOS|CESES|DIMISIONES|REVOCACION|APODERADO|ADMINISTRADOR/.test(t)) {
+  // Positivo: hay un nombramiento explícito, o mención de cargo sin contexto negativo
+  const hasPositive = /NOMBRAMIENTO[S]?/.test(t);
+  const hasNegative = /\bCESE[S]?\b|\bDIMISION[ES]*\b|\bREVOCACION[ES]*\b/.test(t);
+  const hasCargo   = /APODERADO|ADMINISTRADOR/.test(t);
+
+  if (hasPositive || (hasCargo && !hasNegative)) {
+    // Acto de nombramiento (con o sin ceses simultáneos)
     const deteccion = detectarGrupo(texto);
     if (deteccion) {
       return {
@@ -161,6 +167,17 @@ function classifyActo(texto: string): ClasificacionActo {
       };
     }
     return { tipoActo: "nombramiento", grupoNombre: null, personaDetectada: null };
+  }
+
+  if (hasNegative || hasCargo) {
+    // Acto puramente negativo: cese / revocación sin nombramiento → "otros"
+    // (seguimos detectando grupo para trazabilidad)
+    const deteccion = detectarGrupo(texto);
+    return {
+      tipoActo: "otros",
+      grupoNombre: deteccion?.grupoNombre ?? null,
+      personaDetectada: deteccion?.personaDetectada ?? null,
+    };
   }
 
   // ── 3. Resto ──────────────────────────────────────────────────────────────
