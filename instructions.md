@@ -1,7 +1,7 @@
 # Fontiber War Room — Instrucciones para Claude
 
 Documento de contexto para continuar el desarrollo entre conversaciones.
-Actualizado: 2026-04-02 (sesión 6)
+Actualizado: 2026-04-02 (sesión 7)
 
 ---
 
@@ -9,7 +9,7 @@ Actualizado: 2026-04-02 (sesión 6)
 
 **War Room** es un dashboard interno de M&A para Fontiber, orientado al sector de PCI (protección contra incendios) y seguridad electrónica en España.
 
-- Universo actual: **5.017 empresas** (PCI + seg. electrónica + mixtas)
+- Universo actual: **5.022 empresas** (PCI + seg. electrónica + mixtas)
 - Stack: Next.js 14 App Router · TypeScript · Prisma · PostgreSQL (Supabase) · Zustand · react-map-gl / Mapbox GL JS · Tailwind CSS
 - Tema visual: oscuro, estilo "war room"
 - Auth: NextAuth (credentials — alberto/gabriel)
@@ -68,7 +68,8 @@ scripts/
   borme-test.ts                           # Test diario read-only
   borme-buscar-empresa.ts                 # Buscar empresa en historial BORME
   run-borme-today.ts                      # Ejecutar BORME manualmente: npx dotenv-cli -e .env.local -- npx tsx scripts/run-borme-today.ts YYYYMMDD
-  run-pipedrive.ts                        # Ejecutar Pipedrive sync manualmente
+  run-pipedrive.ts                        # Ejecutar Pipedrive sync manualmente (CIF-first matching)
+  check-pipedrive-unmatched.ts            # Muestra deals Dealflow sin match en BD (activos vs cerrados)
   check-crm-changes.ts                    # Ver cambios CRM del día + último log
   check-borme-today.ts                    # Ver alertas BORME creadas hoy con tipo y fecha
   pipedrive-sync.ts                       # Sync Pipedrive → CrmEstado (idempotente) — 155 matches
@@ -87,7 +88,7 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 UTC L
 
 ## 3. Funcionalidades completadas ✅
 
-- Mapa Mapbox con 5.017 empresas, clusters, marcadores por sector/prioridad
+- Mapa Mapbox con 5.022 empresas, clusters, marcadores por sector/prioridad
 - Jitter deterministico en coordenadas: offset ±44m por hash del CIF (evita solapamiento exacto)
 - Panel lateral de empresa: financieros, gráfico histórico, CRM, actividades, alertas BORME, scroll nativo
 - Filtros completos: CCAA + Provincia (cascada), Sector, Perímetro, Cepreven, Aerme, Grupo, Stage CRM, sliders duales (Ingresos, Margen Bruto %, EBITDA %)
@@ -105,8 +106,8 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 UTC L
 - **Grupos actualizados**: Grupo Fire (23), Plana Fabrega (12), Eurofesa (5), Scutum, Attlon ✅
 - **Perímetro actualizado**: 1.552 in / 2.805 out (desde Excel 29/03/2026) ✅
 - **Toggle perímetro** en PanelEmpresa persiste en BD vía `PATCH /api/empresas/[id]/perimetro` ✅
-- **Seguridad electrónica importada**: 666 nuevas + 399 mixtas, total 5.017 empresas ✅
-- **Financieros seg. electrónica**: 579 empresas macheadas, 1.331 registros financieros, 422 CPs geocodificados ✅
+- **Seguridad electrónica importada**: 666 nuevas + 399 mixtas + 5 adicionales sesión 7, total 5.022 empresas ✅
+- **Financieros seg. electrónica**: 579+ empresas macheadas, 1.331+ registros financieros, 422 CPs geocodificados ✅
 - **Grupos editables desde panel**: sección GESTIÓN (ámbar) con autocomplete + "Crear nuevo" ✅
 - **Clusters como donut pie chart**: proporciones de etapas CRM visibles en cada cluster ✅
 - **Filtro de Grupo en Sidebar**: pills para cada grupo, chips activos en la barra de filtros ✅
@@ -240,9 +241,9 @@ Vista accesible desde el botón **"Operaciones"** en la Navbar.
 
 ## 7. Integración Pipedrive ✅ COMPLETADA
 
-### Estado (01/04/2026)
+### Estado (02/04/2026)
 
-**155 empresas** sincronizadas. Cron diario: L-V 20:00 UTC (22:00 CEST) → `/api/cron/pipedrive`.
+**169 empresas** sincronizadas. Cron diario: L-V 20:00 UTC (22:00 CEST) → `/api/cron/pipedrive`.
 
 | Stage Pipedrive | stage_id | War Room `dealStage` |
 |---|---|---|
@@ -255,13 +256,19 @@ Vista accesible desde el botón **"Operaciones"** en la Navbar.
 | Portfolio | 12 | `portfolio` |
 | status=lost | — | `muerto` |
 
-Pipeline sincronizado: **Dealflow (id=1)**. El pipeline "Fundraising" (id=2) es para captación de capital propio → NO se sincroniza.
+Pipeline sincronizado: **Dealflow (id=1, stages 6-12)**. El pipeline "Fundraising" (id=2, stages 13-16) es para captación de capital propio → **ignorado por completo**.
 
-Matching: pipedriveOrgId (primario) → nombre normalizado exacto → core sin forma jurídica.
+Matching (por prioridad):
+1. **CIF** — campo personalizado en el deal (`CIF_FIELD_KEY = "f7524d9f2b0ba3ec93adfd71bf8c6135d9c42d00"`)
+2. **pipedriveOrgId** — vinculado previamente en CrmEstado
+3. **Nombre normalizado exacto**
+4. **Core nombre** — sin forma jurídica (SA, SL, etc.)
 
 **Fix parentéticos** (sesión 5): antes de normalizar el nombre de Pipedrive se eliminan los alias entre paréntesis.
 
-**Nota sobre CrmLog**: la tabla existe en el schema pero está vacía — el sync solo crea logs cuando detecta cambios de stage respecto al estado anterior. Al ser la primera ejecución con la tabla vacía, no generó logs. A partir de ahora sí los generará.
+**CIF en deals Dealflow**: campo personalizado "CIF" existente en el pipeline Dealflow. NO crear campos nuevos ni a nivel de organización. Añadir CIF directamente al deal para garantizar matching fiable.
+
+**Nota sobre CrmLog**: a partir del 02/04/2026 el cron genera logs de cambios de stage. Los primeros 12 registros se crearon ese día.
 
 ---
 
@@ -437,7 +444,7 @@ model CrmLog {
 
 ## 12. Roadmap
 
-### Estado sesión 02/04/2026
+### Estado sesión 02/04/2026 (sesión 7)
 
 | # | Tarea | Prioridad | Estado | Notas |
 |---|---|---|---|---|
@@ -445,6 +452,7 @@ model CrmLog {
 | B | Actualizar grupos desde Excel | Alta | ✅ | 5 grupos |
 | C | Actualizar perímetro desde Excel | Alta | ✅ | 1.552 in / 2.805 out |
 | D | Editar grupo desde panel lateral | Alta | ✅ | Sección GESTIÓN + autocomplete |
+| E | Matchear empresas Pipedrive | Media | ✅ | CIF-first matching; 3 eliminadas de Pipedrive, 2 enlazadas por CIF. 169 matched |
 | F | Cross-referencing BORME (personas) | Alta | ✅ | Catálogo señales + backfill |
 | G | Dashboard Operaciones M&A | Alta | ✅ | 3 sub-tabs |
 | K | Exportar tabla a Excel | Media | ✅ | |
@@ -453,24 +461,29 @@ model CrmLog {
 | N | CRM 8 etapas | Alta | ✅ | |
 | O | Email resumen diario | Alta | ✅ | 3 cifras + link a /daily/[fecha] |
 | P | Ampliar backfill BORME a 2 años | Alta | ✅ | Ejecutado 02/04/2026 |
-| Q | Financieros seg. electrónica | Alta | ✅ | 579 empresas, 1.331 financieros, 422 CPs geocodificados |
+| Q | Financieros seg. electrónica | Alta | ✅ | 579+ empresas, 1.331+ financieros, 422 CPs geocodificados |
 | R | Página /daily/[fecha] pública | Alta | ✅ | Sin login, diseño War Room |
-| E | Matchear ~5 empresas Pipedrive | Media | ⏳ | Sercoin, Protech-PCI, Segufoc, IFI, Gesticon |
-| H | Poblar BormePersona en cron | Media | ⏳ | Schema listo, falta lógica inserción |
-| I | Web enrichment | Media | ⏳ | Logos, LinkedIn empresas en funnel — bloqueado por SSL scraping |
-| — | Geocoding resto BD por CP | Media | ⏳ | Reverse Nominatim (lat/lng → postcode) — pausado hasta que webs vuelvan |
-| — | **Investigar 500 en endpoints cron Vercel** | Alta | ⏳ | Ver sección 15 |
+| S | 5 empresas faltantes seg. electrónica | Media | ✅ | Añadidas a BD con financieros y enPerimetro=true (sesión 7) |
+| — | 500 en endpoints cron Vercel | Alta | ✅ | Resuelto: devuelven 401 correctamente (sin CRON_SECRET) |
+| H | Poblar BormePersona en cron | Baja | ⏳ | Nice to have — tab ya funciona sin ella |
+| I | Web enrichment | Media | ⏳ | Logos, LinkedIn — bloqueado por SSL scraping |
+| — | Geocoding resto BD por CP | Media | ⏳ | Reverse Nominatim — pausado hasta que webs vuelvan |
+| — | Scraping admins/consejeros empresia.es | Media | ⏳ | Pendiente de que vuelva la web — ver detalle abajo |
 
 ### Detalle tareas pendientes
 
-**H — Poblar BormePersona en el cron**
-- Actualmente `processBormeDate()` NO crea registros BormePersona (solo guarda `personaDetectada` en BormeAlerta)
-- La tabla y el schema ya existen, solo falta la lógica de inserción
-- Requiere backfill sobre alertas existentes
+**H — Poblar BormePersona en el cron** (baja prioridad)
+- `processBormeDate()` NO crea registros BormePersona (solo guarda `personaDetectada` en BormeAlerta)
+- El tab "Alertas personas" ya funciona parseando alertas al vuelo — BormePersona sería optimización
+- La tabla y el schema ya existen, solo falta lógica de inserción + backfill
 
-**E — Matchear empresas Pipedrive sin CRM**
-- Pendientes: Sercoin, Protech-PCI, Segufoc, IFI, Gesticon, ~5 más
-- Ajustar nombres en Pipedrive o usar CIFs para upsert directo
+**Scraping administradores/consejeros de empresia.es** (pendiente de que vuelva la web)
+- Plan: scraping puntual de las **5.022 empresas** de la BD (no solo perímetro)
+- Guardar en `BormePersona` con `fuente='empresia'`
+- BORME tiene prioridad si hay solapamiento (más fiable, fecha exacta)
+- Throttling ~200 empresas/hora en background (~25h total)
+- Objetivo: cubrir cargos vigentes anteriores al backfill de 2 años del BORME
+- Complementar con BORME diario para cambios futuros
 
 ---
 
@@ -528,7 +541,7 @@ npx next lint
 - **force-dynamic**: todas las rutas API de datos deben tener `export const dynamic = "force-dynamic"`. Sin esto, Vercel puede cachear las respuestas.
 - **Cron schedule (vercel.json)**: Pipedrive + BORME a las 20:00 UTC (22:00 CEST) L-V. Email a las 06:00 UTC (08:00 CEST) Ma-Sa.
 - **BORME cron procesa HOY**: desde el 01/04/2026 el cron usa la fecha del día en curso. A las 22:00 CEST el BORME del día ya está publicado y completo.
-- **500 en endpoints cron vía HTTP**: `/api/cron/borme` y `/api/cron/pipedrive` devuelven 500 cuando se llaman directamente con curl. Causa desconocida (pendiente revisar logs en Vercel → Functions). Workaround: scripts locales.
+- **500 en endpoints cron — RESUELTO**: los endpoints `/api/cron/borme` y `/api/cron/pipedrive` devuelven **401** correctamente cuando se llaman sin `Authorization: Bearer {CRON_SECRET}`. El CRON_SECRET solo está en Vercel (no en `.env.local`). Para sync manual usar los scripts locales.
 - **Middleware**: excluye `login`, `daily`, `api/auth`, `api/cron`.
 - **Resend init**: `new Resend(apiKey)` debe estar DENTRO de la función, no a nivel módulo.
 - **reuseMaps + iconsReady**: con `reuseMaps` activo, `onLoad` no se dispara al remontar. Los iconos SDF se re-añaden en `handleIdle` con guard `map.hasImage()`.
@@ -541,3 +554,6 @@ npx next lint
 - **personas-compartidas — latest event wins**: para cada par (persona, empresa) se procesa la alerta más reciente (alertas en orden ASC). Si el último evento es revocación → `isActive=false`, si es nombramiento → `isActive=true`. Solo aparecen en el resultado pairs con `isActive=true`. Las alertas `otros` se incluyen en la query porque contienen las revocaciones.
 - **Z-order Mapbox GL en JSX**: el source `empresas-bg` debe declararse ANTES que el source `empresas` para que los puntos grises queden por debajo de los pins activos cuando hay filtros aplicados.
 - **borme-ring (pulse ámbar)**: solo se muestra si `hasBormeReciente=true` AND `enFiltro=true`. `hasBormeReciente` se activa solo para alertas de tipo fusion/adquisicion/posible_adquisicion en los últimos 7 días.
+- **Pipedrive — solo Dealflow**: el funnel de Fundraising (pipeline_id=2, stages 13-16) se ignora completamente. Solo existe el Dealflow (pipeline_id=1, stages 6-12). Los ~80 deals de FOs/inversores en stages 13-16 del mismo pipeline Dealflow tampoco se sincronizan (no matchean con empresas de la BD — correcto).
+- **Regla BD**: la BD es single source of truth. Salvo casos extremos, nunca añadir empresas nuevas a la BD manualmente — solo desde fuentes oficiales (Excel, BORME). Las 5 empresas de seg. electrónica añadidas en sesión 7 son la excepción confirmada por el usuario.
+- **Seg. electrónica — enPerimetro**: todas las empresas de sector `seguridad_electronica` (sin mixto) entran con `enPerimetro=true`. Las de sector `PCI` o `mixto` se gestionan desde el Excel de perímetro.
