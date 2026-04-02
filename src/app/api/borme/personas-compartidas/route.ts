@@ -33,6 +33,8 @@ const REJECT_WORDS = new Set([
   "DELEGADO", "DELEGADOS",
   "DATOS", "REGISTRALES", "REGISTRAL",
   "TOMO", "FOLIO", "HOJA", "SECCION", "INSCRIPCION",
+  // Fragmentos de palabras BORME que aparecen truncadas al inicio de un campo
+  "INISTRACION", "INISTRADOR", "CONCURSAL", "SOCIEDAD", "CONSTITUCION",
 ]);
 
 /** Devuelve true si el candidato tiene forma de nombre de persona */

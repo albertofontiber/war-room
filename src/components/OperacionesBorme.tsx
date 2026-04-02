@@ -329,6 +329,7 @@ function AlertasPersonasTable({
           <th className="px-3 py-2 w-6" />
           <Th k="nombre" label="Persona" align="left" />
           <Th k="numEmpresas" label="Empresas" align="right" />
+          <Th k="enPerimetro" label="En perímetro" align="right" />
           <Th k="ingresos" label="Ingresos totales" align="right" />
           <Th k="ultimaAparicion" label="Última incorporación" align="right" />
         </tr>
@@ -339,6 +340,7 @@ function AlertasPersonasTable({
           const totalIngresos = p.empresas.reduce(
             (sum, e) => sum + (e.ingresos ?? 0), 0
           );
+          const enPerimetroCount = p.empresas.filter((e) => e.enPerimetro).length;
           return (
             <React.Fragment key={p.nombreNorm}>
               {/* ── Collapsed header row ── */}
@@ -362,6 +364,12 @@ function AlertasPersonasTable({
                 </td>
                 <td className="px-3 py-2.5 text-right tabular-nums text-wr-muted">
                   {p.numEmpresas}
+                </td>
+                <td className="px-3 py-2.5 text-right tabular-nums">
+                  {enPerimetroCount > 0
+                    ? <span className="text-wr-blue font-medium">{enPerimetroCount}</span>
+                    : <span className="text-wr-border">—</span>
+                  }
                 </td>
                 <td className="px-3 py-2.5 text-right tabular-nums text-wr-text">
                   {totalIngresos > 0 ? fmtM(totalIngresos) : "—"}
@@ -618,6 +626,9 @@ export default function OperacionesBorme() {
       } else if (personaSortKey === "ingresos") {
         av = a.empresas.reduce((s, e) => s + (e.ingresos ?? 0), 0);
         bv = b.empresas.reduce((s, e) => s + (e.ingresos ?? 0), 0);
+      } else if (personaSortKey === "enPerimetro") {
+        av = a.empresas.filter((e) => e.enPerimetro).length;
+        bv = b.empresas.filter((e) => e.enPerimetro).length;
       } else return 0;
       return personaSortDir === "asc" ? av - bv : bv - av;
     });

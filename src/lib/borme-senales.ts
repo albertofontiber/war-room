@@ -28,6 +28,7 @@ export const GRUPOS_SENALES: GrupoSenales[] = [
       "ZALA NAVARRO ALEJANDRO",
       "REYES ROMERO LUIS ROBERTO",
       "GUITARD MALDONADO ALVARO",
+      "DE LA PASCUA ARAGON PABLO",
     ],
     keywordsDenominacion: ["FIRE BUSINESS"],
     keywordsSocioUnico: ["FIRE BUSINESS"],

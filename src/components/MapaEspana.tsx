@@ -838,7 +838,10 @@ export default function MapaEspana() {
                 ["==", ["get", "sector"], "PCI"],
                 ["boolean", ["get", "enFiltro"], true],
               ]}
-              paint={{
+              layout={{
+                "circle-sort-key": ["case", ["boolean", ["get", "enPerimetro"], false], 1, 0] as unknown as number,
+              }}
+            paint={{
                 "circle-color": CRM_COLOR as unknown as string,
                 "circle-radius": sizeExpr as unknown as number,
                 "circle-stroke-width": 2,
@@ -864,6 +867,7 @@ export default function MapaEspana() {
                   "icon-size": iconSizeExpr as unknown as number,
                   "icon-allow-overlap": true,
                   "icon-ignore-placement": true,
+                  "symbol-sort-key": ["case", ["boolean", ["get", "enPerimetro"], false], 1, 0],
                 }}
                 paint={{
                   "icon-color": CRM_COLOR as unknown as string,
@@ -888,6 +892,7 @@ export default function MapaEspana() {
                   "icon-size": iconSizeExpr as unknown as number,
                   "icon-allow-overlap": true,
                   "icon-ignore-placement": true,
+                  "symbol-sort-key": ["case", ["boolean", ["get", "enPerimetro"], false], 1, 0],
                 }}
                 paint={{
                   "icon-color": CRM_COLOR as unknown as string,
@@ -908,12 +913,11 @@ export default function MapaEspana() {
             id="markers-bg"
             type="circle"
             paint={{
-              "circle-color": "#64748b",
+              "circle-color": "#1e2a3a",
               "circle-radius": sizeExpr as unknown as number,
-              "circle-opacity": 0.08,
-              "circle-stroke-width": 1,
-              "circle-stroke-color": "#1e293b",
-              "circle-stroke-opacity": 0.1,
+              "circle-opacity": 0.6,
+              "circle-stroke-width": 0,
+              "circle-stroke-opacity": 0,
             }}
           />
         </Source>
