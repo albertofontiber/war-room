@@ -910,10 +910,10 @@ export default function MapaEspana() {
             paint={{
               "circle-color": "#64748b",
               "circle-radius": sizeExpr as unknown as number,
-              "circle-opacity": 0.35,
+              "circle-opacity": 0.08,
               "circle-stroke-width": 1,
               "circle-stroke-color": "#1e293b",
-              "circle-stroke-opacity": 0.4,
+              "circle-stroke-opacity": 0.1,
             }}
           />
         </Source>

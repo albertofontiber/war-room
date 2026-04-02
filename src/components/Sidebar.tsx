@@ -236,10 +236,12 @@ export default function Sidebar() {
     getVisiblesCount,
     getAvailableCCAA,
     getAvailableProvincias,
+    getAvailableGrupos,
   } = useWarRoomStore();
 
   const availableCCAA = getAvailableCCAA();
   const availableProvincias = getAvailableProvincias();
+  const availableGrupos = getAvailableGrupos();
 
   // ── Stats derivados del GeoJSON (sin filtro) ──────────────────────────
   const stats = useMemo(() => {
@@ -294,6 +296,10 @@ export default function Sidebar() {
     filtros.sector.forEach((v) => {
       const lbl = v === "PCI" ? "PCI" : v === "seguridad_electronica" ? "Seg. El." : "Mixto";
       chips.push({ label: `Sector: ${lbl}`, remove: () => toggleFiltroArray("sector", v) });
+    });
+    filtros.grupoId.forEach((v) => {
+      const grupo = availableGrupos.find((g) => g.id === v);
+      chips.push({ label: `Grupo: ${grupo?.nombre ?? v}`, remove: () => toggleFiltroArray("grupoId", v) });
     });
     filtros.crmStage.forEach((v) => {
       const lbls: Record<string, string> = {
@@ -506,6 +512,25 @@ export default function Sidebar() {
               ))}
             </div>
           </div>
+
+          {/* ── Grupo ── */}
+          {availableGrupos.length > 0 && (
+            <div>
+              <SectionLabel>Grupo</SectionLabel>
+              <div className="flex flex-wrap gap-1.5">
+                {availableGrupos.map((g) => (
+                  <TogglePill
+                    key={g.id}
+                    active={filtros.grupoId.includes(g.id)}
+                    onClick={() => toggleFiltroArray("grupoId", g.id)}
+                    color="blue"
+                  >
+                    {g.nombre}
+                  </TogglePill>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* ── Ingresos range slider ── */}
           <RangeSliderFiltro
