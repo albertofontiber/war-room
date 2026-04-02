@@ -83,7 +83,8 @@ interface PersonaCompartida {
 
 /**
  * Extrae pares (nombre_normalizado, rol) de un texto de BormeAlerta.
- * Busca patrones como "Adm. Solid.: APELLIDO1 APELLIDO2 NOMBRE"
+ * Solo extrae personas de secciones de NOMBRAMIENTO — ignora las de
+ * REVOCACION, CESE o DIMISION para evitar falsos positivos.
  */
 function extractPersonasFromDesc(
   desc: string
@@ -96,19 +97,42 @@ function extractPersonasFromDesc(
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/\s+/g, " ");
 
+  // Mapear posiciones de marcadores de sección positivos / negativos
+  const POSITIVE_RE = /\b(NOMBRAMIENTO[S]?)\b/g;
+  const NEGATIVE_RE = /\b(REVOCACION[ES]*|CESE[S]?|DIMISION[ES]*|BAJA)\b/g;
+
+  const markers: Array<{ pos: number; positive: boolean }> = [];
+  let mx: RegExpExecArray | null;
+  while ((mx = POSITIVE_RE.exec(t)) !== null) markers.push({ pos: mx.index, positive: true });
+  NEGATIVE_RE.lastIndex = 0;
+  while ((mx = NEGATIVE_RE.exec(t)) !== null) markers.push({ pos: mx.index, positive: false });
+  markers.sort((a, b) => a.pos - b.pos);
+
+  /** Devuelve true si la posición está en un bloque de nombramiento (no revocación) */
+  function isPositiveContext(pos: number): boolean {
+    if (markers.length === 0) return true; // sin marcadores → incluir todo
+    let last: typeof markers[0] | null = null;
+    for (const marker of markers) {
+      if (marker.pos < pos) last = marker;
+      else break;
+    }
+    return last === null ? true : last.positive;
+  }
+
   const result: Array<{ nombreNorm: string; rol: string | null }> = [];
 
   // Patrón: rol_abreviado seguido de ":" y un nombre en CAPS
-  // El ":?" hace el colon opcional para cubrir "Adm. Solid. NOMBRE" sin ":"
   const ROL_RE =
     /\b(ADM\.?\s*(?:SOLID\.?|MANCOM\.?|UNICO\.?|SUSTITUT\.?)?|ADMINISTRADOR(?:\s+(?:SOLIDARIO|MANCOMUNADO|UNICO|SUSTITUTO))?|APODERADO|CONSEJERO(?:\s+DELEGADO)?|LIQUIDADOR|DIRECTOR(?:\s+GENERAL)?|SECRETARIO)\s*:?\s*([A-Z][A-Z ]{4,60}?)(?=\s*[;.,()\d]|$)/g;
 
   let m: RegExpExecArray | null;
   while ((m = ROL_RE.exec(t)) !== null) {
+    // Ignorar si este match está dentro de una sección de revocación/cese
+    if (!isPositiveContext(m.index)) continue;
+
     const rolRaw = m[1].trim();
     const namesPart = m[2];
 
-    // Puede haber varios nombres separados por ";"
     const names = namesPart.split(";").map((n) => n.trim());
     for (const rawName of names) {
       const name = rawName.replace(/[.,;]+$/, "").trim();
