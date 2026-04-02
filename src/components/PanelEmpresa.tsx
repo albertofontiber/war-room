@@ -55,13 +55,29 @@ const ACTIVIDAD_ICON: Record<TipoActividad, string> = {
   reunion: "R",
 };
 
-const ACTO_LABEL: Record<TipoActo, string> = {
-  adquisicion: "Adquisición",
-  disolucion: "Disolución",
-  cambio_titular: "Cambio titular",
-  fusion: "Fusión",
-  otros: "Otros",
+const BORME_TIPO: Record<string, { label: string; pill: string; dot: string }> = {
+  fusion:              { label: "Fusión",        pill: "bg-purple-500/20 text-purple-300 border-purple-500/30", dot: "bg-purple-400" },
+  adquisicion:         { label: "Adquisición",   pill: "bg-wr-blue/20 text-wr-blue border-wr-blue/30",         dot: "bg-wr-blue" },
+  posible_adquisicion: { label: "Posible adq.",  pill: "bg-orange-500/20 text-orange-300 border-orange-500/30", dot: "bg-orange-400" },
+  nombramiento_grupo:  { label: "Nombramiento",  pill: "bg-green-500/20 text-green-300 border-green-500/30",   dot: "bg-green-400" },
+  nombramiento:        { label: "Nombramiento",  pill: "bg-green-500/20 text-green-300 border-green-500/30",   dot: "bg-green-400" },
+  cambio_denominacion: { label: "Rebranding",    pill: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30", dot: "bg-yellow-400" },
+  disolucion:          { label: "Disolución",    pill: "bg-red-500/20 text-red-300 border-red-500/30",         dot: "bg-red-400" },
+  ampliacion_capital:  { label: "Amp. capital",  pill: "bg-teal-500/20 text-teal-300 border-teal-500/30",      dot: "bg-teal-400" },
+  otros:               { label: "Otro acto",     pill: "bg-wr-surface2 text-wr-muted border-wr-border",        dot: "bg-wr-muted" },
 };
+
+function getBormeTipo(tipoActo: string) {
+  return BORME_TIPO[tipoActo] ?? BORME_TIPO.otros;
+}
+
+function bormeContexto(tipoActo: string, grupoNombre: string | null | undefined): string | null {
+  if (!grupoNombre) return null;
+  if (tipoActo === "posible_adquisicion" || tipoActo === "nombramiento_grupo") return `por ${grupoNombre}`;
+  if (tipoActo === "adquisicion") return `por ${grupoNombre}`;
+  if (tipoActo === "fusion") return `con ${grupoNombre}`;
+  return null;
+}
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
@@ -293,6 +309,7 @@ export default function PanelEmpresa() {
 
   const [empresa, setEmpresa] = useState<EmpresaDetalle | null>(null);
   const [loading, setLoading] = useState(true);
+  const [expandBorme, setExpandBorme] = useState(false);
   const [toggling, setToggling] = useState(false);
   const [editingGrupo, setEditingGrupo] = useState(false);
   const [grupoInput, setGrupoInput] = useState("");
@@ -306,6 +323,7 @@ export default function PanelEmpresa() {
   useEffect(() => {
     if (!empresaSeleccionadaId) return;
     setLoading(true);
+    setExpandBorme(false);
     fetch(`/api/empresas/${empresaSeleccionadaId}`)
       .then((r) => r.json())
       .then((data) => setEmpresa(data))
@@ -820,44 +838,60 @@ export default function PanelEmpresa() {
               <Separator className="bg-wr-border" />
               <div>
                 <SectionLabel>
-                  Alertas BORME ({empresa.bormeAlertas.length})
+                  Señales BORME ({empresa.bormeAlertas.length})
                 </SectionLabel>
                 <div className="space-y-2">
-                  {empresa.bormeAlertas.map((a) => (
-                    <div
-                      key={a.id}
-                      className="flex items-start gap-2 text-xs"
-                    >
-                      <div className="w-1.5 h-1.5 rounded-full bg-wr-amber flex-shrink-0 mt-1.5" />
-                      <div className="min-w-0 flex-1">
-                        <p className="text-wr-text font-medium">
-                          {ACTO_LABEL[a.tipoActo as TipoActo] ?? a.tipoActo}
-                        </p>
-                        {a.descripcion && (
-                          <p className="text-wr-muted leading-snug line-clamp-2">
-                            {a.descripcion}
-                          </p>
-                        )}
-                        <p className="text-wr-hint text-[10px] mt-0.5">
-                          {fmtDate(a.fecha)}
-                          {a.urlBorme && (
-                            <>
-                              {" · "}
-                              <a
-                                href={a.urlBorme}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-wr-blue hover:underline"
-                              >
-                                Ver BORME ↗
-                              </a>
-                            </>
+                  {(expandBorme ? empresa.bormeAlertas : empresa.bormeAlertas.slice(0, 5)).map((a) => {
+                    const cfg = getBormeTipo(a.tipoActo);
+                    const contexto = bormeContexto(a.tipoActo, a.grupoInferido?.nombre);
+                    return (
+                      <div key={a.id} className="flex items-start gap-2 text-xs">
+                        <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5 ${cfg.dot}`} />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold border ${cfg.pill}`}>
+                              {cfg.label}
+                            </span>
+                            {contexto && (
+                              <span className="text-wr-muted text-[10px]">{contexto}</span>
+                            )}
+                          </div>
+                          {a.descripcion && (
+                            <p className="text-wr-muted leading-snug line-clamp-2 mt-0.5">
+                              {a.descripcion}
+                            </p>
                           )}
-                        </p>
+                          <p className="text-wr-hint text-[10px] mt-0.5">
+                            {fmtDate(a.fecha)}
+                            {a.urlBorme && (
+                              <>
+                                {" · "}
+                                <a
+                                  href={a.urlBorme}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-wr-blue hover:underline"
+                                >
+                                  Ver BORME ↗
+                                </a>
+                              </>
+                            )}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
+                {empresa.bormeAlertas.length > 5 && (
+                  <button
+                    onClick={() => setExpandBorme(!expandBorme)}
+                    className="mt-2 text-[10px] text-wr-blue hover:underline"
+                  >
+                    {expandBorme
+                      ? "Ver menos ↑"
+                      : `Ver todas (${empresa.bormeAlertas.length}) ↓`}
+                  </button>
+                )}
               </div>
             </>
           )}

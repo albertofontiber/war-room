@@ -33,11 +33,12 @@ export async function GET(
       },
       bormeAlertas: {
         orderBy: { fecha: "desc" },
-        take: 10,
+        take: 20,
         select: {
           id: true,
           fecha: true,
           tipoActo: true,
+          grupoInferido: { select: { nombre: true } },
           descripcion: true,
           urlBorme: true,
           leido: true,

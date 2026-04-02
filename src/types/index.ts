@@ -77,7 +77,8 @@ export interface EmpresaDetalle {
   bormeAlertas: {
     id: number;
     fecha: string;
-    tipoActo: TipoActo;
+    tipoActo: string;
+    grupoInferido: { nombre: string } | null;
     descripcion: string | null;
     urlBorme: string | null;
     leido: boolean;
