@@ -776,6 +776,26 @@ export default function MapaEspana() {
         onIdle={handleIdle}
         reuseMaps
       >
+        {/* ── Empresas fuera del filtro (fondo, sin cluster, opacidad baja) ── */}
+        {/* Declarado ANTES del source principal para que quede por debajo en z-order ── */}
+        <Source
+          id="empresas-bg"
+          type="geojson"
+          data={(geojsonBg ?? { type: "FeatureCollection", features: [] }) as unknown as GeoJSON.FeatureCollection}
+        >
+          <Layer
+            id="markers-bg"
+            type="circle"
+            paint={{
+              "circle-color": "#2d2d2d",
+              "circle-radius": sizeExpr as unknown as number,
+              "circle-opacity": 0.7,
+              "circle-stroke-width": 0,
+              "circle-stroke-opacity": 0,
+            }}
+          />
+        </Source>
+
         <Source
             id="empresas"
             type="geojson"
@@ -818,6 +838,7 @@ export default function MapaEspana() {
                 "all",
                 ["!", ["has", "point_count"]],
                 ["boolean", ["get", "hasBormeReciente"], false],
+                ["boolean", ["get", "enFiltro"], true],
               ]}
               paint={{
                 "circle-radius": 8,
@@ -901,26 +922,6 @@ export default function MapaEspana() {
               />
             )}
           </Source>
-
-        {/* ── Empresas fuera del filtro (fondo, sin cluster, opacidad baja) ── */}
-        {/* Siempre montado para evitar errores de removeSource en Mapbox GL */}
-        <Source
-          id="empresas-bg"
-          type="geojson"
-          data={(geojsonBg ?? { type: "FeatureCollection", features: [] }) as unknown as GeoJSON.FeatureCollection}
-        >
-          <Layer
-            id="markers-bg"
-            type="circle"
-            paint={{
-              "circle-color": "#2d2d2d",
-              "circle-radius": sizeExpr as unknown as number,
-              "circle-opacity": 0.7,
-              "circle-stroke-width": 0,
-              "circle-stroke-opacity": 0,
-            }}
-          />
-        </Source>
 
         {/* ── Cluster pie chart markers ── */}
         {clusterMarkers.map((marker) => (

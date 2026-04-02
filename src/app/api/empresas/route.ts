@@ -32,13 +32,14 @@ export async function GET() {
         select: { dealStage: true, pipedriveOrgId: true },
       },
       bormeAlertas: {
-        select: { id: true, fecha: true },
+        select: { id: true, fecha: true, tipoActo: true },
       },
     },
   });
 
-  const cutoff24m = new Date();
-  cutoff24m.setMonth(cutoff24m.getMonth() - 24);
+  const cutoff7d = new Date();
+  cutoff7d.setDate(cutoff7d.getDate() - 7);
+  const PULSE_TIPOS = new Set(["fusion", "adquisicion", "posible_adquisicion"]);
 
   const features = empresas
     .filter((e) => e.lat !== null && e.lng !== null)
@@ -58,7 +59,7 @@ export async function GET() {
 
       const bormeAlertasCount = empresa.bormeAlertas.length;
       const hasBormeReciente = empresa.bormeAlertas.some(
-        (a) => new Date(a.fecha) > cutoff24m
+        (a) => PULSE_TIPOS.has(a.tipoActo) && new Date(a.fecha) > cutoff7d
       );
 
       const dealStage = empresa.crmEstado?.dealStage ?? null;
