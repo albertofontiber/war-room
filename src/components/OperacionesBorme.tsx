@@ -291,9 +291,15 @@ function OperacionRow({
 function AlertasPersonasTable({
   personas,
   onVerPerfil,
+  sortKey,
+  sortDir,
+  onSort,
 }: {
   personas: PersonaCompartida[];
   onVerPerfil: (id: number) => void;
+  sortKey: string;
+  sortDir: "asc" | "desc";
+  onSort: (key: string) => void;
 }) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
@@ -304,15 +310,27 @@ function AlertasPersonasTable({
       return next;
     });
 
+  const Th = ({ k, label, align = "left" }: { k: string; label: string; align?: "left" | "right" }) => (
+    <th
+      onClick={() => onSort(k)}
+      className={`px-3 py-2 font-medium whitespace-nowrap cursor-pointer select-none hover:text-wr-text transition-colors text-${align} ${sortKey === k ? "text-wr-blue" : "text-wr-hint"}`}
+    >
+      {label}
+      <span className="ml-1 text-[9px]">
+        {sortKey === k ? (sortDir === "asc" ? "↑" : "↓") : "↕"}
+      </span>
+    </th>
+  );
+
   return (
     <table className="w-full text-xs border-collapse">
       <thead className="sticky top-0 z-10">
-        <tr className="bg-wr-surface border-b border-wr-border text-wr-hint">
-          <th className="px-3 py-2 text-left font-medium w-6" />
-          <th className="px-3 py-2 text-left font-medium">Persona</th>
-          <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Empresas</th>
-          <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Ingresos totales</th>
-          <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Última incorporación</th>
+        <tr className="bg-wr-surface border-b border-wr-border">
+          <th className="px-3 py-2 w-6" />
+          <Th k="nombre" label="Persona" align="left" />
+          <Th k="numEmpresas" label="Empresas" align="right" />
+          <Th k="ingresos" label="Ingresos totales" align="right" />
+          <Th k="ultimaAparicion" label="Última incorporación" align="right" />
         </tr>
       </thead>
       <tbody>
@@ -587,12 +605,19 @@ export default function OperacionesBorme() {
 
     // Sort
     return [...filtered].sort((a, b) => {
+      if (personaSortKey === "nombre") {
+        const cmp = a.nombreNorm.localeCompare(b.nombreNorm);
+        return personaSortDir === "asc" ? cmp : -cmp;
+      }
       let av: number, bv: number;
       if (personaSortKey === "ultimaAparicion") {
         av = new Date(a.ultimaAparicion).getTime();
         bv = new Date(b.ultimaAparicion).getTime();
       } else if (personaSortKey === "numEmpresas") {
         av = a.numEmpresas; bv = b.numEmpresas;
+      } else if (personaSortKey === "ingresos") {
+        av = a.empresas.reduce((s, e) => s + (e.ingresos ?? 0), 0);
+        bv = b.empresas.reduce((s, e) => s + (e.ingresos ?? 0), 0);
       } else return 0;
       return personaSortDir === "asc" ? av - bv : bv - av;
     });
@@ -715,20 +740,6 @@ export default function OperacionesBorme() {
           </div>
         )}
 
-        {/* Sort options — personas only */}
-        {subVista === "alertas_personas" && (
-          <div className="flex items-center gap-2 text-[10px] text-wr-hint">
-            <span>Ordenar por:</span>
-            {(["ultimaAparicion", "numEmpresas"] as const).map((k) => (
-              <button key={k} onClick={() => togglePersonaSort(k)}
-                className={`px-2 py-0.5 rounded border transition-colors ${personaSortKey === k ? "border-wr-blue text-wr-blue bg-wr-blue/10" : "border-wr-border hover:border-wr-muted"}`}
-              >
-                {k === "ultimaAparicion" ? "Fecha" : "Nº empresas"}
-                <SortIcon k={k} activeKey={personaSortKey} dir={personaSortDir} />
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* Date range */}
         <div className="flex items-center gap-1.5 text-[10px] text-wr-hint">
@@ -865,7 +876,13 @@ export default function OperacionesBorme() {
               </div>
             )}
             {!loadingPersonas && !errorPersonas && filteredPersonas.length > 0 && (
-              <AlertasPersonasTable personas={filteredPersonas} onVerPerfil={handleVerPerfil} />
+              <AlertasPersonasTable
+                personas={filteredPersonas}
+                onVerPerfil={handleVerPerfil}
+                sortKey={personaSortKey}
+                sortDir={personaSortDir}
+                onSort={togglePersonaSort}
+              />
             )}
           </>
         )}
