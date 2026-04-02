@@ -19,6 +19,9 @@ const STAGE_MAP: Record<number, string> = {
   12: "portfolio",
 };
 
+// Campo personalizado CIF en deals del pipeline Dealflow
+const CIF_FIELD_KEY = "f7524d9f2b0ba3ec93adfd71bf8c6135d9c42d00";
+
 function coreNombre(nombre: string): string {
   return nombre
     .replace(/\s*\(.*?\)\s*/g, " ")  // elimina sufijos entre paréntesis, ej: "(Prodein)"
@@ -58,12 +61,14 @@ export async function GET(req: NextRequest) {
 
   try {
     const empresas = await prisma.empresa.findMany({
-      select: { id: true, nombre: true },
+      select: { id: true, nombre: true, cif: true },
     });
 
+    const cifToId = new Map<string, number>();
     const nombreToId = new Map<string, number>();
     const coreToId = new Map<string, number>();
     for (const e of empresas) {
+      if (e.cif) cifToId.set(e.cif.toUpperCase().trim(), e.id);
       const norm = normalizeNombre(e.nombre);
       const core = coreNombre(norm);
       nombreToId.set(norm, e.id);
@@ -105,12 +110,16 @@ export async function GET(req: NextRequest) {
         dealStage = STAGE_MAP[deal.stage_id as number] ?? "prospecto";
       }
 
+      // 1ª prioridad: CIF del deal
+      const dealCif: string | null = (deal[CIF_FIELD_KEY] as string) ?? null;
+      const byCif = dealCif ? cifToId.get(dealCif.toUpperCase().trim()) ?? null : null;
+      // 2ª prioridad: orgId ya vinculado en CrmEstado
       const byOrgId = orgId != null ? orgIdToEmpresaId.get(String(orgId)) : null;
-      // Limpiar sufijos entre paréntesis antes de normalizar, ej: "Empresa SL (Alias)" → "Empresa SL"
+      // 3ª prioridad: nombre normalizado / core
       const orgNameClean = orgName.replace(/\s*\(.*?\)\s*/g, " ").trim();
       const normOrg = normalizeNombre(orgNameClean);
       const coreOrg = coreNombre(normOrg);
-      const empresaId = byOrgId ?? nombreToId.get(normOrg) ?? coreToId.get(coreOrg) ?? null;
+      const empresaId = byCif ?? byOrgId ?? nombreToId.get(normOrg) ?? coreToId.get(coreOrg) ?? null;
 
       if (!empresaId) { skipped++; continue; }
 

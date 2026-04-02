@@ -14,6 +14,8 @@ const STAGE_MAP: Record<number, string> = {
   9: "analisis", 10: "LOI enviada", 11: "execution", 12: "portfolio",
 };
 
+const CIF_FIELD_KEY = "f7524d9f2b0ba3ec93adfd71bf8c6135d9c42d00";
+
 function coreNombre(nombre: string): string {
   return nombre
     .replace(/\s*\(.*?\)\s*/g, " ")
@@ -38,10 +40,12 @@ async function fetchAllDeals() {
 async function main() {
   if (!API_KEY) { console.error("PIPEDRIVE_API_KEY not set"); process.exit(1); }
 
-  const empresas = await prisma.empresa.findMany({ select: { id: true, nombre: true } });
+  const empresas = await prisma.empresa.findMany({ select: { id: true, nombre: true, cif: true } });
+  const cifToId = new Map<string, number>();
   const nombreToId = new Map<string, number>();
   const coreToId = new Map<string, number>();
   for (const e of empresas) {
+    if (e.cif) cifToId.set(e.cif.toUpperCase().trim(), e.id);
     const norm = normalizeNombre(e.nombre);
     const core = coreNombre(norm);
     nombreToId.set(norm, e.id);
@@ -70,10 +74,15 @@ async function main() {
     else if (deal.status === "won") dealStage = "portfolio";
     else dealStage = STAGE_MAP[deal.stage_id as number] ?? "prospecto";
 
+    // 1ª prioridad: CIF del deal
+    const dealCif = (deal[CIF_FIELD_KEY] as string) ?? null;
+    const byCif = dealCif ? cifToId.get(dealCif.toUpperCase().trim()) ?? null : null;
+    // 2ª prioridad: orgId ya vinculado en CrmEstado
     const byOrgId = orgId != null ? orgIdToEmpresaId.get(String(orgId)) : null;
+    // 3ª prioridad: nombre normalizado / core
     const normOrg = normalizeNombre(orgName.replace(/\s*\(.*?\)\s*/g, " ").trim());
     const coreOrg = coreNombre(normOrg);
-    const empresaId = byOrgId ?? nombreToId.get(normOrg) ?? coreToId.get(coreOrg) ?? null;
+    const empresaId = byCif ?? byOrgId ?? nombreToId.get(normOrg) ?? coreToId.get(coreOrg) ?? null;
     if (!empresaId) { skipped++; continue; }
 
     const prevStage = existingStageMap.get(empresaId);
