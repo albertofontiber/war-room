@@ -14,7 +14,6 @@
  *   Insertar BormeAlerta para los matches
  */
 
-import { PDFParse } from "pdf-parse";
 import { prisma } from "./prisma";
 import { detectarGrupo } from "./borme-senales";
 
@@ -222,10 +221,28 @@ async function fetchPdfText(url: string): Promise<string> {
   });
   if (!res.ok) throw new Error(`HTTP ${res.status} al descargar PDF ${url}`);
   const buf = Buffer.from(await res.arrayBuffer());
-  const parser = new PDFParse({ data: buf });
-  const result = await parser.getText();
-  await parser.destroy();
-  return result.text;
+
+  // Use pdfjs-dist directly (pure JS, no native binaries) via dynamic import
+  // to avoid Next.js bundler issues with the top-level module graph.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pdfjsLib = await import("pdfjs-dist") as any;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "";
+
+  const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buf) });
+  const pdf = await loadingTask.promise;
+
+  let text = "";
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((item: any) => ("str" in item ? item.str : ""))
+      .join(" ");
+    text += "\n";
+  }
+  await loadingTask.destroy();
+  return text;
 }
 
 /**
