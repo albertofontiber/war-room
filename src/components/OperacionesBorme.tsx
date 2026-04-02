@@ -52,6 +52,7 @@ interface PersonaEnEmpresa {
   grupoId: number | null;
   rol: string | null;
   ultimaFecha: string;
+  urlBorme: string | null;
   enPerimetro: boolean;
   ccaa: string | null;
   provincia: string | null;
@@ -389,6 +390,7 @@ function AlertasPersonasTable({
                     <td className="px-3 py-1 text-[9px] text-wr-hint font-medium text-right">Rol</td>
                     <td className="px-3 py-1 text-[9px] text-wr-hint font-medium text-right">Ingresos</td>
                     <td className="px-3 py-1 text-[9px] text-wr-hint font-medium text-right">EBITDA · GM%</td>
+                    <td className="px-3 py-1 text-[9px] text-wr-hint font-medium text-right">Fecha · BORME</td>
                   </tr>
                   {p.empresas.map((emp) => (
                     <tr
@@ -428,10 +430,9 @@ function AlertasPersonasTable({
                             </a>
                           )}
                         </div>
-                        <div className="text-[9px] text-wr-hint mt-0.5">
-                          {fmtFechaShort(emp.ultimaFecha)}
-                          {emp.provincia ? ` · ${emp.provincia}` : ""}
-                        </div>
+                        {emp.provincia && (
+                          <div className="text-[9px] text-wr-hint mt-0.5">{emp.provincia}</div>
+                        )}
                       </td>
                       {/* Rol */}
                       <td className="px-3 py-2 text-wr-muted text-[10px] whitespace-nowrap text-right">
@@ -460,6 +461,28 @@ function AlertasPersonasTable({
                           <span className="text-wr-hint text-[9px] ml-2">
                             GM: {fmtPct(emp.margenBrutoPct)}
                           </span>
+                        )}
+                      </td>
+                      {/* Fecha + link BORME */}
+                      <td className="px-3 py-2 text-right whitespace-nowrap">
+                        <span className="text-[10px] text-wr-muted tabular-nums">
+                          {fmtFechaShort(emp.ultimaFecha)}
+                        </span>
+                        {emp.urlBorme && (
+                          <a
+                            href={emp.urlBorme}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="ml-1.5 inline-flex items-center text-wr-hint hover:text-wr-blue transition-colors"
+                            title="Ver en BORME"
+                          >
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                              <polyline points="15 3 21 3 21 9" />
+                              <line x1="10" y1="14" x2="21" y2="3" />
+                            </svg>
+                          </a>
                         )}
                       </td>
                     </tr>

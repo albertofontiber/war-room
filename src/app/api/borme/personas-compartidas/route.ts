@@ -67,6 +67,7 @@ interface PersonaEnEmpresa extends EmpresaFinanciero {
   grupoId: number | null;
   rol: string | null;
   ultimaFecha: string;
+  urlBorme: string | null;
   enPerimetro: boolean;
   ccaa: string | null;
   provincia: string | null;
@@ -172,6 +173,7 @@ export async function GET() {
         empresaId: true,
         descripcion: true,
         fecha: true,
+        urlBorme: true,
         empresa: {
           select: {
             id: true,
@@ -252,6 +254,8 @@ export async function GET() {
           empresasMap.set(eid, {
             ...base,
             rol: isRevocacion ? (existing?.rol ?? rol) : rol,
+            // Para revocaciones conservamos la urlBorme del nombramiento previo
+            urlBorme: isRevocacion ? (existing?.urlBorme ?? null) : (alerta.urlBorme ?? null),
             ultimaFecha: alerta.fecha.toISOString(),
             fechaDate: alerta.fecha,
             isActive: !isRevocacion, // revocación → inactivo, nombramiento → activo
