@@ -223,10 +223,10 @@ async function fetchPdfText(url: string): Promise<string> {
   const buf = Buffer.from(await res.arrayBuffer());
 
   // pdf-parse@1.1.1: pure JS, no native deps, works in Node.js and Vercel.
-  // Dynamic import avoids Next.js bundler issues (the package reads a test
-  // file at module load time that doesn't exist in the build sandbox).
+  // Import from the lib directly to bypass index.js which reads a test PDF
+  // file at load time (ENOENT when the test/data dir doesn't exist).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const pdfParse = (await import("pdf-parse")).default as any;
+  const pdfParse = (await import("pdf-parse/lib/pdf-parse.js")).default as any;
   const result = await pdfParse(buf);
   return result.text as string;
 }
