@@ -49,6 +49,7 @@ model Empresa {
   enPerimetroAt    DateTime?
   scoreInicial     Float?
   score            Float?
+  anioConstitucion Int?          // año de constitución (fuente: empresia)
   // Control
   fuente           String        @default("excel_seed")
   updatedAt        DateTime      @updatedAt
@@ -56,6 +57,7 @@ model Empresa {
   financieros      Financiero[]
   bormeAlertas     BormeAlerta[]
   bormePersonas    BormePersona[]
+  personasCargo    PersonaCargo[]
   crmEstado        CrmEstado?
   crmLogs          CrmLog[]
   actividades      Actividad[]
@@ -108,6 +110,25 @@ model BormePersona {
   @@index([nombreNorm])
   @@index([empresaId])
   @@index([alertaId])
+}
+
+model PersonaCargo {
+  id          Int      @id @default(autoincrement())
+  empresaId   Int
+  empresa     Empresa  @relation(fields: [empresaId], references: [id])
+  nombreNorm  String   // tokens sin partículas, ordenados alfabéticamente, mayúsculas sin tildes: "DAVID LOPEZ LOPEZ"
+  nombreOrig  String   // tal como aparece en la fuente: "David López López"
+  rol         String?  // "administrador"|"consejero"|"apoderado"|etc.
+  fechaDesde  DateTime?
+  esJuridica  Boolean  @default(false) // true = persona jurídica (empresa), false = persona física
+  vigente     Boolean  @default(true)
+  fuente      String   // "empresia" | "borme"
+  scrapedAt   DateTime @default(now())
+
+  @@unique([empresaId, nombreNorm])
+  @@index([nombreNorm])
+  @@index([empresaId])
+  @@index([esJuridica])
 }
 
 model CrmEstado {
