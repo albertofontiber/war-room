@@ -16,6 +16,7 @@
 
 import { prisma } from "./prisma";
 import { detectarGrupo } from "./borme-senales";
+import { bormePersonaToCargoKey } from "./normalize";
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -301,6 +302,151 @@ function parsePdfEntradas(text: string, pdfUrl: string): EntradaBorme[] {
   return entradas;
 }
 
+// ─── Parser de personas para PersonaCargo ────────────────────────────────────
+
+const REJECT_WORDS = new Set([
+  "A", "Y", "O", "E",
+  "SOLIDARIOS", "SOLIDARIO", "SOLIDARIAS", "SOLIDARIA",
+  "MANCOMUNADOS", "MANCOMUNADO", "MANCOMUNADAS", "MANCOMUNADA",
+  "ADMINISTRADORES", "ADMINISTRADOR", "APODERADOS", "APODERADO",
+  "CONSEJEROS", "CONSEJERO", "LIQUIDADORES", "LIQUIDADOR",
+  "UNICO", "UNICOS", "UNICA", "UNICAS",
+  "UNIPERSONAL", "UNIPERSONALIDAD",
+  "SUSTITUTO", "SUSTITUTOS", "DELEGADO", "DELEGADOS",
+  "DATOS", "REGISTRALES", "REGISTRAL",
+  "TOMO", "FOLIO", "HOJA", "SECCION", "INSCRIPCION",
+  "INISTRACION", "INISTRADOR", "CONCURSAL", "SOCIEDAD", "CONSTITUCION",
+]);
+
+function isLikelyPersonName(name: string): boolean {
+  const words = name.split(/\s+/);
+  if (words.length < 2 || words.length > 5) return false;
+  if (words.some((w) => w.length === 1)) return false;
+  if (words.some((w) => REJECT_WORDS.has(w))) return false;
+  if (words.some((w) => /\d/.test(w))) return false;
+  return true;
+}
+
+function normalizeRolBorme(raw: string): string {
+  const r = raw.toUpperCase().replace(/\s+/g, " ").trim();
+  if (/ADM.*SOLID|ADMINISTRADOR.*SOLIDARIO/.test(r)) return "administrador_solidario";
+  if (/ADM.*MANCOM|ADMINISTRADOR.*MANCOMUNADO/.test(r)) return "administrador_mancomunado";
+  if (/ADM.*UNICO|ADMINISTRADOR.*UNICO/.test(r)) return "administrador_unico";
+  if (/ADM|ADMINISTRADOR/.test(r)) return "administrador";
+  if (/APODERADO/.test(r)) return "apoderado";
+  if (/CONSEJERO\s*DELEGADO/.test(r)) return "consejero_delegado";
+  if (/CONSEJERO/.test(r)) return "consejero";
+  if (/LIQUIDADOR/.test(r)) return "liquidador";
+  if (/DIRECTOR/.test(r)) return "director";
+  return "administrador";
+}
+
+function extractPersonasFromText(
+  desc: string
+): Array<{ nombreBorme: string; rol: string; isRevocacion: boolean }> {
+  if (!desc) return [];
+  const t = desc
+    .toUpperCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ");
+
+  const POSITIVE_RE = /\b(NOMBRAMIENTO[S]?)\b/g;
+  const NEGATIVE_RE = /\b(REVOCACION[ES]*|CESE[S]?|DIMISION[ES]*|BAJA)\b/g;
+  const markers: Array<{ pos: number; positive: boolean }> = [];
+
+  let mx: RegExpExecArray | null;
+  while ((mx = POSITIVE_RE.exec(t)) !== null) markers.push({ pos: mx.index, positive: true });
+  NEGATIVE_RE.lastIndex = 0;
+  while ((mx = NEGATIVE_RE.exec(t)) !== null) markers.push({ pos: mx.index, positive: false });
+  markers.sort((a, b) => a.pos - b.pos);
+
+  function getContext(pos: number): boolean | null {
+    if (markers.length === 0) return null;
+    let last: typeof markers[0] | null = null;
+    for (const marker of markers) {
+      if (marker.pos < pos) last = marker;
+      else break;
+    }
+    return last === null ? null : last.positive;
+  }
+
+  const ROL_RE =
+    /\b(ADM\.?\s*(?:SOLID\.?|MANCOM\.?|UNICO\.?|SUSTITUT\.?)?|ADMINISTRADOR(?:\s+(?:SOLIDARIO|MANCOMUNADO|UNICO|SUSTITUTO))?|APODERADO|CONSEJERO(?:\s+DELEGADO)?|LIQUIDADOR|DIRECTOR(?:\s+GENERAL)?|SECRETARIO)\s*:?\s*([A-Z][A-Z ]{4,60}?)(?=\s*[;.,()\d]|$)/g;
+
+  const result: Array<{ nombreBorme: string; rol: string; isRevocacion: boolean }> = [];
+  let m: RegExpExecArray | null;
+  while ((m = ROL_RE.exec(t)) !== null) {
+    const ctx = getContext(m.index);
+    const isRevocacion = ctx === false;
+    const names = m[2].split(";").map((n: string) => n.trim());
+    for (const rawName of names) {
+      const name = rawName.replace(/[.,;]+$/, "").trim();
+      if (!isLikelyPersonName(name)) continue;
+      result.push({ nombreBorme: name, rol: normalizeRolBorme(m[1].trim()), isRevocacion });
+    }
+  }
+  return result;
+}
+
+/**
+ * Upsert PersonaCargo para los nombres extraídos de una descripción BORME.
+ * - Nombramientos  → vigente=true  (no sobreescribe fuente='empresia')
+ * - Revocaciones   → vigente=false (solo actualiza registros de fuente='borme')
+ * Silencia errores individualmente para no interrumpir el cron.
+ */
+async function upsertPersonasCargo(
+  empresaId: number,
+  descripcion: string,
+  fecha: Date
+): Promise<void> {
+  const personas = extractPersonasFromText(descripcion);
+  for (const { nombreBorme, rol, isRevocacion } of personas) {
+    const nombreNorm = bormePersonaToCargoKey(nombreBorme);
+    if (!nombreNorm || nombreNorm.length < 4) continue;
+    try {
+      if (isRevocacion) {
+        // Solo marca inactivos los registros de fuente='borme'; no toca empresia
+        await prisma.personaCargo.updateMany({
+          where: { empresaId, nombreNorm, fuente: "borme" },
+          data: { vigente: false, scrapedAt: new Date() },
+        });
+      } else {
+        // No sobreescribir datos de fuente='empresia'
+        const existing = await prisma.personaCargo.findUnique({
+          where: { empresaId_nombreNorm: { empresaId, nombreNorm } },
+          select: { fuente: true },
+        });
+        if (existing?.fuente === "empresia") continue;
+
+        await prisma.personaCargo.upsert({
+          where: { empresaId_nombreNorm: { empresaId, nombreNorm } },
+          create: {
+            empresaId,
+            nombreNorm,
+            nombreOrig: nombreBorme,
+            rol,
+            fechaDesde: fecha,
+            esJuridica: false,
+            vigente: true,
+            fuente: "borme",
+          },
+          update: {
+            nombreOrig: nombreBorme,
+            rol,
+            fechaDesde: fecha,
+            vigente: true,
+            fuente: "borme",
+            scrapedAt: new Date(),
+          },
+        });
+      }
+    } catch {
+      // Silencioso — no interrumpir el cron por errores en PersonaCargo
+    }
+  }
+}
+
 // ─── Función principal ────────────────────────────────────────────────────────
 
 export interface BormeProcessResult {
@@ -435,13 +581,15 @@ export async function processBormeDate(
           select: { id: true },
         });
 
+        const descripcionAlerta = `${entrada.numeroRegistro} — ${entrada.textoActo}`.slice(0, 500);
+
         if (!yaExiste) {
           await prisma.bormeAlerta.create({
             data: {
               empresaId,
               fecha,
               tipoActo,
-              descripcion: `${entrada.numeroRegistro} — ${entrada.textoActo}`.slice(0, 500),
+              descripcion: descripcionAlerta,
               urlBorme: item.url_pdf,
               leido: false,
               grupoInferidoId,
@@ -449,6 +597,11 @@ export async function processBormeDate(
             },
           });
           result.alertasCreadas++;
+
+          // Upsert PersonaCargo para actos con posibles nombramientos o ceses
+          if (["nombramiento", "nombramiento_grupo", "posible_adquisicion", "otros"].includes(tipoActo)) {
+            await upsertPersonasCargo(empresaId, descripcionAlerta, fecha);
+          }
         } else if (grupoInferidoId || personaDetectada) {
           // Si ya existía pero ahora detectamos grupo/persona, actualizamos
           await prisma.bormeAlerta.update({
