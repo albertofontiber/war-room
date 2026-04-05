@@ -1,55 +1,28 @@
 /**
  * GET /api/borme/personas-compartidas
  *
- * Detecta personas que aparecen en cargos de 2+ empresas distintas
- * extrayendo nombres de los textos de BormeAlerta, excluyendo las
- * personas ya conocidas en GRUPOS_SENALES.
+ * Detecta personas que aparecen en cargos vigentes de 2+ empresas distintas,
+ * consultando directamente la tabla PersonaCargo (Fase 2).
+ *
+ * Para registros de fuente='borme', hace un lookup secundario en BormeAlerta
+ * para recuperar el urlBorme del nombramiento correspondiente.
  */
 
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { GRUPOS_SENALES, norm } from "@/lib/borme-senales";
+import { GRUPOS_SENALES } from "@/lib/borme-senales";
+import { bormePersonaToCargoKey } from "@/lib/normalize";
 
 export const dynamic = "force-dynamic";
 
 const prisma = new PrismaClient();
 
-// Personas ya conocidas — se excluyen del análisis
+// Personas ya conocidas (grupos) — convertidas al formato clave de PersonaCargo (tokens ordenados)
 const KNOWN_PERSONS_NORM = new Set(
-  GRUPOS_SENALES.flatMap((g) => g.personas).map((p) => norm(p))
+  GRUPOS_SENALES.flatMap((g) => g.personas)
+    .map((p) => bormePersonaToCargoKey(p))
+    .filter(Boolean) as string[]
 );
-
-// Palabras que NO pueden formar parte de un nombre de persona
-// (son términos estructurales del BORME o preposiciones)
-const REJECT_WORDS = new Set([
-  "A", "Y", "O", "E",                              // conjunciones / preposición
-  "SOLIDARIOS", "SOLIDARIO", "SOLIDARIAS", "SOLIDARIA",
-  "MANCOMUNADOS", "MANCOMUNADO", "MANCOMUNADAS", "MANCOMUNADA",
-  "ADMINISTRADORES", "ADMINISTRADOR", "APODERADOS", "APODERADO",
-  "CONSEJEROS", "CONSEJERO", "LIQUIDADORES", "LIQUIDADOR",
-  "UNICO", "UNICOS", "UNICA", "UNICAS",
-  "UNIPERSONAL", "UNIPERSONALIDAD",
-  "SUSTITUTO", "SUSTITUTOS",
-  "DELEGADO", "DELEGADOS",
-  "DATOS", "REGISTRALES", "REGISTRAL",
-  "TOMO", "FOLIO", "HOJA", "SECCION", "INSCRIPCION",
-  // Fragmentos de palabras BORME que aparecen truncadas al inicio de un campo
-  "INISTRACION", "INISTRADOR", "CONCURSAL", "SOCIEDAD", "CONSTITUCION",
-]);
-
-/** Devuelve true si el candidato tiene forma de nombre de persona */
-function isLikelyPersonName(name: string): boolean {
-  const words = name.split(/\s+/);
-  // Debe tener entre 2 y 5 palabras
-  if (words.length < 2 || words.length > 5) return false;
-  // Sin palabras de 1 carácter (A, Y, O…)
-  if (words.some((w) => w.length === 1)) return false;
-  // Sin keywords estructurales del BORME
-  if (words.some((w) => REJECT_WORDS.has(w))) return false;
-  // Todas las palabras deben ser solo letras mayúsculas (sin dígitos)
-  if (words.some((w) => /\d/.test(w))) return false;
-  return true;
-}
 
 interface EmpresaFinanciero {
   ingresos: number | null;
@@ -73,107 +46,31 @@ interface PersonaEnEmpresa extends EmpresaFinanciero {
   provincia: string | null;
   sector: string | null;
   web: string | null;
+  fuente: string;
+  nombreOrig: string;
 }
 
 interface PersonaCompartida {
   nombreNorm: string;
+  displayName: string;   // nombre en orden natural (preferido: fuente empresia)
   numEmpresas: number;
   ultimaAparicion: string;
   empresas: PersonaEnEmpresa[];
 }
 
-/**
- * Extrae pares (nombre_normalizado, rol, isRevocacion) de un texto de BormeAlerta.
- * Extrae personas tanto de secciones de NOMBRAMIENTO (isRevocacion=false)
- * como de REVOCACION/CESE/DIMISION (isRevocacion=true).
- */
-function extractPersonasFromDesc(
-  desc: string
-): Array<{ nombreNorm: string; rol: string | null; isRevocacion: boolean }> {
-  if (!desc) return [];
-
-  const t = desc
-    .toUpperCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ");
-
-  // Mapear posiciones de marcadores de sección positivos / negativos
-  const POSITIVE_RE = /\b(NOMBRAMIENTO[S]?)\b/g;
-  const NEGATIVE_RE = /\b(REVOCACION[ES]*|CESE[S]?|DIMISION[ES]*|BAJA)\b/g;
-
-  const markers: Array<{ pos: number; positive: boolean }> = [];
-  let mx: RegExpExecArray | null;
-  while ((mx = POSITIVE_RE.exec(t)) !== null) markers.push({ pos: mx.index, positive: true });
-  NEGATIVE_RE.lastIndex = 0;
-  while ((mx = NEGATIVE_RE.exec(t)) !== null) markers.push({ pos: mx.index, positive: false });
-  markers.sort((a, b) => a.pos - b.pos);
-
-  /** Devuelve el contexto de la posición: true=nombramiento, false=revocación, null=sin marcadores */
-  function getContext(pos: number): boolean | null {
-    if (markers.length === 0) return null; // sin marcadores → contexto desconocido
-    let last: typeof markers[0] | null = null;
-    for (const marker of markers) {
-      if (marker.pos < pos) last = marker;
-      else break;
-    }
-    return last === null ? null : last.positive;
-  }
-
-  const result: Array<{ nombreNorm: string; rol: string | null; isRevocacion: boolean }> = [];
-
-  // Patrón: rol_abreviado seguido de ":" y un nombre en CAPS
-  const ROL_RE =
-    /\b(ADM\.?\s*(?:SOLID\.?|MANCOM\.?|UNICO\.?|SUSTITUT\.?)?|ADMINISTRADOR(?:\s+(?:SOLIDARIO|MANCOMUNADO|UNICO|SUSTITUTO))?|APODERADO|CONSEJERO(?:\s+DELEGADO)?|LIQUIDADOR|DIRECTOR(?:\s+GENERAL)?|SECRETARIO)\s*:?\s*([A-Z][A-Z ]{4,60}?)(?=\s*[;.,()\d]|$)/g;
-
-  let m: RegExpExecArray | null;
-  while ((m = ROL_RE.exec(t)) !== null) {
-    const ctx = getContext(m.index);
-    // ctx=null → sin marcadores → asumir nombramiento (comportamiento anterior)
-    // ctx=true → nombramiento, ctx=false → revocación
-    const isRevocacion = ctx === false;
-
-    const rolRaw = m[1].trim();
-    const namesPart = m[2];
-
-    const names = namesPart.split(";").map((n) => n.trim());
-    for (const rawName of names) {
-      const name = rawName.replace(/[.,;]+$/, "").trim();
-      if (!isLikelyPersonName(name)) continue;
-      result.push({ nombreNorm: name, rol: normalizeRol(rolRaw), isRevocacion });
-    }
-  }
-
-  return result;
-}
-
-function normalizeRol(raw: string): string | null {
-  const r = raw.toUpperCase().replace(/\s+/g, " ").trim();
-  if (/ADM.*SOLID|ADMINISTRADOR.*SOLIDARIO/.test(r)) return "administrador_solidario";
-  if (/ADM.*MANCOM|ADMINISTRADOR.*MANCOMUNADO/.test(r)) return "administrador_mancomunado";
-  if (/ADM.*UNICO|ADMINISTRADOR.*UNICO/.test(r)) return "administrador_unico";
-  if (/ADM|ADMINISTRADOR/.test(r)) return "administrador";
-  if (/APODERADO/.test(r)) return "apoderado";
-  if (/CONSEJERO\s*DELEGADO/.test(r)) return "consejero_delegado";
-  if (/CONSEJERO/.test(r)) return "consejero";
-  if (/LIQUIDADOR/.test(r)) return "liquidador";
-  if (/DIRECTOR/.test(r)) return "director";
-  return null;
-}
-
 export async function GET() {
   try {
-    // Alertas de nombramiento Y de otros (que contienen revocaciones/ceses)
-    const alertas = await prisma.bormeAlerta.findMany({
-      where: {
-        tipoActo: { in: ["nombramiento", "nombramiento_grupo", "otros"] },
-        descripcion: { not: null },
-      },
+    // 1. Leer todos los PersonaCargo vigentes con datos de empresa
+    const cargos = await prisma.personaCargo.findMany({
+      where: { vigente: true },
       select: {
         empresaId: true,
-        descripcion: true,
-        fecha: true,
-        urlBorme: true,
+        nombreNorm: true,
+        nombreOrig: true,
+        rol: true,
+        fechaDesde: true,
+        esJuridica: true,
+        fuente: true,
         empresa: {
           select: {
             id: true,
@@ -193,100 +90,116 @@ export async function GET() {
           },
         },
       },
-      orderBy: { fecha: "asc" }, // asc: procesar cronológicamente para "latest wins"
     });
 
-    // Acumular personas → Map<nombreNorm, Map<empresaId, PersonaEnEmpresa & estado>>
-    // Para cada (persona, empresa): guardamos el evento más reciente y si está activo
-    type EmpresaEntry = PersonaEnEmpresa & {
-      fechaDate: Date;
-      isActive: boolean;
-    };
+    // 2. Agrupar por nombreNorm, excluir personas de grupos conocidos
+    type CargoRaw = typeof cargos[number];
+    const personaMap = new Map<string, CargoRaw[]>();
 
-    const personaMap = new Map<string, Map<number, EmpresaEntry>>();
+    for (const cargo of cargos) {
+      if (KNOWN_PERSONS_NORM.has(cargo.nombreNorm)) continue;
+      if (!personaMap.has(cargo.nombreNorm)) personaMap.set(cargo.nombreNorm, []);
+      personaMap.get(cargo.nombreNorm)!.push(cargo);
+    }
 
-    for (const alerta of alertas) {
-      const personas = extractPersonasFromDesc(alerta.descripcion ?? "");
-      for (const { nombreNorm, rol, isRevocacion } of personas) {
-        if (KNOWN_PERSONS_NORM.has(nombreNorm)) continue;
+    // 3. Filtrar a personas con ≥2 empresas distintas
+    const candidatos = new Map<string, CargoRaw[]>();
+    for (const [nombreNorm, entries] of Array.from(personaMap.entries())) {
+      if (entries.length >= 2) candidatos.set(nombreNorm, entries);
+    }
 
-        if (!personaMap.has(nombreNorm)) {
-          personaMap.set(nombreNorm, new Map());
-        }
-        const empresasMap = personaMap.get(nombreNorm)!;
+    // 4. Lookup secundario de urlBorme para registros de fuente='borme'
+    //    Agrupamos por empresaId para hacer una sola query por empresa
+    const bormeEntries = Array.from(candidatos.values())
+      .flat()
+      .filter((c: CargoRaw) => c.fuente === "borme" && c.fechaDesde !== null);
 
-        const eid = alerta.empresa.id;
-        const existing = empresasMap.get(eid);
+    const empresaIdsConBorme = Array.from(
+      new Set(bormeEntries.map((c: CargoRaw) => c.empresaId))
+    );
+    const urlBormeMap = new Map<string, string>(); // key: `${empresaId}::${fecha.toISOString()}`
 
-        // "Latest event wins": actualizar si este evento es más reciente
-        if (!existing || alerta.fecha >= existing.fechaDate) {
-          const fin = alerta.empresa.financieros[0] ?? null;
-          const ingresos = fin?.ingresos ?? null;
-          const ebitda = fin?.ebitda ?? null;
-          const margenBruto = fin?.margenBruto ?? null;
+    if (empresaIdsConBorme.length > 0) {
+      const alertas = await prisma.bormeAlerta.findMany({
+        where: {
+          empresaId: { in: empresaIdsConBorme },
+          tipoActo: { in: ["nombramiento", "nombramiento_grupo", "otros"] },
+          urlBorme: { not: null },
+        },
+        select: { empresaId: true, fecha: true, urlBorme: true },
+      });
 
-          // Para revocaciones mantenemos los datos de la empresa pero marcamos inactivo
-          // Para nombramientos actualizamos rol y marcamos activo
-          const base = existing ?? {
-            empresaId: eid,
-            empresaNombre: alerta.empresa.nombre,
-            grupoNombre: alerta.empresa.grupo?.nombre ?? null,
-            grupoId: alerta.empresa.grupoId,
-            enPerimetro: alerta.empresa.enPerimetro,
-            ccaa: alerta.empresa.ccaa,
-            provincia: alerta.empresa.provincia,
-            sector: alerta.empresa.sector,
-            web: alerta.empresa.web,
-            ingresos,
-            ebitda,
-            ebitdaPct:
-              ingresos && ebitda
-                ? Math.round((ebitda / ingresos) * 1000) / 10
-                : null,
-            margenBruto,
-            margenBrutoPct:
-              ingresos && margenBruto
-                ? Math.round((margenBruto / ingresos) * 1000) / 10
-                : null,
-            anioFinanciero: fin?.anio ?? null,
-          };
-
-          empresasMap.set(eid, {
-            ...base,
-            rol: isRevocacion ? (existing?.rol ?? rol) : rol,
-            // Para revocaciones conservamos la urlBorme del nombramiento previo
-            urlBorme: isRevocacion ? (existing?.urlBorme ?? null) : (alerta.urlBorme ?? null),
-            ultimaFecha: alerta.fecha.toISOString(),
-            fechaDate: alerta.fecha,
-            isActive: !isRevocacion, // revocación → inactivo, nombramiento → activo
-          });
-        }
+      for (const a of alertas) {
+        if (!a.urlBorme) continue;
+        const key = `${a.empresaId}::${a.fecha.toISOString()}`;
+        if (!urlBormeMap.has(key)) urlBormeMap.set(key, a.urlBorme);
       }
     }
 
-    // Filtrar: solo (persona, empresa) con isActive=true, y solo personas en 2+ empresas activas
+    // 5. Construir resultado final
     const results: PersonaCompartida[] = [];
-    personaMap.forEach((empresasMap, nombreNorm) => {
-      const empresasActivas: PersonaEnEmpresa[] = [];
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      empresasMap.forEach(({ fechaDate: _fd, isActive, ...rest }) => {
-        if (isActive) empresasActivas.push(rest);
+
+    for (const [nombreNorm, entries] of Array.from(candidatos.entries())) {
+      const empresas: PersonaEnEmpresa[] = entries.map((cargo) => {
+        const fin = cargo.empresa.financieros[0] ?? null;
+        const ingresos = fin?.ingresos ?? null;
+        const ebitda = fin?.ebitda ?? null;
+        const margenBruto = fin?.margenBruto ?? null;
+
+        let urlBorme: string | null = null;
+        if (cargo.fuente === "borme" && cargo.fechaDesde) {
+          const key = `${cargo.empresaId}::${cargo.fechaDesde.toISOString()}`;
+          urlBorme = urlBormeMap.get(key) ?? null;
+        }
+
+        return {
+          empresaId: cargo.empresaId,
+          empresaNombre: cargo.empresa.nombre,
+          grupoNombre: cargo.empresa.grupo?.nombre ?? null,
+          grupoId: cargo.empresa.grupoId,
+          rol: cargo.rol ?? null,
+          ultimaFecha: cargo.fechaDesde?.toISOString() ?? new Date(0).toISOString(),
+          urlBorme,
+          enPerimetro: cargo.empresa.enPerimetro,
+          ccaa: cargo.empresa.ccaa,
+          provincia: cargo.empresa.provincia,
+          sector: cargo.empresa.sector,
+          web: cargo.empresa.web,
+          fuente: cargo.fuente,
+          nombreOrig: cargo.nombreOrig,
+          ingresos,
+          ebitda,
+          ebitdaPct:
+            ingresos && ebitda ? Math.round((ebitda / ingresos) * 1000) / 10 : null,
+          margenBruto,
+          margenBrutoPct:
+            ingresos && margenBruto
+              ? Math.round((margenBruto / ingresos) * 1000) / 10
+              : null,
+          anioFinanciero: fin?.anio ?? null,
+        };
       });
 
-      if (empresasActivas.length < 2) return;
-
-      empresasActivas.sort(
+      // Ordenar empresas por fecha desc
+      empresas.sort(
         (a, b) =>
           new Date(b.ultimaFecha).getTime() - new Date(a.ultimaFecha).getTime()
       );
 
+      // displayName: preferir el nombreOrig de fuente=empresia (más fiable)
+      const empresiaEntry = entries.find((e: CargoRaw) => e.fuente === "empresia");
+      const displayName = empresiaEntry
+        ? empresiaEntry.nombreOrig
+        : entries[0].nombreOrig;
+
       results.push({
         nombreNorm,
-        numEmpresas: empresasActivas.length,
-        ultimaAparicion: empresasActivas[0].ultimaFecha,
-        empresas: empresasActivas,
+        displayName,
+        numEmpresas: empresas.length,
+        ultimaAparicion: empresas[0].ultimaFecha,
+        empresas,
       });
-    });
+    }
 
     results.sort(
       (a, b) =>

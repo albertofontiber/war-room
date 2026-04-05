@@ -1,7 +1,7 @@
 # Fontiber War Room — Instrucciones para Claude
 
 Documento de contexto para continuar el desarrollo entre conversaciones.
-Actualizado: 2026-04-02 (sesión 7)
+Actualizado: 2026-04-05 (sesión 8)
 
 ---
 
@@ -9,7 +9,7 @@ Actualizado: 2026-04-02 (sesión 7)
 
 **War Room** es un dashboard interno de M&A para Fontiber, orientado al sector de PCI (protección contra incendios) y seguridad electrónica en España.
 
-- Universo actual: **5.022 empresas** (PCI + seg. electrónica + mixtas)
+- Universo actual: **~5.140 empresas** (PCI + seg. electrónica + mixtas)
 - Stack: Next.js 14 App Router · TypeScript · Prisma · PostgreSQL (Supabase) · Zustand · react-map-gl / Mapbox GL JS · Tailwind CSS
 - Tema visual: oscuro, estilo "war room"
 - Auth: NextAuth (credentials — alberto/gabriel)
@@ -51,6 +51,7 @@ src/
   lib/
     borme.ts                              # Lógica BORME: fetch, parse, classify, process ⭐
     borme-senales.ts                      # Catálogo señales por grupo (personas + keywords) ⭐
+    normalize.ts                          # Fuente de verdad normalización nombres ⭐ (sesión 8)
     email-daily-summary.ts                # Email mínimo: 3 cifras + link a /daily/[fecha] (Resend)
     filtros.ts                            # isInFilter()
     prisma.ts                             # Singleton PrismaClient
@@ -80,6 +81,15 @@ scripts/
   reclasificar-posible-adquisicion.ts     # Reclasifica nombramiento_grupo→posible_adquisicion si empresa no pertenece al grupo (EJECUTADO — 0 cambios)
   find-empresa.ts                         # Buscar empresa en DB por nombre
   test-email.ts                           # Envía email de prueba con datos de los últimos 7 días
+  scrape-empresia.ts                      # Scraping empresia.es → PersonaCargo + enriquece Empresa (sesión 8) ⭐
+  validate-empresia.ts                    # Validación 4D del scraping: cobertura, CP/prov, personas conocidas, personas múltiples (sesión 8)
+  check-cataluna.ts                       # Cross-reference empresas Cataluña vs BD (sesión 8)
+  insert-cataluna.ts                      # Inserta 102 nuevas + actualiza 36 PCI→mixto + M.Boada enPerimetro (EJECUTADO 05/04/2026)
+  enrich-cataluna.ts                      # Enriquece 84 empresas catalanas con web/linkedin/telefono/descripcion (EJECUTADO 05/04/2026)
+  check-cp-mismatches.ts                  # Detecta inconsistencias CP vs provincia: aliases (87) + errores genuinos (36) (sesión 8)
+  fix-provincia-aliases.ts               # Corrige 271 alias: Illes Balears→Baleares, Lleida→Lérida, Ourense→Orense (EJECUTADO 05/04/2026)
+  fix-elecnor-provincia.ts               # Fix puntual: ELECNOR, S.A. Sevilla→Madrid (EJECUTADO 05/04/2026)
+  backfill-persona-cargo-borme.ts        # Backfill PersonaCargo desde BORME para empresas sin datos empresia (sesión 8) ⭐
 
 vercel.json                               # Crons: Pipedrive + BORME 20:00 UTC L-V · Email 06:00 UTC Ma-Sa
 ```
@@ -88,7 +98,7 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 UTC L
 
 ## 3. Funcionalidades completadas ✅
 
-- Mapa Mapbox con 5.022 empresas, clusters, marcadores por sector/prioridad
+- Mapa Mapbox con ~5.140 empresas, clusters, marcadores por sector/prioridad
 - Jitter deterministico en coordenadas: offset ±44m por hash del CIF (evita solapamiento exacto)
 - Panel lateral de empresa: financieros, gráfico histórico, CRM, actividades, alertas BORME, scroll nativo
 - Filtros completos: CCAA + Provincia (cascada), Sector, Perímetro, Cepreven, Aerme, Grupo, Stage CRM, sliders duales (Ingresos, Margen Bruto %, EBITDA %)
@@ -108,6 +118,14 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 UTC L
 - **Toggle perímetro** en PanelEmpresa persiste en BD vía `PATCH /api/empresas/[id]/perimetro` ✅
 - **Seguridad electrónica importada**: 666 nuevas + 399 mixtas + 5 adicionales sesión 7, total 5.022 empresas ✅
 - **Financieros seg. electrónica**: 579+ empresas macheadas, 1.331+ registros financieros, 422 CPs geocodificados ✅
+- **normalize.ts**: librería compartida de normalización de nombres (sesión 8) ✅ — `normalizePersona()`, `normText()`, `bormePersonaToCargoKey()`
+- **PersonaCargo (esJuridica)**: campo `esJuridica Boolean` añadido al schema; scraping captura empresas jurídicas administradoras además de personas físicas (sesión 8) ✅
+- **Scraping empresia.es Run 3**: 7.816 PersonaCargo en ~2.429 empresas (del universo de ~5.140) ✅
+- **Corrección aliases de provincia**: 271 empresas corregidas (Illes Balears→Baleares ×195, Lleida→Lérida ×53, Ourense→Orense ×23, Elecnor SA Sevilla→Madrid) ✅
+- **Backfill PersonaCargo desde BORME**: 366 registros nuevos para empresas sin datos empresia → total 8.182 PersonaCargo, 2.583 empresas con cargo vigente ✅
+- **Registro Ertzaintza (País Vasco)**: 7 PCI→mixto + 4 nuevas empresas insertadas (enPerimetro: true, fuente: ertzaintza_registry) ✅
+- **Registro Mossos (Cataluña)**: 36 PCI→mixto + 102 nuevas empresas insertadas + M. Boada SA enPerimetro:true (fuente: mossos_registry) ✅ — 84 enriquecidas con web/linkedin/telefono
+- **Documentación Notion**: 4 páginas creadas en el War Room (Funcionalidades, Esquema técnico, Next Steps DB, Decisiones de diseño) ✅
 - **Grupos editables desde panel**: sección GESTIÓN (ámbar) con autocomplete + "Crear nuevo" ✅
 - **Clusters como donut pie chart**: proporciones de etapas CRM visibles en cada cluster ✅
 - **Filtro de Grupo en Sidebar**: pills para cada grupo, chips activos en la barra de filtros ✅
@@ -403,6 +421,32 @@ model BormeAlerta {
 }
 ```
 
+### PersonaCargo (sesión 8)
+
+```prisma
+model PersonaCargo {
+  id          Int       @id @default(autoincrement())
+  empresaId   Int
+  empresa     Empresa   @relation(fields: [empresaId], references: [id])
+  nombreNorm  String    // clave canónica: tokens ordenados, sin partículas, sin tildes
+  nombreOrig  String    // nombre tal como aparece en empresia
+  rol         String?   // administrador_unico | administrador_solidario | consejero_delegado | ...
+  fechaDesde  DateTime?
+  esJuridica  Boolean   @default(false)  // true = empresa como administradora (holding)
+  vigente     Boolean   @default(true)
+  fuente      String    // "empresia" | "borme"
+  scrapedAt   DateTime  @default(now())
+  @@unique([empresaId, nombreNorm])
+  @@index([nombreNorm])
+  @@index([empresaId])
+  @@index([esJuridica])
+}
+```
+
+**Normalización** (`src/lib/normalize.ts`):
+- `normalizePersona(raw, esJuridica=false)` — personas físicas: tokens ordenados sin partículas; jurídicas: elimina sufijo mercantil, no reordena
+- `bormePersonaToCargoKey(personaDetectada)` — convierte nombre en formato BORME (orden natural) al formato clave de PersonaCargo
+
 ### BormePersona (tabla existente, pendiente de poblar en el cron)
 
 ```prisma
@@ -444,7 +488,7 @@ model CrmLog {
 
 ## 12. Roadmap
 
-### Estado sesión 02/04/2026 (sesión 7)
+### Estado sesión 05/04/2026 (sesión 8)
 
 | # | Tarea | Prioridad | Estado | Notas |
 |---|---|---|---|---|
@@ -452,7 +496,7 @@ model CrmLog {
 | B | Actualizar grupos desde Excel | Alta | ✅ | 5 grupos |
 | C | Actualizar perímetro desde Excel | Alta | ✅ | 1.552 in / 2.805 out |
 | D | Editar grupo desde panel lateral | Alta | ✅ | Sección GESTIÓN + autocomplete |
-| E | Matchear empresas Pipedrive | Media | ✅ | CIF-first matching; 3 eliminadas de Pipedrive, 2 enlazadas por CIF. 169 matched |
+| E | Matchear empresas Pipedrive | Media | ✅ | CIF-first matching; 169 matched |
 | F | Cross-referencing BORME (personas) | Alta | ✅ | Catálogo señales + backfill |
 | G | Dashboard Operaciones M&A | Alta | ✅ | 3 sub-tabs |
 | K | Exportar tabla a Excel | Media | ✅ | |
@@ -463,27 +507,36 @@ model CrmLog {
 | P | Ampliar backfill BORME a 2 años | Alta | ✅ | Ejecutado 02/04/2026 |
 | Q | Financieros seg. electrónica | Alta | ✅ | 579+ empresas, 1.331+ financieros, 422 CPs geocodificados |
 | R | Página /daily/[fecha] pública | Alta | ✅ | Sin login, diseño War Room |
-| S | 5 empresas faltantes seg. electrónica | Media | ✅ | Añadidas a BD con financieros y enPerimetro=true (sesión 7) |
+| S | 5 empresas faltantes seg. electrónica | Media | ✅ | Añadidas sesión 7 |
+| T | normalize.ts — fuente de verdad normalización | Alta | ✅ | sesión 8 — `normalizePersona`, `normText`, `bormePersonaToCargoKey` |
+| U | PersonaCargo con esJuridica | Alta | ✅ | sesión 8 — schema + scraping Run 3 (7.816 registros, 2.429 empresas) |
+| V | Registro Ertzaintza (País Vasco) | Media | ✅ | sesión 8 — 7 mixto + 4 nuevas |
+| W | Registro Mossos (Cataluña) | Media | ✅ | sesión 8 — 36 mixto + 102 nuevas + M.Boada perímetro |
+| X | Documentación Notion | Media | ✅ | sesión 8 — 4 páginas: funcionalidades, esquema, next steps, decisiones |
+| Y | Corrección aliases de provincia | Media | ✅ | sesión 8 — 271 empresas (Illes Balears, Lleida, Ourense, Elecnor) |
+| Z | Backfill PersonaCargo desde BORME | Alta | ✅ | sesión 8 — 366 insertados, total 8.182 PersonaCargo, 2.583 empresas |
 | — | 500 en endpoints cron Vercel | Alta | ✅ | Resuelto: devuelven 401 correctamente (sin CRON_SECRET) |
-| H | Poblar BormePersona en cron | Baja | ⏳ | Nice to have — tab ya funciona sin ella |
-| I | Web enrichment | Media | ⏳ | Logos, LinkedIn — bloqueado por SSL scraping |
-| — | Geocoding resto BD por CP | Media | ⏳ | Reverse Nominatim — pausado hasta que webs vuelvan |
-| — | Scraping admins/consejeros empresia.es | Media | ⏳ | Pendiente de que vuelva la web — ver detalle abajo |
+| H | Task H: BORME cron → upsert PersonaCargo | Baja | ⏳ | Usar `bormePersonaToCargoKey()` al escribir nombramientos |
+| I | Web enrichment | Baja | ⏳ | Logos, LinkedIn — bloqueado por SSL scraping |
+| — | Geocoding por Google Maps API | Media | ⏳ | Cascada: dirección+localidad → CP → localidad+provincia |
+| — | Fase 2: PersonaCargo → tab personas-compartidas | Alta | ⏳ | Reemplazar/complementar lógica BormeAlerta con PersonaCargo vigente |
+| — | Registros seg. electrónica otras CCAA | Media | ⏳ | Andalucía, Madrid, Valencia... |
 
 ### Detalle tareas pendientes
 
-**H — Poblar BormePersona en el cron** (baja prioridad)
-- `processBormeDate()` NO crea registros BormePersona (solo guarda `personaDetectada` en BormeAlerta)
-- El tab "Alertas personas" ya funciona parseando alertas al vuelo — BormePersona sería optimización
-- La tabla y el schema ya existen, solo falta lógica de inserción + backfill
+**H — Task H: BORME cron → PersonaCargo** (baja prioridad)
+- Cuando el cron detecte un nombramiento, hacer upsert en PersonaCargo usando `bormePersonaToCargoKey(personaDetectada)` para convertir el nombre al formato clave
+- Fuente: `'borme'`. Mantiene PersonaCargo actualizado entre scrapings trimestrales.
 
-**Scraping administradores/consejeros de empresia.es** (pendiente de que vuelva la web)
-- Plan: scraping puntual de las **5.022 empresas** de la BD (no solo perímetro)
-- Guardar en `BormePersona` con `fuente='empresia'`
-- BORME tiene prioridad si hay solapamiento (más fiable, fecha exacta)
-- Throttling ~200 empresas/hora en background (~25h total)
-- Objetivo: cubrir cargos vigentes anteriores al backfill de 2 años del BORME
-- Complementar con BORME diario para cambios futuros
+**Fase 2 — PersonaCargo en tab "personas-compartidas"**
+- Actualmente el tab parsea `BormeAlerta` al vuelo
+- Con PersonaCargo poblado: consultar directamente la tabla para personas físicas y jurídicas en ≥2 empresas
+- Ventaja: captura relaciones anteriores al backfill de 2 años; detecta grupos vía `esJuridica=true`
+
+**Geocoding**
+- Cascada: (1) dirección + localidad → lat/lng exacta, (2) CP → centroide, (3) localidad + provincia → centroide
+- No usar flag de confianza
+- ~5.140 empresas, ~0.5€/1000 requests Google Maps
 
 ---
 
@@ -525,6 +578,19 @@ npx dotenv-cli -e .env.local -- npx tsx scripts/check-crm-changes.ts          # 
 # Email
 npx dotenv-cli -e .env.local -- npx tsx scripts/test-email.ts                 # Email de prueba (7 días)
 
+# PersonaCargo / Empresia
+npx dotenv-cli -e .env.local -- npx tsx scripts/scrape-empresia.ts                        # Scraping completo
+npx dotenv-cli -e .env.local -- npx tsx scripts/scrape-empresia.ts --cif B86743325        # Test empresa individual
+npx dotenv-cli -e .env.local -- npx tsx scripts/scrape-empresia.ts --offset 500           # Reanudar desde posición
+npx dotenv-cli -e .env.local -- npx tsx scripts/validate-empresia.ts                      # Validación 4 dimensiones
+npx dotenv-cli -e .env.local -- npx tsx scripts/backfill-persona-cargo-borme.ts           # Backfill BORME para empresas sin empresia
+npx dotenv-cli -e .env.local -- npx tsx scripts/backfill-persona-cargo-borme.ts --dry-run # Preview sin escribir
+
+# Calidad de datos / Provincia
+npx dotenv-cli -e .env.local -- npx tsx scripts/check-cp-mismatches.ts            # Detecta CP vs provincia inconsistentes
+npx dotenv-cli -e .env.local -- npx tsx scripts/fix-provincia-aliases.ts          # Corrige aliases (Illes Balears, Lleida, Ourense)
+npx dotenv-cli -e .env.local -- npx tsx scripts/fix-elecnor-provincia.ts          # Fix puntual Elecnor
+
 # Reclasificaciones (ya ejecutadas, no repetir salvo nuevo backfill)
 npx ts-node --compiler-options '{"module":"CommonJS"}' scripts/reclasificar-ceses.ts
 npx ts-node --compiler-options '{"module":"CommonJS"}' scripts/reclasificar-posible-adquisicion.ts
@@ -536,7 +602,31 @@ npx next lint
 
 ---
 
-## 15. Notas técnicas críticas
+## 15. normalize.ts — Fuente de verdad para normalización (sesión 8)
+
+Archivo: `src/lib/normalize.ts`. Importado por `scrape-empresia.ts`, `validate-empresia.ts`, y (futuro) el cron BORME.
+
+```typescript
+// Persona física: tokens ordenados alfabéticamente, sin partículas, sin tildes
+normalizePersona("De La Pascua Aragón Pablo")  → "ARAGON PABLO PASCUA"
+normalizePersona("Guitard Maldonado Álvaro")   → "ALVARO GUITARD MALDONADO"
+
+// Persona jurídica (esJuridica=true): elimina sufijo, no reordena
+normalizePersona("GRUFAEM SL", true)           → "GRUFAEM"
+normalizePersona("FIRE BUSINESS, SL", true)    → "FIRE BUSINESS"
+
+// BORME text search (NO para claves PersonaCargo)
+normText("Administración y Gestión")           → "ADMINISTRACION Y GESTION"
+
+// BORME personaDetectada → PersonaCargo key
+bormePersonaToCargoKey("GUITARD MALDONADO ALVARO") → "ALVARO GUITARD MALDONADO"
+```
+
+> **Importante**: el campo `personas` en `GRUPOS_SENALES` usa formato BORME (orden natural + mayúsculas). Para buscar en PersonaCargo, pasar por `bormePersonaToCargoKey()`.
+
+---
+
+## 16. Notas técnicas críticas
 
 - **force-dynamic**: todas las rutas API de datos deben tener `export const dynamic = "force-dynamic"`. Sin esto, Vercel puede cachear las respuestas.
 - **Cron schedule (vercel.json)**: Pipedrive + BORME a las 20:00 UTC (22:00 CEST) L-V. Email a las 06:00 UTC (08:00 CEST) Ma-Sa.

@@ -58,6 +58,8 @@ interface PersonaEnEmpresa {
   provincia: string | null;
   sector: string | null;
   web: string | null;
+  fuente: string;
+  nombreOrig: string;
   ingresos: number | null;
   ebitda: number | null;
   ebitdaPct: number | null;
@@ -68,6 +70,7 @@ interface PersonaEnEmpresa {
 
 interface PersonaCompartida {
   nombreNorm: string;
+  displayName: string;
   numEmpresas: number;
   ultimaAparicion: string;
   empresas: PersonaEnEmpresa[];
@@ -360,7 +363,7 @@ function AlertasPersonasTable({
                 </td>
                 <td className="px-3 py-2.5">
                   <span className="font-semibold text-wr-text text-[10px] tracking-wide">
-                    {p.nombreNorm}
+                    {p.displayName}
                   </span>
                 </td>
                 <td className="px-3 py-2.5 text-right tabular-nums text-wr-muted">
@@ -434,9 +437,16 @@ function AlertasPersonasTable({
                           <div className="text-[9px] text-wr-hint mt-0.5">{emp.provincia}</div>
                         )}
                       </td>
-                      {/* Rol */}
-                      <td className="px-3 py-2 text-wr-muted text-[10px] whitespace-nowrap text-right">
-                        {emp.rol ? emp.rol.replace(/_/g, " ") : "—"}
+                      {/* Rol + fuente */}
+                      <td className="px-3 py-2 text-[10px] whitespace-nowrap text-right">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <span className="text-[8px] text-wr-border">
+                            {emp.fuente}
+                          </span>
+                          <span className="text-wr-muted">
+                            {emp.rol ? emp.rol.replace(/_/g, " ") : "—"}
+                          </span>
+                        </div>
                       </td>
                       {/* Ingresos */}
                       <td className="px-3 py-2 text-right tabular-nums text-wr-text">
