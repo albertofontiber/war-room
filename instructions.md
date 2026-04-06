@@ -1,7 +1,7 @@
 # Fontiber War Room — Instrucciones para Claude
 
 Documento de contexto para continuar el desarrollo entre conversaciones.
-Actualizado: 2026-04-05 (sesión 8)
+Actualizado: 2026-04-06 (sesión 9)
 
 ---
 
@@ -10,7 +10,7 @@ Actualizado: 2026-04-05 (sesión 8)
 **War Room** es un dashboard interno de M&A para Fontiber, orientado al sector de PCI (protección contra incendios) y seguridad electrónica en España.
 
 - Universo actual: **~5.140 empresas** (PCI + seg. electrónica + mixtas)
-- Stack: Next.js 14 App Router · TypeScript · Prisma · PostgreSQL (Supabase) · Zustand · react-map-gl / Mapbox GL JS · Tailwind CSS
+- Stack: Next.js 14 App Router · TypeScript · Prisma · PostgreSQL (Supabase) · Zustand · react-map-gl / Mapbox GL JS · Tailwind CSS · Vercel AI SDK + Claude
 - Tema visual: oscuro, estilo "war room"
 - Auth: NextAuth (credentials — alberto/gabriel)
 - Deploy: Vercel → **https://warroom.fontiber.com** (dominio propio, activo)
@@ -31,6 +31,7 @@ src/
       empresas/[id]/perimetro/            # PATCH — toggle enPerimetro (force-dynamic)
       empresas/[id]/grupo/                # PATCH — asigna/crea grupo
       grupos/route.ts                     # GET — lista todos los grupos (autocomplete)
+      chat/route.ts                       # POST — Chat IA streaming (Claude + SQL tools) (sesión 9)
       borme/
         operaciones/route.ts              # GET — señales M&A enriquecidas (force-dynamic)
         personas-compartidas/route.ts     # GET — personas en 2+ empresas activas (force-dynamic)
@@ -40,7 +41,8 @@ src/
         pipedrive/route.ts                # GET — cron Pipedrive (L-V 20:00 UTC = 22:00 CEST)
         daily-summary/route.ts            # GET — cron email (Ma-Sa 06:00 UTC = 08:00 CEST)
   components/
-    WarRoomLayout.tsx                     # Layout raíz — renderiza Mapa | Tabla | Operaciones | Grupos
+    ChatIA.tsx                            # Chat IA flotante — Claude + SQL sobre datos War Room (sesión 9)
+    WarRoomLayout.tsx                     # Layout raíz — renderiza Mapa | Tabla | Operaciones | Grupos + ChatIA
     MapaEspana.tsx                        # Mapa Mapbox con clusters, marcadores, selección área
     Navbar.tsx                            # Barra superior — toggle Mapa/Tabla/Operaciones/Grupos + búsqueda
     Sidebar.tsx                           # Filtros + estadísticas (8 stages CRM + filtro Grupo)
@@ -51,6 +53,7 @@ src/
   lib/
     borme.ts                              # Lógica BORME: fetch, parse, classify, process ⭐
     borme-senales.ts                      # Catálogo señales por grupo (personas + keywords) ⭐
+    chat-schema.ts                        # Schema BD + system prompt para Chat IA (sesión 9) ⭐
     normalize.ts                          # Fuente de verdad normalización nombres ⭐ (sesión 8)
     email-daily-summary.ts                # Email mínimo: 3 cifras + link a /daily/[fecha] (Resend)
     filtros.ts                            # isInFilter()
@@ -86,6 +89,7 @@ scripts/
   check-cataluna.ts                       # Cross-reference empresas Cataluña vs BD (sesión 8)
   insert-cataluna.ts                      # Inserta 102 nuevas + actualiza 36 PCI→mixto + M.Boada enPerimetro (EJECUTADO 05/04/2026)
   enrich-cataluna.ts                      # Enriquece 84 empresas catalanas con web/linkedin/telefono/descripcion (EJECUTADO 05/04/2026)
+  geocode-remaining.ts                   # Re-geocoding 1.025 empresas (id>3125) con Nominatim: dirección→CP→localidad (EJECUTADO 06/04/2026)
   check-cp-mismatches.ts                  # Detecta inconsistencias CP vs provincia: aliases (87) + errores genuinos (36) (sesión 8)
   fix-provincia-aliases.ts               # Corrige 271 alias: Illes Balears→Baleares, Lleida→Lérida, Ourense→Orense (EJECUTADO 05/04/2026)
   fix-elecnor-provincia.ts               # Fix puntual: ELECNOR, S.A. Sevilla→Madrid (EJECUTADO 05/04/2026)
@@ -127,6 +131,9 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 UTC L
 - **Backfill PersonaCargo desde BORME**: 366 registros nuevos para empresas sin datos empresia → total 8.182 PersonaCargo, 2.583 empresas con cargo vigente ✅
 - **Registro Ertzaintza (País Vasco)**: 7 PCI→mixto + 4 nuevas empresas insertadas (enPerimetro: true, fuente: ertzaintza_registry) ✅
 - **Registro Mossos (Cataluña)**: 36 PCI→mixto + 102 nuevas empresas insertadas + M. Boada SA enPerimetro:true (fuente: mossos_registry) ✅ — 84 enriquecidas con web/linkedin/telefono
+- **Chat IA flotante** (sesión 9): Claude genera queries SQL SELECT contra la BD en lenguaje natural. Streaming con Vercel AI SDK v6. Markdown con react-markdown + @tailwindcss/typography. Pregunta por horizonte temporal en queries temporales. ✅
+- **Re-geocoding mejorado** (sesión 9): 1.016 empresas re-geocodificadas con Nominatim (233 a nivel calle, 647 a nivel CP, 136 a nivel localidad). Script: `geocode-remaining.ts` ✅
+- **Limpieza provincia/ccaa** (sesión 9): 300+ empresas corregidas — Illes Balears→Baleares (194), provincia=Cataluña→correcta (61), null ccaa rellenados (37), Madrid-area corregidos manualmente (20), mossos_registry→Barcelona (18) ✅
 - **Documentación Notion**: 4 páginas creadas en el War Room (Funcionalidades, Esquema técnico, Next Steps DB, Decisiones de diseño) ✅
 - **Grupos editables desde panel**: sección GESTIÓN (ámbar) con autocomplete + "Crear nuevo" ✅
 - **Clusters como donut pie chart**: proporciones de etapas CRM visibles en cada cluster ✅
@@ -490,7 +497,7 @@ model CrmLog {
 
 ## 12. Roadmap
 
-### Estado sesión 05/04/2026 (sesión 8)
+### Estado sesión 06/04/2026 (sesión 9)
 
 | # | Tarea | Prioridad | Estado | Notas |
 |---|---|---|---|---|
@@ -518,27 +525,43 @@ model CrmLog {
 | Y | Corrección aliases de provincia | Media | ✅ | sesión 8 — 271 empresas (Illes Balears, Lleida, Ourense, Elecnor) |
 | Z | Backfill PersonaCargo desde BORME | Alta | ✅ | sesión 8 — 366 insertados, total 8.182 PersonaCargo, 2.583 empresas |
 | — | 500 en endpoints cron Vercel | Alta | ✅ | Resuelto: devuelven 401 correctamente (sin CRON_SECRET) |
-| H | Task H: BORME cron → upsert PersonaCargo | Baja | ⏳ | Usar `bormePersonaToCargoKey()` al escribir nombramientos |
+| AA | Chat IA flotante | Alta | ✅ | sesión 9 — Claude + SQL SELECT, streaming, markdown, horizonte temporal |
+| AB | Re-geocoding mejorado (Nominatim) | Alta | ✅ | sesión 9 — 1.016 empresas (233 calle, 647 CP, 136 localidad) |
+| AC | Limpieza provincia/ccaa | Alta | ✅ | sesión 9 — 300+ empresas corregidas |
+| H | Task H: BORME cron → upsert PersonaCargo | Baja | ✅ | sesión 9 — upsert automático en PersonaCargo tras nuevas BormeAlerta |
+| — | Fase 2: PersonaCargo → tab personas-compartidas | Alta | ✅ | sesión 8 — Implementado con consulta directa a PersonaCargo |
 | I | Web enrichment | Baja | ⏳ | Logos, LinkedIn — bloqueado por SSL scraping |
-| — | Geocoding por Google Maps API | Media | ⏳ | Cascada: dirección+localidad → CP → localidad+provincia |
-| — | Fase 2: PersonaCargo → tab personas-compartidas | Alta | ⏳ | Reemplazar/complementar lógica BormeAlerta con PersonaCargo vigente |
 | — | Registros seg. electrónica otras CCAA | Media | ⏳ | Andalucía, Madrid, Valencia... |
 
 ### Detalle tareas pendientes
 
-**H — Task H: BORME cron → PersonaCargo** (baja prioridad)
-- Cuando el cron detecte un nombramiento, hacer upsert en PersonaCargo usando `bormePersonaToCargoKey(personaDetectada)` para convertir el nombre al formato clave
-- Fuente: `'borme'`. Mantiene PersonaCargo actualizado entre scrapings trimestrales.
+**Registros seg. electrónica otras CCAA**
+- Andalucía, Madrid, Valencia, etc. — cada CCAA tiene su propio registro de empresas de seguridad
 
-**Fase 2 — PersonaCargo en tab "personas-compartidas"**
-- Actualmente el tab parsea `BormeAlerta` al vuelo
-- Con PersonaCargo poblado: consultar directamente la tabla para personas físicas y jurídicas en ≥2 empresas
-- Ventaja: captura relaciones anteriores al backfill de 2 años; detecta grupos vía `esJuridica=true`
+### Funcionalidades completadas en sesión 9
 
-**Geocoding**
-- Cascada: (1) dirección + localidad → lat/lng exacta, (2) CP → centroide, (3) localidad + provincia → centroide
-- No usar flag de confianza
-- ~5.140 empresas, ~0.5€/1000 requests Google Maps
+**Chat IA flotante** (`src/components/ChatIA.tsx` + `src/app/api/chat/route.ts` + `src/lib/chat-schema.ts`)
+- Vercel AI SDK v6 (`ai@6.0.146`, `@ai-sdk/react`, `@ai-sdk/anthropic`)
+- `useChat` con `DefaultChatTransport` → `POST /api/chat`
+- Tool `execute_sql`: Claude genera queries SQL SELECT, backend ejecuta con `prisma.$queryRawUnsafe()`, resultados devueltos a Claude para formatear
+- Validación: solo SELECT, sin DROP/DELETE/UPDATE/INSERT/ALTER/TRUNCATE
+- BigInt serialization fix (Prisma COUNT/SUM → JSON.stringify con replacer)
+- `convertToModelMessages()` (async) para convertir UIMessage[] → ModelMessage[], stripping `id`
+- Markdown rendering: `react-markdown` + `@tailwindcss/typography` (prose-invert, text-xs)
+- System prompt incluye schema BD completo + instrucciones horizonte temporal
+- Variable de entorno: `ANTHROPIC_API_KEY` (en `.env.local` y Vercel)
+
+**Re-geocoding (Nominatim)**
+- Script `scripts/geocode-remaining.ts`: cascada dirección → CP → localidad
+- 1.016 empresas actualizadas (de 1.025 procesadas): 233 nivel calle, 647 nivel CP, 136 nivel localidad, 9 sin resultado
+- Respeta rate limit Nominatim (1.1s entre requests)
+
+**Limpieza provincia/ccaa**
+- 194 "Illes Balears" → "Baleares"
+- 61 provincia="Cataluña" → provincia correcta (Barcelona, Tarragona, etc.)
+- 37 null ccaa → rellenados desde mapeo provincia→ccaa
+- 20 Madrid-area empresas con ccaa incorrecto → corregidas manualmente
+- 18 mossos_registry sin dirección → asignadas a Barcelona/Cataluña
 
 ---
 
@@ -558,6 +581,7 @@ ADMIN_PASS_2=warroom2024
 PIPEDRIVE_API_KEY=...
 RESEND_API_KEY=...                   # Configurado en Vercel ✅
 CRON_SECRET=...                      # Configurado en Vercel ✅
+ANTHROPIC_API_KEY=...                # Chat IA — Configurado en Vercel ✅ (sesión 9)
 ```
 
 ---
@@ -587,6 +611,9 @@ npx dotenv-cli -e .env.local -- npx tsx scripts/scrape-empresia.ts --offset 500 
 npx dotenv-cli -e .env.local -- npx tsx scripts/validate-empresia.ts                      # Validación 4 dimensiones
 npx dotenv-cli -e .env.local -- npx tsx scripts/backfill-persona-cargo-borme.ts           # Backfill BORME para empresas sin empresia
 npx dotenv-cli -e .env.local -- npx tsx scripts/backfill-persona-cargo-borme.ts --dry-run # Preview sin escribir
+
+# Geocoding
+npx dotenv-cli -e .env.local -- npx tsx scripts/geocode-remaining.ts              # Re-geocoding Nominatim (EJECUTADO 06/04/2026)
 
 # Calidad de datos / Provincia
 npx dotenv-cli -e .env.local -- npx tsx scripts/check-cp-mismatches.ts            # Detecta CP vs provincia inconsistentes
@@ -649,3 +676,6 @@ bormePersonaToCargoKey("GUITARD MALDONADO ALVARO") → "ALVARO GUITARD MALDONADO
 - **Pipedrive — solo Dealflow**: el funnel de Fundraising (pipeline_id=2, stages 13-16) se ignora completamente. Solo existe el Dealflow (pipeline_id=1, stages 6-12). Los ~80 deals de FOs/inversores en stages 13-16 del mismo pipeline Dealflow tampoco se sincronizan (no matchean con empresas de la BD — correcto).
 - **Regla BD**: la BD es single source of truth. Salvo casos extremos, nunca añadir empresas nuevas a la BD manualmente — solo desde fuentes oficiales (Excel, BORME). Las 5 empresas de seg. electrónica añadidas en sesión 7 son la excepción confirmada por el usuario.
 - **Seg. electrónica — enPerimetro**: todas las empresas de sector `seguridad_electronica` (sin mixto) entran con `enPerimetro=true`. Las de sector `PCI` o `mixto` se gestionan desde el Excel de perímetro.
+- **Chat IA — Vercel AI SDK v6**: usa `convertToModelMessages()` (async) para convertir UIMessage[] a ModelMessage[]. Requiere strip del campo `id`. BigInt de Prisma se serializa con replacer custom en JSON.stringify.
+- **Chat IA — horizonte temporal**: el system prompt instruye a Claude a preguntar por horizonte temporal cuando la query implica datos temporales (BORME, financieros, CRM) y el usuario no especifica período.
+- **Geocoding Nominatim**: cascada dirección→CP→localidad. Rate limit 1.1s. User-Agent: "Fontiber-WarRoom/1.0". Ejecutado para empresas id>3125 con dirección o CP (06/04/2026).
