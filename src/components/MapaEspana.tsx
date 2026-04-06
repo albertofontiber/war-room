@@ -18,6 +18,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import type mapboxgl from "mapbox-gl";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { isInFilter } from "@/lib/filtros";
+import { fmtM, fmtPct } from "@/lib/format";
 import MapTooltip from "@/components/MapTooltip";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
@@ -260,18 +261,8 @@ function ClusterPie({ marker, onClick }: { marker: ClusterMarker; onClick: () =>
   );
 }
 
-function fmtMLocal(n: unknown): string {
-  if (n === null || n === undefined) return "n.a.";
-  const v = n as number;
-  if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(1)}M€`;
-  if (v >= 1_000) return `${(v / 1_000).toFixed(0)}K€`;
-  return `${v.toLocaleString("es-ES")}€`;
-}
-
-function fmtPctLocal(n: unknown): string {
-  if (n === null || n === undefined) return "—";
-  return `${(n as number).toFixed(1)}%`;
-}
+const fmtMLocal = (n: unknown) => fmtM(n as number | null);
+const fmtPctLocal = (n: unknown) => fmtPct(n as number | null, "—");
 
 function SeleccionAreaPanel({
   empresas,

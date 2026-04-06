@@ -6,8 +6,9 @@ import { authOptions } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const grupos = await prisma.grupo.findMany({
     orderBy: { nombre: "asc" },
@@ -95,4 +96,8 @@ export async function GET() {
   });
 
   return NextResponse.json(result);
+  } catch (error) {
+    console.error("GET /api/grupos/detalle", error);
+    return NextResponse.json({ error: "Error interno" }, { status: 500 });
+  }
 }

@@ -3,26 +3,8 @@
 import { useMemo, useState, useCallback } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { isInFilter } from "@/lib/filtros";
+import { fmt, fmtM, fmtPct } from "@/lib/format";
 import * as XLSX from "xlsx";
-
-// ─── Helpers ───────────────────────────────────────────────────────────────
-
-function fmtM(n: number | null | undefined): string {
-  if (n === null || n === undefined) return "n.a.";
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M€`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K€`;
-  return `${n.toLocaleString("es-ES")}€`;
-}
-
-function fmtPct(n: number | null | undefined): string {
-  if (n === null || n === undefined) return "n.a.";
-  return `${n.toFixed(1)}%`;
-}
-
-function fmt(n: number | null | undefined): string {
-  if (n === null || n === undefined) return "n.a.";
-  return n.toLocaleString("es-ES");
-}
 
 const SECTOR_LABEL: Record<string, string> = {
   PCI: "PCI",

@@ -5,6 +5,7 @@ interface FinRow {
   ingresos: number | null;
   margenBruto: number | null;
   ebitda: number | null;
+  resultadoNeto?: number | null;
 }
 
 export interface TendenciaResult {
@@ -44,7 +45,6 @@ export function enrichFinancieros(financieros: FinRow[]) {
     ebitda: f.ebitda,
     ebitdaPct:
       f.ingresos && f.ebitda ? (f.ebitda / f.ingresos) * 100 : null,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    resultadoNeto: (f as any).resultadoNeto ?? null,
+    resultadoNeto: f.resultadoNeto ?? null,
   }));
 }

@@ -9,13 +9,11 @@
  */
 
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { GRUPOS_SENALES } from "@/lib/borme-senales";
 import { bormePersonaToCargoKey } from "@/lib/normalize";
 
 export const dynamic = "force-dynamic";
-
-const prisma = new PrismaClient();
 
 // Personas ya conocidas (grupos) — convertidas al formato clave de PersonaCargo (tokens ordenados)
 const KNOWN_PERSONS_NORM = new Set(
@@ -212,7 +210,5 @@ export async function GET() {
   } catch (err) {
     console.error("[borme/personas-compartidas] Error:", err);
     return NextResponse.json({ error: String(err) }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
   }
 }

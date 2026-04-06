@@ -1,6 +1,7 @@
 "use client";
 
 import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { fmt, fmtM } from "@/lib/format";
 
 interface TooltipProps {
   x: number;
@@ -50,17 +51,6 @@ const STAGE_COLOR: Record<string, string> = {
   muerto: "bg-wr-red/20 text-wr-red",
 };
 
-function fmt(n: number | null, decimals = 0): string {
-  if (n === null || n === undefined) return "n.a.";
-  return n.toLocaleString("es-ES", { maximumFractionDigits: decimals });
-}
-
-function fmtM(n: number | null): string {
-  if (n === null || n === undefined) return "n.a.";
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M€`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K€`;
-  return `${n}€`;
-}
 
 function TendenciaIcon({ dir, pct }: { dir: string; pct: number | null }) {
   if (dir === "up")

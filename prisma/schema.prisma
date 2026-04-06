@@ -61,6 +61,9 @@ model Empresa {
   crmEstado        CrmEstado?
   crmLogs          CrmLog[]
   actividades      Actividad[]
+
+  @@index([nombre])
+  @@index([fuente])
 }
 
 model Financiero {
@@ -94,6 +97,8 @@ model BormeAlerta {
   personaDetectada String?        // nombre normalizado de la persona clave detectada
   createdAt        DateTime       @default(now())
   personas         BormePersona[]
+
+  @@index([fecha])
 }
 
 model BormePersona {

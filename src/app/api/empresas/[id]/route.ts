@@ -10,15 +10,16 @@ export async function GET(
   _req: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const id = parseInt(params.id, 10);
-  if (isNaN(id))
-    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    const id = parseInt(params.id, 10);
+    if (isNaN(id))
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
-  const empresa = await prisma.empresa.findUnique({
+    const empresa = await prisma.empresa.findUnique({
     where: { id },
     include: {
       grupo: { select: { id: true, nombre: true, tipo: true } },
@@ -108,4 +109,8 @@ export async function GET(
     },
     { headers: { "Cache-Control": "no-store" } }
   );
+  } catch (error) {
+    console.error("GET /api/empresas/[id]", error);
+    return NextResponse.json({ error: "Error interno" }, { status: 500 });
+  }
 }

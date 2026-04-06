@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { fmtM as _fmtM, fmtPct as _fmtPct, fmtFechaShort } from "@/lib/format";
+import { BORME_TIPO } from "@/lib/borme-constants";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -102,17 +104,8 @@ interface RecienteItem {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function fmtM(v: number | null): string {
-  if (v === null || v === undefined) return "—";
-  if (Math.abs(v) >= 1_000_000) return `${(v / 1_000_000).toFixed(1)}M€`;
-  if (Math.abs(v) >= 1_000) return `${(v / 1_000).toFixed(0)}K€`;
-  return `${v.toFixed(0)}€`;
-}
-
-function fmtPct(v: number | null): string {
-  if (v === null || v === undefined) return "—";
-  return `${v.toFixed(1)}%`;
-}
+const fmtM = (v: number | null) => _fmtM(v, "—");
+const fmtPct = (v: number | null) => _fmtPct(v, "—");
 
 function ebitdaColor(v: number | null): string {
   if (v === null) return "text-wr-muted";
@@ -122,28 +115,13 @@ function ebitdaColor(v: number | null): string {
   return "text-red-400";
 }
 
-function fmtFechaShort(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "2-digit" });
-}
 
-// ─── Badge config ─────────────────────────────────────────────────────────────
-
-const TIPO_CONFIG: Record<string, { label: string; pill: string }> = {
-  fusion:              { label: "Fusión",        pill: "bg-purple-500/20 text-purple-300 border-purple-500/30" },
-  adquisicion:         { label: "Adquisición",   pill: "bg-wr-blue/20 text-wr-blue border-wr-blue/30" },
-  posible_adquisicion: { label: "Posible adq.",  pill: "bg-orange-500/20 text-orange-300 border-orange-500/30" },
-  nombramiento_grupo:  { label: "Nombramiento",  pill: "bg-green-500/20 text-green-300 border-green-500/30" },
-  nombramiento:        { label: "Nombramiento",  pill: "bg-green-500/20 text-green-300 border-green-500/30" },
-  cambio_denominacion: { label: "Rebranding",    pill: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" },
-  disolucion:          { label: "Disolución",    pill: "bg-red-500/20 text-red-300 border-red-500/30" },
-  otros:               { label: "Otro acto",     pill: "bg-wr-surface2 text-wr-muted border-wr-border" },
-};
+// Badge config: BORME_TIPO imported from @/lib/borme-constants
 
 const FILTER_TIPOS = ["fusion", "adquisicion", "posible_adquisicion", "nombramiento", "cambio_denominacion"] as const;
 
 function TipoPill({ tipo }: { tipo: string }) {
-  const cfg = TIPO_CONFIG[tipo] ?? { label: tipo, pill: "bg-wr-surface2 text-wr-muted border-wr-border" };
+  const cfg = BORME_TIPO[tipo] ?? { label: tipo, pill: "bg-wr-surface2 text-wr-muted border-wr-border" };
   return (
     <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold border whitespace-nowrap ${cfg.pill}`}>
       {cfg.label}
@@ -771,7 +749,7 @@ export default function OperacionesBorme() {
         {subVista === "senales" && (
           <div className="flex items-center gap-1">
             {FILTER_TIPOS.map((t) => {
-              const cfg = TIPO_CONFIG[t];
+              const cfg = BORME_TIPO[t];
               const on = tiposActivos.has(t);
               return (
                 <button key={t} onClick={() => toggleTipo(t)}
@@ -833,7 +811,7 @@ export default function OperacionesBorme() {
             <span className="font-semibold text-wr-text">{filteredItems.length} señales</span>
             <span className="text-wr-border">·</span>
             {Object.entries(stats.porTipo).map(([tipo, n]) => (
-              <span key={tipo}><span className="font-medium text-wr-text">{n}</span> {TIPO_CONFIG[tipo]?.label ?? tipo}</span>
+              <span key={tipo}><span className="font-medium text-wr-text">{n}</span> {BORME_TIPO[tipo]?.label ?? tipo}</span>
             ))}
             <span className="text-wr-border">·</span>
             <span><span className="font-medium text-wr-blue">{stats.gruposActivos}</span> grupos activos</span>
@@ -853,7 +831,7 @@ export default function OperacionesBorme() {
             {Object.entries(
               filteredRecientes.reduce((acc, i) => { acc[i.tipoActo] = (acc[i.tipoActo] ?? 0) + 1; return acc; }, {} as Record<string, number>)
             ).map(([tipo, n]) => (
-              <span key={tipo}><span className="font-medium text-wr-text">{n}</span> {TIPO_CONFIG[tipo]?.label ?? tipo}</span>
+              <span key={tipo}><span className="font-medium text-wr-text">{n}</span> {BORME_TIPO[tipo]?.label ?? tipo}</span>
             ))}
           </>
         )}

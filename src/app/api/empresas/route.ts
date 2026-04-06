@@ -21,97 +21,102 @@ function getJitter(cif: string, axis: 0 | 1): number {
 }
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const empresas = await prisma.empresa.findMany({
-    include: {
-      grupo: { select: { id: true, nombre: true } },
-      financieros: { orderBy: { anio: "desc" } },
-      crmEstado: {
-        select: { dealStage: true, pipedriveOrgId: true },
-      },
-      bormeAlertas: {
-        select: { id: true, fecha: true, tipoActo: true },
-      },
-    },
-  });
-
-  const cutoff7d = new Date();
-  cutoff7d.setDate(cutoff7d.getDate() - 7);
-  const PULSE_TIPOS = new Set(["fusion", "adquisicion", "posible_adquisicion"]);
-
-  const features = empresas
-    .filter((e) => e.lat !== null && e.lng !== null)
-    .map((empresa) => {
-      // Latest financial year
-      const latestFin = empresa.financieros[0] ?? null;
-
-      const ingresos = latestFin?.ingresos ?? null;
-      const margenBruto = latestFin?.margenBruto ?? null;
-      const ebitda = latestFin?.ebitda ?? null;
-      const margenBrutoPct =
-        ingresos && margenBruto ? (margenBruto / ingresos) * 100 : null;
-      const ebitdaPct =
-        ingresos && ebitda ? (ebitda / ingresos) * 100 : null;
-
-      const tendenciaIngresos = calcTendencia(empresa.financieros, "ingresos");
-
-      const bormeAlertasCount = empresa.bormeAlertas.length;
-      const hasBormeReciente = empresa.bormeAlertas.some(
-        (a) => PULSE_TIPOS.has(a.tipoActo) && new Date(a.fecha) > cutoff7d
-      );
-
-      const dealStage = empresa.crmEstado?.dealStage ?? null;
-
-      return {
-        type: "Feature" as const,
-        geometry: {
-          type: "Point" as const,
-          coordinates: [empresa.lng! + getJitter(empresa.cif, 0), empresa.lat! + getJitter(empresa.cif, 1)],
+    const empresas = await prisma.empresa.findMany({
+      include: {
+        grupo: { select: { id: true, nombre: true } },
+        financieros: { orderBy: { anio: "desc" } },
+        crmEstado: {
+          select: { dealStage: true, pipedriveOrgId: true },
         },
-        properties: {
-          id: empresa.id,
-          cif: empresa.cif,
-          nombre: empresa.nombre,
-          localidad: empresa.localidad,
-          provincia: empresa.provincia,
-          ccaa: empresa.ccaa,
-          sector: empresa.sector,
-          dealStage,
-          // Financieros (último año disponible)
-          ingresos,
-          margenBruto,
-          margenBrutoPct,
-          ebitda,
-          ebitdaPct,
-          empleados: empresa.empleados,
-          // Perímetro
-          enPerimetro: empresa.enPerimetro,
-          // BORME
-          bormeAlertasCount,
-          hasBormeReciente,
-          // Enrichment
-          logoUrl: empresa.logoUrl,
-          web: empresa.web,
-          grupoId: empresa.grupoId,
-          grupoNombre: empresa.grupo?.nombre ?? null,
-          cepreven: empresa.cepreven,
-          aerme: empresa.aerme,
-          score: empresa.score,
-          // Tendencia ingresos
-          tendencia: tendenciaIngresos?.direccion ?? "flat",
-          variacionPct: tendenciaIngresos?.variacionPct ?? null,
+        bormeAlertas: {
+          select: { id: true, fecha: true, tipoActo: true },
         },
-      };
+      },
     });
 
-  return NextResponse.json(
-    { type: "FeatureCollection", features },
-    {
-      headers: {
-        "Cache-Control": "no-store",
-      },
-    }
-  );
+    const cutoff7d = new Date();
+    cutoff7d.setDate(cutoff7d.getDate() - 7);
+    const PULSE_TIPOS = new Set(["fusion", "adquisicion", "posible_adquisicion"]);
+
+    const features = empresas
+      .filter((e) => e.lat !== null && e.lng !== null)
+      .map((empresa) => {
+        // Latest financial year
+        const latestFin = empresa.financieros[0] ?? null;
+
+        const ingresos = latestFin?.ingresos ?? null;
+        const margenBruto = latestFin?.margenBruto ?? null;
+        const ebitda = latestFin?.ebitda ?? null;
+        const margenBrutoPct =
+          ingresos && margenBruto ? (margenBruto / ingresos) * 100 : null;
+        const ebitdaPct =
+          ingresos && ebitda ? (ebitda / ingresos) * 100 : null;
+
+        const tendenciaIngresos = calcTendencia(empresa.financieros, "ingresos");
+
+        const bormeAlertasCount = empresa.bormeAlertas.length;
+        const hasBormeReciente = empresa.bormeAlertas.some(
+          (a) => PULSE_TIPOS.has(a.tipoActo) && new Date(a.fecha) > cutoff7d
+        );
+
+        const dealStage = empresa.crmEstado?.dealStage ?? null;
+
+        return {
+          type: "Feature" as const,
+          geometry: {
+            type: "Point" as const,
+            coordinates: [empresa.lng! + getJitter(empresa.cif, 0), empresa.lat! + getJitter(empresa.cif, 1)],
+          },
+          properties: {
+            id: empresa.id,
+            cif: empresa.cif,
+            nombre: empresa.nombre,
+            localidad: empresa.localidad,
+            provincia: empresa.provincia,
+            ccaa: empresa.ccaa,
+            sector: empresa.sector,
+            dealStage,
+            // Financieros (último año disponible)
+            ingresos,
+            margenBruto,
+            margenBrutoPct,
+            ebitda,
+            ebitdaPct,
+            empleados: empresa.empleados,
+            // Perímetro
+            enPerimetro: empresa.enPerimetro,
+            // BORME
+            bormeAlertasCount,
+            hasBormeReciente,
+            // Enrichment
+            logoUrl: empresa.logoUrl,
+            web: empresa.web,
+            grupoId: empresa.grupoId,
+            grupoNombre: empresa.grupo?.nombre ?? null,
+            cepreven: empresa.cepreven,
+            aerme: empresa.aerme,
+            score: empresa.score,
+            // Tendencia ingresos
+            tendencia: tendenciaIngresos?.direccion ?? "flat",
+            variacionPct: tendenciaIngresos?.variacionPct ?? null,
+          },
+        };
+      });
+
+    return NextResponse.json(
+      { type: "FeatureCollection", features },
+      {
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("GET /api/empresas", error);
+    return NextResponse.json({ error: "Error interno" }, { status: 500 });
+  }
 }

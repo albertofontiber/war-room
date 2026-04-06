@@ -3,16 +3,9 @@
 import { useMemo, useEffect, useState } from "react";
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { fmtM } from "@/lib/format";
 import { FILTROS_DEFAULT } from "@/types";
 import type { DealStage, Sector } from "@/types";
-
-// ─── Helpers ──────────────────────────────────────────────────────────────
-
-function fmtM(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(0)}M€`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K€`;
-  return `${n}€`;
-}
 
 // ─── Range slider de dos thumbs ───────────────────────────────────────────
 

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fmtM as _fmtM, fmtPct as _fmtPct, fmtDate as _fmtDate } from "@/lib/format";
+import { BORME_TIPO } from "@/lib/borme-constants";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -52,15 +54,7 @@ const TIPO_GRUPO: Record<string, { label: string; pill: string }> = {
   multinacional:  { label: "Multinacional",  pill: "bg-orange-500/20 text-orange-300 border-orange-500/30" },
 };
 
-const BORME_TIPO: Record<string, { label: string; pill: string }> = {
-  fusion:              { label: "Fusión",       pill: "bg-purple-500/20 text-purple-300 border-purple-500/30" },
-  adquisicion:         { label: "Adquisición",  pill: "bg-wr-blue/20 text-wr-blue border-wr-blue/30" },
-  posible_adquisicion: { label: "Posible adq.", pill: "bg-orange-500/20 text-orange-300 border-orange-500/30" },
-  nombramiento_grupo:  { label: "Nombr.",       pill: "bg-green-500/20 text-green-300 border-green-500/30" },
-  nombramiento:        { label: "Nombr.",       pill: "bg-green-500/20 text-green-300 border-green-500/30" },
-  cambio_denominacion: { label: "Rebranding",   pill: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" },
-  disolucion:          { label: "Disolución",   pill: "bg-red-500/20 text-red-300 border-red-500/30" },
-};
+// BORME_TIPO imported from @/lib/borme-constants
 
 const CRM_PILL: Record<string, string> = {
   identificado:    "bg-[#64748b]/20 text-[#94a3b8]",
@@ -82,21 +76,9 @@ const CRM_LABEL: Record<string, string> = {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function fmtM(n: number | null): string {
-  if (n == null) return "—";
-  if (Math.abs(n) >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M€`;
-  if (Math.abs(n) >= 1_000) return `${(n / 1_000).toFixed(0)}K€`;
-  return `${n}€`;
-}
-
-function fmtPct(n: number | null): string {
-  if (n == null) return "—";
-  return `${n.toFixed(1)}%`;
-}
-
-function fmtDate(s: string): string {
-  return new Date(s).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "2-digit" });
-}
+const fmtM = (n: number | null) => _fmtM(n, "—");
+const fmtPct = (n: number | null) => _fmtPct(n, "—");
+const fmtDate = (s: string) => _fmtDate(s, "—");
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 

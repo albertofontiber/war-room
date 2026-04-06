@@ -7,41 +7,19 @@
  */
 
 import { prisma } from "@/lib/prisma";
+import { fmtM as _fmtM } from "@/lib/format";
+import { BORME_TIPO, BORME_TIPO_ORDER, BORME_DETAIL_TIPOS } from "@/lib/borme-constants";
 
-const TIPO_LABEL: Record<string, string> = {
-  fusion:              "Fusión",
-  adquisicion:        "Adquisición",
-  posible_adquisicion: "Posible adq.",
-  nombramiento:       "Nombramiento",
-  nombramiento_grupo: "Nom. grupo",
-  cambio_denominacion: "Rebranding",
-  disolucion:         "Disolución",
-  otros:              "Otros",
-};
+const TIPO_LABEL = Object.fromEntries(
+  Object.entries(BORME_TIPO).map(([k, v]) => [k, v.label])
+);
+const TIPO_COLOR = Object.fromEntries(
+  Object.entries(BORME_TIPO).map(([k, v]) => [k, v.pill])
+);
+const DETAIL_TIPOS = BORME_DETAIL_TIPOS;
+const TIPO_ORDER = BORME_TIPO_ORDER;
 
-const TIPO_COLOR: Record<string, string> = {
-  fusion:              "text-violet-400 bg-violet-400/10 border-violet-400/30",
-  adquisicion:        "text-blue-400 bg-blue-400/10 border-blue-400/30",
-  posible_adquisicion: "text-orange-400 bg-orange-400/10 border-orange-400/30",
-  nombramiento:       "text-green-400 bg-green-400/10 border-green-400/30",
-  nombramiento_grupo: "text-green-400 bg-green-400/10 border-green-400/30",
-  cambio_denominacion: "text-amber-400 bg-amber-400/10 border-amber-400/30",
-  disolucion:         "text-red-400 bg-red-400/10 border-red-400/30",
-  otros:              "text-wr-hint bg-wr-hint/10 border-wr-hint/30",
-};
-
-const DETAIL_TIPOS = new Set(["fusion", "adquisicion", "posible_adquisicion"]);
-const TIPO_ORDER = [
-  "fusion", "adquisicion", "posible_adquisicion",
-  "cambio_denominacion", "nombramiento", "disolucion", "otros",
-];
-
-function fmtM(v: number | null | undefined): string {
-  if (v == null) return "—";
-  if (Math.abs(v) >= 1_000_000) return `${(v / 1_000_000).toFixed(1)}M€`;
-  if (Math.abs(v) >= 1_000) return `${Math.round(v / 1_000)}K€`;
-  return `${Math.round(v)}€`;
-}
+const fmtM = (v: number | null | undefined) => _fmtM(v, "—");
 
 function fmtDate(d: Date): string {
   return d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" });

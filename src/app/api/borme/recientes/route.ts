@@ -5,9 +5,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -68,7 +66,5 @@ export async function GET() {
   } catch (err) {
     console.error("[borme/recientes] Error:", err);
     return NextResponse.json({ error: String(err) }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
   }
 }

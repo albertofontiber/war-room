@@ -12,11 +12,9 @@
  */
 
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
-
-const prisma = new PrismaClient();
 
 const TIPOS_OPERACIONALES = [
   "fusion",
@@ -197,7 +195,5 @@ export async function GET() {
   } catch (err) {
     console.error("[borme/operaciones] Error:", err);
     return NextResponse.json({ error: String(err) }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
   }
 }

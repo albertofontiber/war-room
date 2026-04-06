@@ -2,7 +2,9 @@
 
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { fmt, fmtM, fmtPct, fmtDate, fmtMillions } from "@/lib/format";
 import type { EmpresaDetalle, TipoActividad } from "@/types";
+import { getBormeTipo } from "@/lib/borme-constants";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -55,21 +57,6 @@ const ACTIVIDAD_ICON: Record<TipoActividad, string> = {
   reunion: "R",
 };
 
-const BORME_TIPO: Record<string, { label: string; pill: string; dot: string }> = {
-  fusion:              { label: "Fusión",        pill: "bg-purple-500/20 text-purple-300 border-purple-500/30", dot: "bg-purple-400" },
-  adquisicion:         { label: "Adquisición",   pill: "bg-wr-blue/20 text-wr-blue border-wr-blue/30",         dot: "bg-wr-blue" },
-  posible_adquisicion: { label: "Posible adq.",  pill: "bg-orange-500/20 text-orange-300 border-orange-500/30", dot: "bg-orange-400" },
-  nombramiento_grupo:  { label: "Nombramiento",  pill: "bg-green-500/20 text-green-300 border-green-500/30",   dot: "bg-green-400" },
-  nombramiento:        { label: "Nombramiento",  pill: "bg-green-500/20 text-green-300 border-green-500/30",   dot: "bg-green-400" },
-  cambio_denominacion: { label: "Rebranding",    pill: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30", dot: "bg-yellow-400" },
-  disolucion:          { label: "Disolución",    pill: "bg-red-500/20 text-red-300 border-red-500/30",         dot: "bg-red-400" },
-  ampliacion_capital:  { label: "Amp. capital",  pill: "bg-teal-500/20 text-teal-300 border-teal-500/30",      dot: "bg-teal-400" },
-  otros:               { label: "Otro acto",     pill: "bg-wr-surface2 text-wr-muted border-wr-border",        dot: "bg-wr-muted" },
-};
-
-function getBormeTipo(tipoActo: string) {
-  return BORME_TIPO[tipoActo] ?? BORME_TIPO.otros;
-}
 
 function bormeContexto(tipoActo: string, grupoNombre: string | null | undefined): string | null {
   if (!grupoNombre) return null;
@@ -80,32 +67,6 @@ function bormeContexto(tipoActo: string, grupoNombre: string | null | undefined)
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
-
-function fmt(n: number | null): string {
-  if (n === null || n === undefined) return "n.a.";
-  return n.toLocaleString("es-ES");
-}
-
-function fmtM(n: number | null): string {
-  if (n === null || n === undefined) return "n.a.";
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M€`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K€`;
-  return `${n.toLocaleString("es-ES")}€`;
-}
-
-function fmtPct(n: number | null): string {
-  if (n === null || n === undefined) return "n.a.";
-  return `${n.toFixed(1)}%`;
-}
-
-function fmtDate(d: string | null): string {
-  if (!d) return "n.a.";
-  return new Date(d).toLocaleDateString("es-ES", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
 
 function TendenciaArrow({
   dir,
@@ -180,9 +141,6 @@ type FinRow = {
   ebitdaPct: number | null;
 };
 
-function fmtMillions(v: number) {
-  return `${(v / 1_000_000).toFixed(1)}M`;
-}
 
 function HistoricoChart({ financieros }: { financieros: FinRow[] }) {
   // Orden cronológico ascendente para el eje X

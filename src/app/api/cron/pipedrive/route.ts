@@ -22,6 +22,26 @@ const STAGE_MAP: Record<number, string> = {
 // Campo personalizado CIF en deals del pipeline Dealflow
 const CIF_FIELD_KEY = "f7524d9f2b0ba3ec93adfd71bf8c6135d9c42d00";
 
+interface PipedriveDeal {
+  org_name?: string;
+  title?: string;
+  org_id?: { value: number } | null;
+  user_id?: { name: string } | null;
+  status: string;
+  stage_id: number;
+  [key: string]: unknown; // custom fields like CIF_FIELD_KEY
+}
+
+interface PipedriveResponse {
+  success: boolean;
+  data: PipedriveDeal[] | null;
+  additional_data?: {
+    pagination?: {
+      more_items_in_collection?: boolean;
+    };
+  };
+}
+
 function coreNombre(nombre: string): string {
   return nombre
     .replace(/\s*\(.*?\)\s*/g, " ")  // elimina sufijos entre paréntesis, ej: "(Prodein)"
@@ -30,16 +50,14 @@ function coreNombre(nombre: string): string {
     .trim();
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function fetchAllDeals(): Promise<any[]> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const all: any[] = [];
+async function fetchAllDeals(): Promise<PipedriveDeal[]> {
+  const all: PipedriveDeal[] = [];
   let start = 0;
   while (true) {
     const url =
       `${BASE}/deals?pipeline_id=${DEALFLOW_PIPELINE_ID}` +
       `&status=all_not_deleted&limit=500&start=${start}&api_token=${API_KEY}`;
-    const res = await fetch(url).then((r) => r.json());
+    const res: PipedriveResponse = await fetch(url).then((r) => r.json());
     if (!res.success || !Array.isArray(res.data)) break;
     all.push(...res.data);
     if (!res.additional_data?.pagination?.more_items_in_collection) break;
@@ -107,11 +125,11 @@ export async function GET(req: NextRequest) {
       } else if (deal.status === "won") {
         dealStage = "portfolio";
       } else {
-        dealStage = STAGE_MAP[deal.stage_id as number] ?? "prospecto";
+        dealStage = STAGE_MAP[deal.stage_id] ?? "prospecto";
       }
 
       // 1ª prioridad: CIF del deal
-      const dealCif: string | null = (deal[CIF_FIELD_KEY] as string) ?? null;
+      const dealCif: string | null = typeof deal[CIF_FIELD_KEY] === "string" ? deal[CIF_FIELD_KEY] : null;
       const byCif = dealCif ? cifToId.get(dealCif.toUpperCase().trim()) ?? null : null;
       // 2ª prioridad: orgId ya vinculado en CrmEstado
       const byOrgId = orgId != null ? orgIdToEmpresaId.get(String(orgId)) : null;
