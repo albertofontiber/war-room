@@ -9,6 +9,7 @@ import TablaEmpresas from "@/components/TablaEmpresas";
 import PanelEmpresa from "@/components/PanelEmpresa";
 import OperacionesBorme from "@/components/OperacionesBorme";
 import GruposView from "@/components/GruposView";
+import ChatIA from "@/components/ChatIA";
 
 const MapaEspana = dynamic(() => import("@/components/MapaEspana"), {
   ssr: false,
@@ -54,6 +55,9 @@ export default function WarRoomLayout() {
 
       {/* ── Panel lateral derecho 340px — solo en mapa/tabla/grupos ── */}
       {panelAbierto && vistaActual !== "operaciones" && <PanelEmpresa />}
+
+      {/* ── Chat IA flotante ── */}
+      <ChatIA />
     </div>
   );
 }

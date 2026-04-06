@@ -121,6 +121,8 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 UTC L
 - **normalize.ts**: librería compartida de normalización de nombres (sesión 8) ✅ — `normalizePersona()`, `normText()`, `bormePersonaToCargoKey()`
 - **PersonaCargo (esJuridica)**: campo `esJuridica Boolean` añadido al schema; scraping captura empresas jurídicas administradoras además de personas físicas (sesión 8) ✅
 - **Scraping empresia.es Run 3**: 7.816 PersonaCargo en ~2.429 empresas (del universo de ~5.140) ✅
+- **Personas-compartidas Fase 2**: tab "Alertas personas" consulta PersonaCargo directamente (vs parseo BormeAlerta); badge fuente (empresia/borme); displayName en orden natural ✅
+- **Task H: BORME cron → PersonaCargo**: tras cada nueva BormeAlerta de tipo nombramiento/otros, upsert automático en PersonaCargo ✅
 - **Corrección aliases de provincia**: 271 empresas corregidas (Illes Balears→Baleares ×195, Lleida→Lérida ×53, Ourense→Orense ×23, Elecnor SA Sevilla→Madrid) ✅
 - **Backfill PersonaCargo desde BORME**: 366 registros nuevos para empresas sin datos empresia → total 8.182 PersonaCargo, 2.583 empresas con cargo vigente ✅
 - **Registro Ertzaintza (País Vasco)**: 7 PCI→mixto + 4 nuevas empresas insertadas (enPerimetro: true, fuente: ertzaintza_registry) ✅
@@ -206,33 +208,33 @@ Vista accesible desde el botón **"Operaciones"** en la Navbar.
 ### Sub-tab "Señales M&A"
 
 - **API**: `GET /api/borme/operaciones`
-  - Devuelve señales operacionales (fusion + adquisicion + cambio_denominacion + nombramiento_grupo)
+  - `TIPOS_OPERACIONALES = ["fusion", "adquisicion", "cambio_denominacion", "nombramiento_grupo", "nombramiento"]`
   - Enriquecidas con: financieros del año más reciente, grupoInferido, adquirente extraído del texto
-  - Calcula `efectiveTipo` (posible_adquisicion / nombramiento)
+  - Calcula `efectiveTipo`:
+    - `nombramiento_grupo` + empresa NO en el grupo → `posible_adquisicion`
+    - `nombramiento_grupo` + empresa YA en el grupo → se muestra como `nombramiento` (actividad interna del grupo)
+    - resto de tipos → igual que `tipoActo`
   - Deduplicación por (empresaId, día): conserva el tipo de mayor prioridad
 - **Botón refresh** (↻) para forzar re-fetch sin recargar página
 - **Tabla compacta** sortable por fecha / ingresos / EBITDA%
   - Columnas: Fecha | Tipo | Empresa (⊕ perímetro, link web) | Adquirente | Ingresos | EBITDA | MB% | BORME↗
   - Click en fila → expande descripción inline
   - Filas `posible_adquisicion` con fondo naranja tenue
-- **Filtros de tipo**: Fusión / Adquisición / Posible adq. / Rebranding (pills)
+- **Filtros de tipo**: Fusión / Adquisición / Posible adq. / Nombramiento / Rebranding (pills)
 - **Filtro de fecha**: desde / hasta
 - **Filtros del sidebar** (enPerimetro, CCAA, provincia, sector, grupoId, ingresos) → aplicados client-side
 
 ### Sub-tab "Alertas personas"
 
-- **API**: `GET /api/borme/personas-compartidas`
-  - Extrae nombres de personas de los textos BORME (patrón "Rol: NOMBRE APELLIDO")
-  - Distingue secciones de NOMBRAMIENTO vs CESE/REVOCACION/DIMISION/BAJA mediante marcadores posicionales
-  - **Lógica "latest event wins"**: por cada par (persona, empresa) se guarda el evento más reciente; si es revocación → `isActive=false`; si es nombramiento → `isActive=true`
-  - Solo aparecen en el resultado personas con `isActive=true` en ≥2 empresas distintas
-  - Incluye alertas de `tipoActo = "otros"` (donde viven las revocaciones tras el backfill) además de nombramientos
-  - Excluye personas ya en GRUPOS_SENALES (conocidas)
-  - Incluye `urlBorme` del nombramiento activo para cada (persona, empresa)
-  - REJECT_WORDS extendido: INISTRACION, INISTRADOR, CONCURSAL, SOCIEDAD, CONSTITUCION (fragmentos truncados del BORME)
+- **API**: `GET /api/borme/personas-compartidas` — **Fase 2: consulta PersonaCargo directamente**
+  - Lee `PersonaCargo WHERE vigente=true`, agrupa por `nombreNorm`
+  - Solo aparecen personas con registros activos en ≥2 empresas distintas
+  - Excluye personas ya en GRUPOS_SENALES (convertidas a formato PersonaCargo con `bormePersonaToCargoKey`)
+  - Para registros de `fuente='borme'`: lookup secundario en BormeAlerta por (empresaId, fechaDesde) para recuperar `urlBorme`
+  - `displayName`: nombre en orden natural (preferido: nombreOrig de fuente=empresia; fallback: borme)
 - **Tabla colapsable** por persona:
-  - Fila colapsada: Persona | Empresas (count) | En perímetro | Ingresos totales | Última incorporación
-  - Fila expandida (por empresa): Empresa (clickable + grupo pill + web icon) | Rol | Ingresos | EBITDA·GM% | Fecha·BORME↗
+  - Fila colapsada: Persona (displayName) | Empresas (count) | En perímetro | Ingresos totales | Última incorporación
+  - Fila expandida (por empresa): Empresa (clickable + grupo pill + web icon) | Badge fuente (empresia/borme) | Rol | Ingresos | EBITDA·GM% | Fecha·BORME↗
   - Headers sortables: nombre / ingresos / enPerimetro (con indicadores ↑↓↕)
 - **Filtros del sidebar** → se muestra una persona si AL MENOS UNA de sus empresas activas pasa el filtro
 

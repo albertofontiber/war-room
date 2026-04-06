@@ -20,6 +20,20 @@ export interface GrupoSenales {
   keywordsSocioUnico: string[];
 }
 
+/**
+ * NOTA sobre normalización de nombres de personas:
+ *
+ * - El campo `personas` usa formato "búsqueda en texto BORME":
+ *   mayúsculas, sin tildes, orden natural (p.ej. "GUITARD MALDONADO ALVARO").
+ *   Se busca como substring en el texto del acto via norm().
+ *
+ * - Para obtener la clave PersonaCargo.nombreNorm equivalente, usar:
+ *   import { bormePersonaToCargoKey } from './normalize';
+ *   bormePersonaToCargoKey("GUITARD MALDONADO ALVARO") → "ALVARO GUITARD MALDONADO"
+ *
+ * Cuando Task H escriba nombramientos en PersonaCargo, debe pasar
+ * personaDetectada por bormePersonaToCargoKey() para obtener el nombreNorm.
+ */
 export const GRUPOS_SENALES: GrupoSenales[] = [
   {
     grupoNombre: "Grupo Fire",
@@ -74,12 +88,17 @@ export const GRUPOS_SENALES: GrupoSenales[] = [
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** Normaliza texto para comparación: mayúsculas sin diacríticos */
+/**
+ * Normaliza texto para búsqueda en PDFs BORME: mayúsculas, sin diacríticos,
+ * sin puntuación. Solo para detectar substrings en texto libre.
+ * NO usar para generar claves PersonaCargo — usar normalizePersona() de normalize.ts.
+ */
 export function norm(s: string): string {
   return s
     .toUpperCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^A-Z0-9\s]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }

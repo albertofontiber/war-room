@@ -81,6 +81,7 @@ const config: Config = {
     },
   },
   plugins: [
+    require("@tailwindcss/typography"),
     // shadcn/ui components use outline-ring/* opacity modifiers — define it here
     function ({ addUtilities, theme }: { addUtilities: (u: Record<string, Record<string,string>>) => void; theme: (k: string) => Record<string,string> }) {
       addUtilities({

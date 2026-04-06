@@ -169,6 +169,7 @@ async function main() {
   const offsetArg = args.find(a => a.startsWith('--offset=') || args[args.indexOf('--offset') + 1]);
   const cifArg = args.find(a => a.startsWith('--cif='))?.split('=')[1]
     || (args.includes('--cif') ? args[args.indexOf('--cif') + 1] : null);
+  const missingData = args.includes('--missing-data');
   const offset = offsetArg ? parseInt(offsetArg.replace('--offset=', '')) || 0 : 0;
 
   // ── Modo test: una sola empresa ──────────────────────────────────────────
@@ -181,11 +182,26 @@ async function main() {
   }
 
   // ── Modo completo ────────────────────────────────────────────────────────
-  const empresas = await prisma.empresa.findMany({
-    select: { id: true, cif: true, nombre: true },
-    orderBy: { id: 'asc' },
-    skip: offset,
-  });
+  let empresas;
+  if (missingData) {
+    // Solo empresas sin PersonaCargo de empresia (nunca scrapeadas)
+    empresas = await prisma.$queryRaw<{ id: number; cif: string; nombre: string }[]>`
+      SELECT e.id, e.cif, e.nombre
+      FROM "Empresa" e
+      WHERE NOT EXISTS (
+        SELECT 1 FROM "PersonaCargo" pc
+        WHERE pc."empresaId" = e.id AND pc.fuente = 'empresia'
+      )
+      ORDER BY e.id ASC
+    `;
+    console.log(`🔍 Modo --missing-data: solo empresas sin scraping previo de empresia`);
+  } else {
+    empresas = await prisma.empresa.findMany({
+      select: { id: true, cif: true, nombre: true },
+      orderBy: { id: 'asc' },
+      skip: offset,
+    });
+  }
 
   console.log(`📋 ${empresas.length} empresas a procesar (offset=${offset})`);
   console.log(`⏱  Tiempo estimado: ~${Math.round(empresas.length * DELAY_MS / 1000 / 60)} minutos\n`);

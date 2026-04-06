@@ -56,6 +56,8 @@ interface ExcelRow {
 
 // ─── Geocoding ────────────────────────────────────────────────────────────────
 
+const NOMINATIM_UA = "Fontiber-WarRoom/1.0 (internal geocoding)";
+
 async function geocodeByPostalCode(
   cp: string
 ): Promise<{ lat: number; lng: number } | null> {
@@ -63,9 +65,27 @@ async function geocodeByPostalCode(
     const url =
       `https://nominatim.openstreetmap.org/search` +
       `?postalcode=${encodeURIComponent(cp)}&country=Spain&format=json&limit=1`;
-    const res = await fetch(url, {
-      headers: { "User-Agent": "Fontiber-WarRoom/1.0 (internal geocoding)" },
-    });
+    const res = await fetch(url, { headers: { "User-Agent": NOMINATIM_UA } });
+    if (!res.ok) return null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = (await res.json()) as any[];
+    if (!data.length) return null;
+    return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+  } catch {
+    return null;
+  }
+}
+
+async function geocodeByLocality(
+  localidad: string,
+  provincia: string | null
+): Promise<{ lat: number; lng: number } | null> {
+  try {
+    const q = provincia ? `${localidad}, ${provincia}, Spain` : `${localidad}, Spain`;
+    const url =
+      `https://nominatim.openstreetmap.org/search` +
+      `?q=${encodeURIComponent(q)}&format=json&limit=1`;
+    const res = await fetch(url, { headers: { "User-Agent": NOMINATIM_UA } });
     if (!res.ok) return null;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data = (await res.json()) as any[];
@@ -134,8 +154,9 @@ async function main() {
     geocoded = 0,
     geocodeFailed = 0;
 
-  // Collect postal codes that need geocoding: cp → empresaId[]
-  const needGeocode = new Map<string, number[]>();
+  // Collect companies to re-geocode by CP (more precise than locality)
+  // cp → list of { id, localidad, provincia } for fallback
+  const needGeocode = new Map<string, Array<{ id: number; localidad: string | null; provincia: string | null }>>();
 
   for (const row of rows) {
     const cif = normalizeCif(row["Código NIF"]);
@@ -178,8 +199,11 @@ async function main() {
     // Only update if current value is null/empty
     if (!empresa.web && row["Dirección web"])
       updateData.web = (row["Dirección web"] as string).trim();
-    if (!empresa.empleados && row["Número empleados 2024"])
-      updateData.empleados = row["Número empleados 2024"];
+    if (!empresa.empleados && row["Número empleados 2024"]) {
+      const empRaw = row["Número empleados 2024"];
+      const empInt = typeof empRaw === "number" ? Math.round(empRaw) : parseInt(String(empRaw), 10);
+      if (!isNaN(empInt)) updateData.empleados = empInt;
+    }
 
     // New fields — always update from Excel (authoritative source)
     if (row["Teléfono"]) updateData.telefono = (row["Teléfono"] as string).trim();
@@ -194,10 +218,12 @@ async function main() {
       empresasUpdated++;
     }
 
-    // ── Geocoding needed? ────────────────────────────────────────────────────
-    if (!empresa.lat && cp) {
+    // ── Geocoding: always re-geocode by CP (more precise than locality) ──────
+    if (cp) {
+      const localidad = row["Localidad"] ? String(row["Localidad"]).trim() : null;
+      const provincia = row["Provincia"] ? String(row["Provincia"]).trim() : null;
       const list = needGeocode.get(cp) ?? [];
-      list.push(empresaId);
+      list.push({ id: empresaId, localidad, provincia });
       needGeocode.set(cp, list);
     }
   }
@@ -207,31 +233,49 @@ async function main() {
   console.log(`   Empresas fields:  ${empresasUpdated} actualizadas`);
   console.log(`\n📍 Geocoding por código postal — ${needGeocode.size} CPs únicos\n`);
 
-  // ── Geocode by unique postal code ──────────────────────────────────────────
+  // ── Geocode: CP first, fallback to localidad ───────────────────────────────
   let cpIdx = 0;
-  for (const [cp, ids] of needGeocode) {
+  for (const [cp, items] of needGeocode) {
     cpIdx++;
     process.stdout.write(`[${String(cpIdx).padStart(3)}/${needGeocode.size}] CP ${cp}  `);
 
-    const coords = await geocodeByPostalCode(cp);
-    if (coords) {
-      // Apply to all companies with this CP
-      for (const id of ids) {
+    const coordsCP = await geocodeByPostalCode(cp);
+    await new Promise((r) => setTimeout(r, GEOCODE_DELAY_MS)); // rate-limit
+
+    if (coordsCP) {
+      // Apply to all companies sharing this CP
+      for (const item of items) {
         await prisma.empresa.update({
-          where: { id },
-          data: { lat: coords.lat, lng: coords.lng },
+          where: { id: item.id },
+          data: { lat: coordsCP.lat, lng: coordsCP.lng },
         });
       }
-      console.log(`✓  ${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}  (${ids.length} empresa${ids.length > 1 ? "s" : ""})`);
-      geocoded += ids.length;
+      console.log(`✓ CP  ${coordsCP.lat.toFixed(4)}, ${coordsCP.lng.toFixed(4)}  (${items.length} empresa${items.length > 1 ? "s" : ""})`);
+      geocoded += items.length;
     } else {
-      console.log(`✗  no encontrado`);
-      geocodeFailed += ids.length;
-    }
+      // Fallback: geocode each company by its localidad
+      console.log(`✗ CP  → fallback por localidad`);
+      for (const item of items) {
+        if (!item.localidad) {
+          geocodeFailed++;
+          continue;
+        }
+        process.stdout.write(`        localidad: ${item.localidad}  `);
+        const coordsLoc = await geocodeByLocality(item.localidad, item.provincia);
+        await new Promise((r) => setTimeout(r, GEOCODE_DELAY_MS)); // rate-limit
 
-    // Rate limit: 1 req/s
-    if (cpIdx < needGeocode.size) {
-      await new Promise((r) => setTimeout(r, GEOCODE_DELAY_MS));
+        if (coordsLoc) {
+          await prisma.empresa.update({
+            where: { id: item.id },
+            data: { lat: coordsLoc.lat, lng: coordsLoc.lng },
+          });
+          console.log(`✓ Loc ${coordsLoc.lat.toFixed(4)}, ${coordsLoc.lng.toFixed(4)}`);
+          geocoded++;
+        } else {
+          console.log(`✗ no encontrado`);
+          geocodeFailed++;
+        }
+      }
     }
   }
 

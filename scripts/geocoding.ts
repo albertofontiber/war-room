@@ -2,12 +2,21 @@
  * geocoding.ts
  * Geocodifica empresas sin lat/lng usando Nominatim (OpenStreetMap) — gratuito, sin API key.
  *
- * Optimización: geocodifica por localidad única (no por empresa),
- * luego asigna las mismas coordenadas a todas las empresas de esa localidad.
- * Reduce las llamadas a la API de ~4000 a ~1000.
+ * Cascada de precisión:
+ *   1. Dirección + localidad + provincia  (nivel calle)
+ *   2. CP + localidad + provincia         (nivel código postal)
+ *   3. Localidad + provincia              (nivel municipio)
+ *   4. Provincia / CCAA                   (fallback)
+ *
+ * Modos:
+ *   --missing     Solo empresas sin coordenadas (default)
+ *   --all         Re-geocodifica TODAS las empresas (mejora precisión)
+ *   --dry-run     Preview sin escribir en BD
  *
  * Uso:
- *   npx tsx scripts/geocoding.ts
+ *   npx dotenv-cli -e .env.local -- npx tsx scripts/geocoding.ts
+ *   npx dotenv-cli -e .env.local -- npx tsx scripts/geocoding.ts --all
+ *   npx dotenv-cli -e .env.local -- npx tsx scripts/geocoding.ts --dry-run
  */
 
 import { PrismaClient } from "@prisma/client";
@@ -19,7 +28,13 @@ function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-async function geocode(query: string): Promise<{ lat: number; lng: number } | null> {
+interface GeoResult {
+  lat: number;
+  lng: number;
+  nivel: string;
+}
+
+async function nominatim(query: string): Promise<{ lat: number; lng: number } | null> {
   const url =
     "https://nominatim.openstreetmap.org/search?" +
     new URLSearchParams({
@@ -41,108 +56,149 @@ async function geocode(query: string): Promise<{ lat: number; lng: number } | nu
   return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
 }
 
-async function main() {
-  // ── Obtener localidades únicas sin geocodificar ──────────────────────────
-  type LocalidadRow = { localidad: string | null; provincia: string | null; ccaa: string | null };
-  const localidades = await prisma.$queryRaw<LocalidadRow[]>`
-    SELECT DISTINCT localidad, provincia, ccaa
-    FROM "Empresa"
-    WHERE lat IS NULL OR lng IS NULL
-    ORDER BY provincia, localidad
-  `;
+async function geocodeEmpresa(empresa: {
+  direccion: string | null;
+  codigoPostal: string | null;
+  localidad: string | null;
+  provincia: string | null;
+  ccaa: string | null;
+}): Promise<GeoResult | null> {
+  const { direccion, codigoPostal, localidad, provincia, ccaa } = empresa;
 
-  if (localidades.length === 0) {
+  // Nivel 1: dirección + localidad + provincia
+  if (direccion && localidad && provincia) {
+    const coords = await nominatim(`${direccion}, ${localidad}, ${provincia}`);
+    if (coords) return { ...coords, nivel: "direccion" };
+    await sleep(DELAY_MS);
+  }
+
+  // Nivel 2: CP + localidad + provincia
+  if (codigoPostal && localidad && provincia) {
+    const coords = await nominatim(`${codigoPostal} ${localidad}, ${provincia}`);
+    if (coords) return { ...coords, nivel: "cp" };
+    await sleep(DELAY_MS);
+  }
+
+  // Nivel 2b: CP solo
+  if (codigoPostal) {
+    const coords = await nominatim(`${codigoPostal}, España`);
+    if (coords) return { ...coords, nivel: "cp" };
+    await sleep(DELAY_MS);
+  }
+
+  // Nivel 3: localidad + provincia
+  if (localidad && provincia) {
+    const coords = await nominatim(`${localidad}, ${provincia}`);
+    if (coords) return { ...coords, nivel: "localidad" };
+    await sleep(DELAY_MS);
+  }
+
+  // Nivel 3b: solo localidad
+  if (localidad) {
+    const coords = await nominatim(`${localidad}, España`);
+    if (coords) return { ...coords, nivel: "localidad" };
+    await sleep(DELAY_MS);
+  }
+
+  // Nivel 4: provincia
+  if (provincia) {
+    const coords = await nominatim(`${provincia}, España`);
+    if (coords) return { ...coords, nivel: "provincia" };
+    await sleep(DELAY_MS);
+  }
+
+  // Nivel 5: CCAA
+  if (ccaa) {
+    const coords = await nominatim(`${ccaa}, España`);
+    if (coords) return { ...coords, nivel: "ccaa" };
+  }
+
+  return null;
+}
+
+async function main() {
+  const args = process.argv.slice(2);
+  const allMode = args.includes("--all");
+  const dryRun = args.includes("--dry-run");
+
+  const where = allMode ? {} : { OR: [{ lat: null as any }, { lng: null as any }] };
+
+  const empresas = await prisma.empresa.findMany({
+    where,
+    select: {
+      id: true,
+      cif: true,
+      nombre: true,
+      direccion: true,
+      codigoPostal: true,
+      localidad: true,
+      provincia: true,
+      ccaa: true,
+      lat: true,
+      lng: true,
+    },
+    orderBy: { id: "asc" },
+  });
+
+  if (empresas.length === 0) {
     console.log("✅  Todas las empresas ya tienen coordenadas.");
     return;
   }
 
-  const totalEmpresas = await prisma.empresa.count({
-    where: { OR: [{ lat: null }, { lng: null }] },
-  });
-
-  console.log(`\n📍  ${totalEmpresas} empresas sin coordenadas`);
-  console.log(`🗺️   ${localidades.length} localidades únicas a geocodificar`);
-  console.log(`⏱️   Tiempo estimado: ~${Math.ceil((localidades.length * DELAY_MS) / 60000)} min\n`);
+  console.log(`\n📍  ${empresas.length} empresas a geocodificar${allMode ? " (modo --all)" : ""}`);
+  if (dryRun) console.log("🔒  Modo --dry-run: no se escribirá en BD");
+  console.log(`⏱️   Tiempo estimado: ~${Math.ceil((empresas.length * DELAY_MS) / 60000)} min\n`);
   console.log("─".repeat(64));
 
-  let ok = 0, fallback = 0, noResult = 0, errores = 0;
-  let empresasActualizadas = 0;
+  const stats = { direccion: 0, cp: 0, localidad: 0, provincia: 0, ccaa: 0, sinResultado: 0, errores: 0 };
+  let actualizadas = 0;
 
-  for (let i = 0; i < localidades.length; i++) {
-    const { localidad, provincia, ccaa } = localidades[i];
+  for (let i = 0; i < empresas.length; i++) {
+    const emp = empresas[i];
     await sleep(DELAY_MS);
 
     try {
-      let coords: { lat: number; lng: number } | null = null;
-      let nivel = "";
+      const result = await geocodeEmpresa(emp);
 
-      // Intento 1: localidad + provincia
-      if (localidad && provincia) {
-        coords = await geocode(`${localidad}, ${provincia}`);
-        if (coords) nivel = "localidad+provincia";
-      }
+      if (result) {
+        stats[result.nivel as keyof typeof stats]++;
+        actualizadas++;
 
-      // Intento 2: solo localidad
-      if (!coords && localidad) {
-        await sleep(DELAY_MS);
-        coords = await geocode(`${localidad}, España`);
-        if (coords) nivel = "localidad";
-      }
+        if (!dryRun) {
+          await prisma.empresa.update({
+            where: { id: emp.id },
+            data: { lat: result.lat, lng: result.lng },
+          });
+        }
 
-      // Intento 3: provincia
-      if (!coords && provincia) {
-        await sleep(DELAY_MS);
-        coords = await geocode(`${provincia}, España`);
-        if (coords) nivel = "provincia";
-      }
-
-      // Intento 4: CCAA
-      if (!coords && ccaa) {
-        await sleep(DELAY_MS);
-        coords = await geocode(`${ccaa}, España`);
-        if (coords) nivel = "ccaa";
-      }
-
-      if (coords) {
-        // Actualizar todas las empresas de esta localidad en un solo query
-        const updated = await prisma.empresa.updateMany({
-          where: {
-            localidad: localidad ?? undefined,
-            provincia: provincia ?? undefined,
-            OR: [{ lat: null }, { lng: null }],
-          },
-          data: { lat: coords.lat, lng: coords.lng },
-        });
-        empresasActualizadas += updated.count;
-
-        const pct = Math.round(((i + 1) / localidades.length) * 100);
-        const tag = nivel === "localidad+provincia" ? "✅" : "⚠️ ";
+        const icon = result.nivel === "direccion" ? "📍" : result.nivel === "cp" ? "📮" : result.nivel === "localidad" ? "🏘️" : "⚠️";
+        const pct = Math.round(((i + 1) / empresas.length) * 100);
         process.stdout.write(
-          `\r${tag} [${i + 1}/${localidades.length}] (${pct}%) ${localidad ?? "-"}, ${provincia ?? "-"}  (+${updated.count} emp)   `
+          `\r${icon} [${i + 1}/${empresas.length}] (${pct}%) ${emp.nombre.substring(0, 35).padEnd(35)} → ${result.nivel}   `
         );
-
-        if (nivel === "localidad+provincia") ok++;
-        else fallback++;
       } else {
-        noResult++;
+        stats.sinResultado++;
         process.stdout.write(
-          `\r❌  [${i + 1}/${localidades.length}] Sin resultado: ${localidad ?? "-"}, ${provincia ?? "-"}                   \n`
+          `\r❌  [${i + 1}/${empresas.length}] Sin resultado: ${emp.nombre.substring(0, 40)}                   \n`
         );
       }
     } catch (err) {
-      errores++;
-      console.error(`\n💥  Error en ${localidad}, ${provincia}:`, err);
+      stats.errores++;
+      console.error(`\n💥  Error en ${emp.cif} ${emp.nombre}:`, err);
     }
   }
 
   console.log("\n\n" + "═".repeat(64));
   console.log("RESUMEN GEOCODING");
   console.log("═".repeat(64));
-  console.log(`✅  Exacto (localidad+provincia): ${ok}`);
-  console.log(`⚠️   Fallback (nivel superior):   ${fallback}`);
-  console.log(`❌  Sin resultado:                ${noResult}`);
-  if (errores) console.log(`💥  Errores:                     ${errores}`);
-  console.log(`🏢  Empresas actualizadas:        ${empresasActualizadas}`);
+  console.log(`📍  Dirección (nivel calle):    ${stats.direccion}`);
+  console.log(`📮  Código postal:              ${stats.cp}`);
+  console.log(`🏘️   Localidad (municipio):      ${stats.localidad}`);
+  console.log(`⚠️   Provincia/CCAA (fallback):  ${stats.provincia + stats.ccaa}`);
+  console.log(`❌  Sin resultado:              ${stats.sinResultado}`);
+  if (stats.errores) console.log(`💥  Errores:                    ${stats.errores}`);
+  console.log(`🏢  Empresas actualizadas:      ${actualizadas}`);
+  if (dryRun) console.log(`🔒  (dry-run — nada escrito en BD)`);
   console.log("═".repeat(64) + "\n");
 }
 
