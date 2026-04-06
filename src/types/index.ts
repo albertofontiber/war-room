@@ -57,7 +57,7 @@ export interface EmpresaDetalle {
   linkedin: string | null;
   logoUrl: string | null;
   descripcion: string | null;
-  cepreven: boolean;
+  cepreven: string | null;  // null | "asociada" | "calificada"
   aerme: boolean;
   enPerimetro: boolean;
   enPerimetroAt: string | null;
@@ -105,7 +105,7 @@ export interface EmpresaResumen {
   empleados: number | null;
   web: string | null;
   logoUrl: string | null;
-  cepreven: boolean;
+  cepreven: string | null;  // null | "asociada" | "calificada"
   aerme: boolean;
   enPerimetro: boolean;
   score: number | null;

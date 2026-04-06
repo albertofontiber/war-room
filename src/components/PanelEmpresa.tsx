@@ -551,9 +551,9 @@ export default function PanelEmpresa() {
             {empresa.cepreven && (
               <Badge
                 variant="outline"
-                className="text-[10px] bg-wr-amber/10 text-wr-amber border-wr-amber/30"
+                className={`text-[10px] border ${empresa.cepreven === "calificada" ? "bg-green-500/10 text-green-400 border-green-500/30" : "bg-wr-amber/10 text-wr-amber border-wr-amber/30"}`}
               >
-                Cepreven
+                Cepreven {empresa.cepreven === "calificada" ? "✓" : ""}
               </Badge>
             )}
             {empresa.aerme && (

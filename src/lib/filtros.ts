@@ -19,7 +19,10 @@ export function isInFilter(
     const stage = p.dealStage as string | null;
     if (!stage || !f.crmStage.includes(stage as never)) return false;
   }
-  if (f.cepreven !== null && Boolean(p.cepreven) !== f.cepreven) return false;
+  if (f.cepreven !== null) {
+    const hasCep = p.cepreven != null && p.cepreven !== false && p.cepreven !== "";
+    if (hasCep !== f.cepreven) return false;
+  }
   if (f.aerme !== null && Boolean(p.aerme) !== f.aerme) return false;
   const ingresos = p.ingresos as number | null;
   if (ingresos === null) {

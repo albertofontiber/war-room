@@ -41,7 +41,7 @@ model Empresa {
   linkedin         String?
   logoUrl          String?
   descripcion      String?
-  cepreven         Boolean       @default(false)
+  cepreven         String?       // null = n/a, "asociada", "calificada"
   aerme            Boolean       @default(false)
   ambitoGeo        String?       // "E" = estatal | "A" = autonómico — solo seg. electrónica
   // Perímetro y scoring

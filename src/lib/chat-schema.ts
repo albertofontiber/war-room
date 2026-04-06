@@ -40,7 +40,7 @@ CREATE TABLE "Empresa" (
   web TEXT,
   linkedin TEXT,
   descripcion TEXT,
-  cepreven BOOLEAN DEFAULT false,  -- asociada a Cepreven
+  cepreven TEXT,  -- NULL = no asociada, 'asociada' = miembro CEPREVEN, 'calificada' = certificada por CEPREVEN
   aerme BOOLEAN DEFAULT false,     -- asociada a AERME
   "ambitoGeo" TEXT,      -- "E" = estatal | "A" = autonómico (solo seg. electrónica)
   "enPerimetro" BOOLEAN DEFAULT true,  -- true = empresa de interés para M&A
