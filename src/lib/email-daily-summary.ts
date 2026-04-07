@@ -9,7 +9,7 @@
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
 
-const TO       = process.env.SUMMARY_EMAIL_TO   ?? "alberto@fontiber.com";
+const TO       = process.env.SUMMARY_EMAIL_TO   ?? "alberto@fontiber.com,gabriel@fontiber.com";
 const FROM     = process.env.SUMMARY_EMAIL_FROM ?? "warroom@fontiber.com";
 const BASE_URL = "https://warroom.fontiber.com";
 
@@ -27,9 +27,12 @@ export async function sendDailySummary(
     const d = new Date(); d.setDate(d.getDate() - 1); d.setHours(0, 0, 0, 0); return d;
   })();
 
-  // ── 1. BORME alerts ────────────────────────────────────────────────────────
+  // ── 1. BORME alerts (solo empresas en perímetro) ────────────────────────────
   const bormeAlertas = await prisma.bormeAlerta.findMany({
-    where: { createdAt: { gte: todayStart } },
+    where: {
+      createdAt: { gte: todayStart },
+      empresa:   { enPerimetro: true },
+    },
     include: {
       empresa:       { select: { enPerimetro: true } },
       grupoInferido: { select: { nombre: true } },
