@@ -233,6 +233,7 @@ export default async function DailyPage({
                     <th className="text-right px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">Ingresos</th>
                     <th className="text-right px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">EBITDA</th>
                     <th className="text-right px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">MB%</th>
+                    <th className="text-center px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">BORME</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -300,6 +301,11 @@ export default async function DailyPage({
                         <td className="px-3 py-2.5 text-[11px] text-wr-muted text-right">
                           {mb != null ? `${mb.toFixed(1)}%` : "—"}
                         </td>
+                        <td className="px-3 py-2.5 text-center">
+                          {r.urlBorme ? (
+                            <a href={r.urlBorme} target="_blank" rel="noopener noreferrer" className="text-wr-blue hover:underline text-[10px]">PDF</a>
+                          ) : <span className="text-wr-hint text-[10px]">—</span>}
+                        </td>
                       </tr>
                     );
                   })}
@@ -330,6 +336,7 @@ export default async function DailyPage({
                     <th className="text-left px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">CCAA</th>
                     <th className="text-left px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">Fecha BORME</th>
                     <th className="text-right px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">Ingresos</th>
+                    <th className="text-center px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">BORME</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -365,6 +372,11 @@ export default async function DailyPage({
                         </td>
                         <td className="px-3 py-2 text-[11px] text-wr-muted text-right tabular-nums">
                           {fmtM(fin?.ingresos ?? null)}
+                        </td>
+                        <td className="px-3 py-2 text-center">
+                          {r.urlBorme ? (
+                            <a href={r.urlBorme} target="_blank" rel="noopener noreferrer" className="text-wr-blue hover:underline text-[10px]">PDF</a>
+                          ) : <span className="text-wr-hint text-[10px]">—</span>}
                         </td>
                       </tr>
                     );
