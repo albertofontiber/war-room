@@ -45,7 +45,10 @@ export default async function DailyPage({
 
   // ── Fetch BORME alerts ──────────────────────────────────────────────────────
   const bormeAlertas = await prisma.bormeAlerta.findMany({
-    where: { createdAt: { gte: dayStart, lte: dayEnd } },
+    where: {
+      createdAt: { gte: dayStart, lte: dayEnd },
+      empresa:   { enPerimetro: true },
+    },
     include: {
       empresa: {
         select: {
