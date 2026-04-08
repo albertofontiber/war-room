@@ -15,7 +15,7 @@ const BASE_URL = "https://warroom.fontiber.com";
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 export async function sendDailySummary(
-  options?: { since?: Date; force?: boolean }
+  options?: { since?: Date; force?: boolean; to?: string }
 ): Promise<{ sent: boolean; reason?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return { sent: false, reason: "RESEND_API_KEY not set" };
@@ -177,7 +177,7 @@ export async function sendDailySummary(
   // ── Send ───────────────────────────────────────────────────────────────────
   const { error } = await resend.emails.send({
     from: `War Room <${FROM}>`,
-    to: TO.split(",").map((s) => s.trim()),
+    to: (options?.to ?? TO).split(",").map((s) => s.trim()),
     subject: `⚡ War Room — ${dateCapitalized}`,
     html,
   });

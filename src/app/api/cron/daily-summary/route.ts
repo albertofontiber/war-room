@@ -18,7 +18,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const result = await sendDailySummary();
+    const to = req.nextUrl.searchParams.get("to") ?? undefined;
+    const force = req.nextUrl.searchParams.get("force") === "true";
+    const result = await sendDailySummary({ force, to });
     console.log("[daily-summary]", result);
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
