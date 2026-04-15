@@ -267,9 +267,13 @@ const fmtPctLocal = (n: unknown) => fmtPct(n as number | null, "—");
 function SeleccionAreaPanel({
   empresas,
   onClose,
+  height,
+  onResizeStart,
 }: {
   empresas: Props[];
   onClose: () => void;
+  height: number;
+  onResizeStart: (e: React.PointerEvent) => void;
 }) {
   const { seleccionarEmpresa, modoPresentacion } = useWarRoomStore();
   const [sortKey, setSortKey] = useState<string>("ingresos");
@@ -313,9 +317,17 @@ function SeleccionAreaPanel({
 
   return (
     <div className="absolute bottom-0 left-0 right-0 z-20 animate-slide-up">
-      <div className="bg-wr-surface/95 backdrop-blur-md border-t border-wr-border shadow-2xl"
-        style={{ maxHeight: "38vh" }}
+      <div className="bg-wr-surface/95 backdrop-blur-md border-t border-wr-border shadow-2xl relative"
+        style={{ height }}
       >
+        {/* Resize handle */}
+        <div
+          onPointerDown={onResizeStart}
+          title="Arrastra para redimensionar"
+          className="absolute top-0 left-0 right-0 h-2 -translate-y-1/2 cursor-ns-resize z-30 group flex items-center justify-center"
+        >
+          <div className="w-12 h-1 rounded-full bg-wr-border group-hover:bg-wr-blue transition-colors" />
+        </div>
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-wr-border flex-shrink-0">
           <div className="flex items-center gap-2">
@@ -339,7 +351,7 @@ function SeleccionAreaPanel({
         </div>
 
         {/* Tabla */}
-        <div className="overflow-auto" style={{ maxHeight: "calc(38vh - 44px)" }}>
+        <div className="overflow-auto" style={{ height: `calc(100% - 44px)` }}>
           {empresas.length === 0 ? (
             <p className="text-center py-8 text-wr-hint text-xs">
               Ninguna empresa en el área seleccionada
@@ -471,7 +483,9 @@ export default function MapaEspana() {
   const [drawMode, setDrawMode] = useState(false);
   const [drawPoints, setDrawPoints] = useState<[number, number][]>([]);
   const [drawMouse, setDrawMouse] = useState<[number, number] | null>(null);
-  const [seleccionArea, setSeleccionArea] = useState<Props[] | null>(null);
+  const [selectedPolygon, setSelectedPolygon] = useState<[number, number][] | null>(null);
+  const [panelHeight, setPanelHeight] = useState(360); // px — altura del panel selección
+  const resizingRef = useRef(false);
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -523,6 +537,19 @@ export default function MapaEspana() {
       geojsonBg: { ...rawGeoJSON, features: outFilter },
     };
   }, [rawGeoJSON, filtros, searchQuery]);
+
+  // Empresas dentro del polígono — reactivo a cambios de filtros/search
+  const seleccionArea = useMemo<Props[] | null>(() => {
+    if (!selectedPolygon || !geojson) return null;
+    return geojson.features
+      .filter((f) =>
+        pointInPolygon(
+          [f.geometry.coordinates[0], f.geometry.coordinates[1]],
+          selectedPolygon
+        )
+      )
+      .map((f) => f.properties);
+  }, [selectedPolygon, geojson]);
 
   // Helper: extrae y persiste los bounds actuales del mapa
   const saveBounds = useCallback(() => {
@@ -674,16 +701,8 @@ export default function MapaEspana() {
       setDrawPoints((prev) => {
         // dblclick fires two clicks first → remove last erroneous point
         const pts = prev.length > 1 ? prev.slice(0, -1) : prev;
-        if (pts.length >= 3 && geojson) {
-          const inside = geojson.features
-            .filter((f) =>
-              pointInPolygon(
-                [f.geometry.coordinates[0], f.geometry.coordinates[1]],
-                pts
-              )
-            )
-            .map((f) => f.properties);
-          setSeleccionArea(inside);
+        if (pts.length >= 3) {
+          setSelectedPolygon(pts);
         }
         return pts;
       });
@@ -691,7 +710,7 @@ export default function MapaEspana() {
       setDrawMouse(null);
       setTimeout(() => { closingRef.current = false; }, 300);
     },
-    [drawMode, geojson]
+    [drawMode]
   );
 
   // Helpers para activar/cancelar el modo dibujo
@@ -699,7 +718,7 @@ export default function MapaEspana() {
     setDrawMode(true);
     setDrawPoints([]);
     setDrawMouse(null);
-    setSeleccionArea(null);
+    setSelectedPolygon(null);
     setTooltip(null);
   }, []);
 
@@ -707,7 +726,7 @@ export default function MapaEspana() {
     setDrawMode(false);
     setDrawPoints([]);
     setDrawMouse(null);
-    setSeleccionArea(null);
+    setSelectedPolygon(null);
   }, []);
 
   const sizeExpr = useMemo(() => makeSizeExpr(sizeMetric), [sizeMetric]);
@@ -1042,7 +1061,30 @@ export default function MapaEspana() {
 
       {/* ── Panel resultados selección área ── */}
       {seleccionArea && !drawMode && (
-        <SeleccionAreaPanel empresas={seleccionArea} onClose={cancelDraw} />
+        <SeleccionAreaPanel
+          empresas={seleccionArea}
+          onClose={cancelDraw}
+          height={panelHeight}
+          onResizeStart={(e) => {
+            e.preventDefault();
+            resizingRef.current = true;
+            const startY = e.clientY;
+            const startH = panelHeight;
+            const onMove = (ev: PointerEvent) => {
+              if (!resizingRef.current) return;
+              const delta = startY - ev.clientY;
+              const next = Math.max(120, Math.min(window.innerHeight - 80, startH + delta));
+              setPanelHeight(next);
+            };
+            const onUp = () => {
+              resizingRef.current = false;
+              window.removeEventListener("pointermove", onMove);
+              window.removeEventListener("pointerup", onUp);
+            };
+            window.addEventListener("pointermove", onMove);
+            window.addEventListener("pointerup", onUp);
+          }}
+        />
       )}
 
       {/* ── Leyenda de formas ── */}
