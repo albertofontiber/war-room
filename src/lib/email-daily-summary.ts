@@ -70,11 +70,6 @@ export async function sendDailySummary(
     }
   }
 
-  const hasContent = bormeAlertas.length > 0 || personaAlertCount > 0;
-  if (!hasContent && !options?.force) {
-    return { sent: false, reason: "No hay cambios hoy — email omitido" };
-  }
-
   // ── Counts ─────────────────────────────────────────────────────────────────
   const DETAIL_TIPOS = new Set(["fusion", "adquisicion", "posible_adquisicion"]);
   const detailCount = bormeAlertas.filter((a) => {
