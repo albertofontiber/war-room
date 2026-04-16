@@ -312,7 +312,7 @@ export default function TablaEmpresas() {
                   }`}
                 >
                   {/* Empresa */}
-                  <td className="px-3 py-2.5 max-w-[200px]">
+                  <td className="px-3 py-2.5">
                     <div className="flex items-center gap-2">
                       <LogoCell
                         logoUrl={r.logoUrl as string | null}
