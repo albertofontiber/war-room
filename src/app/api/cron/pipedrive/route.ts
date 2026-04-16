@@ -114,6 +114,11 @@ export async function GET(req: NextRequest) {
 
     let matched = 0, skipped = 0;
 
+    // Resolve all deals to empresa matches first (CPU-only, fast)
+    const resolved: Array<{
+      empresaId: number; orgId: string | null; dealStage: string; owner: string | null;
+    }> = [];
+
     for (const deal of deals) {
       const orgName: string = deal.org_name ?? deal.title ?? "";
       const orgId: number | null = deal.org_id?.value ?? null;
@@ -141,29 +146,45 @@ export async function GET(req: NextRequest) {
 
       if (!empresaId) { skipped++; continue; }
 
-      const prevStage = existingStageMap.get(empresaId);
-      const isNew = prevStage === undefined;
-      const stageChanged = !isNew && prevStage !== dealStage;
-
-      await prisma.crmEstado.upsert({
-        where: { empresaId },
-        create: { empresaId, pipedriveOrgId: orgId != null ? String(orgId) : null, dealStage, owner },
-        update: { pipedriveOrgId: orgId != null ? String(orgId) : null, dealStage, owner },
+      resolved.push({
+        empresaId,
+        orgId: orgId != null ? String(orgId) : null,
+        dealStage,
+        owner,
       });
+    }
 
-      if (isNew || stageChanged) {
-        await prisma.crmLog.create({
-          data: {
-            empresaId,
-            event: isNew ? "new_deal" : "stage_changed",
-            fromStage: isNew ? null : (prevStage ?? null),
-            toStage: dealStage,
-            owner,
-          },
-        });
-      }
+    // Process DB writes in batches of 20 concurrently (much faster than sequential)
+    const BATCH = 20;
+    for (let i = 0; i < resolved.length; i += BATCH) {
+      const batch = resolved.slice(i, i + BATCH);
+      await Promise.all(
+        batch.map(async ({ empresaId, orgId, dealStage, owner }) => {
+          const prevStage = existingStageMap.get(empresaId);
+          const isNew = prevStage === undefined;
+          const stageChanged = !isNew && prevStage !== dealStage;
 
-      matched++;
+          await prisma.crmEstado.upsert({
+            where: { empresaId },
+            create: { empresaId, pipedriveOrgId: orgId, dealStage, owner },
+            update: { pipedriveOrgId: orgId, dealStage, owner },
+          });
+
+          if (isNew || stageChanged) {
+            await prisma.crmLog.create({
+              data: {
+                empresaId,
+                event: isNew ? "new_deal" : "stage_changed",
+                fromStage: isNew ? null : (prevStage ?? null),
+                toStage: dealStage,
+                owner,
+              },
+            });
+          }
+
+          matched++;
+        })
+      );
     }
 
     return NextResponse.json({ success: true, deals: deals.length, matched, skipped });
