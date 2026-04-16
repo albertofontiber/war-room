@@ -1,32 +1,40 @@
 "use client"
 
-import { Switch as SwitchPrimitive } from "@base-ui/react/switch"
-
-import { cn } from "@/lib/utils"
-
 function Switch({
+  checked,
+  onCheckedChange,
+  disabled,
   className,
-  size = "default",
-  ...props
-}: SwitchPrimitive.Root.Props & {
-  size?: "sm" | "default"
+}: {
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  disabled?: boolean;
+  className?: string;
 }) {
   return (
-    <SwitchPrimitive.Root
-      data-slot="switch"
-      data-size={size}
-      className={cn(
-        "peer group/switch relative inline-flex shrink-0 items-center rounded-full border border-transparent transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-[size=default]:h-[18.4px] data-[size=default]:w-[32px] data-[size=sm]:h-[14px] data-[size=sm]:w-[24px] dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:bg-primary data-unchecked:bg-input dark:data-unchecked:bg-input/80 data-disabled:cursor-not-allowed data-disabled:opacity-50",
-        className
-      )}
-      {...props}
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      disabled={disabled}
+      onClick={() => onCheckedChange(!checked)}
+      className={`
+        relative inline-flex h-[22px] w-[40px] shrink-0 items-center rounded-full
+        transition-colors duration-200 outline-none
+        ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
+        ${checked ? "bg-emerald-500" : "bg-red-500/80"}
+        ${className ?? ""}
+      `}
     >
-      <SwitchPrimitive.Thumb
-        data-slot="switch-thumb"
-        className="pointer-events-none block rounded-full bg-background ring-0 transition-transform duration-200 group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 group-data-[size=default]/switch:data-checked:translate-x-[14px] group-data-[size=sm]/switch:data-checked:translate-x-[10px] dark:data-checked:bg-primary-foreground group-data-[size=default]/switch:data-unchecked:translate-x-[2px] group-data-[size=sm]/switch:data-unchecked:translate-x-[1px] dark:data-unchecked:bg-foreground"
+      <span
+        className={`
+          pointer-events-none block h-[16px] w-[16px] rounded-full bg-white shadow-sm
+          transition-transform duration-200
+          ${checked ? "translate-x-[20px]" : "translate-x-[3px]"}
+        `}
       />
-    </SwitchPrimitive.Root>
-  )
+    </button>
+  );
 }
 
 export { Switch }
