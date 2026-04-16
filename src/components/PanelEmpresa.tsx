@@ -542,6 +542,7 @@ export default function PanelEmpresa() {
                 checked={empresa.enPerimetro}
                 onCheckedChange={togglePerimetro}
                 disabled={toggling}
+                className="data-[checked]:bg-emerald-500 data-[unchecked]:bg-red-500/80"
               />
             </div>
 
