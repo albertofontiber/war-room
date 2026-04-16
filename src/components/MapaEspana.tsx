@@ -636,7 +636,7 @@ export default function MapaEspana() {
     frame = requestAnimationFrame(tick);
 
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [saveBounds]);
 
   // Mouse move — tooltip OR draw preview
   const handleMouseMove = useCallback((e: MapMouseEvent) => {

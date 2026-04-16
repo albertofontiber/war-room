@@ -358,7 +358,7 @@ export default function Sidebar() {
       });
     }
     return chips;
-  }, [filtros, setFiltro, toggleFiltroArray]);
+  }, [filtros, setFiltro, toggleFiltroArray, availableGrupos]);
 
   // ─────────────────────────────────────────────────────────────────────
 
