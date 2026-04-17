@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { normalizeNombre } from "@/lib/borme";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -42,14 +41,6 @@ interface PipedriveResponse {
   };
 }
 
-function coreNombre(nombre: string): string {
-  return nombre
-    .replace(/\s*\(.*?\)\s*/g, " ")  // elimina sufijos entre paréntesis, ej: "(Prodein)"
-    .replace(/\b(SAU|SLU|SLL|SRL|SCL|SLNE|SLP|AIE|UTE|CB|SC|SA|SL)\b/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 async function fetchAllDeals(): Promise<PipedriveDeal[]> {
   const all: PipedriveDeal[] = [];
   let start = 0;
@@ -79,18 +70,12 @@ export async function GET(req: NextRequest) {
 
   try {
     const empresas = await prisma.empresa.findMany({
-      select: { id: true, nombre: true, cif: true },
+      select: { id: true, cif: true },
     });
 
     const cifToId = new Map<string, number>();
-    const nombreToId = new Map<string, number>();
-    const coreToId = new Map<string, number>();
     for (const e of empresas) {
       if (e.cif) cifToId.set(e.cif.toUpperCase().trim(), e.id);
-      const norm = normalizeNombre(e.nombre);
-      const core = coreNombre(norm);
-      nombreToId.set(norm, e.id);
-      if (!coreToId.has(core)) coreToId.set(core, e.id);
     }
 
     const deals = await fetchAllDeals();
@@ -113,8 +98,11 @@ export async function GET(req: NextRequest) {
     );
 
     let matched = 0, skipped = 0;
+    const skippedDeals: Array<{ title: string; orgName: string; reason: string }> = [];
 
     // Resolve all deals to empresa matches first (CPU-only, fast)
+    // Solo aceptamos matches estrictos: CIF del deal o orgId ya vinculado en BD.
+    // Los matches por nombre se descartan para evitar falsos positivos.
     const resolved: Array<{
       empresaId: number; orgId: string | null; dealStage: string; owner: string | null;
     }> = [];
@@ -136,15 +124,20 @@ export async function GET(req: NextRequest) {
       // 1ª prioridad: CIF del deal
       const dealCif: string | null = typeof deal[CIF_FIELD_KEY] === "string" ? deal[CIF_FIELD_KEY] : null;
       const byCif = dealCif ? cifToId.get(dealCif.toUpperCase().trim()) ?? null : null;
-      // 2ª prioridad: orgId ya vinculado en CrmEstado
+      // 2ª prioridad: orgId ya vinculado previamente vía CIF
       const byOrgId = orgId != null ? orgIdToEmpresaId.get(String(orgId)) : null;
-      // 3ª prioridad: nombre normalizado / core
-      const orgNameClean = orgName.replace(/\s*\(.*?\)\s*/g, " ").trim();
-      const normOrg = normalizeNombre(orgNameClean);
-      const coreOrg = coreNombre(normOrg);
-      const empresaId = byCif ?? byOrgId ?? nombreToId.get(normOrg) ?? coreToId.get(coreOrg) ?? null;
 
-      if (!empresaId) { skipped++; continue; }
+      const empresaId = byCif ?? byOrgId ?? null;
+
+      if (!empresaId) {
+        skipped++;
+        skippedDeals.push({
+          title: deal.title ?? "",
+          orgName,
+          reason: !dealCif ? "no CIF en deal" : "CIF no encontrado en BD",
+        });
+        continue;
+      }
 
       resolved.push({
         empresaId,
@@ -195,7 +188,10 @@ export async function GET(req: NextRequest) {
     }
 
     console.log(`[pipedrive-cron] deals=${deals.length} matched=${matched} skipped=${skipped} stage_changes=${stageChanges}`);
-    return NextResponse.json({ success: true, deals: deals.length, matched, skipped, stageChanges });
+    if (skippedDeals.length > 0) {
+      console.log(`[pipedrive-cron] skipped deals (sin CIF o sin match):`, JSON.stringify(skippedDeals.slice(0, 50)));
+    }
+    return NextResponse.json({ success: true, deals: deals.length, matched, skipped, stageChanges, skippedDeals: skippedDeals.slice(0, 50) });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }
