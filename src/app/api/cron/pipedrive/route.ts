@@ -187,7 +187,15 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    return NextResponse.json({ success: true, deals: deals.length, matched, skipped });
+    // Count stage changes for observability
+    let stageChanges = 0;
+    for (const r of resolved) {
+      const prev = existingStageMap.get(r.empresaId);
+      if (prev !== undefined && prev !== r.dealStage) stageChanges++;
+    }
+
+    console.log(`[pipedrive-cron] deals=${deals.length} matched=${matched} skipped=${skipped} stage_changes=${stageChanges}`);
+    return NextResponse.json({ success: true, deals: deals.length, matched, skipped, stageChanges });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }
