@@ -320,7 +320,7 @@ export default function TablaEmpresas() {
                         logoUrl={r.logoUrl as string | null}
                         nombre={r.nombre as string}
                       />
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1">
                         <p className="font-medium text-wr-text truncate">
                           {r.web ? (
                             <a
@@ -343,6 +343,14 @@ export default function TablaEmpresas() {
                           </p>
                         ) : null}
                       </div>
+                      {(r.tareasPendientesCount as number | undefined) ? (
+                        <span
+                          className="text-[9px] font-bold bg-wr-amber/20 text-wr-amber border border-wr-amber/30 rounded px-1 py-0.5 whitespace-nowrap flex-shrink-0"
+                          title={`${r.tareasPendientesCount} tareas pendientes`}
+                        >
+                          {r.tareasPendientesCount as number}T
+                        </span>
+                      ) : null}
                     </div>
                   </td>
 

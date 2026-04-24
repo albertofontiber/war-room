@@ -24,6 +24,7 @@ interface TooltipProps {
     variacionPct: number | null;
     hasBormeReciente: boolean;
     enPerimetro: boolean;
+    tareasPendientesCount: number;
   };
 }
 
@@ -143,6 +144,14 @@ export default function MapTooltip({ x, y, props }: TooltipProps) {
           {!props.enPerimetro && (
             <span className="px-1.5 py-0.5 rounded text-[10px] bg-wr-hint/20 text-wr-hint border border-wr-hint/20">
               Fuera perímetro
+            </span>
+          )}
+          {props.tareasPendientesCount > 0 && (
+            <span
+              className="px-1.5 py-0.5 rounded text-[10px] bg-wr-amber/20 text-wr-amber border border-wr-amber/30"
+              title={`${props.tareasPendientesCount} tareas pendientes`}
+            >
+              {props.tareasPendientesCount}T
             </span>
           )}
         </div>
