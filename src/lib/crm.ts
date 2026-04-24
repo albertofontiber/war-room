@@ -132,8 +132,28 @@ export function diasDesde(fecha: Date | string | null | undefined): number | nul
  * Mapping para sanitización al finder: 8 stages internos → 4 estados agregados.
  * NO exponer el stage real al finder bajo ningún concepto.
  */
-export const FINDER_STATUS_MAP: Record<DealStage, "Contactado" | "En negociación" | "Cerrado" | "En pausa" | "Descartado" | null> = {
-  identificado: null, // no visible para el finder hasta que se materialice
+export type FinderStatus =
+  | "Pendiente"
+  | "Contactado"
+  | "En negociación"
+  | "Cerrado"
+  | "En pausa"
+  | "Descartado";
+
+export const FINDER_STATUSES: FinderStatus[] = [
+  "Pendiente",
+  "Contactado",
+  "En negociación",
+  "Cerrado",
+  "En pausa",
+  "Descartado",
+];
+
+/** Mapa 9 stages internos → 6 etiquetas agregadas para el portal de finders.
+ * No exponer nunca el stage interno al finder: la granularidad interna
+ * (LOI/Execution/Análisis) es información sensible. */
+export const FINDER_STATUS_MAP: Record<DealStage, FinderStatus> = {
+  identificado: "Pendiente",
   contactado: "Contactado",
   primera_reunion: "Contactado",
   analisis: "En negociación",
@@ -142,6 +162,15 @@ export const FINDER_STATUS_MAP: Record<DealStage, "Contactado" | "En negociació
   portfolio: "Cerrado",
   on_hold: "En pausa",
   muerto: "Descartado",
+};
+
+export const FINDER_STATUS_PILL: Record<FinderStatus, string> = {
+  Pendiente: "bg-[#64748b]/20 text-[#94a3b8] border-[#64748b]/30",
+  Contactado: "bg-wr-blue/20 text-wr-blue border-wr-blue/30",
+  "En negociación": "bg-[#8b5cf6]/20 text-[#8b5cf6] border-[#8b5cf6]/30",
+  Cerrado: "bg-wr-green/20 text-wr-green border-wr-green/30",
+  "En pausa": "bg-[#a8a29e]/20 text-[#a8a29e] border-[#a8a29e]/30",
+  Descartado: "bg-wr-red/20 text-wr-red border-wr-red/30",
 };
 
 /** Umbral de días en stage para considerar un deal "estancado" (UI: badge rojo). */
