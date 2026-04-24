@@ -22,6 +22,7 @@ export async function GET() {
         name: true,
         email: true,
         commissionPct: true,
+        passwordSetAt: true,
       },
       orderBy: { name: "asc" },
     });
