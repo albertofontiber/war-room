@@ -586,20 +586,34 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
             )}
           </div>
 
-          {/* ── Modo COMPACTO (mapa/tabla): solo botón al Pipeline ──────── */}
+          {/* ── Modo COMPACTO (mapa/tabla): botón al Pipeline + badge tareas ──────── */}
           {!modoDetallado && (
-            <button
-              onClick={() => router.push("/pipeline")}
-              className="w-full flex items-center justify-center gap-2 text-xs bg-wr-blue/10 text-wr-blue border border-wr-blue/30 rounded-md px-3 py-2 hover:bg-wr-blue/20 transition-colors"
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
-              </svg>
-              Ver detalle en Pipeline
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M7 17L17 7M7 7h10v10" />
-              </svg>
-            </button>
+            <div className="space-y-2">
+              {empresa.tareasPendientesCount > 0 && (
+                <div className="flex items-center gap-2 text-xs bg-wr-amber/10 text-wr-amber border border-wr-amber/30 rounded-md px-3 py-2">
+                  <span className="text-[9px] font-bold bg-wr-amber/20 border border-wr-amber/30 rounded px-1 py-0.5">
+                    {empresa.tareasPendientesCount}T
+                  </span>
+                  <span>
+                    {empresa.tareasPendientesCount === 1
+                      ? "1 tarea pendiente"
+                      : `${empresa.tareasPendientesCount} tareas pendientes`}
+                  </span>
+                </div>
+              )}
+              <button
+                onClick={() => router.push("/pipeline")}
+                className="w-full flex items-center justify-center gap-2 text-xs bg-wr-blue/10 text-wr-blue border border-wr-blue/30 rounded-md px-3 py-2 hover:bg-wr-blue/20 transition-colors"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+                </svg>
+                Ver detalle en Pipeline
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M7 17L17 7M7 7h10v10" />
+                </svg>
+              </button>
+            </div>
           )}
 
           {/* ── Modo DETALLADO (/pipeline): chevron + historial + tareas + notas */}

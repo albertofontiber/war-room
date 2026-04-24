@@ -103,6 +103,7 @@ export interface EmpresaDetalle {
     autor: string | null;
     fecha: string;
   }[];
+  tareasPendientesCount: number;
 }
 
 // ─── Empresa en listado / GeoJSON (response de /api/empresas) ─────────────
