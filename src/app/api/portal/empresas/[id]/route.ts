@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder } from "@/lib/finder-session";
+import { logFinderAction } from "@/lib/finder-access-log";
 
 export const dynamic = "force-dynamic";
 
@@ -114,6 +115,12 @@ export async function GET(
       fecha: true,
       autorFinder: { select: { name: true } },
     },
+  });
+
+  await logFinderAction({
+    finderId: finder.id,
+    action: "view_deal",
+    resourceId: String(id),
   });
 
   return NextResponse.json({

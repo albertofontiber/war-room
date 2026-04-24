@@ -12,6 +12,8 @@ import {
   PortalTareaCreateSchema,
   PortalTareaUpdateSchema,
   PortalActividadCreateSchema,
+  ProposalCreateSchema,
+  ProposalReviewSchema,
 } from "./validation";
 
 describe("TareaCreateSchema", () => {
@@ -198,6 +200,42 @@ describe("PortalActividadCreateSchema", () => {
     for (const t of ["nota", "llamada", "email", "reunion"]) {
       expect(PortalActividadCreateSchema.safeParse({ tipo: t }).success, `tipo=${t}`).toBe(true);
     }
+  });
+});
+
+describe("ProposalCreateSchema", () => {
+  it("acepta con solo companyName", () => {
+    expect(ProposalCreateSchema.safeParse({ companyName: "Fire Targets SL" }).success).toBe(true);
+  });
+  it("acepta con todos los campos", () => {
+    const r = ProposalCreateSchema.safeParse({
+      companyName: "Target X",
+      cif: "B12345678",
+      website: "https://target.com",
+      contactName: "Juan",
+      contactRole: "CEO",
+      notes: "Muy interesante",
+    });
+    expect(r.success).toBe(true);
+  });
+  it("rechaza sin companyName", () => {
+    expect(ProposalCreateSchema.safeParse({}).success).toBe(false);
+    expect(ProposalCreateSchema.safeParse({ companyName: "   " }).success).toBe(false);
+  });
+});
+
+describe("ProposalReviewSchema", () => {
+  it("acepta status válidos", () => {
+    for (const s of ["PENDING", "ACCEPTED", "DUPLICATE", "OUT_OF_SCOPE", "REJECTED"]) {
+      expect(ProposalReviewSchema.safeParse({ status: s }).success, `status=${s}`).toBe(true);
+    }
+  });
+  it("rechaza status inventado", () => {
+    expect(ProposalReviewSchema.safeParse({ status: "PENDIENTE" }).success).toBe(false);
+  });
+  it("acepta empresaId vinculado en ACCEPTED", () => {
+    const r = ProposalReviewSchema.safeParse({ status: "ACCEPTED", empresaId: 42 });
+    expect(r.success).toBe(true);
   });
 });
 

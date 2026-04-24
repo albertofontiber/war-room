@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder } from "@/lib/finder-session";
+import { logFinderAction } from "@/lib/finder-access-log";
 import { FINDER_STATUSES, FINDER_STATUS_MAP, diasDesde } from "@/lib/crm";
 import type { FinderStatus } from "@/lib/crm";
 import type { DealStage } from "@/types";
@@ -105,6 +106,8 @@ export async function GET() {
     const counts = Object.fromEntries(
       FINDER_STATUSES.map((s) => [s, grouped[s].length])
     ) as Record<FinderStatus, number>;
+
+    await logFinderAction({ finderId: finder.id, action: "view_deals" });
 
     return NextResponse.json({
       statuses: FINDER_STATUSES,
