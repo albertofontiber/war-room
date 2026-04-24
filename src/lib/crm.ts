@@ -44,6 +44,32 @@ export const DEAL_STAGE_COLOR: Record<DealStage, string> = {
   muerto: "#ef4444",        // red
 };
 
+/** Clases Tailwind de texto por stage — para celdas y textos simples. */
+export const DEAL_STAGE_TEXT_CLASS: Record<DealStage, string> = {
+  identificado: "text-[#94a3b8]",
+  contactado: "text-wr-blue",
+  primera_reunion: "text-sky-400",
+  analisis: "text-violet-400",
+  "LOI enviada": "text-wr-amber",
+  execution: "text-orange-400",
+  portfolio: "text-wr-green",
+  on_hold: "text-[#a8a29e]",
+  muerto: "text-wr-red",
+};
+
+/** Clases Tailwind de pill (bg + text + border) por stage — para badges/chips. */
+export const DEAL_STAGE_PILL_CLASS: Record<DealStage, string> = {
+  identificado: "bg-[#64748b]/20 text-[#94a3b8] border-[#64748b]/30",
+  contactado: "bg-wr-blue/20 text-wr-blue border-wr-blue/30",
+  primera_reunion: "bg-wr-blue/20 text-wr-blue border-wr-blue/30",
+  analisis: "bg-[#8b5cf6]/20 text-[#8b5cf6] border-[#8b5cf6]/30",
+  "LOI enviada": "bg-wr-amber/20 text-wr-amber border-wr-amber/30",
+  execution: "bg-wr-amber/20 text-wr-amber border-wr-amber/30",
+  portfolio: "bg-wr-green/20 text-wr-green border-wr-green/30",
+  on_hold: "bg-[#a8a29e]/20 text-[#a8a29e] border-[#a8a29e]/30",
+  muerto: "bg-wr-red/20 text-wr-red border-wr-red/30",
+};
+
 /** Stages visibles en el funnel principal (on_hold y muerto se muestran colapsados aparte). */
 export const FUNNEL_STAGES: DealStage[] = DEAL_STAGES.filter(
   (s) => s !== "muerto" && s !== "on_hold"

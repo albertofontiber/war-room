@@ -11,7 +11,11 @@ import { Switch } from "@/components/ui/switch";
 import StageChevron from "@/components/StageChevron";
 import { NotasSection, TareasSection, HistorialSection } from "@/components/CrmSections";
 import FinderSelector from "@/components/FinderSelector";
-import { diasDesde } from "@/lib/crm";
+import {
+  diasDesde,
+  DEAL_STAGE_LABEL,
+  DEAL_STAGE_PILL_CLASS,
+} from "@/lib/crm";
 import type { DealStage } from "@/types";
 import { useRouter } from "next/navigation";
 import {
@@ -32,30 +36,6 @@ const SECTOR_LABEL: Record<string, string> = {
   PCI: "PCI",
   seguridad_electronica: "Seg. Electrónica",
   mixto: "Mixto",
-};
-
-const STAGE_LABEL: Record<string, string> = {
-  identificado:    "Identificado",
-  contactado:      "Contactado",
-  primera_reunion: "1ª reunión",
-  analisis:        "Análisis",
-  "LOI enviada":   "LOI enviada",
-  execution:       "Ejecución",
-  portfolio:       "Portfolio",
-  on_hold:         "On hold",
-  muerto:          "Muerto",
-};
-
-const STAGE_COLOR: Record<string, string> = {
-  identificado:    "bg-[#64748b]/20 text-[#94a3b8] border-[#64748b]/30",
-  contactado:      "bg-wr-blue/20 text-wr-blue border-wr-blue/30",
-  primera_reunion: "bg-wr-blue/20 text-wr-blue border-wr-blue/30",
-  analisis:        "bg-wr-blue/20 text-wr-blue border-wr-blue/30",
-  "LOI enviada":   "bg-wr-amber/20 text-wr-amber border-wr-amber/30",
-  execution:       "bg-wr-amber/20 text-wr-amber border-wr-amber/30",
-  portfolio:       "bg-wr-green/20 text-wr-green border-wr-green/30",
-  on_hold:         "bg-[#a8a29e]/20 text-[#a8a29e] border-[#a8a29e]/30",
-  muerto:          "bg-wr-red/20 text-wr-red border-wr-red/30",
 };
 
 const ACTIVIDAD_ICON: Record<TipoActividad, string> = {
@@ -489,7 +469,9 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
 
   const latestFin = empresa.financieros[0] ?? null;
   const dealStage = empresa.crmEstado?.dealStage;
-  const stageClass = STAGE_COLOR[dealStage ?? ""] ?? STAGE_COLOR.prospecto;
+  const stageClass = dealStage
+    ? DEAL_STAGE_PILL_CLASS[dealStage]
+    : DEAL_STAGE_PILL_CLASS.identificado;
 
   return (
     <aside className={`${modoDetallado ? "w-full" : "w-[340px] flex-shrink-0"} bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right`}>
@@ -565,7 +547,7 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
                 variant="outline"
                 className={`text-[10px] border ${stageClass}`}
               >
-                {STAGE_LABEL[dealStage] ?? dealStage}
+                {DEAL_STAGE_LABEL[dealStage] ?? dealStage}
               </Badge>
             )}
             {empresa.cepreven && (
@@ -932,9 +914,10 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
                     href={`https://fontiber.pipedrive.com/organization/${empresa.crmEstado.pipedriveOrgId}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 mt-2 text-xs text-wr-blue hover:underline"
+                    className="inline-flex items-center gap-1 mt-2 text-xs text-wr-hint hover:text-wr-muted hover:underline"
+                    title="Histórico Pipedrive (legacy, read-only tras cut-over)"
                   >
-                    Ver en Pipedrive →
+                    Ver en Pipedrive (legacy) →
                   </a>
                 )}
               </div>

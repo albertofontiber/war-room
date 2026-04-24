@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
+import { NotaCreateSchema, zodError } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
 
@@ -50,16 +51,14 @@ export async function POST(
       return NextResponse.json({ error: "Invalid empresa id" }, { status: 400 });
     }
 
-    const { contenido } = (await req.json()) as { contenido?: string };
-    if (!contenido?.trim()) {
-      return NextResponse.json({ error: "Content required" }, { status: 400 });
-    }
+    const parsed = NotaCreateSchema.safeParse(await req.json());
+    if (!parsed.success) return zodError(parsed.error);
 
     const nota = await prisma.nota.create({
       data: {
         empresaId,
         autorId: user.id,
-        contenido: contenido.trim(),
+        contenido: parsed.data.contenido,
       },
       include: { autor: { select: { id: true, name: true } } },
     });

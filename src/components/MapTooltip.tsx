@@ -2,6 +2,8 @@
 
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { fmt, fmtM } from "@/lib/format";
+import { DEAL_STAGE_LABEL, DEAL_STAGE_PILL_CLASS } from "@/lib/crm";
+import type { DealStage } from "@/types";
 
 interface TooltipProps {
   x: number;
@@ -32,30 +34,6 @@ const SECTOR_LABEL: Record<string, string> = {
   PCI: "PCI",
   seguridad_electronica: "Seg. Electrónica",
   mixto: "Mixto",
-};
-
-const STAGE_LABEL: Record<string, string> = {
-  identificado: "Identificado",
-  contactado: "Contactado",
-  primera_reunion: "1ª reunión",
-  analisis: "Análisis",
-  "LOI enviada": "LOI enviada",
-  execution: "Ejecución",
-  portfolio: "Portfolio",
-  on_hold: "On hold",
-  muerto: "Muerto",
-};
-
-const STAGE_COLOR: Record<string, string> = {
-  identificado: "bg-[#64748b]/20 text-[#94a3b8]",
-  contactado: "bg-wr-blue/20 text-wr-blue",
-  primera_reunion: "bg-wr-blue/20 text-wr-blue",
-  analisis: "bg-[#8b5cf6]/20 text-[#8b5cf6]",
-  "LOI enviada": "bg-wr-amber/20 text-wr-amber",
-  execution: "bg-wr-amber/20 text-wr-amber",
-  portfolio: "bg-wr-green/20 text-wr-green",
-  on_hold: "bg-[#a8a29e]/20 text-[#a8a29e]",
-  muerto: "bg-wr-red/20 text-wr-red",
 };
 
 
@@ -97,7 +75,8 @@ export default function MapTooltip({ x, y, props }: TooltipProps) {
   const offsetY = y - 8;
 
   const stageClass =
-    STAGE_COLOR[props.dealStage ?? ""] ?? "bg-[#64748b]/20 text-[#94a3b8]";
+    DEAL_STAGE_PILL_CLASS[props.dealStage as DealStage] ??
+    "bg-[#64748b]/20 text-[#94a3b8] border-[#64748b]/30";
 
   return (
     <div
@@ -138,7 +117,7 @@ export default function MapTooltip({ x, y, props }: TooltipProps) {
           </span>
           {props.dealStage && (
             <span className={`px-1.5 py-0.5 rounded text-[10px] ${stageClass}`}>
-              {STAGE_LABEL[props.dealStage] ?? props.dealStage}
+              {DEAL_STAGE_LABEL[props.dealStage as DealStage] ?? props.dealStage}
             </span>
           )}
           {!props.enPerimetro && (

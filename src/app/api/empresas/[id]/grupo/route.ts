@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { GrupoAssignSchema, zodError } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
 
@@ -11,8 +12,9 @@ export async function PATCH(
     const id = parseInt(params.id);
     if (isNaN(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
-    const body = await req.json();
-    const grupoNombre: string | null = body.grupoNombre?.trim() || null;
+    const parsed = GrupoAssignSchema.safeParse(await req.json());
+    if (!parsed.success) return zodError(parsed.error);
+    const grupoNombre: string | null = parsed.data.grupoNombre?.trim() || null;
 
     let grupoId: number | null = null;
 

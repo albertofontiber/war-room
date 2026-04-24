@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
-import { isValidTareaTipo } from "@/lib/crm";
+import { TareaUpdateSchema, zodError } from "@/lib/validation";
+import type { TareaTipo } from "@/types";
 
 export const dynamic = "force-dynamic";
 
@@ -24,23 +25,18 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid tarea id" }, { status: 400 });
     }
 
-    const body = (await req.json()) as {
-      tipo?: string;
-      titulo?: string;
-      descripcion?: string | null;
-      fechaLimite?: string | null;
-      asignadoId?: string | null;
-      completada?: boolean;
-    };
+    const parsed = TareaUpdateSchema.safeParse(await req.json());
+    if (!parsed.success) return zodError(parsed.error);
+    const body = parsed.data;
 
     const data: Record<string, unknown> = {};
-    if (body.tipo && isValidTareaTipo(body.tipo)) data.tipo = body.tipo;
-    if (typeof body.titulo === "string") data.titulo = body.titulo.trim();
+    if (body.tipo !== undefined) data.tipo = body.tipo as TareaTipo;
+    if (body.titulo !== undefined) data.titulo = body.titulo;
     if (body.descripcion !== undefined) data.descripcion = body.descripcion?.trim() || null;
     if (body.fechaLimite !== undefined)
       data.fechaLimite = body.fechaLimite ? new Date(body.fechaLimite) : null;
     if (body.asignadoId !== undefined) data.asignadoId = body.asignadoId || null;
-    if (typeof body.completada === "boolean") {
+    if (body.completada !== undefined) {
       data.completada = body.completada;
       data.completadaAt = body.completada ? new Date() : null;
     }

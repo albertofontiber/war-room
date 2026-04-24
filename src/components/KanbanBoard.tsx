@@ -21,6 +21,7 @@ import {
   FUNNEL_STAGES,
   SIDE_STAGES,
 } from "@/lib/crm";
+import { fmtM } from "@/lib/format";
 import type { DealStage } from "@/types";
 
 export type SortOption = "nombre" | "ingresos_desc" | "ingresos_asc" | "act_desc" | "act_asc" | "stage_desc" | "stage_asc";
@@ -96,13 +97,6 @@ function sortCards(cards: KanbanCard[], option: SortOption): KanbanCard[] {
   return copy;
 }
 
-function formatEuros(n: number | null): string {
-  if (n == null) return "—";
-  if (Math.abs(n) >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M€`;
-  if (Math.abs(n) >= 1_000) return `${(n / 1_000).toFixed(0)}K€`;
-  return `${n.toFixed(0)}€`;
-}
-
 function Card({ card, onClick, blur = false }: { card: KanbanCard; onClick?: () => void; blur?: boolean }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `empresa-${card.id}`,
@@ -150,10 +144,10 @@ function Card({ card, onClick, blur = false }: { card: KanbanCard; onClick?: () 
 
       <div className="flex items-center gap-2 text-[10px] text-wr-muted">
         <span title="Ingresos">
-          <span className="text-wr-hint">I:</span> {formatEuros(card.ingresos)}
+          <span className="text-wr-hint">I:</span> {fmtM(card.ingresos, "—")}
         </span>
         <span title="EBITDA">
-          <span className="text-wr-hint">E:</span> {formatEuros(card.ebitda)}
+          <span className="text-wr-hint">E:</span> {fmtM(card.ebitda, "—")}
         </span>
         {card.margenBrutoPct != null && (
           <span title="Margen bruto">

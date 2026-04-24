@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 
 export const dynamic = "force-dynamic";
 import { authOptions } from "@/lib/auth";
+import { PerimetroPatchSchema, zodError } from "@/lib/validation";
 
 export async function PATCH(
   req: Request,
@@ -18,13 +19,13 @@ export async function PATCH(
     if (isNaN(id))
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
-    const body = await req.json();
-    const enPerimetro = Boolean(body.enPerimetro);
+    const parsed = PerimetroPatchSchema.safeParse(await req.json());
+    if (!parsed.success) return zodError(parsed.error);
 
     const empresa = await prisma.empresa.update({
       where: { id },
       data: {
-        enPerimetro,
+        enPerimetro: parsed.data.enPerimetro,
         enPerimetroAt: new Date(),
       },
       select: { id: true, enPerimetro: true, enPerimetroAt: true },

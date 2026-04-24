@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { isValidDealStage } from "@/lib/crm";
+import { StageChangeSchema, zodError } from "@/lib/validation";
 import type { DealStage } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -34,12 +34,10 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid empresa id" }, { status: 400 });
     }
 
-    const body = await req.json();
-    const { dealStage, note } = body as { dealStage: DealStage | null; note?: string };
-
-    if (dealStage !== null && !isValidDealStage(dealStage)) {
-      return NextResponse.json({ error: "Invalid dealStage" }, { status: 400 });
-    }
+    const parsed = StageChangeSchema.safeParse(await req.json());
+    if (!parsed.success) return zodError(parsed.error);
+    const dealStage = parsed.data.dealStage as DealStage | null;
+    const note = parsed.data.note;
 
     // Resolver usuario actual (admin) para autoría
     const user = await prisma.user.findUnique({
