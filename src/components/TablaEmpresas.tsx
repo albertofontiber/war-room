@@ -20,6 +20,7 @@ const STAGE_LABEL: Record<string, string> = {
   "LOI enviada":   "LOI enviada",
   execution:       "Ejecución",
   portfolio:       "Portfolio",
+  on_hold:         "On hold",
   muerto:          "Muerto",
 };
 
@@ -31,6 +32,7 @@ const STAGE_COLOR: Record<string, string> = {
   "LOI enviada":   "text-wr-amber",
   execution:       "text-orange-400",
   portfolio:       "text-wr-green",
+  on_hold:         "text-[#a8a29e]",
   muerto:          "text-wr-red",
 };
 

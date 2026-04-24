@@ -33,6 +33,7 @@ const CRM_COLOR = [
   ["==", ["get", "dealStage"], "LOI enviada"],     "#f59e0b",  // amber
   ["==", ["get", "dealStage"], "execution"],       "#f97316",  // orange
   ["==", ["get", "dealStage"], "portfolio"],       "#22c55e",  // green
+  ["==", ["get", "dealStage"], "on_hold"],         "#a8a29e",  // stone — en pausa
   ["==", ["get", "dealStage"], "muerto"],          "#ef4444",  // red
   "#94a3b8",  // slate — sin CRM / identificado
 ] as const;
@@ -158,6 +159,7 @@ const STAGE_LBL: Record<string, string> = {
   "LOI enviada":   "LOI enviada",
   execution:       "Ejecución",
   portfolio:       "Portfolio",
+  on_hold:         "On hold",
   muerto:          "Muerto",
 };
 const STAGE_CLR: Record<string, string> = {
@@ -167,6 +169,7 @@ const STAGE_CLR: Record<string, string> = {
   "LOI enviada":   "#f59e0b",
   execution:       "#f97316",
   portfolio:       "#22c55e",
+  on_hold:         "#a8a29e",
   muerto:          "#ef4444",
 };
 
@@ -1112,6 +1115,7 @@ export default function MapaEspana() {
             ["#f59e0b", "LOI enviada"],
             ["#f97316", "Ejecución"],
             ["#22c55e", "Portfolio"],
+            ["#a8a29e", "On hold"],
             ["#ef4444", "Muerto"],
           ].map(([color, label]) => (
             <div key={label} className="flex items-center gap-2 text-wr-muted">

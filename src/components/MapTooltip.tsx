@@ -34,20 +34,26 @@ const SECTOR_LABEL: Record<string, string> = {
 };
 
 const STAGE_LABEL: Record<string, string> = {
-  prospecto: "Prospecto",
+  identificado: "Identificado",
   contactado: "Contactado",
-  NBO: "NBO",
-  exclusividad: "Exclusividad",
-  muerto: "Muerto",
+  primera_reunion: "1ª reunión",
+  analisis: "Análisis",
+  "LOI enviada": "LOI enviada",
+  execution: "Ejecución",
   portfolio: "Portfolio",
+  on_hold: "On hold",
+  muerto: "Muerto",
 };
 
 const STAGE_COLOR: Record<string, string> = {
-  prospecto: "bg-[#64748b]/20 text-[#94a3b8]",
+  identificado: "bg-[#64748b]/20 text-[#94a3b8]",
   contactado: "bg-wr-blue/20 text-wr-blue",
-  NBO: "bg-wr-amber/20 text-wr-amber",
-  exclusividad: "bg-wr-amber/20 text-wr-amber",
+  primera_reunion: "bg-wr-blue/20 text-wr-blue",
+  analisis: "bg-[#8b5cf6]/20 text-[#8b5cf6]",
+  "LOI enviada": "bg-wr-amber/20 text-wr-amber",
+  execution: "bg-wr-amber/20 text-wr-amber",
   portfolio: "bg-wr-green/20 text-wr-green",
+  on_hold: "bg-[#a8a29e]/20 text-[#a8a29e]",
   muerto: "bg-wr-red/20 text-wr-red",
 };
 

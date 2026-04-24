@@ -1,0 +1,207 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { DEAL_STAGES, diasDesde } from "@/lib/crm";
+import type { DealStage } from "@/types";
+
+export const dynamic = "force-dynamic";
+
+/**
+ * GET /api/crm/pipeline
+ *
+ * Lista de empresas del funnel, agrupadas por dealStage, con los datos
+ * necesarios para pintar cada tarjeta del Kanban:
+ *   - nombre, CIF, ingresos, EBITDA, margen%, owner
+ *   - última actividad (excluye tipo=nota, que no cuenta)
+ *   - nº tareas pendientes
+ *   - días en stage actual
+ *
+ * Solo empresas con enPerimetro=true aparecen. La columna "identificado"
+ * incluye además empresas en perímetro SIN CrmEstado (backlog).
+ *
+ * Query params opcionales (filtros):
+ *   ?ccaa=...   (comma-separated)
+ *   ?provincia=...
+ *   ?sector=PCI|seguridad_electronica|mixto
+ *   ?owner=<userId>     (filtra por CrmEstado.ownerUserId)
+ *   ?q=<text>           (busca en nombre/CIF — simple includes case-insensitive)
+ *   ?conTarea=true      (solo empresas con al menos una tarea pendiente)
+ */
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const url = new URL(req.url);
+    const ccaa = url.searchParams.get("ccaa")?.split(",").filter(Boolean) ?? [];
+    const provincia = url.searchParams.get("provincia")?.split(",").filter(Boolean) ?? [];
+    const sector = url.searchParams.get("sector")?.split(",").filter(Boolean) ?? [];
+    const owner = url.searchParams.get("owner") ?? null;
+    const finder = url.searchParams.get("finder") ?? null;
+    const q = url.searchParams.get("q")?.trim().toLowerCase() ?? "";
+    const conTarea = url.searchParams.get("conTarea") === "true";
+    const diasSinActividadMinParam = url.searchParams.get("diasSinActividadMin");
+    const diasSinActividadMin = diasSinActividadMinParam
+      ? Number(diasSinActividadMinParam)
+      : null;
+
+    // Filtros base: solo perímetro
+    const whereBase: Parameters<typeof prisma.empresa.findMany>[0] = {
+      where: {
+        enPerimetro: true,
+        ...(ccaa.length ? { ccaa: { in: ccaa } } : {}),
+        ...(provincia.length ? { provincia: { in: provincia } } : {}),
+        ...(sector.length ? { sector: { in: sector } } : {}),
+        ...(owner ? { crmEstado: { ownerUserId: owner } } : {}),
+        ...(finder === "__none__"
+          ? { finderSourceId: null }
+          : finder
+          ? { finderSourceId: finder }
+          : {}),
+        ...(q
+          ? {
+              OR: [
+                { nombre: { contains: q, mode: "insensitive" } },
+                { cif: { contains: q, mode: "insensitive" } },
+              ],
+            }
+          : {}),
+        ...(conTarea
+          ? {
+              tareas: { some: { completada: false } },
+            }
+          : {}),
+      },
+    };
+
+    const empresas = await prisma.empresa.findMany({
+      ...whereBase,
+      include: {
+        financieros: { orderBy: { anio: "desc" }, take: 1 },
+        crmEstado: {
+          include: {
+            ownerUser: { select: { id: true, name: true } },
+          },
+        },
+        finderSource: { select: { id: true, name: true } },
+        // última actividad real (llamada/email/reunión) — excluye tipo=nota
+        actividades: {
+          where: { tipo: { in: ["llamada", "email", "reunion"] } },
+          orderBy: { fecha: "desc" },
+          take: 1,
+          select: { fecha: true, tipo: true },
+        },
+        _count: {
+          select: {
+            tareas: { where: { completada: false } },
+          },
+        },
+      },
+      orderBy: [{ nombre: "asc" }],
+    });
+
+    type Card = {
+      id: number;
+      cif: string;
+      nombre: string;
+      ccaa: string | null;
+      provincia: string | null;
+      sector: string | null;
+      dealStage: DealStage | null;
+      ingresos: number | null;
+      margenBrutoPct: number | null;
+      ebitda: number | null;
+      ownerUserId: string | null;
+      ownerName: string | null;
+      finderName: string | null;
+      finderId: string | null;
+      ultimaActividad: { fecha: string; tipo: string } | null;
+      diasSinActividad: number | null;
+      diasEnStage: number | null;
+      tareasPendientes: number;
+    };
+
+    const tarjetas: Card[] = empresas.map((e) => {
+      const fin = e.financieros[0] ?? null;
+      const ingresos = fin?.ingresos ?? null;
+      const margenBruto = fin?.margenBruto ?? null;
+      const margenBrutoPct =
+        ingresos && margenBruto ? (margenBruto / ingresos) * 100 : null;
+      const ebitda = fin?.ebitda ?? null;
+
+      const ultima = e.actividades[0] ?? null;
+      const diasSinActividad = ultima ? diasDesde(ultima.fecha) : null;
+
+      const fechaEntrada = e.crmEstado?.fechaEntradaStage ?? e.crmEstado?.updatedAt ?? null;
+      const diasEnStage = fechaEntrada ? diasDesde(fechaEntrada) : null;
+
+      return {
+        id: e.id,
+        cif: e.cif,
+        nombre: e.nombre,
+        ccaa: e.ccaa,
+        provincia: e.provincia,
+        sector: e.sector,
+        dealStage: (e.crmEstado?.dealStage as DealStage | undefined) ?? null,
+        ingresos,
+        margenBrutoPct,
+        ebitda,
+        ownerUserId: e.crmEstado?.ownerUserId ?? null,
+        ownerName: e.crmEstado?.ownerUser?.name ?? e.crmEstado?.owner ?? null,
+        finderName: e.finderSource?.name ?? null,
+        finderId: e.finderSource?.id ?? null,
+        ultimaActividad: ultima
+          ? { fecha: ultima.fecha.toISOString(), tipo: ultima.tipo }
+          : null,
+        diasSinActividad,
+        diasEnStage,
+        tareasPendientes: e._count.tareas,
+      };
+    });
+
+    // Filtro en memoria: días sin actividad ≥ N
+    const filtered =
+      diasSinActividadMin != null && Number.isFinite(diasSinActividadMin)
+        ? tarjetas.filter((t) => {
+            if (t.diasSinActividad == null) return true; // si nunca hubo actividad, incluir
+            return t.diasSinActividad >= diasSinActividadMin;
+          })
+        : tarjetas;
+
+    // Agrupar por stage. Las empresas sin CrmEstado → "identificado" (backlog).
+    const grouped: Record<DealStage, Card[]> = {
+      identificado: [],
+      contactado: [],
+      primera_reunion: [],
+      analisis: [],
+      "LOI enviada": [],
+      execution: [],
+      portfolio: [],
+      on_hold: [],
+      muerto: [],
+    };
+
+    for (const card of filtered) {
+      const stage: DealStage = card.dealStage ?? "identificado";
+      grouped[stage].push(card);
+    }
+
+    const counts = Object.fromEntries(
+      DEAL_STAGES.map((s) => [s, grouped[s].length])
+    ) as Record<DealStage, number>;
+
+    return NextResponse.json({
+      stages: DEAL_STAGES,
+      grouped,
+      counts,
+      total: filtered.length,
+    });
+  } catch (err) {
+    console.error("[GET /api/crm/pipeline]", err);
+    return NextResponse.json(
+      { error: "Internal error" },
+      { status: 500 }
+    );
+  }
+}

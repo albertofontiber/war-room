@@ -61,9 +61,17 @@ model Empresa {
   crmEstado        CrmEstado?
   crmLogs          CrmLog[]
   actividades      Actividad[]
+  notas            Nota[]
+  tareas           Tarea[]
+  // CRM finder module
+  finderSourceId   String?
+  finderSource     Finder?       @relation(fields: [finderSourceId], references: [id])
+  finderNotes      FinderNote[]
+  proposals        TargetProposal[]
 
   @@index([nombre])
   @@index([fuente])
+  @@index([finderSourceId])
 }
 
 model Financiero {
@@ -137,37 +145,191 @@ model PersonaCargo {
 }
 
 model CrmEstado {
-  id             Int      @id @default(autoincrement())
-  empresaId      Int      @unique
-  empresa        Empresa  @relation(fields: [empresaId], references: [id])
-  pipedriveOrgId String?
-  dealStage      String?  // "prospecto"|"contactado"|"NBO"|"exclusividad"|"muerto"|"portfolio"
-  owner          String?
-  updatedAt      DateTime @updatedAt
+  id                 Int       @id @default(autoincrement())
+  empresaId          Int       @unique
+  empresa            Empresa   @relation(fields: [empresaId], references: [id])
+  pipedriveOrgId     String?   // legacy Pipedrive, read-only tras cut-over
+  dealStage          String?   // "identificado"|"contactado"|"primera_reunion"|"analisis"|"LOI enviada"|"execution"|"portfolio"|"muerto"
+  owner              String?   // legacy string ("alberto"|"gabriel") — mantenido para compat
+  ownerUserId        String?
+  ownerUser          User?     @relation("CrmOwner", fields: [ownerUserId], references: [id])
+  fechaEntradaStage  DateTime? // cuándo entró al stage actual (para "X días en stage")
+  updatedAt          DateTime  @updatedAt
+
+  @@index([dealStage])
+  @@index([ownerUserId])
 }
 
 model CrmLog {
   id         Int      @id @default(autoincrement())
   empresaId  Int
   empresa    Empresa  @relation(fields: [empresaId], references: [id])
-  event      String   // "new_deal" | "stage_changed"
+  event      String   // "new_deal" | "stage_changed" | "removed_from_funnel"
   fromStage  String?
   toStage    String?
-  owner      String?
+  owner      String?  // legacy string
+  autorId    String?
+  autor      User?    @relation(fields: [autorId], references: [id])
+  note       String?  // comentario opcional al cambiar stage
   createdAt  DateTime @default(now())
 
   @@index([empresaId])
   @@index([createdAt])
+  @@index([autorId])
 }
 
 model Actividad {
-  id             Int      @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   empresaId      Int
-  empresa        Empresa  @relation(fields: [empresaId], references: [id])
-  pipedriveId    String   @unique
-  tipo           String   // "nota"|"llamada"|"email"|"reunion"
-  texto          String?
-  autor          String?
+  empresa        Empresa   @relation(fields: [empresaId], references: [id])
+  pipedriveId    String?   @unique // null para actividades nativas War Room, set para legacy Pipedrive
+  tipo           String    // "nota"|"llamada"|"email"|"reunion"
+  texto          String?   @db.Text
+  autor          String?   // legacy string (Pipedrive)
+  autorId        String?
+  autorUser      User?     @relation(fields: [autorId], references: [id])
   fecha          DateTime
-  sincronizadoAt DateTime @default(now())
+  sincronizadoAt DateTime  @default(now())
+
+  @@index([empresaId, fecha])
+  @@index([autorId])
+}
+
+// ─────────────────────────────────────────────────────────────
+// CRM module — MVP 1 (users, notas generales, tareas)
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  name       String
+  role       String   @default("admin") // "admin" | "finder" (reservado MVP 1.5)
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relaciones
+  notas           Nota[]            @relation("NotaAutor")
+  tareasCreadas   Tarea[]           @relation("TareaAutor")
+  tareasAsignadas Tarea[]           @relation("TareaAsignado")
+  crmLogs         CrmLog[]
+  actividades     Actividad[]
+  crmEstadosOwner CrmEstado[]       @relation("CrmOwner")
+}
+
+model Nota {
+  id         Int      @id @default(autoincrement())
+  empresaId  Int
+  empresa    Empresa  @relation(fields: [empresaId], references: [id])
+  autorId    String
+  autor      User     @relation("NotaAutor", fields: [autorId], references: [id])
+  contenido  String   @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([empresaId, createdAt])
+  @@index([autorId])
+}
+
+model Tarea {
+  id           Int       @id @default(autoincrement())
+  empresaId    Int
+  empresa      Empresa   @relation(fields: [empresaId], references: [id])
+  tipo         String    @default("otra") // contacto_linkedin|mensaje_whatsapp|llamada|reunion_presencial|otra
+  titulo       String
+  descripcion  String?   @db.Text
+  fechaLimite  DateTime?
+  completada   Boolean   @default(false)
+  completadaAt DateTime?
+  asignadoId   String?
+  asignado     User?     @relation("TareaAsignado", fields: [asignadoId], references: [id])
+  autorId      String
+  autor        User      @relation("TareaAutor", fields: [autorId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([empresaId])
+  @@index([fechaLimite, completada])
+  @@index([asignadoId, completada])
+  @@index([tipo])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Finder module — MVP 1.5 (portal de finders)
+// Tablas preparadas ya en MVP 1 para registrar finders existentes.
+// Las tablas NextAuth (FinderSession/Account/VerificationToken) se añaden en MVP 1.5.
+// ─────────────────────────────────────────────────────────────
+
+model Finder {
+  id                String            @id @default(cuid())
+  email             String            @unique
+  name              String
+  active            Boolean           @default(true)
+  commissionPct     Float?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  empresas          Empresa[]
+  finderNotes       FinderNote[]
+  proposals         TargetProposal[]
+  accessLogs        FinderAccessLog[]
+}
+
+model FinderNote {
+  id         Int      @id @default(autoincrement())
+  finderId   String
+  finder     Finder   @relation(fields: [finderId], references: [id])
+  empresaId  Int
+  empresa    Empresa  @relation(fields: [empresaId], references: [id])
+  contenido  String   @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([finderId])
+  @@index([empresaId])
+}
+
+model TargetProposal {
+  id              Int             @id @default(autoincrement())
+  finderId        String
+  finder          Finder          @relation(fields: [finderId], references: [id])
+  companyName     String
+  cif             String?
+  website         String?
+  contactName     String?
+  contactRole     String?
+  notes           String?         @db.Text
+  status          ProposalStatus  @default(PENDING)
+  empresaId       Int?
+  empresa         Empresa?        @relation(fields: [empresaId], references: [id])
+  rejectionReason String?         // interno, nunca se expone al finder
+  createdAt       DateTime        @default(now())
+  reviewedAt      DateTime?
+  reviewedBy      String?         // User.id del admin que revisó
+
+  @@index([finderId])
+  @@index([status])
+}
+
+enum ProposalStatus {
+  PENDING
+  ACCEPTED
+  DUPLICATE
+  OUT_OF_SCOPE
+  REJECTED
+}
+
+model FinderAccessLog {
+  id         Int       @id @default(autoincrement())
+  finderId   String?
+  finder     Finder?   @relation(fields: [finderId], references: [id])
+  email      String?
+  action     String    // "login_attempt"|"login_success"|"view_deals"|"view_deal"|"add_note"|"edit_note"|"delete_note"|"propose_target"
+  resourceId String?
+  ip         String?
+  userAgent  String?   @db.Text
+  createdAt  DateTime  @default(now())
+
+  @@index([finderId])
+  @@index([action, createdAt])
 }

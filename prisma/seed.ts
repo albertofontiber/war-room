@@ -5,6 +5,44 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Iniciando seed War Room PCI...");
 
+  // ─── USUARIOS ADMIN ──────────────────────────────────────────────────────
+  const userAlberto = await prisma.user.upsert({
+    where: { email: "alberto@fontiber.com" },
+    update: {},
+    create: {
+      email: "alberto@fontiber.com",
+      name: "Alberto",
+      role: "admin",
+    },
+  });
+
+  const userGabriel = await prisma.user.upsert({
+    where: { email: "gabriel@fontiber.com" },
+    update: {},
+    create: {
+      email: "gabriel@fontiber.com",
+      name: "Gabriel",
+      role: "admin",
+    },
+  });
+  console.log("✅ Usuarios admin creados (alberto, gabriel)");
+
+  // ─── FINDER DE PRUEBA ────────────────────────────────────────────────────
+  // Usado para simular el portal de finders (MVP 1.5). Email apunta a otra
+  // cuenta personal de Alberto para poder hacer login como finder sin depender
+  // de un finder real. Cuando haya finders reales, se añaden desde /admin/finders.
+  const finderTest = await prisma.finder.upsert({
+    where: { email: "silvaglez.alberto@gmail.com" },
+    update: {},
+    create: {
+      email: "silvaglez.alberto@gmail.com",
+      name: "Finder Test",
+      active: true,
+      commissionPct: 2.5,
+    },
+  });
+  console.log("✅ Finder de prueba creado (silvaglez.alberto@gmail.com)");
+
   // ─── GRUPOS ──────────────────────────────────────────────────────────────
   const grupoJC = await prisma.grupo.upsert({
     where: { id: 1 },
@@ -572,30 +610,50 @@ async function main() {
   console.log("✅ BORME alertas creadas (4)");
 
   // ─── CRM ESTADOS ──────────────────────────────────────────────────────────
+  // Stages reales del War Room (8): identificado | contactado | primera_reunion |
+  // analisis | "LOI enviada" | execution | portfolio | muerto
   const crmData = [
-    { empresaId: e1.id, dealStage: "prospecto",    owner: "alberto", pipedriveOrgId: "ORG-1001" },
-    { empresaId: e2.id, dealStage: "prospecto",    owner: "gabriel", pipedriveOrgId: "ORG-1002" },
-    { empresaId: e3.id, dealStage: "NBO",          owner: "alberto", pipedriveOrgId: "ORG-1003" },
-    { empresaId: e4.id, dealStage: "contactado",   owner: "gabriel", pipedriveOrgId: "ORG-1004" },
-    { empresaId: e5.id, dealStage: "contactado",   owner: "alberto", pipedriveOrgId: "ORG-1005" },
-    { empresaId: e6.id, dealStage: "contactado",   owner: "gabriel", pipedriveOrgId: "ORG-1006" },
-    { empresaId: e7.id, dealStage: "exclusividad", owner: "alberto", pipedriveOrgId: "ORG-1007" },
-    { empresaId: e8.id, dealStage: "NBO",          owner: "gabriel", pipedriveOrgId: "ORG-1008" },
-    { empresaId: e9.id, dealStage: "portfolio",    owner: "alberto", pipedriveOrgId: "ORG-1009" },
-    { empresaId: e10.id, dealStage: "prospecto",   owner: "gabriel", pipedriveOrgId: "ORG-1010" },
-    { empresaId: e11.id, dealStage: "muerto",      owner: "alberto", pipedriveOrgId: null },
-    { empresaId: e12.id, dealStage: "muerto",      owner: "gabriel", pipedriveOrgId: null },
-    // e13, e14, e15 → sin CrmEstado (sin contactar)
+    { empresaId: e1.id, dealStage: "identificado",     owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: "ORG-1001" },
+    { empresaId: e2.id, dealStage: "identificado",     owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: "ORG-1002" },
+    { empresaId: e3.id, dealStage: "LOI enviada",      owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: "ORG-1003" },
+    { empresaId: e4.id, dealStage: "contactado",       owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: "ORG-1004" },
+    { empresaId: e5.id, dealStage: "contactado",       owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: "ORG-1005" },
+    { empresaId: e6.id, dealStage: "primera_reunion",  owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: "ORG-1006" },
+    { empresaId: e7.id, dealStage: "execution",        owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: "ORG-1007" },
+    { empresaId: e8.id, dealStage: "analisis",         owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: "ORG-1008" },
+    { empresaId: e9.id, dealStage: "portfolio",        owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: "ORG-1009" },
+    { empresaId: e10.id, dealStage: "identificado",    owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: "ORG-1010" },
+    { empresaId: e11.id, dealStage: "muerto",          owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: null },
+    { empresaId: e12.id, dealStage: "muerto",          owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: null },
+    // e13, e14, e15 → sin CrmEstado (backlog "sin tocar")
   ];
 
+  const now = new Date();
   for (const crm of crmData) {
     await prisma.crmEstado.upsert({
       where: { empresaId: crm.empresaId },
       update: {},
-      create: { ...crm, updatedAt: new Date() },
+      create: { ...crm, fechaEntradaStage: now, updatedAt: now },
     });
   }
-  console.log("✅ CRM estados creados (12; 3 empresas sin contactar)");
+  console.log("✅ CRM estados creados (12; 3 empresas sin contactar — backlog)");
+
+  // ─── ASIGNACIÓN A FINDER DE PRUEBA ───────────────────────────────────────
+  // 3 empresas como "traídas por el finder de prueba", para que cuando montemos
+  // el portal de finders (MVP 1.5) haya algo que visualizar al loguear.
+  await prisma.empresa.update({
+    where: { id: e4.id },
+    data: { finderSourceId: finderTest.id },
+  });
+  await prisma.empresa.update({
+    where: { id: e6.id },
+    data: { finderSourceId: finderTest.id },
+  });
+  await prisma.empresa.update({
+    where: { id: e10.id },
+    data: { finderSourceId: finderTest.id },
+  });
+  console.log("✅ 3 empresas asignadas al finder de prueba (e4, e6, e10)");
 
   // ─── ACTIVIDADES CRM ─────────────────────────────────────────────────────
   const actividadesData = [
