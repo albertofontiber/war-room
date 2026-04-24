@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
+import { NotaUpdateSchema, zodError } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
 
@@ -22,14 +23,12 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid nota id" }, { status: 400 });
     }
 
-    const { contenido } = (await req.json()) as { contenido?: string };
-    if (!contenido?.trim()) {
-      return NextResponse.json({ error: "Content required" }, { status: 400 });
-    }
+    const parsed = NotaUpdateSchema.safeParse(await req.json());
+    if (!parsed.success) return zodError(parsed.error);
 
     const nota = await prisma.nota.update({
       where: { id: notaId },
-      data: { contenido: contenido.trim() },
+      data: { contenido: parsed.data.contenido },
       include: { autor: { select: { id: true, name: true } } },
     });
     return NextResponse.json(nota);

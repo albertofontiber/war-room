@@ -4,36 +4,14 @@ import { useMemo, useState, useCallback } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { isInFilter } from "@/lib/filtros";
 import { fmt, fmtM, fmtPct } from "@/lib/format";
+import { DEAL_STAGE_LABEL, DEAL_STAGE_TEXT_CLASS } from "@/lib/crm";
+import type { DealStage } from "@/types";
 import * as XLSX from "xlsx";
 
 const SECTOR_LABEL: Record<string, string> = {
   PCI: "PCI",
   seguridad_electronica: "Seg. Electrónica",
   mixto: "Mixto",
-};
-
-const STAGE_LABEL: Record<string, string> = {
-  identificado:    "Identificado",
-  contactado:      "Contactado",
-  primera_reunion: "1ª reunión",
-  analisis:        "Análisis",
-  "LOI enviada":   "LOI enviada",
-  execution:       "Ejecución",
-  portfolio:       "Portfolio",
-  on_hold:         "On hold",
-  muerto:          "Muerto",
-};
-
-const STAGE_COLOR: Record<string, string> = {
-  identificado:    "text-[#94a3b8]",
-  contactado:      "text-wr-blue",
-  primera_reunion: "text-sky-400",
-  analisis:        "text-violet-400",
-  "LOI enviada":   "text-wr-amber",
-  execution:       "text-orange-400",
-  portfolio:       "text-wr-green",
-  on_hold:         "text-[#a8a29e]",
-  muerto:          "text-wr-red",
 };
 
 type SortKey =
@@ -161,7 +139,7 @@ export default function TablaEmpresas() {
         Ciudad: r.localidad ?? "",
         Provincia: r.provincia,
         Sector: SECTOR_LABEL[r.sector as string] ?? r.sector,
-        CRM: STAGE_LABEL[r.dealStage as string] ?? r.dealStage ?? "—",
+        CRM: DEAL_STAGE_LABEL[r.dealStage as DealStage] ?? r.dealStage ?? "—",
       };
       if (!modoPresentacion) {
         row["Ingresos (€)"] = r.ingresos ?? null;
@@ -382,9 +360,9 @@ export default function TablaEmpresas() {
                   <td className="px-3 py-2.5 whitespace-nowrap">
                     {r.dealStage ? (
                       <span
-                        className={`font-medium ${STAGE_COLOR[r.dealStage as string] ?? "text-wr-muted"}`}
+                        className={`font-medium ${DEAL_STAGE_TEXT_CLASS[r.dealStage as DealStage] ?? "text-wr-muted"}`}
                       >
-                        {STAGE_LABEL[r.dealStage as string] ?? (r.dealStage as string)}
+                        {DEAL_STAGE_LABEL[r.dealStage as DealStage] ?? (r.dealStage as string)}
                       </span>
                     ) : (
                       <span className="text-wr-hint">—</span>

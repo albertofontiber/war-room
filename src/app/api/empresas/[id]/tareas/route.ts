@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
-import { isValidTareaTipo } from "@/lib/crm";
+import { TareaCreateSchema, zodError } from "@/lib/validation";
 import type { TareaTipo } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -66,28 +66,18 @@ export async function POST(
       return NextResponse.json({ error: "Invalid empresa id" }, { status: 400 });
     }
 
-    const body = (await req.json()) as {
-      tipo?: string;
-      titulo?: string;
-      descripcion?: string | null;
-      fechaLimite?: string | null;
-      asignadoId?: string | null;
-    };
-
-    if (!body.titulo?.trim()) {
-      return NextResponse.json({ error: "Titulo required" }, { status: 400 });
-    }
-
-    const tipo: TareaTipo = isValidTareaTipo(body.tipo) ? body.tipo : "otra";
+    const parsed = TareaCreateSchema.safeParse(await req.json());
+    if (!parsed.success) return zodError(parsed.error);
+    const { tipo, titulo, descripcion, fechaLimite, asignadoId } = parsed.data;
 
     const tarea = await prisma.tarea.create({
       data: {
         empresaId,
-        tipo,
-        titulo: body.titulo.trim(),
-        descripcion: body.descripcion?.trim() || null,
-        fechaLimite: body.fechaLimite ? new Date(body.fechaLimite) : null,
-        asignadoId: body.asignadoId || null,
+        tipo: (tipo ?? "otra") as TareaTipo,
+        titulo,
+        descripcion: descripcion?.trim() || null,
+        fechaLimite: fechaLimite ? new Date(fechaLimite) : null,
+        asignadoId: asignadoId || null,
         autorId: user.id,
       },
       include: {

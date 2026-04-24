@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { FinderAssignSchema, zodError } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +24,9 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid empresa id" }, { status: 400 });
     }
 
-    const { finderId } = (await req.json()) as { finderId: string | null };
+    const parsed = FinderAssignSchema.safeParse(await req.json());
+    if (!parsed.success) return zodError(parsed.error);
+    const { finderId } = parsed.data;
 
     // Verificar que el finder existe si se asigna
     if (finderId) {

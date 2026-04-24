@@ -59,6 +59,7 @@ src/
     normalize.ts                          # Fuente de verdad normalización nombres ⭐ (sesión 8)
     email-daily-summary.ts                # Email mínimo: 3 cifras + link a /daily/[fecha] (Resend)
     email-task-digest.ts                  # Email por usuario: vencidas + hoy + próximos 7 días (Resend)
+    validation.ts                         # Schemas zod para bodies de endpoints CRM (tareas, notas, stage, finder, perímetro, grupo)
     filtros.ts                            # isInFilter()
     prisma.ts                             # Singleton PrismaClient
   store/
