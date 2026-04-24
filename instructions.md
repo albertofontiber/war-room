@@ -99,6 +99,8 @@ scripts/
   fix-provincia-aliases.ts               # Corrige 271 alias: Illes Balears→Baleares, Lleida→Lérida, Ourense→Orense (EJECUTADO 05/04/2026)
   fix-elecnor-provincia.ts               # Fix puntual: ELECNOR, S.A. Sevilla→Madrid (EJECUTADO 05/04/2026)
   backfill-persona-cargo-borme.ts        # Backfill PersonaCargo desde BORME para empresas sin datos empresia (sesión 8) ⭐
+  migrate-pipedrive-activities.ts        # Histórico de activities Pipedrive → Actividad (EJECUTADO 24/04/2026 — 210 migradas)
+  inspect-pipedrive-samples.ts           # Dump read-only de activities Pipedrive + cómo quedarían en War Room
 
 vercel.json                               # Crons: Pipedrive + BORME 20:00 L-V · Resumen 06:00 Ma-Sa · Task digest 07:00 L-V (UTC)
 ```
