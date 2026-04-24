@@ -34,7 +34,9 @@ export async function GET(
       },
       include: {
         autor: { select: { id: true, name: true } },
+        autorFinder: { select: { id: true, name: true } },
         asignado: { select: { id: true, name: true } },
+        asignadoFinder: { select: { id: true, name: true } },
       },
       orderBy: [
         { completada: "asc" },
@@ -82,7 +84,9 @@ export async function POST(
       },
       include: {
         autor: { select: { id: true, name: true } },
+        autorFinder: { select: { id: true, name: true } },
         asignado: { select: { id: true, name: true } },
+        asignadoFinder: { select: { id: true, name: true } },
       },
     });
     return NextResponse.json(tarea, { status: 201 });

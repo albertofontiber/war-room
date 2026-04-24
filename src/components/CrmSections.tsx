@@ -15,6 +15,7 @@ type Nota = {
   createdAt: string;
   updatedAt: string;
   autor: Autor;
+  autorFinder?: Autor;
 };
 
 type Tarea = {
@@ -26,7 +27,9 @@ type Tarea = {
   completada: boolean;
   completadaAt: string | null;
   autor: Autor;
+  autorFinder?: Autor;
   asignado: Autor;
+  asignadoFinder?: Autor;
 };
 
 type HistorialItem = {
@@ -34,9 +37,26 @@ type HistorialItem = {
   kind: "actividad" | "stage" | "tarea_completada";
   fecha: string;
   autor: string | null;
+  autorKind?: "admin" | "finder" | "pipedrive" | null;
   texto: string;
   meta?: Record<string, unknown>;
 };
+
+/** Badge distintivo cuando la entrada la creó un finder desde el portal. */
+function FinderBadge({ name }: { name: string }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1 text-[9px] bg-wr-amber/10 text-wr-amber border border-wr-amber/30 rounded px-1 py-0.5"
+      title={`Aportado por el finder ${name}`}
+    >
+      <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+        <circle cx="12" cy="7" r="4" />
+        <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
+      </svg>
+      Finder: {name}
+    </span>
+  );
+}
 
 /**
  * Extrae un mensaje user-friendly de una Response fallida.
@@ -203,36 +223,41 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
             ) : (
               <>
                 <p className="whitespace-pre-wrap text-wr-text">{n.contenido}</p>
-                <div className="flex items-center justify-between mt-1.5 text-[9px] text-wr-hint">
-                  <span>
-                    {n.autor?.name ?? "—"} · {fmtDate(n.createdAt)}
+                <div className="flex items-center justify-between mt-1.5 text-[9px] text-wr-hint gap-1.5">
+                  <span className="flex items-center gap-1.5 flex-wrap">
+                    {n.autorFinder ? <FinderBadge name={n.autorFinder.name} /> : <span>{n.autor?.name ?? "—"}</span>}
+                    <span className="text-wr-hint">· {fmtDate(n.createdAt)}</span>
                   </span>
-                  <span className="flex gap-1.5 items-center">
-                    <button
-                      onClick={() => {
-                        setEditing(n.id);
-                        setEditContent(n.contenido);
-                      }}
-                      className="hover:text-wr-text p-0.5"
-                      title="Editar"
-                    >
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => borrar(n.id)}
-                      className="hover:text-wr-red p-0.5"
-                      title="Borrar"
-                    >
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M3 6h18" />
-                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                      </svg>
-                    </button>
-                  </span>
+                  {/* Los admins solo pueden editar/borrar notas de otros admins. Las
+                     del finder son suyas y deben gestionarlas desde el portal. */}
+                  {!n.autorFinder && (
+                    <span className="flex gap-1.5 items-center">
+                      <button
+                        onClick={() => {
+                          setEditing(n.id);
+                          setEditContent(n.contenido);
+                        }}
+                        className="hover:text-wr-text p-0.5"
+                        title="Editar"
+                      >
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => borrar(n.id)}
+                        className="hover:text-wr-red p-0.5"
+                        title="Borrar"
+                      >
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M3 6h18" />
+                          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                        </svg>
+                      </button>
+                    </span>
+                  )}
                 </div>
               </>
             )}
@@ -582,37 +607,55 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
                         {t.descripcion}
                       </p>
                     )}
-                    <p className="text-[9px] text-wr-hint mt-0.5">
+                    <p className="text-[9px] text-wr-hint mt-0.5 flex items-center gap-1.5 flex-wrap">
                       <span className={estado.color}>{estado.label}</span>
-                      {t.asignado
-                        ? ` · asignado a ${t.asignado.name}`
-                        : t.autor && ` · creada por ${t.autor.name}`}
+                      {t.asignadoFinder ? (
+                        <>
+                          <span>·</span>
+                          <span>asignado a</span>
+                          <FinderBadge name={t.asignadoFinder.name} />
+                        </>
+                      ) : t.asignado ? (
+                        <span>· asignado a {t.asignado.name}</span>
+                      ) : t.autorFinder ? (
+                        <>
+                          <span>·</span>
+                          <span>creada por</span>
+                          <FinderBadge name={t.autorFinder.name} />
+                        </>
+                      ) : t.autor ? (
+                        <span>· creada por {t.autor.name}</span>
+                      ) : null}
                     </p>
                   </div>
-                  <div className="flex gap-1 flex-shrink-0">
-                    <button
-                      onClick={() => startEdit(t)}
-                      className="text-wr-hint hover:text-wr-text p-1"
-                      title="Editar"
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => borrar(t.id)}
-                      className="text-wr-hint hover:text-wr-red p-1"
-                      title="Borrar"
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M3 6h18" />
-                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                        <path d="M10 11v6M14 11v6" />
-                      </svg>
-                    </button>
-                  </div>
+                  {/* Las tareas creadas por un finder se gestionan desde el portal,
+                     no las edita el admin (evita colisión con la ventana 24h del finder). */}
+                  {!t.autorFinder && (
+                    <div className="flex gap-1 flex-shrink-0">
+                      <button
+                        onClick={() => startEdit(t)}
+                        className="text-wr-hint hover:text-wr-text p-1"
+                        title="Editar"
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => borrar(t.id)}
+                        className="text-wr-hint hover:text-wr-red p-1"
+                        title="Borrar"
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M3 6h18" />
+                          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                          <path d="M10 11v6M14 11v6" />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -715,7 +758,14 @@ export function HistorialSection({ empresaId }: { empresaId: number }) {
                   </p>
                 )}
                 {item.autor && (
-                  <p className="text-[9px] text-wr-hint mt-0.5">por {item.autor}</p>
+                  <p className="text-[9px] text-wr-hint mt-0.5">
+                    por{" "}
+                    {item.autorKind === "finder" ? (
+                      <FinderBadge name={item.autor} />
+                    ) : (
+                      <span>{item.autor}</span>
+                    )}
+                  </p>
                 )}
               </div>
             );

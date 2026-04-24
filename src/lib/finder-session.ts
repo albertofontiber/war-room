@@ -31,3 +31,16 @@ export async function requireCurrentFinder() {
   }
   return finder;
 }
+
+/** Ventana de edición para recursos creados desde el portal. Pasadas 24h, un
+ * finder no puede editar ni borrar lo que él mismo creó — solo añadir nuevas
+ * entradas. Esto alinea el comportamiento con sistemas tipo "immutable log"
+ * y evita que una conversación histórica con un fundador se reescriba a
+ * posteriori. */
+export const PORTAL_EDIT_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+export function canEditWithin24h(createdAt: Date | string): boolean {
+  const ts = typeof createdAt === "string" ? new Date(createdAt).getTime() : createdAt.getTime();
+  if (isNaN(ts)) return false;
+  return Date.now() - ts < PORTAL_EDIT_WINDOW_MS;
+}

@@ -24,7 +24,10 @@ export async function GET(
 
     const notas = await prisma.nota.findMany({
       where: { empresaId },
-      include: { autor: { select: { id: true, name: true } } },
+      include: {
+        autor: { select: { id: true, name: true } },
+        autorFinder: { select: { id: true, name: true } },
+      },
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(notas);
@@ -60,7 +63,10 @@ export async function POST(
         autorId: user.id,
         contenido: parsed.data.contenido,
       },
-      include: { autor: { select: { id: true, name: true } } },
+      include: {
+        autor: { select: { id: true, name: true } },
+        autorFinder: { select: { id: true, name: true } },
+      },
     });
     return NextResponse.json(nota, { status: 201 });
   } catch (err) {

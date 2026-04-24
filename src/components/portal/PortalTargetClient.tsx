@@ -1,15 +1,44 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { fmtDate } from "@/lib/format";
 import {
   FINDER_STATUS_MAP,
   FINDER_STATUS_PILL,
+  TAREA_TIPOS,
+  TAREA_TIPO_LABEL,
 } from "@/lib/crm";
 import type { FinderStatus } from "@/lib/crm";
-import type { DealStage } from "@/types";
+import type { DealStage, TareaTipo } from "@/types";
+
+type Nota = {
+  id: number;
+  contenido: string;
+  createdAt: string;
+  autor?: { name: string } | null;
+  autorFinder?: { name: string } | null;
+};
+type Tarea = {
+  id: number;
+  tipo: string;
+  titulo: string;
+  descripcion: string | null;
+  fechaLimite: string | null;
+  completada: boolean;
+  completadaAt: string | null;
+  createdAt: string;
+  autor?: { name: string } | null;
+  autorFinder?: { name: string } | null;
+};
+type Actividad = {
+  id: number;
+  tipo: string;
+  texto: string | null;
+  fecha: string;
+  autorFinder?: { name: string } | null;
+};
 
 type Target = {
   id: number;
@@ -23,32 +52,9 @@ type Target = {
   descripcion: string | null;
   logoUrl: string | null;
   crmEstado: { dealStage: DealStage | null; fechaEntradaStage: string | null } | null;
-  notas: {
-    id: number;
-    contenido: string;
-    createdAt: string;
-    autor: { name: string } | null;
-    autorFinder: { name: string } | null;
-  }[];
-  tareas: {
-    id: number;
-    tipo: string;
-    titulo: string;
-    descripcion: string | null;
-    fechaLimite: string | null;
-    completada: boolean;
-    completadaAt: string | null;
-    createdAt: string;
-    autor: { name: string } | null;
-    autorFinder: { name: string } | null;
-  }[];
-  actividades: {
-    id: number;
-    tipo: string;
-    texto: string | null;
-    fecha: string;
-    autorFinder: { name: string } | null;
-  }[];
+  notas: Nota[];
+  tareas: Tarea[];
+  actividades: Actividad[];
 };
 
 const SECTOR_LABEL: Record<string, string> = {
@@ -56,6 +62,18 @@ const SECTOR_LABEL: Record<string, string> = {
   seguridad_electronica: "Seg. electrónica",
   mixto: "Mixto",
 };
+
+const ACTIVIDAD_TIPOS = [
+  { value: "llamada", label: "Llamada" },
+  { value: "email", label: "Email" },
+  { value: "reunion", label: "Reunión" },
+  { value: "nota", label: "Nota de interacción" },
+];
+
+const EDIT_WINDOW_MS = 24 * 60 * 60 * 1000;
+function withinEditWindow(createdAt: string) {
+  return Date.now() - new Date(createdAt).getTime() < EDIT_WINDOW_MS;
+}
 
 export default function PortalTargetClient({
   empresaId,
@@ -69,7 +87,7 @@ export default function PortalTargetClient({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     setLoading(true);
     fetch(`/api/portal/empresas/${empresaId}`)
       .then(async (r) => {
@@ -81,6 +99,8 @@ export default function PortalTargetClient({
       .catch((e) => setError(e.message ?? String(e)))
       .finally(() => setLoading(false));
   }, [empresaId]);
+
+  useEffect(() => { load(); }, [load]);
 
   const initials = finderName.split(" ").slice(0, 2).map((p) => p[0]?.toUpperCase()).join("");
   const stage = target?.crmEstado?.dealStage ?? null;
@@ -167,100 +187,394 @@ export default function PortalTargetClient({
               </p>
             )}
 
-            {/* Tareas */}
-            <section>
-              <h2 className="text-[10px] font-semibold text-wr-muted uppercase tracking-widest mb-2">
-                Tareas ({target.tareas.length})
-              </h2>
-              {target.tareas.length === 0 ? (
-                <p className="text-xs text-wr-hint italic">Sin tareas. Podrás crear tareas en la siguiente versión.</p>
-              ) : (
-                <div className="space-y-2">
-                  {target.tareas.map((t) => (
-                    <div
-                      key={t.id}
-                      className={`p-3 rounded-lg border ${
-                        t.completada
-                          ? "border-wr-border bg-wr-surface2/30 opacity-60"
-                          : "border-wr-border bg-wr-surface"
-                      }`}
-                    >
-                      <div className="flex items-start gap-2">
-                        <span
-                          className={`w-3.5 h-3.5 mt-0.5 rounded border flex-shrink-0 ${
-                            t.completada ? "bg-wr-green border-wr-green" : "border-wr-border"
-                          }`}
-                        />
-                        <div className="flex-1 min-w-0">
-                          <p className={`text-xs ${t.completada ? "line-through text-wr-muted" : "text-wr-text"}`}>
-                            {t.titulo}
-                          </p>
-                          {t.descripcion && (
-                            <p className="text-[11px] text-wr-muted mt-0.5">{t.descripcion}</p>
-                          )}
-                          <p className="text-[10px] text-wr-hint mt-1">
-                            {t.fechaLimite && <>Vence {fmtDate(t.fechaLimite)} · </>}
-                            {t.autorFinder?.name ?? t.autor?.name}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-
-            {/* Historial: notas + actividades mezcladas por fecha */}
-            <section>
-              <h2 className="text-[10px] font-semibold text-wr-muted uppercase tracking-widest mb-2">
-                Historial
-              </h2>
-              {target.notas.length === 0 && target.actividades.length === 0 ? (
-                <p className="text-xs text-wr-hint italic">Aún no hay historial visible.</p>
-              ) : (
-                <ul className="space-y-3">
-                  {[
-                    ...target.notas.map((n) => ({
-                      kind: "nota" as const,
-                      fecha: n.createdAt,
-                      contenido: n.contenido,
-                      autor: n.autorFinder?.name ?? n.autor?.name ?? "—",
-                      esFinder: !!n.autorFinder,
-                    })),
-                    ...target.actividades.map((a) => ({
-                      kind: "actividad" as const,
-                      fecha: a.fecha,
-                      tipo: a.tipo,
-                      contenido: a.texto ?? "",
-                      autor: a.autorFinder?.name ?? "—",
-                      esFinder: true,
-                    })),
-                  ]
-                    .sort((a, b) => (a.fecha < b.fecha ? 1 : -1))
-                    .map((h, i) => (
-                      <li key={i} className="flex gap-2 text-xs">
-                        <div className="w-5 flex-shrink-0 text-center text-[10px] font-bold text-wr-muted">
-                          {h.kind === "nota" ? "N" : h.kind === "actividad" ? "A" : "·"}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-wr-text leading-snug whitespace-pre-wrap">{h.contenido}</p>
-                          <p className="text-[10px] text-wr-hint mt-0.5">
-                            {h.autor} · {fmtDate(h.fecha)}
-                            {!h.esFinder && <span className="ml-2 text-wr-blue">· Fontiber</span>}
-                          </p>
-                        </div>
-                      </li>
-                    ))}
-                </ul>
-              )}
-            </section>
-
-            <div className="pt-4 border-t border-wr-border text-[10px] text-wr-hint text-center">
-              La opción de añadir notas y tareas llegará en la siguiente versión del portal.
-            </div>
+            <TareasSection empresaId={empresaId} tareas={target.tareas} onChanged={load} />
+            <ActividadesSection empresaId={empresaId} actividades={target.actividades} onChanged={load} />
+            <NotasSection empresaId={empresaId} notas={target.notas} onChanged={load} />
           </div>
         )}
       </main>
     </div>
+  );
+}
+
+// ─── Secciones ───────────────────────────────────────────────────────────────
+
+function SectionHeader({ title, count, onAdd, adding }: { title: string; count: number; onAdd: () => void; adding: boolean }) {
+  return (
+    <div className="flex items-center justify-between mb-2">
+      <h2 className="text-[10px] font-semibold text-wr-muted uppercase tracking-widest">
+        {title} ({count})
+      </h2>
+      {!adding && (
+        <button
+          onClick={onAdd}
+          className="text-[10px] px-2 py-0.5 rounded bg-wr-blue/10 border border-wr-blue/30 text-wr-blue hover:bg-wr-blue/20"
+        >
+          + Añadir
+        </button>
+      )}
+    </div>
+  );
+}
+
+function TareasSection({ empresaId, tareas, onChanged }: { empresaId: number; tareas: Tarea[]; onChanged: () => void }) {
+  const [adding, setAdding] = useState(false);
+  const [titulo, setTitulo] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const [tipo, setTipo] = useState<TareaTipo>("otra");
+  const [fechaLimite, setFechaLimite] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const reset = () => {
+    setTitulo(""); setDescripcion(""); setTipo("otra"); setFechaLimite("");
+    setError(null); setAdding(false);
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true); setError(null);
+    try {
+      const res = await fetch(`/api/portal/empresas/${empresaId}/tareas`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          titulo,
+          descripcion: descripcion || null,
+          tipo,
+          fechaLimite: fechaLimite ? new Date(fechaLimite).toISOString() : null,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.issues?.map((i: { message: string }) => i.message).join("; ") || json.error || "Error");
+        return;
+      }
+      reset();
+      onChanged();
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const toggleCompletada = async (t: Tarea) => {
+    const res = await fetch(`/api/portal/tareas/${t.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ completada: !t.completada }),
+    });
+    if (res.ok) onChanged();
+  };
+
+  const remove = async (t: Tarea) => {
+    if (!confirm("¿Borrar esta tarea?")) return;
+    const res = await fetch(`/api/portal/tareas/${t.id}`, { method: "DELETE" });
+    if (res.ok) onChanged();
+  };
+
+  return (
+    <section>
+      <SectionHeader title="Tareas" count={tareas.length} onAdd={() => setAdding(true)} adding={adding} />
+
+      {adding && (
+        <form onSubmit={submit} className="bg-wr-surface border border-wr-border rounded-lg p-3 space-y-2 mb-3">
+          <input
+            autoFocus value={titulo} onChange={(e) => setTitulo(e.target.value)}
+            placeholder="Título (obligatorio)"
+            className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue"
+            required
+          />
+          <textarea
+            value={descripcion} onChange={(e) => setDescripcion(e.target.value)}
+            placeholder="Descripción (opcional)" rows={2}
+            className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
+          />
+          <div className="grid grid-cols-2 gap-2">
+            <select value={tipo} onChange={(e) => setTipo(e.target.value as TareaTipo)} className="bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text">
+              {TAREA_TIPOS.map((t) => (<option key={t} value={t}>{TAREA_TIPO_LABEL[t]}</option>))}
+            </select>
+            <input type="date" value={fechaLimite} onChange={(e) => setFechaLimite(e.target.value)}
+              className="bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text"
+            />
+          </div>
+          {error && <p className="text-wr-red text-[11px]">{error}</p>}
+          <div className="flex justify-end gap-2 pt-1">
+            <button type="button" onClick={reset} className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text">
+              Cancelar
+            </button>
+            <button type="submit" disabled={submitting || !titulo.trim()}
+              className="text-[10px] px-2 py-1 rounded bg-wr-blue text-white hover:bg-blue-500 disabled:opacity-40">
+              {submitting ? "Guardando…" : "Guardar"}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {tareas.length === 0 && !adding ? (
+        <p className="text-xs text-wr-hint italic">Sin tareas.</p>
+      ) : (
+        <div className="space-y-2">
+          {tareas.map((t) => {
+            const canEdit = !!t.autorFinder && withinEditWindow(t.createdAt);
+            return (
+              <div key={t.id} className={`group p-3 rounded-lg border ${t.completada ? "border-wr-border bg-wr-surface2/30 opacity-60" : "border-wr-border bg-wr-surface"}`}>
+                <div className="flex items-start gap-2">
+                  <button
+                    onClick={() => toggleCompletada(t)}
+                    aria-label={t.completada ? "Marcar como pendiente" : "Marcar como completada"}
+                    className={`w-3.5 h-3.5 mt-0.5 rounded border flex-shrink-0 transition-colors ${
+                      t.completada ? "bg-wr-green border-wr-green" : "border-wr-border hover:border-wr-blue"
+                    }`}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-xs ${t.completada ? "line-through text-wr-muted" : "text-wr-text"}`}>{t.titulo}</p>
+                    {t.descripcion && <p className="text-[11px] text-wr-muted mt-0.5">{t.descripcion}</p>}
+                    <p className="text-[10px] text-wr-hint mt-1">
+                      {t.fechaLimite && <>Vence {fmtDate(t.fechaLimite)} · </>}
+                      {t.autorFinder?.name ?? t.autor?.name}
+                      {t.autor?.name && !t.autorFinder && <span className="ml-1 text-wr-blue">· Fontiber</span>}
+                    </p>
+                  </div>
+                  {canEdit && (
+                    <button
+                      onClick={() => remove(t)}
+                      title="Borrar (ventana 24h)"
+                      className="opacity-0 group-hover:opacity-60 text-[10px] text-wr-red hover:opacity-100"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; notas: Nota[]; onChanged: () => void }) {
+  const [adding, setAdding] = useState(false);
+  const [contenido, setContenido] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editContenido, setEditContenido] = useState("");
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true); setError(null);
+    try {
+      const res = await fetch(`/api/portal/empresas/${empresaId}/notas`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contenido }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.issues?.map((i: { message: string }) => i.message).join("; ") || json.error || "Error");
+        return;
+      }
+      setContenido(""); setAdding(false); onChanged();
+    } catch (e) { setError(String(e)); }
+    finally { setSubmitting(false); }
+  };
+
+  const startEdit = (n: Nota) => {
+    setEditingId(n.id); setEditContenido(n.contenido);
+  };
+  const saveEdit = async (id: number) => {
+    const res = await fetch(`/api/portal/notas/${id}`, {
+      method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contenido: editContenido }),
+    });
+    if (res.ok) { setEditingId(null); onChanged(); }
+  };
+  const remove = async (id: number) => {
+    if (!confirm("¿Borrar esta nota?")) return;
+    const res = await fetch(`/api/portal/notas/${id}`, { method: "DELETE" });
+    if (res.ok) onChanged();
+  };
+
+  return (
+    <section>
+      <SectionHeader title="Notas" count={notas.length} onAdd={() => setAdding(true)} adding={adding} />
+
+      {adding && (
+        <form onSubmit={submit} className="bg-wr-surface border border-wr-border rounded-lg p-3 space-y-2 mb-3">
+          <textarea
+            autoFocus value={contenido} onChange={(e) => setContenido(e.target.value)}
+            placeholder="Escribe tu nota…" rows={3}
+            className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
+            required
+          />
+          {error && <p className="text-wr-red text-[11px]">{error}</p>}
+          <div className="flex justify-end gap-2">
+            <button type="button" onClick={() => { setAdding(false); setContenido(""); setError(null); }}
+              className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text">
+              Cancelar
+            </button>
+            <button type="submit" disabled={submitting || !contenido.trim()}
+              className="text-[10px] px-2 py-1 rounded bg-wr-blue text-white hover:bg-blue-500 disabled:opacity-40">
+              {submitting ? "Guardando…" : "Guardar"}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {notas.length === 0 && !adding ? (
+        <p className="text-xs text-wr-hint italic">Sin notas visibles.</p>
+      ) : (
+        <ul className="space-y-2">
+          {notas.map((n) => {
+            const esFinder = !!n.autorFinder;
+            const canEdit = esFinder && withinEditWindow(n.createdAt);
+            return (
+              <li key={n.id} className="group bg-wr-surface border border-wr-border rounded-lg p-3">
+                {editingId === n.id ? (
+                  <>
+                    <textarea value={editContenido} onChange={(e) => setEditContenido(e.target.value)} rows={3}
+                      className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
+                    />
+                    <div className="flex justify-end gap-2 mt-2">
+                      <button onClick={() => setEditingId(null)}
+                        className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted">Cancelar</button>
+                      <button onClick={() => saveEdit(n.id)} disabled={!editContenido.trim()}
+                        className="text-[10px] px-2 py-1 rounded bg-wr-blue text-white disabled:opacity-40">Guardar</button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xs text-wr-text whitespace-pre-wrap leading-snug">{n.contenido}</p>
+                    <div className="flex items-center justify-between mt-1">
+                      <p className="text-[10px] text-wr-hint">
+                        {n.autorFinder?.name ?? n.autor?.name ?? "—"} · {fmtDate(n.createdAt)}
+                        {!esFinder && <span className="ml-1 text-wr-blue">· Fontiber</span>}
+                      </p>
+                      {canEdit && (
+                        <div className="opacity-0 group-hover:opacity-80 flex gap-1">
+                          <button onClick={() => startEdit(n)} className="text-[10px] text-wr-blue">Editar</button>
+                          <span className="text-wr-hint">·</span>
+                          <button onClick={() => remove(n.id)} className="text-[10px] text-wr-red">Borrar</button>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function ActividadesSection({ empresaId, actividades, onChanged }: { empresaId: number; actividades: Actividad[]; onChanged: () => void }) {
+  const [adding, setAdding] = useState(false);
+  const [tipo, setTipo] = useState("llamada");
+  const [texto, setTexto] = useState("");
+  const [fecha, setFecha] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const reset = () => { setTipo("llamada"); setTexto(""); setFecha(""); setError(null); setAdding(false); };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true); setError(null);
+    try {
+      const res = await fetch(`/api/portal/empresas/${empresaId}/actividades`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipo, texto: texto || null,
+          fecha: fecha ? new Date(fecha).toISOString() : undefined,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.issues?.map((i: { message: string }) => i.message).join("; ") || json.error || "Error");
+        return;
+      }
+      reset(); onChanged();
+    } catch (e) { setError(String(e)); }
+    finally { setSubmitting(false); }
+  };
+
+  const remove = async (id: number) => {
+    if (!confirm("¿Borrar esta actividad?")) return;
+    const res = await fetch(`/api/portal/actividades/${id}`, { method: "DELETE" });
+    if (res.ok) onChanged();
+  };
+
+  const orderedActividades = useMemo(
+    () => [...actividades].sort((a, b) => (a.fecha < b.fecha ? 1 : -1)),
+    [actividades]
+  );
+
+  return (
+    <section>
+      <SectionHeader title="Actividades" count={actividades.length} onAdd={() => setAdding(true)} adding={adding} />
+
+      {adding && (
+        <form onSubmit={submit} className="bg-wr-surface border border-wr-border rounded-lg p-3 space-y-2 mb-3">
+          <div className="grid grid-cols-2 gap-2">
+            <select value={tipo} onChange={(e) => setTipo(e.target.value)} className="bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text">
+              {ACTIVIDAD_TIPOS.map((t) => (<option key={t.value} value={t.value}>{t.label}</option>))}
+            </select>
+            <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)}
+              className="bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text"
+              title="Fecha (opcional, por defecto hoy)"
+            />
+          </div>
+          <textarea
+            autoFocus value={texto} onChange={(e) => setTexto(e.target.value)} rows={3}
+            placeholder="Qué ha pasado en la llamada/reunión/email…"
+            className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
+          />
+          {error && <p className="text-wr-red text-[11px]">{error}</p>}
+          <div className="flex justify-end gap-2">
+            <button type="button" onClick={reset} className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted">
+              Cancelar
+            </button>
+            <button type="submit" disabled={submitting}
+              className="text-[10px] px-2 py-1 rounded bg-wr-blue text-white hover:bg-blue-500 disabled:opacity-40">
+              {submitting ? "Guardando…" : "Guardar"}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {actividades.length === 0 && !adding ? (
+        <p className="text-xs text-wr-hint italic">Sin actividades registradas.</p>
+      ) : (
+        <ul className="space-y-2">
+          {orderedActividades.map((a) => {
+            const canEdit = withinEditWindow(a.fecha);
+            const label = ACTIVIDAD_TIPOS.find((t) => t.value === a.tipo)?.label ?? a.tipo;
+            return (
+              <li key={a.id} className="group bg-wr-surface border border-wr-border rounded-lg p-3 flex gap-2">
+                <div className="w-5 flex-shrink-0 text-center text-[10px] font-bold text-wr-muted">{label[0]}</div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] text-wr-hint font-semibold uppercase tracking-wider">{label} · {fmtDate(a.fecha)}</p>
+                  {a.texto && <p className="text-xs text-wr-text whitespace-pre-wrap leading-snug mt-1">{a.texto}</p>}
+                </div>
+                {canEdit && (
+                  <button
+                    onClick={() => remove(a.id)}
+                    title="Borrar (ventana 24h)"
+                    className="opacity-0 group-hover:opacity-60 text-[10px] text-wr-red hover:opacity-100"
+                  >
+                    ×
+                  </button>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
   );
 }

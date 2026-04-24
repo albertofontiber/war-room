@@ -8,6 +8,10 @@ import {
   PerimetroPatchSchema,
   LeadLinkSchema,
   FinderSetPasswordSchema,
+  PortalNotaCreateSchema,
+  PortalTareaCreateSchema,
+  PortalTareaUpdateSchema,
+  PortalActividadCreateSchema,
 } from "./validation";
 
 describe("TareaCreateSchema", () => {
@@ -140,6 +144,60 @@ describe("FinderSetPasswordSchema", () => {
 
   it("rechaza password no string", () => {
     expect(FinderSetPasswordSchema.safeParse({ password: 1234567890 }).success).toBe(false);
+  });
+});
+
+describe("PortalNotaCreateSchema", () => {
+  it("acepta contenido válido", () => {
+    expect(PortalNotaCreateSchema.safeParse({ contenido: "Primera llamada OK" }).success).toBe(true);
+  });
+  it("rechaza contenido vacío o espacios", () => {
+    expect(PortalNotaCreateSchema.safeParse({ contenido: "" }).success).toBe(false);
+    expect(PortalNotaCreateSchema.safeParse({ contenido: "   " }).success).toBe(false);
+  });
+});
+
+describe("PortalTareaCreateSchema", () => {
+  it("acepta body mínimo con título", () => {
+    const r = PortalTareaCreateSchema.safeParse({ titulo: "Llamar al fundador" });
+    expect(r.success).toBe(true);
+  });
+  it("rechaza sin título", () => {
+    expect(PortalTareaCreateSchema.safeParse({}).success).toBe(false);
+  });
+  it("acepta fechaLimite ISO", () => {
+    const r = PortalTareaCreateSchema.safeParse({
+      titulo: "x",
+      fechaLimite: "2026-05-01T00:00:00.000Z",
+    });
+    expect(r.success).toBe(true);
+  });
+});
+
+describe("PortalTareaUpdateSchema", () => {
+  it("acepta toggle completada solo", () => {
+    expect(PortalTareaUpdateSchema.safeParse({ completada: true }).success).toBe(true);
+  });
+  it("rechaza body vacío", () => {
+    expect(PortalTareaUpdateSchema.safeParse({}).success).toBe(false);
+  });
+});
+
+describe("PortalActividadCreateSchema", () => {
+  it("acepta tipo + texto", () => {
+    const r = PortalActividadCreateSchema.safeParse({
+      tipo: "llamada",
+      texto: "Primera conversación con el fundador",
+    });
+    expect(r.success).toBe(true);
+  });
+  it("rechaza tipo inválido", () => {
+    expect(PortalActividadCreateSchema.safeParse({ tipo: "café", texto: "x" }).success).toBe(false);
+  });
+  it("acepta todos los tipos válidos", () => {
+    for (const t of ["nota", "llamada", "email", "reunion"]) {
+      expect(PortalActividadCreateSchema.safeParse({ tipo: t }).success, `tipo=${t}`).toBe(true);
+    }
   });
 });
 
