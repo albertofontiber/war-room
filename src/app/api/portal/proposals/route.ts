@@ -57,17 +57,11 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  if (existe) {
-    await logFinderAction({
-      finderId: finder.id,
-      action: "propose_target_duplicate",
-    });
-    return NextResponse.json({
-      existe: true,
-      mensaje: "Esta empresa ya está en seguimiento. Gracias de todas formas.",
-    });
-  }
-
+  // Siempre creamos TargetProposal. Si hay dedup match, la propuesta nace
+  // `DUPLICATE` y auto-revisada (reviewedAt=now, reviewedBy=null = sistema).
+  // Desde el portal, el finder siempre ve "Propuesta enviada" sin pista de
+  // si existe o no en la BD — decisión de producto: no revelar qué targets
+  // tenemos registrados, aunque sea información post-hoc.
   const proposal = await prisma.targetProposal.create({
     data: {
       finderId: finder.id,
@@ -77,18 +71,20 @@ export async function POST(req: NextRequest) {
       contactName: body.contactName?.trim() || null,
       contactRole: body.contactRole?.trim() || null,
       notes: body.notes?.trim() || null,
-      status: "PENDING",
+      status: existe ? "DUPLICATE" : "PENDING",
+      reviewedAt: existe ? new Date() : null,
+      reviewedBy: null,
     },
     select: { id: true, companyName: true, createdAt: true, status: true },
   });
 
   await logFinderAction({
     finderId: finder.id,
-    action: "propose_target",
+    action: existe ? "propose_target_duplicate" : "propose_target",
     resourceId: String(proposal.id),
   });
 
-  return NextResponse.json({ existe: false, proposal }, { status: 201 });
+  return NextResponse.json({ proposal }, { status: 201 });
 }
 
 /**

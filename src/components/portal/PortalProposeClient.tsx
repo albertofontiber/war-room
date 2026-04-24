@@ -17,10 +17,13 @@ type Proposal = {
   reviewedAt: string | null;
 };
 
+// Labels visibles al finder. Mantenemos DUPLICATE con apariencia de "cerrada"
+// neutra (no "Ya existía") para no revelar que la empresa estaba registrada.
+// Desde admin se sigue etiquetando como "Duplicada".
 const STATUS_LABEL: Record<Proposal["status"], string> = {
   PENDING: "En revisión",
   ACCEPTED: "Aceptada",
-  DUPLICATE: "Ya existía",
+  DUPLICATE: "Cerrada",
   OUT_OF_SCOPE: "Fuera de scope",
   REJECTED: "Rechazada",
 };
@@ -28,7 +31,7 @@ const STATUS_LABEL: Record<Proposal["status"], string> = {
 const STATUS_PILL: Record<Proposal["status"], string> = {
   PENDING: "bg-wr-blue/15 text-wr-blue border-wr-blue/30",
   ACCEPTED: "bg-wr-green/15 text-wr-green border-wr-green/30",
-  DUPLICATE: "bg-wr-amber/15 text-wr-amber border-wr-amber/30",
+  DUPLICATE: "bg-[#64748b]/20 text-[#94a3b8] border-[#64748b]/30",
   OUT_OF_SCOPE: "bg-[#64748b]/20 text-[#94a3b8] border-[#64748b]/30",
   REJECTED: "bg-wr-red/15 text-wr-red border-wr-red/30",
 };
@@ -48,10 +51,8 @@ export default function PortalProposeClient({ finderName }: { finderName: string
   const [matches, setMatches] = useState<{ nombre: string; cif: string }[]>([]);
   const [searching, setSearching] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [duplicateMatch, setDuplicateMatch] = useState<{ nombre: string; cif: string } | null>(null);
   const searchWrapperRef = useRef<HTMLDivElement>(null);
   const [feedback, setFeedback] = useState<
-    | { kind: "duplicate"; mensaje: string }
     | { kind: "created"; mensaje: string }
     | { kind: "error"; mensaje: string }
     | null
@@ -67,37 +68,23 @@ export default function PortalProposeClient({ finderName }: { finderName: string
 
   useEffect(() => { loadHistory(); }, []);
 
-  // Debounced search contra la BD para avisar de duplicados antes de submit.
-  // El finder escribe nombre o CIF → mostramos hasta 10 matches.
+  // Debounced search contra la BD. Función SOLO de ayuda al finder para
+  // evitar escribir un nombre ligeramente distinto al que ya existe (typo,
+  // espaciado, SA vs SL...). El dropdown NO revela si el target está o no
+  // en seguimiento — simplemente muestra empresas del universo conocido.
   useEffect(() => {
-    const q = (companyName + " " + cif).trim();
     const qRaw = companyName.trim().length >= 2 ? companyName.trim() : (cif.trim().length >= 2 ? cif.trim() : "");
-    if (qRaw.length < 2) { setMatches([]); setDuplicateMatch(null); return; }
+    if (qRaw.length < 2) { setMatches([]); return; }
     setSearching(true);
     const ctrl = new AbortController();
     const t = setTimeout(() => {
       fetch(`/api/portal/empresas/search?q=${encodeURIComponent(qRaw)}`, { signal: ctrl.signal })
         .then((r) => r.json())
-        .then((data) => {
-          if (!Array.isArray(data)) return;
-          setMatches(data);
-          // Si el usuario teclea exactamente un nombre o CIF de la BD, lo
-          // tratamos como duplicado (bloquea submit).
-          const normName = companyName.trim().toLowerCase();
-          const normCif = cif.trim().toUpperCase();
-          const exact = data.find(
-            (m) =>
-              (normName && m.nombre.toLowerCase() === normName) ||
-              (normCif && m.cif.toUpperCase() === normCif)
-          );
-          setDuplicateMatch(exact ?? null);
-        })
+        .then((data) => { if (Array.isArray(data)) setMatches(data); })
         .catch(() => {})
         .finally(() => setSearching(false));
     }, 250);
     return () => { clearTimeout(t); ctrl.abort(); };
-    // q se usa solo para que cambie cuando cambian cualquiera de los dos inputs
-    void q;
   }, [companyName, cif]);
 
   // Cerrar dropdown al clicar fuera
@@ -115,13 +102,12 @@ export default function PortalProposeClient({ finderName }: { finderName: string
   const reset = () => {
     setCompanyName(""); setCif(""); setWebsite("");
     setContactName(""); setContactRole(""); setNotes("");
-    setMatches([]); setDuplicateMatch(null); setShowDropdown(false);
+    setMatches([]); setShowDropdown(false);
   };
 
   const pickMatch = (m: { nombre: string; cif: string }) => {
     setCompanyName(m.nombre);
     setCif(m.cif);
-    setDuplicateMatch(m);
     setShowDropdown(false);
   };
 
@@ -149,16 +135,12 @@ export default function PortalProposeClient({ finderName }: { finderName: string
         });
         return;
       }
-      if (json.existe) {
-        setFeedback({ kind: "duplicate", mensaje: json.mensaje });
-      } else {
-        setFeedback({
-          kind: "created",
-          mensaje: "Propuesta enviada. Fontiber la revisará y te avisará.",
-        });
-        reset();
-        loadHistory();
-      }
+      setFeedback({
+        kind: "created",
+        mensaje: "Propuesta enviada. Fontiber la revisará y te avisará.",
+      });
+      reset();
+      loadHistory();
     } catch (err) {
       setFeedback({ kind: "error", mensaje: String(err) });
     } finally {
@@ -214,7 +196,7 @@ export default function PortalProposeClient({ finderName }: { finderName: string
               {showDropdown && matches.length > 0 && (
                 <div className="absolute z-10 left-0 right-0 top-full mt-1 bg-wr-surface border border-wr-border rounded shadow-xl max-h-64 overflow-y-auto">
                   <p className="px-3 py-1.5 text-[10px] text-wr-hint uppercase tracking-wider border-b border-wr-border">
-                    Empresas ya en seguimiento
+                    Sugerencias
                   </p>
                   {matches.map((m) => (
                     <button
@@ -253,15 +235,6 @@ export default function PortalProposeClient({ finderName }: { finderName: string
               </Field>
             </div>
 
-            {duplicateMatch && (
-              <div className="rounded border border-wr-amber/30 bg-wr-amber/5 p-3 text-xs text-wr-amber">
-                <p className="font-semibold mb-1">Ya tenemos esta empresa en seguimiento</p>
-                <p className="text-wr-muted text-[11px]">
-                  <span className="text-wr-text">{duplicateMatch.nombre}</span> ({duplicateMatch.cif}) ya está
-                  registrada. Gracias de todas formas — no hace falta proponerla.
-                </p>
-              </div>
-            )}
 
             <div className="grid grid-cols-2 gap-3">
               <Field label="Contacto (nombre)">
@@ -292,9 +265,7 @@ export default function PortalProposeClient({ finderName }: { finderName: string
             {feedback && (
               <div
                 className={`rounded border p-3 text-xs ${
-                  feedback.kind === "duplicate"
-                    ? "border-wr-amber/30 bg-wr-amber/5 text-wr-amber"
-                    : feedback.kind === "created"
+                  feedback.kind === "created"
                     ? "border-wr-green/30 bg-wr-green/5 text-wr-green"
                     : "border-wr-red/30 bg-wr-red/5 text-wr-red"
                 }`}
@@ -306,9 +277,8 @@ export default function PortalProposeClient({ finderName }: { finderName: string
             <div className="flex justify-end pt-2 border-t border-wr-border">
               <button
                 type="submit"
-                disabled={submitting || !companyName.trim() || !!duplicateMatch}
+                disabled={submitting || !companyName.trim()}
                 className="text-xs px-4 py-2 bg-wr-blue text-white rounded hover:bg-blue-500 disabled:opacity-40"
-                title={duplicateMatch ? "Esta empresa ya está en seguimiento" : undefined}
               >
                 {submitting ? "Enviando…" : "Enviar propuesta"}
               </button>
