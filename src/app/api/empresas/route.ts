@@ -35,6 +35,11 @@ export async function GET() {
         bormeAlertas: {
           select: { id: true, fecha: true, tipoActo: true },
         },
+        _count: {
+          select: {
+            tareas: { where: { completada: false } },
+          },
+        },
       },
     });
 
@@ -64,6 +69,7 @@ export async function GET() {
         );
 
         const dealStage = empresa.crmEstado?.dealStage ?? null;
+        const tareasPendientesCount = empresa._count.tareas;
 
         return {
           type: "Feature" as const,
@@ -92,6 +98,8 @@ export async function GET() {
             // BORME
             bormeAlertasCount,
             hasBormeReciente,
+            // CRM — tareas pendientes
+            tareasPendientesCount,
             // Enrichment
             logoUrl: empresa.logoUrl,
             web: empresa.web,

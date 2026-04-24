@@ -39,7 +39,8 @@ src/
       cron/
         borme/route.ts                    # GET — cron BORME (L-V 20:00 UTC = 22:00 CEST)
         pipedrive/route.ts                # GET — cron Pipedrive (L-V 20:00 UTC = 22:00 CEST)
-        daily-summary/route.ts            # GET — cron email (Ma-Sa 06:00 UTC = 08:00 CEST)
+        daily-summary/route.ts            # GET — cron email resumen (Ma-Sa 06:00 UTC)
+        task-digest/route.ts              # GET — cron tareas por usuario (L-V 07:00 UTC)
   components/
     ChatIA.tsx                            # Chat IA flotante — Claude + SQL sobre datos War Room (sesión 9)
     WarRoomLayout.tsx                     # Layout raíz — renderiza Mapa | Tabla | Operaciones | Grupos + ChatIA
@@ -56,6 +57,7 @@ src/
     chat-schema.ts                        # Schema BD + system prompt para Chat IA (sesión 9) ⭐
     normalize.ts                          # Fuente de verdad normalización nombres ⭐ (sesión 8)
     email-daily-summary.ts                # Email mínimo: 3 cifras + link a /daily/[fecha] (Resend)
+    email-task-digest.ts                  # Email por usuario: vencidas + hoy + próximos 7 días (Resend)
     filtros.ts                            # isInFilter()
     prisma.ts                             # Singleton PrismaClient
   store/
@@ -95,7 +97,7 @@ scripts/
   fix-elecnor-provincia.ts               # Fix puntual: ELECNOR, S.A. Sevilla→Madrid (EJECUTADO 05/04/2026)
   backfill-persona-cargo-borme.ts        # Backfill PersonaCargo desde BORME para empresas sin datos empresia (sesión 8) ⭐
 
-vercel.json                               # Crons: Pipedrive + BORME 20:00 UTC L-V · Email 06:00 UTC Ma-Sa
+vercel.json                               # Crons: Pipedrive + BORME 20:00 L-V · Resumen 06:00 Ma-Sa · Task digest 07:00 L-V (UTC)
 ```
 
 ---
@@ -141,6 +143,8 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 UTC L
 - **Vista Grupos**: nueva pestaña en Navbar con tabla de grupos y sus empresas ✅
 - **Exportar tabla a Excel**: botón en toolbar de la vista Tabla ✅
 - **Email resumen diario**: cron Ma-Sa 06:00 UTC → email con 3 cifras + link a /daily/[fecha] ✅
+- **Email task-digest por usuario**: cron L-V 07:00 UTC → tareas vencidas, hoy y próximos 7 días (1 email por usuario activo con tareas asignadas) ✅
+- **Badge de tareas pendientes**: visible en Kanban (ya existía), tooltip del mapa y filas de la tabla (`XT` en ámbar) ✅
 - **Página /daily/[fecha]**: pública (sin login), resumen completo con diseño War Room ✅
 - **force-dynamic en todas las rutas API**: garantiza datos frescos, sin caché de Vercel ✅
 
@@ -405,6 +409,20 @@ npx dotenv-cli -e .env.local -- npx tsx scripts/test-email.ts
 - **Acceso**: público, sin login
 - **Formato fecha**: YYYY-MM-DD (e.g. `/daily/2026-04-02`)
 - **Secciones**: stats → Señales M&A → Todas las señales → Alertas personas
+
+### Email task-digest por usuario (`src/lib/email-task-digest.ts`)
+
+- **Cron**: L-V 07:00 UTC (~8 Madrid invierno / 9 verano) → `GET /api/cron/task-digest`
+- **Destinatarios**: un email por cada `User.active=true` que tenga `Tarea.asignadoId` con `completada=false`
+  - Usuario sin tareas pendientes no recibe email (no spam)
+- **Contenido**: 4 bloques según `fechaLimite` comparado con "hoy 00:00":
+  - Vencidas (<hoy) — rojo
+  - Hoy — ámbar
+  - Próximos 7 días (> mañana 00:00 y < hoy+8 00:00) — azul
+  - Sin fecha — gris
+- **Query params para testing**:
+  - `?to=a@x.com,b@x.com` fuerza destinatarios (redirige todos los digests)
+  - `?force=true` envía también cuando el usuario no tiene tareas (para validar plantilla)
 
 ---
 

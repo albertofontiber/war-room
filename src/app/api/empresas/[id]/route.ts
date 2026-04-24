@@ -62,6 +62,11 @@ export async function GET(
           fecha: true,
         },
       },
+      _count: {
+        select: {
+          tareas: { where: { completada: false } },
+        },
+      },
     },
   });
 
@@ -151,6 +156,7 @@ export async function GET(
       stageDurations,
       bormeAlertas: empresa.bormeAlertas,
       actividades: empresa.actividades,
+      tareasPendientesCount: empresa._count.tareas,
     },
     { headers: { "Cache-Control": "no-store" } }
   );
