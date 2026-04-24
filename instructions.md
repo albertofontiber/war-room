@@ -42,8 +42,9 @@ src/
         daily-summary/route.ts            # GET — cron email resumen (Ma-Sa 06:00 UTC)
         task-digest/route.ts              # GET — cron tareas por usuario (L-V 07:00 UTC)
   components/
-    ChatIA.tsx                            # Chat IA flotante — Claude + SQL sobre datos War Room (sesión 9)
+    ChatIA.tsx                            # Chat IA flotante — Claude + SQL sobre datos War Room + CRM (sesión 9, schema CRM ampliado abril 2026)
     WarRoomLayout.tsx                     # Layout raíz — renderiza Mapa | Tabla | Operaciones | Grupos + ChatIA
+    PipelinePageClient.tsx                # Kanban CRM + filtros + ChatIA (montado también aquí)
     MapaEspana.tsx                        # Mapa Mapbox con clusters, marcadores, selección área
     Navbar.tsx                            # Barra superior — toggle Mapa/Tabla/Operaciones/Grupos + búsqueda
     Sidebar.tsx                           # Filtros + estadísticas (8 stages CRM + filtro Grupo)
@@ -133,7 +134,7 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 L-V �
 - **Backfill PersonaCargo desde BORME**: 366 registros nuevos para empresas sin datos empresia → total 8.182 PersonaCargo, 2.583 empresas con cargo vigente ✅
 - **Registro Ertzaintza (País Vasco)**: 7 PCI→mixto + 4 nuevas empresas insertadas (enPerimetro: true, fuente: ertzaintza_registry) ✅
 - **Registro Mossos (Cataluña)**: 36 PCI→mixto + 102 nuevas empresas insertadas + M. Boada SA enPerimetro:true (fuente: mossos_registry) ✅ — 84 enriquecidas con web/linkedin/telefono
-- **Chat IA flotante** (sesión 9): Claude genera queries SQL SELECT contra la BD en lenguaje natural. Streaming con Vercel AI SDK v6. Markdown con react-markdown + @tailwindcss/typography. Pregunta por horizonte temporal en queries temporales. ✅
+- **Chat IA flotante** (sesión 9): Claude genera queries SQL SELECT contra la BD en lenguaje natural. Streaming con Vercel AI SDK v6. Markdown con react-markdown + @tailwindcss/typography. Pregunta por horizonte temporal en queries temporales. **Montado también en `/pipeline`** con contexto CRM completo (tablas User, Nota, Tarea, Finder, FinderNote, TargetProposal, CrmEstado/CrmLog/Actividad ampliados con `autorId` y `fechaEntradaStage`). ✅
 - **Re-geocoding mejorado** (sesión 9): 1.016 empresas re-geocodificadas con Nominatim (233 a nivel calle, 647 a nivel CP, 136 a nivel localidad). Script: `geocode-remaining.ts` ✅
 - **Limpieza provincia/ccaa** (sesión 9): 300+ empresas corregidas — Illes Balears→Baleares (194), provincia=Cataluña→correcta (61), null ccaa rellenados (37), Madrid-area corregidos manualmente (20), mossos_registry→Barcelona (18) ✅
 - **Documentación Notion**: 4 páginas creadas en el War Room (Funcionalidades, Esquema técnico, Next Steps DB, Decisiones de diseño) ✅
