@@ -120,6 +120,7 @@ export async function GET(req: NextRequest) {
       diasSinActividad: number | null;
       diasEnStage: number | null;
       tareasPendientes: number;
+      esAnonima: boolean;
     };
 
     const tarjetas: Card[] = empresas.map((e) => {
@@ -161,6 +162,7 @@ export async function GET(req: NextRequest) {
         diasSinActividad,
         diasEnStage,
         tareasPendientes: e._count.tareas,
+        esAnonima: e.esAnonima,
       };
     });
 

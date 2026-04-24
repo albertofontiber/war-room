@@ -53,6 +53,7 @@ export type KanbanCard = {
   diasSinActividad: number | null;
   diasEnStage: number | null;
   tareasPendientes: number;
+  esAnonima: boolean;
 };
 
 type Props = {
@@ -127,18 +128,29 @@ function Card({ card, onClick, blur = false }: { card: KanbanCard; onClick?: () 
         <h4 className={`text-xs font-semibold text-wr-text truncate flex-1 ${blurCls}`} title={card.nombre}>
           {card.nombre}
         </h4>
-        {card.tareasPendientes > 0 && (
-          <span
-            className="text-[9px] font-bold bg-wr-amber/20 text-wr-amber border border-wr-amber/30 rounded px-1 py-0.5 whitespace-nowrap"
-            title={`${card.tareasPendientes} tareas pendientes`}
-          >
-            {card.tareasPendientes}T
-          </span>
-        )}
+        <div className="flex items-center gap-1 flex-shrink-0">
+          {card.esAnonima && (
+            <span
+              className="text-[9px] font-bold bg-wr-blue/20 text-wr-blue border border-wr-blue/30 rounded px-1 py-0.5 whitespace-nowrap"
+              title="Lead sin identificar (identidad confidencial)"
+            >
+              LEAD
+            </span>
+          )}
+          {card.tareasPendientes > 0 && (
+            <span
+              className="text-[9px] font-bold bg-wr-amber/20 text-wr-amber border border-wr-amber/30 rounded px-1 py-0.5 whitespace-nowrap"
+              title={`${card.tareasPendientes} tareas pendientes`}
+            >
+              {card.tareasPendientes}T
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-1.5 text-[10px] text-wr-hint mb-1.5 flex-wrap">
-        <span className={`truncate ${blurCls}`}>{card.cif}</span>
+        {!card.esAnonima && <span className={`truncate ${blurCls}`}>{card.cif}</span>}
+        {card.esAnonima && <span className="text-wr-hint italic">Sin CIF</span>}
         {card.provincia && <span className="truncate">· {card.provincia}</span>}
       </div>
 

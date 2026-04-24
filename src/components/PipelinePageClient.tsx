@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import KanbanBoard, { type KanbanCard, type SortOption, SORT_LABEL } from "@/components/KanbanBoard";
 import PanelEmpresa from "@/components/PanelEmpresa";
 import ChatIA from "@/components/ChatIA";
+import AddLeadModal from "@/components/AddLeadModal";
 import PipelineFiltros, {
   EMPTY_FILTERS,
   type PipelineFilters,
@@ -77,6 +78,7 @@ export default function PipelinePageClient() {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<PipelineFilters>(EMPTY_FILTERS);
   const [sort, setSort] = useState<SortOption>("nombre");
+  const [leadModalOpen, setLeadModalOpen] = useState(false);
   const seleccionarEmpresa = useWarRoomStore((s) => s.seleccionarEmpresa);
   const empresaSeleccionadaId = useWarRoomStore((s) => s.empresaSeleccionadaId);
   const panelAbierto = useWarRoomStore((s) => s.panelAbierto);
@@ -231,6 +233,13 @@ export default function PipelinePageClient() {
           ))}
         </select>
         <button
+          onClick={() => setLeadModalOpen(true)}
+          className="text-[11px] bg-wr-amber/15 text-wr-amber border border-wr-amber/30 rounded px-2.5 py-1 hover:bg-wr-amber/25 transition-colors"
+          title="Añadir un target confidencial cuya identidad aún no se conoce"
+        >
+          + Lead sin identificar
+        </button>
+        <button
           onClick={handleExport}
           disabled={allCards.length === 0}
           className="text-[11px] bg-wr-green/15 text-wr-green border border-wr-green/30 rounded px-2.5 py-1 hover:bg-wr-green/25 disabled:opacity-40 transition-colors"
@@ -256,6 +265,15 @@ export default function PipelinePageClient() {
           </div>
         )}
       </div>
+
+      <AddLeadModal
+        open={leadModalOpen}
+        onClose={() => setLeadModalOpen(false)}
+        onCreated={(empresaId) => {
+          loadPipeline(filters);
+          seleccionarEmpresa(empresaId);
+        }}
+      />
 
       <ChatIA />
     </div>
