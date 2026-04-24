@@ -16,7 +16,7 @@ import Map, {
 } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import type mapboxgl from "mapbox-gl";
-import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { useWarRoomStore, type EmpresaFeatureProperties } from "@/store/useWarRoomStore";
 import { isInFilter } from "@/lib/filtros";
 import { fmtM, fmtPct } from "@/lib/format";
 import MapTooltip from "@/components/MapTooltip";
@@ -124,7 +124,7 @@ function createShapeIcon(shape: "square" | "hexagon", size = 64): ImageData | nu
 
 // ─── Tipos locales ────────────────────────────────────────────────────────
 
-type Props = Record<string, unknown>;
+type Props = EmpresaFeatureProperties;
 
 // ─── Point-in-polygon (ray casting) ─────────────────────────────────────
 
@@ -279,11 +279,12 @@ function SeleccionAreaPanel({
   onResizeStart: (e: React.PointerEvent) => void;
 }) {
   const { seleccionarEmpresa, modoPresentacion } = useWarRoomStore();
-  const [sortKey, setSortKey] = useState<string>("ingresos");
+  type NumericSortKey = "ingresos" | "margenBrutoPct" | "ebitdaPct" | "ebitda";
+  const [sortKey, setSortKey] = useState<NumericSortKey>("ingresos");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
 
   const toggleSort = useCallback(
-    (key: string) => {
+    (key: NumericSortKey) => {
       if (sortKey === key) {
         setSortDir((d) => (d === "asc" ? "desc" : "asc"));
       } else {
@@ -297,14 +298,14 @@ function SeleccionAreaPanel({
   const sorted = useMemo(
     () =>
       [...empresas].sort((a, b) => {
-        const av = (a[sortKey] as number | null) ?? -Infinity;
-        const bv = (b[sortKey] as number | null) ?? -Infinity;
+        const av = a[sortKey] ?? -Infinity;
+        const bv = b[sortKey] ?? -Infinity;
         return sortDir === "asc" ? av - bv : bv - av;
       }),
     [empresas, sortKey, sortDir]
   );
 
-  const SortTh = ({ col, children }: { col: string; children: React.ReactNode }) => (
+  const SortTh = ({ col, children }: { col: NumericSortKey; children: React.ReactNode }) => (
     <th
       className="text-right px-3 py-2 cursor-pointer hover:text-wr-text select-none whitespace-nowrap"
       onClick={() => toggleSort(col)}
