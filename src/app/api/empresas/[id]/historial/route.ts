@@ -44,19 +44,27 @@ export async function GET(
     const [actividades, logs, tareasCompletadas] = await Promise.all([
       prisma.actividad.findMany({
         where: { empresaId, tipo: { in: ["llamada", "email", "reunion"] } },
-        include: { autorUser: { select: { id: true, name: true } } },
+        include: {
+          autorUser: { select: { id: true, name: true } },
+          autorFinder: { select: { id: true, name: true } },
+        },
         orderBy: { fecha: "desc" },
       }),
       prisma.crmLog.findMany({
         where: { empresaId },
-        include: { autor: { select: { id: true, name: true } } },
+        include: {
+          autor: { select: { id: true, name: true } },
+          autorFinder: { select: { id: true, name: true } },
+        },
         orderBy: { createdAt: "desc" },
       }),
       prisma.tarea.findMany({
         where: { empresaId, completada: true, completadaAt: { not: null } },
         include: {
           autor: { select: { id: true, name: true } },
+          autorFinder: { select: { id: true, name: true } },
           asignado: { select: { id: true, name: true } },
+          asignadoFinder: { select: { id: true, name: true } },
         },
         orderBy: { completadaAt: "desc" },
       }),
@@ -66,6 +74,7 @@ export async function GET(
       kind: "actividad" | "stage" | "tarea_completada";
       fecha: string;
       autor: string | null;
+      autorKind: "admin" | "finder" | "pipedrive" | null;
       texto: string;
       meta?: Record<string, unknown>;
       id: string;
@@ -74,11 +83,19 @@ export async function GET(
     const items: Item[] = [];
 
     for (const a of actividades) {
+      const autorKind: Item["autorKind"] = a.autorFinder
+        ? "finder"
+        : a.autorUser
+        ? "admin"
+        : a.pipedriveId
+        ? "pipedrive"
+        : null;
       items.push({
         id: `act-${a.id}`,
         kind: "actividad",
         fecha: a.fecha.toISOString(),
-        autor: a.autorUser?.name ?? a.autor ?? null,
+        autor: a.autorFinder?.name ?? a.autorUser?.name ?? a.autor ?? null,
+        autorKind,
         texto: a.texto ?? "",
         meta: { tipo: a.tipo, pipedrive: !!a.pipedriveId },
       });
@@ -95,18 +112,26 @@ export async function GET(
         id: `log-${l.id}`,
         kind: "stage",
         fecha: l.createdAt.toISOString(),
-        autor: l.autor?.name ?? l.owner ?? null,
+        autor: l.autorFinder?.name ?? l.autor?.name ?? l.owner ?? null,
+        autorKind: l.autorFinder ? "finder" : l.autor ? "admin" : null,
         texto: l.note ? `${texto} — ${l.note}` : texto,
         meta: { event: l.event, fromStage: l.fromStage, toStage: l.toStage },
       });
     }
 
     for (const t of tareasCompletadas) {
+      const completadaPorFinder = !!t.asignadoFinder || (!t.asignado && !!t.autorFinder);
       items.push({
         id: `tarea-done-${t.id}`,
         kind: "tarea_completada",
         fecha: t.completadaAt!.toISOString(),
-        autor: t.asignado?.name ?? t.autor?.name ?? null,
+        autor:
+          t.asignadoFinder?.name ??
+          t.asignado?.name ??
+          t.autorFinder?.name ??
+          t.autor?.name ??
+          null,
+        autorKind: completadaPorFinder ? "finder" : "admin",
         texto: `${tareaIconLabel(t.tipo)} · ${t.titulo}${
           t.descripcion ? ` — ${t.descripcion}` : ""
         }`,

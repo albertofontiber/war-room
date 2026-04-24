@@ -76,6 +76,52 @@ export const FinderSetPasswordSchema = z.object({
   password: z.string().min(10, "La contraseña debe tener al menos 10 caracteres"),
 });
 
+// ─── Portal finders: notas, tareas y actividades ─────────────────────────────
+// Los schemas del portal son un subset de los del war room. No permiten
+// setear autores (se infieren de la sesión) ni flags de admin
+// (visibleAFinder, asignadoId a un User, etc.).
+
+const ACTIVIDAD_TIPOS = ["nota", "llamada", "email", "reunion"] as const;
+
+export const PortalNotaCreateSchema = z.object({
+  contenido: nonEmptyString,
+});
+
+export const PortalNotaUpdateSchema = z.object({
+  contenido: nonEmptyString,
+});
+
+export const PortalTareaCreateSchema = z.object({
+  tipo: z.enum(TAREA_TIPOS as [string, ...string[]]).optional(),
+  titulo: nonEmptyString,
+  descripcion: z.string().nullable().optional(),
+  fechaLimite: nullableDateString,
+});
+
+export const PortalTareaUpdateSchema = z
+  .object({
+    tipo: z.enum(TAREA_TIPOS as [string, ...string[]]).optional(),
+    titulo: nonEmptyString.optional(),
+    descripcion: z.string().nullable().optional(),
+    fechaLimite: nullableDateString,
+    completada: z.boolean().optional(),
+  })
+  .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
+
+export const PortalActividadCreateSchema = z.object({
+  tipo: z.enum(ACTIVIDAD_TIPOS),
+  texto: z.string().nullable().optional(),
+  fecha: z.string().datetime({ offset: true }).optional(),
+});
+
+export const PortalActividadUpdateSchema = z
+  .object({
+    tipo: z.enum(ACTIVIDAD_TIPOS).optional(),
+    texto: z.string().nullable().optional(),
+    fecha: z.string().datetime({ offset: true }).optional(),
+  })
+  .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
+
 export const LeadCreateSchema = z.object({
   nombre: nonEmptyString,                            // alias visible ("Asher")
   sector: z.enum(SECTORES).nullable().optional(),
