@@ -1,7 +1,7 @@
 # Fontiber War Room — Instrucciones para Claude
 
 Documento de contexto para continuar el desarrollo entre conversaciones.
-Actualizado: 2026-04-06 (sesión 9)
+Actualizado: 2026-04-24 (tras PRs #10-#17: leads anónimos + MVP 1.5 portal finders + cleanup)
 
 ---
 
@@ -10,11 +10,14 @@ Actualizado: 2026-04-06 (sesión 9)
 **War Room** es un dashboard interno de M&A para Fontiber, orientado al sector de PCI (protección contra incendios) y seguridad electrónica en España.
 
 - Universo actual: **~5.140 empresas** (PCI + seg. electrónica + mixtas)
-- Stack: Next.js 14 App Router · TypeScript · Prisma · PostgreSQL (Supabase) · Zustand · react-map-gl / Mapbox GL JS · Tailwind CSS · Vercel AI SDK + Claude
+- Stack: Next.js 14 App Router · TypeScript · Prisma · PostgreSQL (Supabase) · Zustand · react-map-gl / Mapbox GL JS · Tailwind CSS · Vercel AI SDK + Claude · bcryptjs (auth finders)
 - Tema visual: oscuro, estilo "war room"
-- Auth: NextAuth (credentials — alberto/gabriel)
-- Deploy: Vercel → **https://warroom.fontiber.com** (dominio propio, activo)
+- **Dos apps bajo un solo deployment**:
+  - **War room** (admins Alberto/Gabriel) → `https://warroom.fontiber.com`
+  - **Portal finders** (finders externos) → `https://portal.fontiber.com` (MVP 1.5, 2026-04-24)
+- Auth: NextAuth con dos CredentialsProviders (admin-credentials y finder-credentials)
 - Repo: https://github.com/albertofontiber/war-room (privado, CI/CD automático)
+- Tests: vitest, 71 unit tests sobre libs (crm, format, validation)
 
 ---
 
@@ -23,18 +26,50 @@ Actualizado: 2026-04-06 (sesión 9)
 ```
 src/
   app/
-    page.tsx                              # Dashboard principal (requiere auth)
+    page.tsx                              # Dashboard principal war room (requiere auth kind=admin)
     daily/[fecha]/page.tsx                # Resumen diario público (sin auth)
+    pipeline/page.tsx                     # Pipeline Kanban CRM (admin)
+    finders/page.tsx                      # Admin: lista de finders + set/reset password ⭐ (PR #11)
+    finders/proposals/page.tsx            # Admin: revisar TargetProposal de los finders ⭐ (PR #14)
+    portal/                               # Subdominio portal.fontiber.com ⭐ (MVP 1.5)
+      layout.tsx                          # Layout mínimo (no comparte Navbar con war room)
+      login/page.tsx                      # Finder login (email + password bcrypt)
+      page.tsx                            # Kanban read-only del finder (solo sus targets)
+      empresas/[id]/page.tsx              # Ficha de target asignado al finder
+      proponer/page.tsx                   # Form "Proponer target" + historial propuestas
     api/
-      empresas/route.ts                   # GET — GeoJSON de todas las empresas (force-dynamic)
-      empresas/[id]/route.ts              # GET — detalle de empresa (force-dynamic)
-      empresas/[id]/perimetro/            # PATCH — toggle enPerimetro (force-dynamic)
+      empresas/route.ts                   # GET — GeoJSON de todas las empresas (excluye anónimas)
+      empresas/[id]/route.ts              # GET — detalle de empresa
+      empresas/[id]/perimetro/            # PATCH — toggle enPerimetro
       empresas/[id]/grupo/                # PATCH — asigna/crea grupo
+      empresas/[id]/notas/route.ts        # GET/POST — notas (incluye autorFinder)
+      empresas/[id]/tareas/route.ts       # GET/POST — tareas (incluye autorFinder/asignadoFinder)
+      empresas/[id]/historial/route.ts    # GET — timeline (incluye autorKind admin/finder/pipedrive)
+      empresas/search/route.ts            # GET — autocomplete admin (para vincular leads)
+      empresas/[id]/stage/route.ts        # PATCH — cambiar dealStage
+      empresas/[id]/finder/route.ts       # PATCH — asignar finder
       grupos/route.ts                     # GET — lista todos los grupos (autocomplete)
-      chat/route.ts                       # POST — Chat IA streaming (Claude + SQL tools) (sesión 9)
+      chat/route.ts                       # POST — Chat IA streaming (Claude + SQL tools)
+      leads/route.ts                      # POST — crear lead anónimo
+      leads/[id]/link/route.ts            # POST — vincular lead anónimo a empresa real ⭐ (PR #10)
+      finders/route.ts                    # GET — lista finders (incluye passwordSetAt)
+      finders/[id]/password/route.ts      # POST — set/reset bcrypt password ⭐ (PR #11)
+      admin/proposals/route.ts            # GET — TargetProposal con dedupMatch on-the-fly ⭐ (PR #14)
+      admin/proposals/[id]/route.ts       # PATCH — resolver propuesta (accept/dup/OOS/reject)
+      portal/                             # Endpoints del portal finders ⭐ (MVP 1.5)
+        pipeline/route.ts                 # GET — Kanban filtrado por finderSourceId
+        empresas/[id]/route.ts            # GET — ficha filtrada (404 si no es del finder)
+        empresas/search/route.ts          # GET — autocomplete de empresas (solo nombre+CIF)
+        empresas/[id]/notas/route.ts      # POST — crear nota
+        empresas/[id]/tareas/route.ts     # POST — crear tarea
+        empresas/[id]/actividades/route.ts # POST — crear actividad
+        notas/[id]/route.ts               # PATCH/DELETE — propia + ventana 24h
+        tareas/[id]/route.ts              # PATCH/DELETE — autor <24h, toggle completada siempre
+        actividades/[id]/route.ts         # PATCH/DELETE — propia + ventana 24h
+        proposals/route.ts                # GET (propio historial), POST (crear + dedup silencioso)
       borme/
-        operaciones/route.ts              # GET — señales M&A enriquecidas (force-dynamic)
-        personas-compartidas/route.ts     # GET — personas en 2+ empresas activas (force-dynamic)
+        operaciones/route.ts              # GET — señales M&A enriquecidas
+        personas-compartidas/route.ts     # GET — personas en 2+ empresas activas
         recientes/route.ts                # GET — todos los actos BORME últimos 90 días
       cron/
         borme/route.ts                    # GET — cron BORME (L-V 20:00 UTC = 22:00 CEST)
@@ -42,69 +77,74 @@ src/
         daily-summary/route.ts            # GET — cron email resumen (Ma-Sa 06:00 UTC)
         task-digest/route.ts              # GET — cron tareas por usuario (L-V 07:00 UTC)
   components/
-    ChatIA.tsx                            # Chat IA flotante — Claude + SQL sobre datos War Room + CRM (sesión 9, schema CRM ampliado abril 2026)
-    WarRoomLayout.tsx                     # Layout raíz — renderiza Mapa | Tabla | Operaciones | Grupos + ChatIA
-    PipelinePageClient.tsx                # Kanban CRM + filtros + ChatIA + botón "+ Lead sin identificar"
-    AddLeadModal.tsx                      # Modal para crear leads anónimos (targets confidenciales sin identidad revelada)
-    MapaEspana.tsx                        # Mapa Mapbox con clusters, marcadores, selección área
-    Navbar.tsx                            # Barra superior — toggle Mapa/Tabla/Operaciones/Grupos + búsqueda
-    Sidebar.tsx                           # Filtros + estadísticas (8 stages CRM + filtro Grupo)
+    ChatIA.tsx                            # Chat IA flotante — Claude + SQL sobre datos War Room + CRM
+    WarRoomLayout.tsx                     # Layout raíz admin — renderiza Mapa/Tabla/Operaciones/Grupos + ChatIA
+    PipelinePageClient.tsx                # Kanban CRM admin + filtros + ChatIA + "+ Lead sin identificar"
+    AddLeadModal.tsx                      # Modal para crear leads anónimos
+    LinkLeadModal.tsx                     # Modal "vincular lead a empresa real" ⭐ (PR #10)
+    MapaEspana.tsx                        # Mapa Mapbox (1130 líneas — candidato a refactor)
+    Navbar.tsx                            # Barra superior + icono "admin" link a /finders
+    Sidebar.tsx                           # Filtros + estadísticas (9 stages CRM + filtro Grupo)
     TablaEmpresas.tsx                     # Tabla con sorting, columna CIF y export Excel
-    PanelEmpresa.tsx                      # Panel lateral detalle empresa
-    OperacionesBorme.tsx                  # Vista Operaciones M&A (señales + alertas personas + actividad)
-    GruposView.tsx                        # Vista Grupos — tabla de grupos con empresas y financieros
+    PanelEmpresa.tsx                      # Panel lateral detalle empresa (+ botón Vincular si esAnonima)
+    CrmSections.tsx                       # Notas/Tareas/Historial + FinderBadge ⭐ (ampliado PR #13)
+    OperacionesBorme.tsx                  # Vista Operaciones M&A
+    GruposView.tsx                        # Vista Grupos
+    FindersAdminClient.tsx                # Vista admin /finders con modal set-password ⭐ (PR #11)
+    ProposalsAdminClient.tsx              # Vista admin /finders/proposals ⭐ (PR #14)
+    portal/                               # Componentes cliente del portal ⭐ (MVP 1.5)
+      PortalPipelineClient.tsx            # Kanban 6 estados agregados
+      PortalTargetClient.tsx              # Ficha + secciones (tareas/actividades/notas)
+      PortalProposeClient.tsx             # Form de proponer + autocomplete neutro
   lib/
+    auth.ts                               # NextAuth: admin-credentials + finder-credentials ⭐ (PR #11)
     borme.ts                              # Lógica BORME: fetch, parse, classify, process ⭐
-    borme-senales.ts                      # Catálogo señales por grupo (personas + keywords) ⭐
-    chat-schema.ts                        # Schema BD + system prompt para Chat IA (sesión 9) ⭐
-    normalize.ts                          # Fuente de verdad normalización nombres ⭐ (sesión 8)
-    email-daily-summary.ts                # Email mínimo: 3 cifras + link a /daily/[fecha] (Resend)
-    email-task-digest.ts                  # Email por usuario: vencidas + hoy + próximos 7 días (Resend)
-    validation.ts                         # Schemas zod para bodies de endpoints CRM (tareas, notas, stage, finder, perímetro, grupo, leads)
-    *.test.ts                             # Suite vitest (lib/crm, lib/format, lib/validation — 47 tests)
-    filtros.ts                            # isInFilter()
+    borme-senales.ts                      # Catálogo señales por grupo
+    chat-schema.ts                        # Schema BD + system prompt para Chat IA
+    crm.ts                                # DEAL_STAGES + labels/pills + FINDER_STATUS_MAP ⭐
+    normalize.ts                          # Fuente de verdad normalización nombres (empresas/personas)
+    filtros.ts                            # isInFilter() tipificado con EmpresaFeatureProperties
+    format.ts                             # fmt, fmtM, fmtPct, fmtDate, fmtMillions
+    email-daily-summary.ts                # Email diario (Resend)
+    email-task-digest.ts                  # Email task digest por usuario (Resend)
+    validation.ts                         # Schemas zod: war room + portal + proposals
+    finder-session.ts                     # requireCurrentFinder + canEditWithin24h ⭐ (PR #12)
+    finder-access-log.ts                  # logFinderAction fire-and-forget ⭐ (PR #14)
+    user-from-session.ts                  # requireCurrentUser / getCurrentUser (admin)
+    *.test.ts                             # Suite vitest (lib/crm, lib/format, lib/validation — 71 tests)
     prisma.ts                             # Singleton PrismaClient
   store/
-    useWarRoomStore.ts                    # Zustand store central (Vista: "mapa"|"tabla"|"operaciones"|"grupos")
-  types/index.ts                          # Tipos + FILTROS_DEFAULT + DealStage (8 valores)
-  middleware.ts                           # Auth middleware — excluye: login, daily, api/auth, api/cron
+    useWarRoomStore.ts                    # Zustand store + EmpresaFeatureProperties tipificado
+  types/index.ts                          # Tipos + FILTROS_DEFAULT + DealStage (9 valores con on_hold)
+  middleware.ts                           # Routing host/path — portal vs war room ⭐ (MVP 1.5)
 
-prisma/schema.prisma                      # Modelos BD
+prisma/schema.prisma                      # Modelos BD (schema único para war room + portal)
 
 scripts/
-  borme-backfill.ts                       # Backfill 6 meses (EJECUTADO 29/03/2026 — 1.223 alertas)
-  borme-backfill-2años.ts                 # Backfill 2 años (EJECUTADO 02/04/2026 — datos desde 01/04/2024)
-  borme-backfill-grupos.ts                # Re-clasifica alertas + asigna grupos (EJECUTADO 30/03/2026)
-  borme-test.ts                           # Test diario read-only
-  borme-buscar-empresa.ts                 # Buscar empresa en historial BORME
+  # ─── Recurrentes (diarios / periódicos) ──────────────────────────────
   run-borme-today.ts                      # Ejecutar BORME manualmente: npx dotenv-cli -e .env.local -- npx tsx scripts/run-borme-today.ts YYYYMMDD
-  run-pipedrive.ts                        # Ejecutar Pipedrive sync manualmente (CIF-first matching)
-  check-pipedrive-unmatched.ts            # Muestra deals Dealflow sin match en BD (activos vs cerrados)
-  check-crm-changes.ts                    # Ver cambios CRM del día + último log
-  check-borme-today.ts                    # Ver alertas BORME creadas hoy con tipo y fecha
-  pipedrive-sync.ts                       # Sync Pipedrive → CrmEstado (idempotente) — 155 matches
-  import-grupos-perimetro.ts              # Importa grupos y perímetro desde Excel (29/03/2026)
-  import-seg-electronica.ts              # Importa empresas seg. electrónica (29/03/2026 — 666 nuevas)
-  import-financieros-seg-electronica.ts   # Importa financieros seg. electrónica desde Excel (02/04/2026)
-  reclasificar-ceses.ts                   # Reclasifica alertas nombramiento→otros si son ceses puros (EJECUTADO 02/04/2026 — 854 reclasificadas)
-  reclasificar-posible-adquisicion.ts     # Reclasifica nombramiento_grupo→posible_adquisicion si empresa no pertenece al grupo (EJECUTADO — 0 cambios)
+  run-pipedrive.ts                        # Ejecutar Pipedrive sync manualmente
+  pipedrive-sync.ts                       # Sync Pipedrive → CrmEstado (idempotente)
+  borme-test.ts                           # Test BORME read-only
+  borme-backfill.ts                       # Template backfill (no ejecutar sin motivo)
+  scrape-empresia.ts                      # Scraping empresia.es → PersonaCargo (trimestral, julio 2026)
+  validate-empresia.ts                    # Validación 4D del scraping
+  test-email.ts                           # Envía email de prueba
+  # ─── Diagnóstico (read-only) ──────────────────────────────────────────
   find-empresa.ts                         # Buscar empresa en DB por nombre
-  test-email.ts                           # Envía email de prueba con datos de los últimos 7 días
-  scrape-empresia.ts                      # Scraping empresia.es → PersonaCargo + enriquece Empresa (sesión 8) ⭐
-  validate-empresia.ts                    # Validación 4D del scraping: cobertura, CP/prov, personas conocidas, personas múltiples (sesión 8)
-  check-cataluna.ts                       # Cross-reference empresas Cataluña vs BD (sesión 8)
-  insert-cataluna.ts                      # Inserta 102 nuevas + actualiza 36 PCI→mixto + M.Boada enPerimetro (EJECUTADO 05/04/2026)
-  enrich-cataluna.ts                      # Enriquece 84 empresas catalanas con web/linkedin/telefono/descripcion (EJECUTADO 05/04/2026)
-  geocode-remaining.ts                   # Re-geocoding 1.025 empresas (id>3125) con Nominatim: dirección→CP→localidad (EJECUTADO 06/04/2026)
-  check-cp-mismatches.ts                  # Detecta inconsistencias CP vs provincia: aliases (87) + errores genuinos (36) (sesión 8)
-  fix-provincia-aliases.ts               # Corrige 271 alias: Illes Balears→Baleares, Lleida→Lérida, Ourense→Orense (EJECUTADO 05/04/2026)
-  fix-elecnor-provincia.ts               # Fix puntual: ELECNOR, S.A. Sevilla→Madrid (EJECUTADO 05/04/2026)
-  backfill-persona-cargo-borme.ts        # Backfill PersonaCargo desde BORME para empresas sin datos empresia (sesión 8) ⭐
-  migrate-pipedrive-activities.ts        # Histórico de activities Pipedrive → Actividad (EJECUTADO 24/04/2026 — 210 migradas)
-  inspect-pipedrive-samples.ts           # Dump read-only de activities Pipedrive + cómo quedarían en War Room
-  backfill-fecha-entrada-stage.ts        # Backfill CrmEstado.fechaEntradaStage desde Pipedrive stage_change_time (EJECUTADO 24/04/2026 — 146 filas)
+  borme-buscar-empresa.ts                 # Buscar empresa en historial BORME
+  check-borme-today.ts                    # Ver alertas BORME creadas hoy
+  check-crm-changes.ts                    # Ver cambios CRM del día
+  check-cp-mismatches.ts                  # Detecta inconsistencias CP vs provincia
+  check-fire-personas.ts                  # Check personas Grupo Fire
+  check-fuente.ts / check-grupos.ts       # Checks de integridad
+  check-pipedrive-unmatched.ts            # Deals Dealflow sin match
+  inspect-excel.ts / inspect-borme-descriptions.ts / inspect-pipedrive-samples.ts / borme-inspect.ts / borme-test-api.ts
+  archive/                                # One-off ya ejecutados + outputs intermedios ⭐ (PR #17)
+                                          # 33 scripts + README.md + 11 JSON de webs
 
 vercel.json                               # Crons: Pipedrive + BORME 20:00 L-V · Resumen 06:00 Ma-Sa · Task digest 07:00 L-V (UTC)
+.env.example                              # Plantilla env vars ⭐ (PR #17)
 ```
 
 ---
@@ -154,6 +194,9 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 L-V �
 - **Badge de tareas pendientes**: visible en Kanban (ya existía), tooltip del mapa y filas de la tabla (`XT` en ámbar) ✅
 - **Página /daily/[fecha]**: pública (sin login), resumen completo con diseño War Room ✅
 - **force-dynamic en todas las rutas API**: garantiza datos frescos, sin caché de Vercel ✅
+- **Leads anónimos** (PR #8-#10, abril 2026): crear y vincular targets confidenciales sin identidad revelada. `Empresa.esAnonima=true`, CIF placeholder `LEAD-{id}`, aparecen solo en `/pipeline`. Endpoint `POST /api/leads/:id/link` mueve notas/tareas/actividades/CrmLog/Financieros del lead a una empresa real y borra el lead. CrmEstado del lead prevalece sobre el del target. Hasta hoy los leads anónimos vienen de Deale (otro finder fuera del portal). ✅
+- **Portal de finders MVP 1.5** (PRs #11-#14, 2026-04-24): subdominio `portal.fontiber.com`, auth bcrypt gestionada por admins desde `/finders`, Kanban read-only con 6 estados agregados, crear/editar notas/tareas/actividades con ventana 24h, proponer targets nuevos con dedup silencioso, `FinderAccessLog` auditoría. Ver sección 17 para detalles. ✅
+- **Cleanup deuda técnica** (PR #17): `.env.example` en raíz, 33 scripts one-off archivados en `scripts/archive/`, tipificación completa de `RawFeature.properties` en el store Zustand. ✅
 
 ---
 
@@ -558,6 +601,32 @@ model CrmLog {
 | I | Web enrichment | Baja | ⏳ | Logos, LinkedIn — bloqueado por SSL scraping |
 | — | Registros seg. electrónica otras CCAA | Media | ⏳ | Andalucía, Madrid, Valencia... |
 
+### Estado abril 2026 (tras PRs #2-#17)
+
+| # | Tarea | Prioridad | Estado | Notas |
+|---|---|---|---|---|
+| AD | MVP 1 CRM (stages 9 + CrmLog + fechaEntradaStage) | Alta | ✅ | PR #1 (ya mergeado sesión anterior) |
+| AE | Badges tareas pendientes mapa/tabla/kanban | Media | ✅ | PR #2 |
+| AF | Email task-digest por usuario | Alta | ✅ | PR #2 cron L-V 07:00 UTC |
+| AG | ChatIA en /pipeline + schema CRM ampliado | Media | ✅ | PR #3 |
+| AH | Audit cleanup (stages centralizadas + zod + legacy label) | Alta | ✅ | PR #4 |
+| AI | Vitest + 47 unit tests iniciales | Alta | ✅ | PR #5 |
+| AJ | Migración histórico Pipedrive activities | Alta | ✅ | PR #6 (210 migradas) |
+| AK | Backfill fechaEntradaStage desde Pipedrive | Alta | ✅ | PR #7 (146 filas) |
+| AL | Leads anónimos PR A — crear targets confidenciales | Alta | ✅ | PR #8 |
+| — | Silent-fail al crear nota/tarea desde panel | Alta | ✅ | PR #9 |
+| AM | Leads anónimos PR B — vincular lead a empresa real | Alta | ✅ | PR #10 — POST /api/leads/:id/link |
+| AN | MVP 1.5 PR1 — schema Finder + auth base | Alta | ✅ | PR #11 — passwordHash + autorFinderId + visibleAFinder |
+| AO | MVP 1.5 PR2 — portal v1 read-only | Alta | ✅ | PR #12 — subdominio portal.fontiber.com, Kanban 6 estados |
+| AP | MVP 1.5 PR3 — portal interacciones | Alta | ✅ | PR #13 — crear/editar notas/tareas/actividades + FinderBadge |
+| AQ | MVP 1.5 PR4 — propuestas + FinderAccessLog | Alta | ✅ | PR #14 — dedup silencioso al finder, badge "posible duplicado" admin |
+| AR | Portal propose autocomplete neutro + DUPLICATE silencioso | Media | ✅ | PRs #15 + #16 |
+| AS | Cleanup deuda técnica (scripts/archive/, .env.example, tipos) | Media | ✅ | PR #17 |
+| — | **Cut-over Pipedrive** | Alta | ⏳ | Desactivar cron + export + baja suscripción (destructivo) |
+| — | Scoring dinámico modular | Media | ⏳ | Sub-scores tamaño/rentabilidad/crecimiento/etc. |
+| — | Mapa de conexiones / grafo | Media | ⏳ | Personas compartidas entre empresas (PersonaCargo) |
+| — | Fase 2 búsqueda webs | Baja | ⏳ | 882 empresas en perímetro sin web |
+
 ### Detalle tareas pendientes
 
 **Registros seg. electrónica otras CCAA**
@@ -592,21 +661,35 @@ model CrmLog {
 
 ## 13. Variables de entorno
 
+Plantilla en `.env.example` (raíz del proyecto, PR #17). Copiar a `.env.local` y rellenar.
+
 ```env
 # .env.local
-DATABASE_URL=postgresql://...        # Supabase
+DATABASE_URL=postgresql://...        # Supabase (pooler)
 DIRECT_URL=postgresql://...          # Supabase (migraciones)
 NEXT_PUBLIC_MAPBOX_TOKEN=...
 NEXTAUTH_SECRET=...
 NEXTAUTH_URL=http://localhost:3000   # Producción: https://warroom.fontiber.com
+
+# Admin war room (los finders NO usan estas variables — su auth es bcrypt
+# contra tabla Finder, password seteada desde /finders)
 ADMIN_USER_1=alberto
 ADMIN_PASS_1=warroom2024
 ADMIN_USER_2=gabriel
 ADMIN_PASS_2=warroom2024
+
+# Integraciones
 PIPEDRIVE_API_KEY=...
-RESEND_API_KEY=...                   # Configurado en Vercel ✅
-CRON_SECRET=...                      # Configurado en Vercel ✅
-ANTHROPIC_API_KEY=...                # Chat IA — Configurado en Vercel ✅ (sesión 9)
+ANTHROPIC_API_KEY=...                # Chat IA
+RESEND_API_KEY=...                   # Emails
+APISPAIN_KEY=...                     # BORME API
+
+# Emails
+SUMMARY_EMAIL_TO=alberto@fontiber.com,gabriel@fontiber.com
+SUMMARY_EMAIL_FROM=warroom@fontiber.com
+
+# Crons (solo en Vercel)
+CRON_SECRET=...
 ```
 
 ---
@@ -704,3 +787,107 @@ bormePersonaToCargoKey("GUITARD MALDONADO ALVARO") → "ALVARO GUITARD MALDONADO
 - **Chat IA — Vercel AI SDK v6**: usa `convertToModelMessages()` (async) para convertir UIMessage[] a ModelMessage[]. Requiere strip del campo `id`. BigInt de Prisma se serializa con replacer custom en JSON.stringify.
 - **Chat IA — horizonte temporal**: el system prompt instruye a Claude a preguntar por horizonte temporal cuando la query implica datos temporales (BORME, financieros, CRM) y el usuario no especifica período.
 - **Geocoding Nominatim**: cascada dirección→CP→localidad. Rate limit 1.1s. User-Agent: "Fontiber-WarRoom/1.0". Ejecutado para empresas id>3125 con dirección o CP (06/04/2026).
+- **DealStage v2 — 9 valores** con `on_hold` añadido (por tareas ejecutadas en abril 2026). Valores actuales: `"identificado"|"contactado"|"primera_reunion"|"analisis"|"LOI enviada"|"execution"|"portfolio"|"on_hold"|"muerto"`.
+- **Dos subdominios en un solo deployment**: `warroom.fontiber.com` (war room admin) y `portal.fontiber.com` (portal finders). El middleware enruta por host O por path (`/portal/*`, `/api/portal/*`). Vercel project único; NO duplicar deploys.
+
+---
+
+## 17. Portal finders (MVP 1.5) — resumen operativo
+
+Subdominio `portal.fontiber.com` construido en 4 PRs (#11-#14, cerrados 2026-04-24).
+
+### Flujo de alta de un finder
+
+1. Admin crea el registro en `Finder` (email + nombre + commissionPct).
+2. Admin entra a `/finders` (war room), pulsa **Set password** en la fila. Se genera una password aleatoria (14 chars), el modal la muestra una vez, admin la copia y la envía al finder por canal seguro (WhatsApp/Signal).
+3. El backend `POST /api/finders/:id/password` hace bcrypt hash + `passwordSetAt=now`. Desde 2026-04-24 el endpoint verifica la persistencia releyendo el registro y devuelve `{ok, passwordSetAt}` para que el cliente falle loud si el pool de Supabase no confirmó el write.
+4. Finder entra en `portal.fontiber.com`, formulario email + password.
+
+### Qué ve el finder (portal.fontiber.com)
+
+- **Kanban `/portal`** con 6 estados agregados: `Pendiente` / `Contactado` / `En negociación` / `Cerrado` / `En pausa` / `Descartado` (mapeados desde los 9 stages internos vía `FINDER_STATUS_MAP` en `src/lib/crm.ts`). NUNCA se expone el stage interno real.
+- **Ficha `/portal/empresas/:id`** filtrada: nombre, sector, provincia/localidad, web, linkedin, descripción, status agregado. NO ve CIF, financieros, grupo, owner admin, BORME, CrmLog ni notas internas (salvo `Nota.visibleAFinder=true`).
+- **Proponer target `/portal/proponer`** con autocomplete neutro ("Sugerencias"). No avisa de duplicados en realtime ni bloquea submit; siempre devuelve "Propuesta enviada".
+
+### Reglas de escritura del finder
+
+- **Crear** notas, tareas y actividades sobre sus targets asignados (`finderSourceId === finder.id`). `autorFinderId` queda seteado automáticamente. Si crea una tarea se autoasigna (`asignadoFinderId = finder.id`).
+- **Editar / borrar**: solo lo propio y dentro de la ventana de 24h desde `createdAt` (constante `PORTAL_EDIT_WINDOW_MS` en `src/lib/finder-session.ts`). Pasada la ventana → 403, debe añadir entrada nueva.
+- **Completar tarea**: toggle de `completada` permitido al finder si es autor O asignado, sin límite de 24h.
+- Las tareas que el finder le asigna un admin (caso no implementado en UI, pero posible desde scripts) solo permiten toggle; el finder no puede editar título/descripción.
+
+### Qué ve el admin de las aportaciones del finder
+
+- En `PanelEmpresa`/`CrmSections` del war room, cada nota/tarea/entrada del historial cuya autoría sea de un finder lleva un `<FinderBadge>` (chip ámbar con icono). Los admins **no pueden editar ni borrar** las entradas del finder desde la UI (para no colisionar con su ventana 24h).
+- En `/finders/proposals`, las propuestas aparecen en `PENDING` por defecto. El GET admin calcula `dedupMatch` on-the-fly (CIF exacto + nombre normalizado contra el universo); si hay coincidencia, la tarjeta lleva un badge ámbar **"Posible duplicado: {empresa} ({CIF})"**. El admin decide manualmente `ACCEPTED / DUPLICATE / OUT_OF_SCOPE / REJECTED`. `rejectionReason` es campo interno — nunca se expone al finder.
+
+### Dedup propuestas (silencioso al finder)
+
+1. `POST /api/portal/proposals` siempre crea `TargetProposal` con `status=PENDING`, independientemente de si hay match.
+2. El `GET` del admin (`/api/admin/proposals`) calcula `dedupMatch` en cada request: normalización `normalizePersona(name, true)` + CIF exacto.
+3. El label `DUPLICATE` se renderiza como **"Cerrada"** en el historial del finder (`PortalProposeClient`), como **"Ya existía"** en el admin (`ProposalsAdminClient`). Esto protege la info de seguimiento interno incluso post-hoc.
+
+### Middleware
+
+`src/middleware.ts` detecta zona portal por **tres vías**:
+1. Host = `portal.fontiber.com` (producción).
+2. Path empieza por `/portal/*` o `/api/portal/*` (refuerzo, siempre portal aunque el host no coincida).
+3. `?portal=1` o header `x-test-portal: 1` en NODE_ENV !== production (testing local).
+
+En zona portal exige `session.kind === "finder"` → sino redirect a `/portal/login`. En zona war room bloquea sesiones finder → redirect `/login?wrongPortal=1`.
+
+### Auth (NextAuth — `src/lib/auth.ts`)
+
+Dos CredentialsProviders:
+- `admin-credentials` (user+password via ENV `ADMIN_USER_1/2` + `ADMIN_PASS_1/2`) — para Alberto y Gabriel.
+- `finder-credentials` (email+password bcrypt contra tabla `Finder`) — para finders externos.
+
+Callback `jwt` guarda `token.kind` y `token.finderId`. Callback `session` los lee. Fallback: token sin `kind` → `admin` (para sesiones pre-PR #11, antes del rollout del portal).
+
+### Access log
+
+`src/lib/finder-access-log.ts` → `logFinderAction({finderId, action, resourceId?})` fire-and-forget. Acciones registradas:
+
+- `view_deals` (carga Kanban `/portal`)
+- `view_deal` (abre ficha target)
+- `add_note` / `add_task` / `add_activity`
+- `propose_target` / `propose_target_duplicate`
+
+Pendiente de loguear (si hace falta auditoría más fina): `login_attempt`, `login_success`, `edit_*`, `delete_*`.
+
+### Modelo de datos clave
+
+```prisma
+model Finder {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  name            String
+  active          Boolean  @default(true)
+  commissionPct   Float?
+  passwordHash    String?         // bcrypt; null = sin acceso al portal
+  passwordSetAt   DateTime?
+  // Relaciones inversas: empresas (targets asignados), notasAutor, tareasAutor,
+  // tareasAsignadas, actividadesAutor, crmLogsAutor, proposals, accessLogs.
+}
+
+model Nota {
+  // autorId | autorFinderId (mutex) — uno de los dos siempre rellenado.
+  visibleAFinder  Boolean  @default(false)  // admin decide si compartir
+}
+
+model Tarea {
+  // autorId | autorFinderId, asignadoId | asignadoFinderId
+}
+
+model Actividad / CrmLog {
+  // autorId | autorFinderId
+}
+```
+
+Campo `autorId` de `Nota` y `Tarea` pasó a `nullable` en PR #11 para permitir el doble autor (User o Finder). Es compatible con datos existentes.
+
+### Diseño confidencial — cosas a NO romper
+
+- **Nunca** exponer `pipedriveOrgId`, `financieros`, `grupoId`, `ownerUserId`, `BORME`, `CrmLog` ni el stage interno real al finder.
+- **Nunca** revelar si una empresa está en seguimiento: el dedup de propuestas es silencioso, el label `DUPLICATE` se enmascara como "Cerrada", el autocomplete del form muestra "Sugerencias" (nombre genérico) sin información de estado.
+- **Siempre** filtrar por `finderSourceId === finder.id` AND `esAnonima=false` en todos los endpoints del portal. Leads anónimos (que vienen de Deale, otro finder fuera del portal) no existen para los finders del portal.
