@@ -88,50 +88,139 @@ CREATE TABLE "PersonaCargo" (
   UNIQUE("empresaId", "nombreNorm")
 );
 
--- Estado CRM (sincronizado desde Pipedrive)
+-- Estado CRM (War Room es la fuente de verdad; pipedriveOrgId sólo es histórico read-only)
 CREATE TABLE "CrmEstado" (
   id SERIAL PRIMARY KEY,
   "empresaId" INT UNIQUE REFERENCES "Empresa"(id),
-  "pipedriveOrgId" TEXT,
-  "dealStage" TEXT,      -- "identificado"|"contactado"|"primera_reunion"|"analisis"|"LOI enviada"|"execution"|"portfolio"|"muerto"
-  owner TEXT             -- responsable del deal
+  "pipedriveOrgId" TEXT,              -- legacy, read-only tras cut-over
+  "dealStage" TEXT,                   -- "identificado"|"contactado"|"primera_reunion"|"analisis"|"LOI enviada"|"execution"|"portfolio"|"on_hold"|"muerto" (9 stages)
+  owner TEXT,                         -- legacy string ("alberto"|"gabriel")
+  "ownerUserId" TEXT REFERENCES "User"(id),
+  "fechaEntradaStage" TIMESTAMP,      -- cuándo entró al stage actual (para "X días en stage")
+  "updatedAt" TIMESTAMP
 );
 
--- Log de cambios CRM
+-- Log de cambios CRM (incluye autor desde MVP 1)
 CREATE TABLE "CrmLog" (
   id SERIAL PRIMARY KEY,
   "empresaId" INT REFERENCES "Empresa"(id),
-  event TEXT,            -- "new_deal"|"stage_changed"
+  event TEXT,                         -- "new_deal"|"stage_changed"|"removed_from_funnel"
   "fromStage" TEXT,
   "toStage" TEXT,
-  owner TEXT,
+  owner TEXT,                         -- legacy string
+  "autorId" TEXT REFERENCES "User"(id),
+  note TEXT,                          -- comentario opcional al cambiar stage
   "createdAt" TIMESTAMP DEFAULT NOW()
 );
 
--- Actividades CRM (notas, llamadas, emails, reuniones)
+-- Actividades CRM (llamadas, emails, reuniones — NOTA: las notas generales ya NO viven aquí, están en tabla "Nota")
+-- Actividades CUENTAN para el contador "días sin actividad" del pipeline
 CREATE TABLE "Actividad" (
   id SERIAL PRIMARY KEY,
   "empresaId" INT REFERENCES "Empresa"(id),
-  "pipedriveId" TEXT UNIQUE,
-  tipo TEXT,             -- "nota"|"llamada"|"email"|"reunion"
+  "pipedriveId" TEXT UNIQUE,          -- null para actividades nativas War Room, set para legacy Pipedrive
+  tipo TEXT,                          -- "nota"|"llamada"|"email"|"reunion"
   texto TEXT,
-  autor TEXT,
+  autor TEXT,                         -- legacy string
+  "autorId" TEXT REFERENCES "User"(id),
   fecha TIMESTAMP
 );
 
+-- Usuarios admin del War Room (MVP 1). Finders tienen tabla aparte (ver más abajo).
+CREATE TABLE "User" (
+  id TEXT PRIMARY KEY,
+  email TEXT UNIQUE,
+  name TEXT,
+  role TEXT DEFAULT 'admin',          -- "admin" | "finder" (reservado MVP 1.5)
+  active BOOLEAN DEFAULT true,
+  "createdAt" TIMESTAMP,
+  "updatedAt" TIMESTAMP
+);
+
+-- Notas generales de empresa (MVP 1). NO cuentan como "actividad" en el contador de días sin actividad.
+CREATE TABLE "Nota" (
+  id SERIAL PRIMARY KEY,
+  "empresaId" INT REFERENCES "Empresa"(id),
+  "autorId" TEXT REFERENCES "User"(id),
+  contenido TEXT,
+  "createdAt" TIMESTAMP,
+  "updatedAt" TIMESTAMP
+);
+
+-- Tareas accionables (llamadas programadas, mensajes LinkedIn, reuniones…)
+CREATE TABLE "Tarea" (
+  id SERIAL PRIMARY KEY,
+  "empresaId" INT REFERENCES "Empresa"(id),
+  tipo TEXT DEFAULT 'otra',           -- "contacto_linkedin"|"mensaje_whatsapp"|"llamada"|"videollamada"|"reunion_presencial"|"otra"
+  titulo TEXT,
+  descripcion TEXT,
+  "fechaLimite" TIMESTAMP,
+  completada BOOLEAN DEFAULT false,
+  "completadaAt" TIMESTAMP,
+  "asignadoId" TEXT REFERENCES "User"(id),  -- usuario al que está asignada
+  "autorId" TEXT REFERENCES "User"(id),     -- quien la creó
+  "createdAt" TIMESTAMP,
+  "updatedAt" TIMESTAMP
+);
+
+-- Finders externos (MVP 1.5 — portal de finders). En MVP 1 sólo se usan como "fuente" de una empresa.
+CREATE TABLE "Finder" (
+  id TEXT PRIMARY KEY,
+  email TEXT UNIQUE,
+  name TEXT,
+  active BOOLEAN DEFAULT true,
+  "commissionPct" FLOAT,              -- % de comisión pactado
+  "createdAt" TIMESTAMP,
+  "updatedAt" TIMESTAMP
+);
+-- La FK "Empresa.finderSourceId" (si existe) apunta a "Finder".id — indica qué finder trajo la empresa.
+
+-- Notas privadas de un finder sobre una empresa (visibles a admins en la ficha).
+CREATE TABLE "FinderNote" (
+  id SERIAL PRIMARY KEY,
+  "finderId" TEXT REFERENCES "Finder"(id),
+  "empresaId" INT REFERENCES "Empresa"(id),
+  contenido TEXT,
+  "createdAt" TIMESTAMP,
+  "updatedAt" TIMESTAMP
+);
+
+-- Propuestas de targets nuevos enviadas por finders (aún no aprobadas).
+CREATE TABLE "TargetProposal" (
+  id SERIAL PRIMARY KEY,
+  "finderId" TEXT REFERENCES "Finder"(id),
+  "companyName" TEXT,
+  cif TEXT,
+  status TEXT,                        -- "PENDING"|"APPROVED"|"REJECTED"|"DUPLICATE"
+  "empresaId" INT REFERENCES "Empresa"(id),  -- se rellena si se aprueba y crea/vincula Empresa
+  "rejectionReason" TEXT,             -- interno, nunca visible al finder
+  "createdAt" TIMESTAMP,
+  "reviewedAt" TIMESTAMP,
+  "reviewedBy" TEXT                   -- User.id del admin que revisó
+);
+
 ### Notas de negocio
-- "enPerimetro" = empresa dentro del perímetro de interés para M&A (true = interesante)
+- "enPerimetro" = empresa dentro del perímetro de interés para M&A (true = interesante). Solo empresas enPerimetro=true entran al CRM.
 - Los financieros están en euros absolutos. Para calcular márgenes porcentuales: margenBruto/ingresos*100, ebitda/ingresos*100
 - Un "Grupo" es un holding o grupo empresarial que puede poseer varias empresas
 - Las alertas BORME de tipo "fusion" y "adquisicion" son las más relevantes para M&A
 - PersonaCargo con vigente=true son cargos actuales; vigente=false son históricos
 - La tabla BormeAlerta tiene backfill de 2 años (desde abril 2024)
 - sector "mixto" = empresa que opera tanto en PCI como en seguridad electrónica
+
+### CRM (MVP 1 desde abril 2026)
+- El War Room es la fuente de verdad del CRM; Pipedrive se está deprecando. Campos "pipedriveOrgId", "Actividad.pipedriveId" son legacy read-only.
+- Stages del funnel (9 valores en "CrmEstado.dealStage"): "identificado", "contactado", "primera_reunion", "analisis", "LOI enviada", "execution", "portfolio", "on_hold", "muerto".
+- "fechaEntradaStage" indica cuándo la empresa entró al stage ACTUAL (para calcular "días en stage").
+- Autoría: cada Nota, Tarea, CrmLog y Actividad tiene "autorId" apuntando a User.
+- Tareas: "completada=false" = pendiente. "fechaLimite < now()" = vencida. Tareas pendientes por stage/owner son un KPI útil.
+- Notas generales viven en "Nota" (separado de "Actividad"). NO cuentan como actividad para el contador "días sin actividad" del Kanban — solo "Actividad" de tipos llamada/email/reunion cuenta.
+- Finders: un finder externo que "trae" empresas. "Empresa.finderSourceId" indica qué finder introdujo la empresa. Las reglas del portal de finders (sanitización, mapping de stages) entrarán en MVP 1.5.
 `;
 
 export const SYSTEM_PROMPT = `Eres un asistente de análisis de datos para Fontiber Industrial Partners, un fondo de M&A especializado en el sector PCI (protección contra incendios) y seguridad electrónica en España.
 
-Tienes acceso a una base de datos PostgreSQL con información de ~5.140 empresas del sector. Puedes ejecutar queries SQL SELECT para responder preguntas.
+Tienes acceso a una base de datos PostgreSQL con información de ~5.140 empresas del sector + el CRM interno que gestiona el funnel (contactadas, primera reunión, análisis, LOI, ejecución, portfolio). Puedes ejecutar queries SQL SELECT para responder preguntas.
 
 ${DB_SCHEMA}
 
@@ -151,4 +240,13 @@ ${DB_SCHEMA}
 - Al preguntar, indica brevemente el rango de datos disponible (por ejemplo, "Tenemos alertas BORME desde abril 2024" o "Los datos financieros cubren los años 20XX a 20XX").
 - Si el usuario ya especifica un período ("este mes", "en 2024", "últimos 6 meses"), usa directamente ese filtro sin preguntar.
 - Para preguntas que no tienen dimensión temporal (recuento de empresas, datos estáticos, información de grupos), responde directamente sin preguntar por horizonte.
+
+## Preguntas CRM frecuentes
+- "mis tareas pendientes" / "qué tengo que hacer hoy" → filtra "Tarea" con completada=false, JOIN con "User" por "asignadoId".
+- "empresas estancadas en X stage" → "CrmEstado" donde dealStage='X' y "fechaEntradaStage" < NOW() - INTERVAL 'N days'.
+- "últimas actividades de una empresa" → "Actividad" WHERE "empresaId"=X ORDER BY fecha DESC.
+- "días sin contactar a una empresa" → NOW() - MAX("Actividad".fecha) filtrando "Actividad".tipo IN ('llamada','email','reunion') (NO tipo='nota').
+- "empresas traídas por un finder" → Empresa WHERE "finderSourceId"=X.
+- "conversion rate por stage" → count(*) por dealStage en CrmLog eventos stage_changed.
+- Al hablar de tareas/notas/actividades muestra SIEMPRE el nombre de la empresa (JOIN con Empresa) y el autor (JOIN con User) cuando estén disponibles.
 `;

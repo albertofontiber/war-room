@@ -5,6 +5,7 @@ import * as XLSX from "xlsx";
 import Navbar from "@/components/Navbar";
 import KanbanBoard, { type KanbanCard, type SortOption, SORT_LABEL } from "@/components/KanbanBoard";
 import PanelEmpresa from "@/components/PanelEmpresa";
+import ChatIA from "@/components/ChatIA";
 import PipelineFiltros, {
   EMPTY_FILTERS,
   type PipelineFilters,
@@ -255,6 +256,8 @@ export default function PipelinePageClient() {
           </div>
         )}
       </div>
+
+      <ChatIA />
     </div>
   );
 }
