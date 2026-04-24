@@ -9,7 +9,15 @@ export type DealStage =
   | "LOI enviada"
   | "execution"
   | "portfolio"
+  | "on_hold"
   | "muerto";
+export type TareaTipo =
+  | "contacto_linkedin"
+  | "mensaje_whatsapp"
+  | "llamada"
+  | "videollamada"
+  | "reunion_presencial"
+  | "otra";
 export type TipoActo =
   | "adquisicion"
   | "disolucion"
@@ -71,9 +79,14 @@ export interface EmpresaDetalle {
   crmEstado: {
     dealStage: DealStage | null;
     owner: string | null;
+    ownerUserId: string | null;
+    ownerUser: { id: string; name: string } | null;
     pipedriveOrgId: string | null;
+    fechaEntradaStage: string | null;
     updatedAt: string;
   } | null;
+  finderSource: { id: string; name: string; email: string } | null;
+  stageDurations?: Partial<Record<DealStage, number>>;
   bormeAlertas: {
     id: number;
     fecha: string;

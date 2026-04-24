@@ -8,6 +8,12 @@ import { getBormeTipo } from "@/lib/borme-constants";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import StageChevron from "@/components/StageChevron";
+import { NotasSection, TareasSection, HistorialSection } from "@/components/CrmSections";
+import FinderSelector from "@/components/FinderSelector";
+import { diasDesde } from "@/lib/crm";
+import type { DealStage } from "@/types";
+import { useRouter } from "next/navigation";
 import {
   ComposedChart,
   Bar,
@@ -36,6 +42,7 @@ const STAGE_LABEL: Record<string, string> = {
   "LOI enviada":   "LOI enviada",
   execution:       "Ejecución",
   portfolio:       "Portfolio",
+  on_hold:         "On hold",
   muerto:          "Muerto",
 };
 
@@ -47,6 +54,7 @@ const STAGE_COLOR: Record<string, string> = {
   "LOI enviada":   "bg-wr-amber/20 text-wr-amber border-wr-amber/30",
   execution:       "bg-wr-amber/20 text-wr-amber border-wr-amber/30",
   portfolio:       "bg-wr-green/20 text-wr-green border-wr-green/30",
+  on_hold:         "bg-[#a8a29e]/20 text-[#a8a29e] border-[#a8a29e]/30",
   muerto:          "bg-wr-red/20 text-wr-red border-wr-red/30",
 };
 
@@ -261,9 +269,19 @@ function HistoricoChart({ financieros }: { financieros: FinRow[] }) {
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function PanelEmpresa() {
+type PanelEmpresaProps = {
+  /** Si true (default en /pipeline), muestra las secciones CRM expandidas.
+   * Si false (mapa/tabla), las oculta y muestra botón "Ver detalle en Pipeline". */
+  modoDetallado?: boolean;
+  /** Callback al cambiar campos persistentes que afectan a vistas externas (Kanban).
+   * Se dispara tras cambio de stage o asignación de finder exitosos. */
+  onEmpresaChanged?: () => void;
+};
+
+export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }: PanelEmpresaProps = {}) {
   const { empresaSeleccionadaId, cerrarPanel, modoPresentacion } =
     useWarRoomStore();
+  const router = useRouter();
 
   const [empresa, setEmpresa] = useState<EmpresaDetalle | null>(null);
   const [loading, setLoading] = useState(true);
@@ -320,6 +338,50 @@ export default function PanelEmpresa() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [grupoDropdownOpen]);
+
+  // Cambiar stage desde la ficha. Actualiza optimísticamente y persiste via PATCH.
+  const handleStageChange = useCallback(
+    async (nuevo: DealStage | null) => {
+      if (!empresa) return;
+      const prev = empresa.crmEstado;
+      setEmpresa({
+        ...empresa,
+        crmEstado: nuevo
+          ? {
+              dealStage: nuevo,
+              owner: prev?.owner ?? null,
+              ownerUserId: prev?.ownerUserId ?? null,
+              ownerUser: prev?.ownerUser ?? null,
+              pipedriveOrgId: prev?.pipedriveOrgId ?? null,
+              fechaEntradaStage:
+                prev?.dealStage !== nuevo
+                  ? new Date().toISOString()
+                  : prev?.fechaEntradaStage ?? null,
+              updatedAt: new Date().toISOString(),
+            }
+          : null,
+      });
+      try {
+        const res = await fetch(`/api/empresas/${empresa.id}/stage`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ dealStage: nuevo }),
+        });
+        if (!res.ok) throw new Error(`${res.status}`);
+        onEmpresaChanged?.();
+      } catch (err) {
+        console.error("[stage change]", err);
+        // Rollback: recarga la ficha
+        if (empresaSeleccionadaId) {
+          fetch(`/api/empresas/${empresaSeleccionadaId}`)
+            .then((r) => r.json())
+            .then(setEmpresa)
+            .catch(() => {});
+        }
+      }
+    },
+    [empresa, empresaSeleccionadaId, onEmpresaChanged]
+  );
 
   // Open grupo editor
   const startEditGrupo = useCallback(() => {
@@ -396,7 +458,7 @@ export default function PanelEmpresa() {
   // Loading state
   if (loading || !empresa) {
     return (
-      <aside className="w-[340px] flex-shrink-0 bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
+      <aside className={`${modoDetallado ? "w-full" : "w-[340px] flex-shrink-0"} bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right`}>
         <div className="flex items-center justify-between p-4 border-b border-wr-border">
           <div className="h-3 w-24 bg-wr-surface2 rounded animate-pulse" />
           <button
@@ -430,7 +492,7 @@ export default function PanelEmpresa() {
   const stageClass = STAGE_COLOR[dealStage ?? ""] ?? STAGE_COLOR.prospecto;
 
   return (
-    <aside className="w-[340px] flex-shrink-0 bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
+    <aside className={`${modoDetallado ? "w-full" : "w-[340px] flex-shrink-0"} bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right`}>
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <div className="flex items-start gap-3 p-4 border-b border-wr-border">
         {empresa.logoUrl ? (
@@ -451,13 +513,13 @@ export default function PanelEmpresa() {
                   href={empresa.web.startsWith("http") ? empresa.web : `https://${empresa.web}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-semibold text-sm text-wr-text hover:text-wr-blue transition-colors truncate block"
+                  className={`font-semibold text-sm text-wr-text hover:text-wr-blue transition-colors truncate block ${modoPresentacion ? "blur-sm select-none" : ""}`}
                 >
                   {empresa.nombre}{" "}
                   <span className="text-wr-blue text-xs">↗</span>
                 </a>
               ) : (
-                <p className="font-semibold text-sm text-wr-text truncate">
+                <p className={`font-semibold text-sm text-wr-text truncate ${modoPresentacion ? "blur-sm select-none" : ""}`}>
                   {empresa.nombre}
                 </p>
               )}
@@ -523,6 +585,114 @@ export default function PanelEmpresa() {
               </Badge>
             )}
           </div>
+
+          {/* ── Modo COMPACTO (mapa/tabla): solo botón al Pipeline ──────── */}
+          {!modoDetallado && (
+            <button
+              onClick={() => router.push("/pipeline")}
+              className="w-full flex items-center justify-center gap-2 text-xs bg-wr-blue/10 text-wr-blue border border-wr-blue/30 rounded-md px-3 py-2 hover:bg-wr-blue/20 transition-colors"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+              </svg>
+              Ver detalle en Pipeline
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M7 17L17 7M7 7h10v10" />
+              </svg>
+            </button>
+          )}
+
+          {/* ── Modo DETALLADO (/pipeline): chevron + historial + tareas + notas */}
+          {modoDetallado && (
+            <>
+              <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
+                <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
+                  Funnel
+                </p>
+                <StageChevron
+                  stage={dealStage ?? null}
+                  diasEnStage={
+                    empresa.crmEstado?.fechaEntradaStage
+                      ? diasDesde(empresa.crmEstado.fechaEntradaStage)
+                      : null
+                  }
+                  stageDurations={empresa.stageDurations}
+                  onChange={handleStageChange}
+                />
+
+                {(() => {
+                  const ultimaAct = empresa.actividades?.find(
+                    (a) => a.tipo !== "nota"
+                  );
+                  const fechaEntrada = empresa.crmEstado?.fechaEntradaStage;
+                  const diasActividad = ultimaAct ? diasDesde(ultimaAct.fecha) : null;
+                  const diasEntrada = fechaEntrada ? diasDesde(fechaEntrada) : null;
+                  if (!ultimaAct && !fechaEntrada) return null;
+                  return (
+                    <div className="grid grid-cols-2 gap-2 text-[10px] pt-1">
+                      {fechaEntrada && (
+                        <div>
+                          <p className="text-wr-hint uppercase tracking-wider text-[8px]">
+                            En stage desde
+                          </p>
+                          <p className="text-wr-text">
+                            {fmtDate(fechaEntrada)}
+                            {diasEntrada != null && (
+                              <span className="text-wr-hint"> · {diasEntrada}d</span>
+                            )}
+                          </p>
+                        </div>
+                      )}
+                      {ultimaAct && (
+                        <div>
+                          <p className="text-wr-hint uppercase tracking-wider text-[8px]">
+                            Última actividad
+                          </p>
+                          <p className="text-wr-text">
+                            {fmtDate(ultimaAct.fecha)}
+                            {diasActividad != null && (
+                              <span className="text-wr-hint"> · hace {diasActividad}d</span>
+                            )}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+
+                <div className="pt-1">
+                  <p className="text-wr-hint uppercase tracking-wider text-[8px] mb-1">
+                    Finder
+                  </p>
+                  <FinderSelector
+                    empresaId={empresa.id}
+                    finderActual={
+                      empresa.finderSource
+                        ? { id: empresa.finderSource.id, name: empresa.finderSource.name }
+                        : null
+                    }
+                    onChange={(next) => {
+                      setEmpresa((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              finderSource: next
+                                ? { id: next.id, name: next.name, email: next.email }
+                                : null,
+                            }
+                          : prev
+                      );
+                      onEmpresaChanged?.();
+                    }}
+                  />
+                </div>
+              </div>
+
+              <TareasSection empresaId={empresa.id} />
+              <HistorialSection empresaId={empresa.id} />
+              <NotasSection empresaId={empresa.id} />
+            </>
+          )}
 
           {/* ── Sección GESTIÓN ─────────────────────────────────────────── */}
           <div className="rounded-lg border border-wr-amber/20 bg-wr-amber/5">
@@ -692,7 +862,7 @@ export default function PanelEmpresa() {
           <div>
             <SectionLabel>Datos generales</SectionLabel>
             <div className="space-y-0.5">
-              <KpiRow label="CIF" value={empresa.cif} />
+              <KpiRow label="CIF" value={modoPresentacion ? "—" : empresa.cif} />
               <KpiRow label="Empleados" value={fmt(empresa.empleados)} />
               {empresa.servicios.length > 0 && (
                 <div className="py-1">

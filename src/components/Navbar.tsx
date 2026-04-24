@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useSession, signOut } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
+import type { Vista } from "@/types";
 
 export default function Navbar() {
   const {
@@ -11,6 +13,20 @@ export default function Navbar() {
     empresasGeoJSON, seleccionarEmpresa, setFlyToEmpresaId,
   } = useWarRoomStore();
   const { data: session } = useSession();
+  const pathname = usePathname();
+  const router = useRouter();
+  const onPipelinePage = pathname === "/pipeline";
+
+  // Cambio de vista homogéneo: si estamos en /pipeline, navega a "/" y setea la vista
+  // del War Room; si estamos en "/", cambia la vista sin navegar.
+  const goToVista = useCallback((v: Vista) => {
+    if (onPipelinePage) {
+      setVista(v);
+      router.push("/");
+    } else {
+      setVista(v);
+    }
+  }, [onPipelinePage, router, setVista]);
 
   const [inputValue, setInputValue] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -156,12 +172,12 @@ export default function Navbar() {
         </span>
       )}
 
-      {/* Toggle Mapa / Tabla / Operaciones */}
+      {/* Toggle Mapa / Tabla / Operaciones / Grupos / Pipeline */}
       <div className="flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5">
         <button
-          onClick={() => setVista("mapa")}
+          onClick={() => goToVista("mapa")}
           className={`px-3 py-1 text-xs rounded transition-colors ${
-            vistaActual === "mapa"
+            !onPipelinePage && vistaActual === "mapa"
               ? "bg-wr-blue text-white"
               : "text-wr-muted hover:text-wr-text"
           }`}
@@ -169,9 +185,9 @@ export default function Navbar() {
           Mapa
         </button>
         <button
-          onClick={() => setVista("tabla")}
+          onClick={() => goToVista("tabla")}
           className={`px-3 py-1 text-xs rounded transition-colors ${
-            vistaActual === "tabla"
+            !onPipelinePage && vistaActual === "tabla"
               ? "bg-wr-blue text-white"
               : "text-wr-muted hover:text-wr-text"
           }`}
@@ -179,9 +195,9 @@ export default function Navbar() {
           Tabla
         </button>
         <button
-          onClick={() => setVista("operaciones")}
+          onClick={() => goToVista("operaciones")}
           className={`px-3 py-1 text-xs rounded transition-colors ${
-            vistaActual === "operaciones"
+            !onPipelinePage && vistaActual === "operaciones"
               ? "bg-wr-blue text-white"
               : "text-wr-muted hover:text-wr-text"
           }`}
@@ -189,14 +205,24 @@ export default function Navbar() {
           Operaciones
         </button>
         <button
-          onClick={() => setVista("grupos")}
+          onClick={() => goToVista("grupos")}
           className={`px-3 py-1 text-xs rounded transition-colors ${
-            vistaActual === "grupos"
+            !onPipelinePage && vistaActual === "grupos"
               ? "bg-wr-blue text-white"
               : "text-wr-muted hover:text-wr-text"
           }`}
         >
           Grupos
+        </button>
+        <button
+          onClick={() => router.push("/pipeline")}
+          className={`px-3 py-1 text-xs rounded transition-colors ${
+            onPipelinePage
+              ? "bg-wr-blue text-white"
+              : "text-wr-muted hover:text-wr-text"
+          }`}
+        >
+          Pipeline
         </button>
       </div>
 
