@@ -57,11 +57,11 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Siempre creamos TargetProposal. Si hay dedup match, la propuesta nace
-  // `DUPLICATE` y auto-revisada (reviewedAt=now, reviewedBy=null = sistema).
-  // Desde el portal, el finder siempre ve "Propuesta enviada" sin pista de
-  // si existe o no en la BD — decisión de producto: no revelar qué targets
-  // tenemos registrados, aunque sea información post-hoc.
+  // Siempre creamos como PENDING: Alberto quiere revisar también los
+  // posibles duplicados (no auto-cerrarlos). Desde el portal el finder
+  // ve "Propuesta enviada" sin distinción. El flag `existe` se usa
+  // sólo para el log de auditoría y lo muestra la vista admin como
+  // "posible duplicado" calculándolo on-the-fly al leer.
   const proposal = await prisma.targetProposal.create({
     data: {
       finderId: finder.id,
@@ -71,9 +71,7 @@ export async function POST(req: NextRequest) {
       contactName: body.contactName?.trim() || null,
       contactRole: body.contactRole?.trim() || null,
       notes: body.notes?.trim() || null,
-      status: existe ? "DUPLICATE" : "PENDING",
-      reviewedAt: existe ? new Date() : null,
-      reviewedBy: null,
+      status: "PENDING",
     },
     select: { id: true, companyName: true, createdAt: true, status: true },
   });
