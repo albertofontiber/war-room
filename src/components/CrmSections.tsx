@@ -38,12 +38,35 @@ type HistorialItem = {
   meta?: Record<string, unknown>;
 };
 
+/**
+ * Extrae un mensaje user-friendly de una Response fallida.
+ * Soporta el formato {error, issues: [{path, message}]} que emite zodError()
+ * en lib/validation.ts, además de {error} simple.
+ */
+async function extractError(res: Response): Promise<string> {
+  try {
+    const json = await res.json();
+    if (json?.issues?.length) {
+      return json.issues
+        .map((i: { path: string; message: string }) =>
+          i.path ? `${i.path}: ${i.message}` : i.message
+        )
+        .join("; ");
+    }
+    if (json?.error) return String(json.error);
+  } catch {
+    /* fallthrough */
+  }
+  return `Error ${res.status}`;
+}
+
 // ─── Sección NOTAS ────────────────────────────────────────────────────────
 
 export function NotasSection({ empresaId }: { empresaId: number }) {
   const [notas, setNotas] = useState<Nota[]>([]);
   const [nueva, setNueva] = useState("");
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<number | null>(null);
   const [editContent, setEditContent] = useState("");
 
@@ -61,6 +84,7 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
   async function crear() {
     if (!nueva.trim()) return;
     setSaving(true);
+    setError(null);
     try {
       const res = await fetch(`/api/empresas/${empresaId}/notas`, {
         method: "POST",
@@ -70,7 +94,14 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
       if (res.ok) {
         setNueva("");
         load();
+      } else {
+        const msg = await extractError(res);
+        console.error("[NotasSection.crear]", msg);
+        setError(msg);
       }
+    } catch (err) {
+      console.error("[NotasSection.crear] network", err);
+      setError("Error de red");
     } finally {
       setSaving(false);
     }
@@ -78,14 +109,24 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
 
   async function guardarEdit(id: number) {
     if (!editContent.trim()) return;
-    const res = await fetch(`/api/notas/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contenido: editContent }),
-    });
-    if (res.ok) {
-      setEditing(null);
-      load();
+    setError(null);
+    try {
+      const res = await fetch(`/api/notas/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contenido: editContent }),
+      });
+      if (res.ok) {
+        setEditing(null);
+        load();
+      } else {
+        const msg = await extractError(res);
+        console.error("[NotasSection.guardarEdit]", msg);
+        setError(msg);
+      }
+    } catch (err) {
+      console.error("[NotasSection.guardarEdit] network", err);
+      setError("Error de red");
     }
   }
 
@@ -118,6 +159,11 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
         >
           {saving ? "Guardando…" : "Añadir nota"}
         </button>
+        {error && (
+          <p className="text-[10px] text-wr-red bg-wr-red/10 border border-wr-red/30 rounded px-2 py-1">
+            {error}
+          </p>
+        )}
       </div>
 
       <div className="space-y-1.5 max-h-64 overflow-y-auto">
@@ -211,6 +257,7 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
   const [fechaLimite, setFechaLimite] = useState("");
   const [asignadoId, setAsignadoId] = useState("");
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editTipo, setEditTipo] = useState<TareaTipo>("llamada");
   const [editTitulo, setEditTitulo] = useState("");
@@ -244,6 +291,7 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
   async function crear() {
     if (!titulo.trim()) return;
     setSaving(true);
+    setError(null);
     try {
       const res = await fetch(`/api/empresas/${empresaId}/tareas`, {
         method: "POST",
@@ -263,7 +311,14 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
         setAsignadoId("");
         setTipo("llamada");
         load();
+      } else {
+        const msg = await extractError(res);
+        console.error("[TareasSection.crear]", msg);
+        setError(msg);
       }
+    } catch (err) {
+      console.error("[TareasSection.crear] network", err);
+      setError("Error de red");
     } finally {
       setSaving(false);
     }
@@ -280,30 +335,52 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
 
   async function guardarEdit() {
     if (editingId == null || !editTitulo.trim()) return;
-    const res = await fetch(`/api/tareas/${editingId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        tipo: editTipo,
-        titulo: editTitulo,
-        descripcion: editDescripcion.trim() || null,
-        fechaLimite: editFechaLimite || null,
-        asignadoId: editAsignadoId || null,
-      }),
-    });
-    if (res.ok) {
-      setEditingId(null);
-      load();
+    setError(null);
+    try {
+      const res = await fetch(`/api/tareas/${editingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipo: editTipo,
+          titulo: editTitulo,
+          descripcion: editDescripcion.trim() || null,
+          fechaLimite: editFechaLimite || null,
+          asignadoId: editAsignadoId || null,
+        }),
+      });
+      if (res.ok) {
+        setEditingId(null);
+        load();
+      } else {
+        const msg = await extractError(res);
+        console.error("[TareasSection.guardarEdit]", msg);
+        setError(msg);
+      }
+    } catch (err) {
+      console.error("[TareasSection.guardarEdit] network", err);
+      setError("Error de red");
     }
   }
 
   async function toggleCompletada(t: Tarea) {
-    await fetch(`/api/tareas/${t.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ completada: !t.completada }),
-    });
-    load();
+    setError(null);
+    try {
+      const res = await fetch(`/api/tareas/${t.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ completada: !t.completada }),
+      });
+      if (!res.ok) {
+        const msg = await extractError(res);
+        console.error("[TareasSection.toggleCompletada]", msg);
+        setError(msg);
+        return;
+      }
+      load();
+    } catch (err) {
+      console.error("[TareasSection.toggleCompletada] network", err);
+      setError("Error de red");
+    }
   }
 
   async function borrar(id: number) {
@@ -394,6 +471,11 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
         >
           {saving ? "Guardando…" : "Añadir tarea"}
         </button>
+        {error && (
+          <p className="text-[10px] text-wr-red bg-wr-red/10 border border-wr-red/30 rounded px-2 py-1">
+            {error}
+          </p>
+        )}
       </div>
 
       <div className="space-y-1 max-h-64 overflow-y-auto">
