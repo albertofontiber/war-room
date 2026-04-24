@@ -93,7 +93,12 @@ export default function FindersAdminClient() {
               Gestión de acceso al portal. La password solo se muestra una vez — cópiala y pásala al finder por canal seguro.
             </p>
           </div>
-          <a href="/" className="text-xs text-wr-blue hover:underline">← Volver al War Room</a>
+          <div className="flex items-center gap-3">
+            <a href="/finders/proposals" className="text-xs text-wr-blue hover:underline">
+              Revisar propuestas →
+            </a>
+            <a href="/" className="text-xs text-wr-blue hover:underline">← War Room</a>
+          </div>
         </header>
 
         <div className="bg-wr-surface border border-wr-border rounded-lg overflow-hidden">

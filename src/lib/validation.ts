@@ -122,6 +122,31 @@ export const PortalActividadUpdateSchema = z
   })
   .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
 
+export const ProposalCreateSchema = z.object({
+  companyName: nonEmptyString,
+  cif: z.string().trim().min(0).optional().nullable(),
+  website: z.string().trim().optional().nullable(),
+  contactName: z.string().trim().optional().nullable(),
+  contactRole: z.string().trim().optional().nullable(),
+  notes: z.string().trim().optional().nullable(),
+});
+
+const PROPOSAL_STATUSES = [
+  "PENDING",
+  "ACCEPTED",
+  "DUPLICATE",
+  "OUT_OF_SCOPE",
+  "REJECTED",
+] as const;
+
+export const ProposalReviewSchema = z.object({
+  status: z.enum(PROPOSAL_STATUSES),
+  rejectionReason: z.string().trim().optional().nullable(),
+  // Si status=ACCEPTED, permite vincular la propuesta a una empresa existente
+  // o dejar que el admin la cree manualmente después.
+  empresaId: z.number().int().positive().optional().nullable(),
+});
+
 export const LeadCreateSchema = z.object({
   nombre: nonEmptyString,                            // alias visible ("Asher")
   sector: z.enum(SECTORES).nullable().optional(),

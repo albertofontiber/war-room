@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder } from "@/lib/finder-session";
+import { logFinderAction } from "@/lib/finder-access-log";
 import { PortalTareaCreateSchema, zodError } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
@@ -55,5 +56,11 @@ export async function POST(
       autorFinder: { select: { name: true } },
     },
   });
+  await logFinderAction({
+    finderId: finder.id,
+    action: "add_task",
+    resourceId: String(tarea.id),
+  });
+
   return NextResponse.json(tarea, { status: 201 });
 }

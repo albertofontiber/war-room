@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder } from "@/lib/finder-session";
+import { logFinderAction } from "@/lib/finder-access-log";
 import { PortalActividadCreateSchema, zodError } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
@@ -50,5 +51,11 @@ export async function POST(
       autorFinder: { select: { name: true } },
     },
   });
+  await logFinderAction({
+    finderId: finder.id,
+    action: "add_activity",
+    resourceId: String(actividad.id),
+  });
+
   return NextResponse.json(actividad, { status: 201 });
 }

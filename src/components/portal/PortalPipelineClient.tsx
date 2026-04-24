@@ -99,9 +99,7 @@ export default function PortalPipelineClient({ finderName }: { finderName: strin
           </div>
           <button
             onClick={() => router.push("/portal/proponer")}
-            className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500 disabled:opacity-50"
-            disabled
-            title="Próximamente — PR #14"
+            className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500"
           >
             + Proponer target
           </button>
