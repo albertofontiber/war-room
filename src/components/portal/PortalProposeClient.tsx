@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { fmtDate } from "@/lib/format";
@@ -45,6 +45,11 @@ export default function PortalProposeClient({ finderName }: { finderName: string
   const [contactRole, setContactRole] = useState("");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [matches, setMatches] = useState<{ nombre: string; cif: string }[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [duplicateMatch, setDuplicateMatch] = useState<{ nombre: string; cif: string } | null>(null);
+  const searchWrapperRef = useRef<HTMLDivElement>(null);
   const [feedback, setFeedback] = useState<
     | { kind: "duplicate"; mensaje: string }
     | { kind: "created"; mensaje: string }
@@ -62,9 +67,62 @@ export default function PortalProposeClient({ finderName }: { finderName: string
 
   useEffect(() => { loadHistory(); }, []);
 
+  // Debounced search contra la BD para avisar de duplicados antes de submit.
+  // El finder escribe nombre o CIF → mostramos hasta 10 matches.
+  useEffect(() => {
+    const q = (companyName + " " + cif).trim();
+    const qRaw = companyName.trim().length >= 2 ? companyName.trim() : (cif.trim().length >= 2 ? cif.trim() : "");
+    if (qRaw.length < 2) { setMatches([]); setDuplicateMatch(null); return; }
+    setSearching(true);
+    const ctrl = new AbortController();
+    const t = setTimeout(() => {
+      fetch(`/api/portal/empresas/search?q=${encodeURIComponent(qRaw)}`, { signal: ctrl.signal })
+        .then((r) => r.json())
+        .then((data) => {
+          if (!Array.isArray(data)) return;
+          setMatches(data);
+          // Si el usuario teclea exactamente un nombre o CIF de la BD, lo
+          // tratamos como duplicado (bloquea submit).
+          const normName = companyName.trim().toLowerCase();
+          const normCif = cif.trim().toUpperCase();
+          const exact = data.find(
+            (m) =>
+              (normName && m.nombre.toLowerCase() === normName) ||
+              (normCif && m.cif.toUpperCase() === normCif)
+          );
+          setDuplicateMatch(exact ?? null);
+        })
+        .catch(() => {})
+        .finally(() => setSearching(false));
+    }, 250);
+    return () => { clearTimeout(t); ctrl.abort(); };
+    // q se usa solo para que cambie cuando cambian cualquiera de los dos inputs
+    void q;
+  }, [companyName, cif]);
+
+  // Cerrar dropdown al clicar fuera
+  useEffect(() => {
+    if (!showDropdown) return;
+    const handler = (e: MouseEvent) => {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [showDropdown]);
+
   const reset = () => {
     setCompanyName(""); setCif(""); setWebsite("");
     setContactName(""); setContactRole(""); setNotes("");
+    setMatches([]); setDuplicateMatch(null); setShowDropdown(false);
+  };
+
+  const pickMatch = (m: { nombre: string; cif: string }) => {
+    setCompanyName(m.nombre);
+    setCif(m.cif);
+    setDuplicateMatch(m);
+    setShowDropdown(false);
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -140,22 +198,50 @@ export default function PortalProposeClient({ finderName }: { finderName: string
           </div>
 
           <form onSubmit={submit} className="bg-wr-surface border border-wr-border rounded-lg p-4 space-y-3">
-            <Field label="Nombre de la empresa (obligatorio)">
-              <input
-                value={companyName} onChange={(e) => setCompanyName(e.target.value)}
-                placeholder="Ej. Soluciones Fire SL"
-                className="input"
-                required
-                autoFocus
-              />
-            </Field>
+            <div ref={searchWrapperRef} className="relative">
+              <Field label="Nombre de la empresa (obligatorio)">
+                <input
+                  value={companyName}
+                  onChange={(e) => { setCompanyName(e.target.value); setShowDropdown(true); }}
+                  onFocus={() => { if (matches.length > 0) setShowDropdown(true); }}
+                  placeholder="Ej. Soluciones Fire SL"
+                  className="input"
+                  required
+                  autoFocus
+                  autoComplete="off"
+                />
+              </Field>
+              {showDropdown && matches.length > 0 && (
+                <div className="absolute z-10 left-0 right-0 top-full mt-1 bg-wr-surface border border-wr-border rounded shadow-xl max-h-64 overflow-y-auto">
+                  <p className="px-3 py-1.5 text-[10px] text-wr-hint uppercase tracking-wider border-b border-wr-border">
+                    Empresas ya en seguimiento
+                  </p>
+                  {matches.map((m) => (
+                    <button
+                      key={m.cif}
+                      type="button"
+                      onMouseDown={(e) => { e.preventDefault(); pickMatch(m); }}
+                      className="w-full text-left px-3 py-2 hover:bg-wr-surface2 transition-colors"
+                    >
+                      <p className="text-xs text-wr-text truncate">{m.nombre}</p>
+                      <p className="text-[10px] text-wr-hint">{m.cif}</p>
+                    </button>
+                  ))}
+                </div>
+              )}
+              {searching && (
+                <p className="mt-1 text-[10px] text-wr-hint">Buscando en la BD…</p>
+              )}
+            </div>
 
             <div className="grid grid-cols-2 gap-3">
               <Field label="CIF (si lo conoces)">
                 <input
-                  value={cif} onChange={(e) => setCif(e.target.value.toUpperCase())}
+                  value={cif}
+                  onChange={(e) => { setCif(e.target.value.toUpperCase()); setShowDropdown(true); }}
                   placeholder="B12345678"
                   className="input"
+                  autoComplete="off"
                 />
               </Field>
               <Field label="Web">
@@ -166,6 +252,16 @@ export default function PortalProposeClient({ finderName }: { finderName: string
                 />
               </Field>
             </div>
+
+            {duplicateMatch && (
+              <div className="rounded border border-wr-amber/30 bg-wr-amber/5 p-3 text-xs text-wr-amber">
+                <p className="font-semibold mb-1">Ya tenemos esta empresa en seguimiento</p>
+                <p className="text-wr-muted text-[11px]">
+                  <span className="text-wr-text">{duplicateMatch.nombre}</span> ({duplicateMatch.cif}) ya está
+                  registrada. Gracias de todas formas — no hace falta proponerla.
+                </p>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-3">
               <Field label="Contacto (nombre)">
@@ -210,8 +306,9 @@ export default function PortalProposeClient({ finderName }: { finderName: string
             <div className="flex justify-end pt-2 border-t border-wr-border">
               <button
                 type="submit"
-                disabled={submitting || !companyName.trim()}
+                disabled={submitting || !companyName.trim() || !!duplicateMatch}
                 className="text-xs px-4 py-2 bg-wr-blue text-white rounded hover:bg-blue-500 disabled:opacity-40"
+                title={duplicateMatch ? "Esta empresa ya está en seguimiento" : undefined}
               >
                 {submitting ? "Enviando…" : "Enviar propuesta"}
               </button>
