@@ -101,6 +101,7 @@ scripts/
   backfill-persona-cargo-borme.ts        # Backfill PersonaCargo desde BORME para empresas sin datos empresia (sesión 8) ⭐
   migrate-pipedrive-activities.ts        # Histórico de activities Pipedrive → Actividad (EJECUTADO 24/04/2026 — 210 migradas)
   inspect-pipedrive-samples.ts           # Dump read-only de activities Pipedrive + cómo quedarían en War Room
+  backfill-fecha-entrada-stage.ts        # Backfill CrmEstado.fechaEntradaStage desde Pipedrive stage_change_time (EJECUTADO 24/04/2026 — 146 filas)
 
 vercel.json                               # Crons: Pipedrive + BORME 20:00 L-V · Resumen 06:00 Ma-Sa · Task digest 07:00 L-V (UTC)
 ```
