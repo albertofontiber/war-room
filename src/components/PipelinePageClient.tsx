@@ -269,8 +269,11 @@ export default function PipelinePageClient() {
       <AddLeadModal
         open={leadModalOpen}
         onClose={() => setLeadModalOpen(false)}
+        ccaaOptions={meta.ccaa}
+        provinciaOptions={meta.provincia}
         onCreated={(empresaId) => {
           loadPipeline(filters);
+          loadMeta();
           seleccionarEmpresa(empresaId);
         }}
       />

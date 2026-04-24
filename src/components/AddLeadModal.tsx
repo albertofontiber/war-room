@@ -11,6 +11,8 @@ type Props = {
   open: boolean;
   onClose: () => void;
   onCreated: (empresaId: number) => void;
+  ccaaOptions: string[];
+  provinciaOptions: string[];
 };
 
 const SECTORES = [
@@ -19,7 +21,7 @@ const SECTORES = [
   { value: "mixto", label: "Mixto" },
 ];
 
-export default function AddLeadModal({ open, onClose, onCreated }: Props) {
+export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, provinciaOptions }: Props) {
   const [users, setUsers] = useState<User[]>([]);
   const [finders, setFinders] = useState<Finder[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -151,10 +153,16 @@ export default function AddLeadModal({ open, onClose, onCreated }: Props) {
 
           <div className="grid grid-cols-2 gap-3">
             <Field label="Provincia">
-              <input value={provincia} onChange={(e) => setProvincia(e.target.value)} className="input" />
+              <select value={provincia} onChange={(e) => setProvincia(e.target.value)} className="input">
+                <option value="">—</option>
+                {provinciaOptions.map((p) => <option key={p} value={p}>{p}</option>)}
+              </select>
             </Field>
             <Field label="CCAA">
-              <input value={ccaa} onChange={(e) => setCcaa(e.target.value)} className="input" />
+              <select value={ccaa} onChange={(e) => setCcaa(e.target.value)} className="input">
+                <option value="">—</option>
+                {ccaaOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
             </Field>
           </div>
 
@@ -177,11 +185,13 @@ export default function AddLeadModal({ open, onClose, onCreated }: Props) {
             <p className="text-[10px] font-semibold text-wr-muted uppercase tracking-wider">Financieros (opcional)</p>
             <div className="grid grid-cols-4 gap-3">
               <Field label="Año">
-                <input
-                  type="number" value={anioFin} onChange={(e) => setAnioFin(e.target.value)}
-                  className="input"
-                />
+                <input type="number" value={anioFin} onChange={(e) => setAnioFin(e.target.value)} className="input" />
               </Field>
+              <Field label="Empleados">
+                <input type="number" value={empleados} onChange={(e) => setEmpleados(e.target.value)} className="input" />
+              </Field>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
               <Field label="Ingresos (€)">
                 <input value={ingresos} onChange={(e) => setIngresos(e.target.value)} className="input" placeholder="1500000" />
               </Field>
@@ -192,9 +202,6 @@ export default function AddLeadModal({ open, onClose, onCreated }: Props) {
                 <input value={ebitda} onChange={(e) => setEbitda(e.target.value)} className="input" />
               </Field>
             </div>
-            <Field label="Empleados">
-              <input type="number" value={empleados} onChange={(e) => setEmpleados(e.target.value)} className="input w-32" />
-            </Field>
           </div>
 
           <Field label="Notas internas (opcional)">
@@ -245,8 +252,10 @@ export default function AddLeadModal({ open, onClose, onCreated }: Props) {
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  // flex-col + justify-end alinea los inputs al fondo cuando los labels ocupan
+  // distintas alturas (e.g. "MARGEN BRUTO (€)" wrapping en varias líneas).
   return (
-    <label className="block">
+    <label className="flex flex-col h-full justify-end">
       <span className="block text-[10px] font-semibold text-wr-muted uppercase tracking-wider mb-1">{label}</span>
       {children}
     </label>
