@@ -168,21 +168,24 @@ model CrmEstado {
 }
 
 model CrmLog {
-  id         Int      @id @default(autoincrement())
-  empresaId  Int
-  empresa    Empresa  @relation(fields: [empresaId], references: [id])
-  event      String   // "new_deal" | "stage_changed" | "removed_from_funnel"
-  fromStage  String?
-  toStage    String?
-  owner      String?  // legacy string
-  autorId    String?
-  autor      User?    @relation(fields: [autorId], references: [id])
-  note       String?  // comentario opcional al cambiar stage
-  createdAt  DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  empresaId      Int
+  empresa        Empresa  @relation(fields: [empresaId], references: [id])
+  event          String   // "new_deal" | "stage_changed" | "removed_from_funnel"
+  fromStage      String?
+  toStage        String?
+  owner          String?  // legacy string
+  autorId        String?
+  autor          User?    @relation(fields: [autorId], references: [id])
+  autorFinderId  String?
+  autorFinder    Finder?  @relation("CrmLogAutorFinder", fields: [autorFinderId], references: [id])
+  note           String?  // comentario opcional al cambiar stage
+  createdAt      DateTime @default(now())
 
   @@index([empresaId])
   @@index([createdAt])
   @@index([autorId])
+  @@index([autorFinderId])
 }
 
 model Actividad {
@@ -193,13 +196,17 @@ model Actividad {
   tipo           String    // "nota"|"llamada"|"email"|"reunion"
   texto          String?   @db.Text
   autor          String?   // legacy string (Pipedrive)
+  // Autor: solo uno de los dos tiene valor.
   autorId        String?
   autorUser      User?     @relation(fields: [autorId], references: [id])
+  autorFinderId  String?
+  autorFinder    Finder?   @relation("ActividadAutorFinder", fields: [autorFinderId], references: [id])
   fecha          DateTime
   sincronizadoAt DateTime  @default(now())
 
   @@index([empresaId, fecha])
   @@index([autorId])
+  @@index([autorFinderId])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -225,39 +232,58 @@ model User {
 }
 
 model Nota {
-  id         Int      @id @default(autoincrement())
-  empresaId  Int
-  empresa    Empresa  @relation(fields: [empresaId], references: [id])
-  autorId    String
-  autor      User     @relation("NotaAutor", fields: [autorId], references: [id])
-  contenido  String   @db.Text
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  empresaId      Int
+  empresa        Empresa  @relation(fields: [empresaId], references: [id])
+  // Autor: solo uno de los dos campos tiene valor.
+  // - autorId set     → nota creada por un admin (User)
+  // - autorFinderId   → nota creada por un finder desde el portal
+  autorId        String?
+  autor          User?    @relation("NotaAutor", fields: [autorId], references: [id])
+  autorFinderId  String?
+  autorFinder    Finder?  @relation("NotaAutorFinder", fields: [autorFinderId], references: [id])
+  contenido      String   @db.Text
+  // Si la nota la crea un admin, controla si el finder asignado la puede leer.
+  // Default false = nota interna de admins. Las notas de finders siempre las ven
+  // los admins (este flag no aplica a ellas).
+  visibleAFinder Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@index([empresaId, createdAt])
   @@index([autorId])
+  @@index([autorFinderId])
 }
 
 model Tarea {
-  id           Int       @id @default(autoincrement())
-  empresaId    Int
-  empresa      Empresa   @relation(fields: [empresaId], references: [id])
-  tipo         String    @default("otra") // contacto_linkedin|mensaje_whatsapp|llamada|reunion_presencial|otra
-  titulo       String
-  descripcion  String?   @db.Text
-  fechaLimite  DateTime?
-  completada   Boolean   @default(false)
-  completadaAt DateTime?
-  asignadoId   String?
-  asignado     User?     @relation("TareaAsignado", fields: [asignadoId], references: [id])
-  autorId      String
-  autor        User      @relation("TareaAutor", fields: [autorId], references: [id])
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id                  Int       @id @default(autoincrement())
+  empresaId           Int
+  empresa             Empresa   @relation(fields: [empresaId], references: [id])
+  tipo                String    @default("otra") // contacto_linkedin|mensaje_whatsapp|llamada|reunion_presencial|otra
+  titulo              String
+  descripcion         String?   @db.Text
+  fechaLimite         DateTime?
+  completada          Boolean   @default(false)
+  completadaAt        DateTime?
+  // Asignado: solo uno de los dos. Si un admin asigna a otro admin → asignadoId.
+  // Si asigna al finder del deal → asignadoFinderId. Los finders solo pueden
+  // autoasignarse (asignadoFinderId = su id) o crear tareas sin asignar.
+  asignadoId          String?
+  asignado            User?     @relation("TareaAsignado", fields: [asignadoId], references: [id])
+  asignadoFinderId    String?
+  asignadoFinder      Finder?   @relation("TareaAsignadoFinder", fields: [asignadoFinderId], references: [id])
+  autorId             String?
+  autor               User?     @relation("TareaAutor", fields: [autorId], references: [id])
+  autorFinderId       String?
+  autorFinder         Finder?   @relation("TareaAutorFinder", fields: [autorFinderId], references: [id])
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 
   @@index([empresaId])
   @@index([fechaLimite, completada])
   @@index([asignadoId, completada])
+  @@index([asignadoFinderId, completada])
+  @@index([autorFinderId])
   @@index([tipo])
 }
 
@@ -273,6 +299,11 @@ model Finder {
   name              String
   active            Boolean           @default(true)
   commissionPct     Float?
+  // Hash bcrypt de la contraseña del portal. null = aún no se le ha dado acceso.
+  // Los admins (Alberto/Gabriel) son quienes generan/resetean la password vía
+  // POST /api/finders/:id/password y se la comunican al finder por canal seguro.
+  passwordHash      String?
+  passwordSetAt     DateTime?
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
 
@@ -280,6 +311,11 @@ model Finder {
   finderNotes       FinderNote[]
   proposals         TargetProposal[]
   accessLogs        FinderAccessLog[]
+  notasAutor        Nota[]            @relation("NotaAutorFinder")
+  tareasAutor       Tarea[]           @relation("TareaAutorFinder")
+  tareasAsignadas   Tarea[]           @relation("TareaAsignadoFinder")
+  actividadesAutor  Actividad[]       @relation("ActividadAutorFinder")
+  crmLogsAutor      CrmLog[]          @relation("CrmLogAutorFinder")
 }
 
 model FinderNote {

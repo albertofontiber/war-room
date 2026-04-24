@@ -72,6 +72,10 @@ export const LeadLinkSchema = z.object({
   targetEmpresaId: z.number().int().positive(),
 });
 
+export const FinderSetPasswordSchema = z.object({
+  password: z.string().min(10, "La contraseña debe tener al menos 10 caracteres"),
+});
+
 export const LeadCreateSchema = z.object({
   nombre: nonEmptyString,                            // alias visible ("Asher")
   sector: z.enum(SECTORES).nullable().optional(),

@@ -30,6 +30,7 @@
     "@prisma/client": "^5.22.0",
     "@tailwindcss/typography": "^0.5.19",
     "ai": "^6.0.146",
+    "bcryptjs": "^3.0.3",
     "cheerio": "^1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -54,6 +55,7 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/mapbox-gl": "^3.4.1",
     "@types/node": "^20",
     "@types/pdf-parse": "^1.1.5",

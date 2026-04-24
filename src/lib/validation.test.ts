@@ -7,6 +7,7 @@ import {
   FinderAssignSchema,
   PerimetroPatchSchema,
   LeadLinkSchema,
+  FinderSetPasswordSchema,
 } from "./validation";
 
 describe("TareaCreateSchema", () => {
@@ -119,6 +120,26 @@ describe("LeadLinkSchema", () => {
   it("rechaza targetEmpresaId no entero", () => {
     expect(LeadLinkSchema.safeParse({ targetEmpresaId: 1.5 }).success).toBe(false);
     expect(LeadLinkSchema.safeParse({ targetEmpresaId: "42" }).success).toBe(false);
+  });
+});
+
+describe("FinderSetPasswordSchema", () => {
+  it("acepta password de 10+ caracteres", () => {
+    expect(FinderSetPasswordSchema.safeParse({ password: "abcdefghij" }).success).toBe(true);
+    expect(FinderSetPasswordSchema.safeParse({ password: "unaContraseñaLargaYsegura" }).success).toBe(true);
+  });
+
+  it("rechaza password corta", () => {
+    expect(FinderSetPasswordSchema.safeParse({ password: "corta" }).success).toBe(false);
+    expect(FinderSetPasswordSchema.safeParse({ password: "123456789" }).success).toBe(false);
+  });
+
+  it("rechaza body sin password", () => {
+    expect(FinderSetPasswordSchema.safeParse({}).success).toBe(false);
+  });
+
+  it("rechaza password no string", () => {
+    expect(FinderSetPasswordSchema.safeParse({ password: 1234567890 }).success).toBe(false);
   });
 });
 
