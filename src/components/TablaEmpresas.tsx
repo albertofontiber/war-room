@@ -97,7 +97,7 @@ export default function TablaEmpresas() {
           lat >= mapBounds.south && lat <= mapBounds.north
         );
       })
-      .map((f) => f.properties as Record<string, unknown>);
+      .map((f) => f.properties);
 
     filtered.sort((a, b) => {
       const va = a[sortKey] ?? null;

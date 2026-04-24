@@ -1,0 +1,1934 @@
+[
+  {
+    "id": 4132,
+    "nombre": "9PORTAL TECNIC, S.L.",
+    "web": "https://9portaltecnic.com/",
+    "cif": "B13765821",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4997,
+    "nombre": "4 PROTECH 1994, S.L.",
+    "web": "https://4protech.com/",
+    "cif": "B66712944",
+    "matchType": "distinctive: PROTECH"
+  },
+  {
+    "id": 4093,
+    "nombre": "A2M CONCEPT SL",
+    "web": "https://a2mconcept.es/",
+    "cif": "B21777560",
+    "matchType": "distinctive: CONCEPT"
+  },
+  {
+    "id": 4370,
+    "nombre": "ABEX, S.C.",
+    "web": "https://abex.com/",
+    "cif": "J26111583",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3012,
+    "nombre": "ACACIO FUEGO SEGURIDAD, S.L.U.",
+    "web": "https://acaciofuegoseguridad.com/",
+    "cif": "B18952283",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4632,
+    "nombre": "ALEJANDRO RIVERA HIJOSA",
+    "web": "https://alejandro.com/",
+    "cif": "52668710K",
+    "matchType": "distinctive: ALEJANDRO"
+  },
+  {
+    "id": 4971,
+    "nombre": "ACTEMIUM SISTEMAS DE SEGURIDAD S.L.",
+    "web": "https://www.actemium.com/",
+    "cif": "B16950719",
+    "matchType": "distinctive: ACTEMIUM"
+  },
+  {
+    "id": 3043,
+    "nombre": "ADRIGO SOLUCIONES, S.L.",
+    "web": "https://adrigosoluciones.com/",
+    "cif": "B47801717",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2683,
+    "nombre": "AEROEXTINCION, S.L.",
+    "web": "https://aeroextincion.com/",
+    "cif": "B04246161",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4094,
+    "nombre": "ADVANCED SECURITY GENERAL SERVICES ENTERPRISE, S.L.",
+    "web": "https://www.advanced.com/",
+    "cif": "B66562604",
+    "matchType": "core_words: ADVANCED,SERVICES"
+  },
+  {
+    "id": 4899,
+    "nombre": "ALARPLUS SECURITY SYSTEMS, S.L.",
+    "web": "https://www.alarplus.es/",
+    "cif": "B12200168",
+    "matchType": "distinctive: ALARPLUS"
+  },
+  {
+    "id": 5014,
+    "nombre": "ALCAZAR SISTEMAS SOCIEDAD LIMITADA",
+    "web": "https://alcazarsistemas.es/",
+    "cif": "B56223191",
+    "matchType": "distinctive: ALCAZAR"
+  },
+  {
+    "id": 4766,
+    "nombre": "ALAVA INGENIEROS SEGURIDAD, S.L.",
+    "web": "https://www.grupoalava.com/ingenieros/",
+    "cif": "B84529288",
+    "matchType": "core_words: ALAVA,INGENIEROS"
+  },
+  {
+    "id": 3427,
+    "nombre": "AGRUPA MEDITERRANEA DE GESTION Y CONTROL DE PROYECTOS SL",
+    "web": "https://www.agrupa.es/",
+    "cif": "B73765638",
+    "matchType": "core_words: AGRUPA,CONTROL"
+  },
+  {
+    "id": 2922,
+    "nombre": "AMD EXTINTORES",
+    "web": "https://www.amdextintores.com/",
+    "cif": "B53277976",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3335,
+    "nombre": "ALL IN FIRE SL",
+    "web": "https://allinfire.com/",
+    "cif": "B10528636",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3164,
+    "nombre": "ARAISA SEGURIDAD, S.L.",
+    "web": "https://araisaseguridad.com/",
+    "cif": "B03873627",
+    "matchType": "full_name"
+  },
+  {
+    "id": 5126,
+    "nombre": "AP SISTEMES ELECTRONICS, SCP",
+    "web": "https://apsistemes.com/",
+    "cif": "J17590522",
+    "matchType": "distinctive: SISTEMES"
+  },
+  {
+    "id": 4526,
+    "nombre": "ANTONIO MARTINEZ CARRILLO",
+    "web": "https://www.antonio.com/",
+    "cif": "71274091N",
+    "matchType": "distinctive: ANTONIO"
+  },
+  {
+    "id": 4539,
+    "nombre": "ANTONIO JAVIER SAN FRUTOS MARTINEZ",
+    "web": "https://www.antonio.com/",
+    "cif": "03446266S",
+    "matchType": "distinctive: ANTONIO"
+  },
+  {
+    "id": 3232,
+    "nombre": "ANTONIO LLORCA, S.L.",
+    "web": "https://www.antonio.com/",
+    "cif": "B96218508",
+    "matchType": "distinctive: ANTONIO"
+  },
+  {
+    "id": 4672,
+    "nombre": "ALFONSO SÁNCHEZ TORRES CONTROL, S.L.",
+    "web": "https://alfonso.com/",
+    "cif": "B85582765",
+    "matchType": "distinctive: ALFONSO"
+  },
+  {
+    "id": 2850,
+    "nombre": "ATLANTIDA NAYDARA, S.L.",
+    "web": "https://atlantida.com/",
+    "cif": "B76800473",
+    "matchType": "distinctive: ATLANTIDA"
+  },
+  {
+    "id": 5084,
+    "nombre": "AUDINOVA, SL",
+    "web": "https://audinova.es/",
+    "cif": "B58623059",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4024,
+    "nombre": "ATLANTICO INSTALADORES Y SERVICIOS SL",
+    "web": "https://atlantico.fr/",
+    "cif": "B56396567",
+    "matchType": "distinctive: ATLANTICO"
+  },
+  {
+    "id": 3298,
+    "nombre": "ASTEGENER, SL",
+    "web": "https://astegener.es/",
+    "cif": "B42947093",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3605,
+    "nombre": "BARONIA SEGURETAT,SL",
+    "web": "https://baroniaseguretat.com/",
+    "cif": "B10904555",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4272,
+    "nombre": "Bali Sistemas S.L",
+    "web": "https://balisistemas.es/",
+    "cif": "B04928248",
+    "matchType": "full_name"
+  },
+  {
+    "id": 5058,
+    "nombre": "BE QUIET, SL",
+    "web": "https://www.bequiet.com/es",
+    "cif": "B85704138",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2531,
+    "nombre": "AVANZA MADRID, S.L.",
+    "web": "https://avanzamadrid.es/",
+    "cif": "B85356400",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2801,
+    "nombre": "BELDEUS SL",
+    "web": "https://beldeus.com/",
+    "cif": "B36495265",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4927,
+    "nombre": "BARTOLOME FERNANDEZ SANCHEZ",
+    "web": "https://domains.atom.com/lpd/name/bartolome.com",
+    "cif": "75244552Y",
+    "matchType": "distinctive: BARTOLOME"
+  },
+  {
+    "id": 2575,
+    "nombre": "BARSAN, S.A.",
+    "web": "https://www.barsan.com/",
+    "cif": "A26114116",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4128,
+    "nombre": "C.I. SERIMANT, S.L.",
+    "web": "https://www.ciserimant.com/",
+    "cif": "B13921655",
+    "matchType": "distinctive: SERIMANT"
+  },
+  {
+    "id": 3567,
+    "nombre": "BF ENERGIA MACARONESIA RENOVABLE SL",
+    "web": "https://bfenergia.com/",
+    "cif": "B72690399",
+    "matchType": "distinctive: ENERGIA"
+  },
+  {
+    "id": 4892,
+    "nombre": "CABSA SEGURIDAD, S.L.",
+    "web": "https://cabsaseguridad.com/",
+    "cif": "B88106380",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3693,
+    "nombre": "BLACK BEAR SECURITY SL",
+    "web": "https://blackbearsecurity.com/",
+    "cif": "B10765931",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4770,
+    "nombre": "BUSINESS SECURITY & SYSTEMS, S.L.",
+    "web": "https://www.business.com/",
+    "cif": "B90150152",
+    "matchType": "core_words: BUSINESS,SYSTEMS"
+  },
+  {
+    "id": 5125,
+    "nombre": "CARLOS HIDALGO GARCIA",
+    "web": "https://www.carloshidalgo.es/",
+    "cif": "52200910H",
+    "matchType": "core_words: CARLOS,HIDALGO"
+  },
+  {
+    "id": 4499,
+    "nombre": "CETTEC SEGURIDAD S.L.U.",
+    "web": "https://www.cettec.es/",
+    "cif": "29008522W",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2968,
+    "nombre": "CMC SOLUTIONS EUROPE S.L.",
+    "web": "https://www.cmcsolutions.com/",
+    "cif": "B87603445",
+    "matchType": "distinctive: SOLUTIONS"
+  },
+  {
+    "id": 3120,
+    "nombre": "COSTA DAURADA SOLUTIONS SLU",
+    "web": "https://costadauradasolutions.com/",
+    "cif": "B55716054",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3121,
+    "nombre": "CONTROL Y TECNICAS DE INCENDIOS, S.L.",
+    "web": "https://control.com/",
+    "cif": "B82095944",
+    "matchType": "distinctive: CONTROL"
+  },
+  {
+    "id": 4200,
+    "nombre": "Companys Igualada Seguretat i Prevenció, S.L.",
+    "web": "https://www.companys.com/en-eu",
+    "cif": "B72970759",
+    "matchType": "distinctive: COMPANYS"
+  },
+  {
+    "id": 2797,
+    "nombre": "DAS EXTINTORES SL",
+    "web": "https://dasextintores.com/",
+    "cif": "B43431220",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2940,
+    "nombre": "CONECTA SEGURIDAD",
+    "web": "https://www.conectaseguridad.com/",
+    "cif": "B12684858",
+    "matchType": "full_name"
+  },
+  {
+    "id": 5066,
+    "nombre": "DELGADO GINER SEGURETAT, SL",
+    "web": "https://domains.atom.com/lpd/name/delgado.es",
+    "cif": "B65794174",
+    "matchType": "distinctive: DELGADO"
+  },
+  {
+    "id": 3440,
+    "nombre": "DIAMOND PROTECCION GUARD S.L. SL",
+    "web": "https://diamond.com/",
+    "cif": "B09744012",
+    "matchType": "distinctive: DIAMOND"
+  },
+  {
+    "id": 3473,
+    "nombre": "DASA SEGURIDAD,SL",
+    "web": "https://www.dasaseguridad.es/",
+    "cif": "B09557026",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4350,
+    "nombre": "DESARROLLOS INNOVADORES AVANZADOS SL",
+    "web": "https://desarrollos.es/",
+    "cif": "B56527112",
+    "matchType": "distinctive: DESARROLLOS"
+  },
+  {
+    "id": 4707,
+    "nombre": "DOTECHNICS, S.L.U.",
+    "web": "https://dotechnics.com/",
+    "cif": "B57784654",
+    "matchType": "cif"
+  },
+  {
+    "id": 4639,
+    "nombre": "DOMOTECH SEGURIDAD, S.L.",
+    "web": "https://domotechseguridad.com/",
+    "cif": "B80975824",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3432,
+    "nombre": "DISTRIBUCIONES ELECTRICAS JACOB DE GUI",
+    "web": "https://distribuciones.es/",
+    "cif": "B91260943",
+    "matchType": "distinctive: DISTRIBUCIONES"
+  },
+  {
+    "id": 2612,
+    "nombre": "DH. INSTALACIONES TECNICAS, SL",
+    "web": "https://dhinstalaciones.es/",
+    "cif": "B74366485",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4567,
+    "nombre": "DIGITAL AUDIO SEGURIDAD, S.L.",
+    "web": "https://digitalaudioseguridad.es/",
+    "cif": "B40106874",
+    "matchType": "distinctive: DIGITAL"
+  },
+  {
+    "id": 4372,
+    "nombre": "DRAX SMOKE CONTROL S.L.",
+    "web": "https://www.dsc.com/",
+    "cif": "B88037361",
+    "matchType": "distinctive: CONTROL"
+  },
+  {
+    "id": 4462,
+    "nombre": "ECUAL SISTEMAS S.L.",
+    "web": "https://ecual.es/",
+    "cif": "B96421722",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2934,
+    "nombre": "ELECTRICIDAD RAFA Y FERNANDO, S.L.",
+    "web": "https://electricidad.com/",
+    "cif": "B45344207",
+    "matchType": "distinctive: ELECTRICIDAD"
+  },
+  {
+    "id": 4204,
+    "nombre": "ELECTRICIDAD BONMATI, C.B.",
+    "web": "https://electricidad.com/",
+    "cif": "E53084869",
+    "matchType": "distinctive: ELECTRICIDAD"
+  },
+  {
+    "id": 4348,
+    "nombre": "ELECTRIC INDUSTRIAL PROJECT, S.COOP.",
+    "web": "https://electric.com/",
+    "cif": "F70855648",
+    "matchType": "distinctive: ELECTRIC"
+  },
+  {
+    "id": 4762,
+    "nombre": "DOBLE AA INSTALACIONES DE SEGURIDAD (antes ALFONSO ANDRÉS",
+    "web": "https://www.doble.com/",
+    "cif": "B88571856",
+    "matchType": "core_words: DOBLE,ANTES"
+  },
+  {
+    "id": 3184,
+    "nombre": "ELECMOR CONTRAINCENDIOS SL",
+    "web": "https://elecmor.com/",
+    "cif": "B42827071",
+    "matchType": "distinctive: ELECMOR"
+  },
+  {
+    "id": 4203,
+    "nombre": "Electrotecnicos y Frigoristas de Valencia",
+    "web": "https://electrotecnicos.es/",
+    "cif": "B70943360",
+    "matchType": "distinctive: ELECTROTECNICOS"
+  },
+  {
+    "id": 2443,
+    "nombre": "EMPRESA PROVEEDORA DE SERVICIOS HISPANIA TECNICA SL",
+    "web": "https://empresa.es/",
+    "cif": "B85604221",
+    "matchType": "distinctive: EMPRESA"
+  },
+  {
+    "id": 3247,
+    "nombre": "ELECSON ELECTROTECNIA S.L.",
+    "web": "https://www.elecson.com/",
+    "cif": "B15949944",
+    "matchType": "distinctive: ELECSON"
+  },
+  {
+    "id": 3278,
+    "nombre": "EMERGENCIA SEGURIDAD CONTRA INCENDIOS, S.L.",
+    "web": "https://emergencia.es/",
+    "cif": "B13588595",
+    "matchType": "distinctive: EMERGENCIA"
+  },
+  {
+    "id": 4746,
+    "nombre": "ENFITEL SISTEMAS, S.L.",
+    "web": "https://enfitelsistemas.com/",
+    "cif": "B09540030",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4528,
+    "nombre": "ESCUDERO Y MARIA DEL PINO",
+    "web": "https://escudero.com/",
+    "cif": "B35751015",
+    "matchType": "distinctive: ESCUDERO"
+  },
+  {
+    "id": 2878,
+    "nombre": "ENILEC, S.L.",
+    "web": "https://www.enilec.com/",
+    "cif": "B53302857",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2151,
+    "nombre": "EMPYROS, S.L.",
+    "web": "https://empyros.com/",
+    "cif": "B73246423",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4373,
+    "nombre": "EULEN SEGURIDAD, S.A. (ANTES PROSE, S.A.)",
+    "web": "https://www.eulen.com/",
+    "cif": "A28109395",
+    "matchType": "core_words: EULEN,ANTES"
+  },
+  {
+    "id": 4886,
+    "nombre": "EUROPEA SERVICIOS INTEGRALES GLOBALES, S.L.",
+    "web": "https://europea.es/",
+    "cif": "B44270056",
+    "matchType": "distinctive: EUROPEA"
+  },
+  {
+    "id": 3959,
+    "nombre": "EXTIMBAR SEVILLA 2007 S.L.U.",
+    "web": "https://extimbar.com/",
+    "cif": "B22510523",
+    "matchType": "core_words: EXTIMBAR,SEVILLA"
+  },
+  {
+    "id": 3112,
+    "nombre": "EXTINDET JMJ, S.L.",
+    "web": "https://extindet.com/",
+    "cif": "B90426636",
+    "matchType": "distinctive: EXTINDET"
+  },
+  {
+    "id": 2669,
+    "nombre": "EXTINGIL INST I MANT SLL",
+    "web": "https://www.extingil.com/",
+    "cif": "B43695105",
+    "matchType": "distinctive: EXTINGIL"
+  },
+  {
+    "id": 4351,
+    "nombre": "EXTINHOUSE, C.B.",
+    "web": "https://extinhouse.es/",
+    "cif": "E05537584",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3168,
+    "nombre": "EXTINFENIX ANDALUCIA S.L.",
+    "web": "https://extinfenix.com/",
+    "cif": "B93510501",
+    "matchType": "distinctive: EXTINFENIX"
+  },
+  {
+    "id": 2876,
+    "nombre": "EXTINSTEL VILLA, S.L.U.",
+    "web": "https://extinstel.com/",
+    "cif": "B76631399",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3937,
+    "nombre": "EXTINTORES DURAN S.L.",
+    "web": "https://extintores.com/",
+    "cif": "B70896006",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3149,
+    "nombre": "EXTINTORES HUELVA S.L.",
+    "web": "https://www.extintoreshuelva.es/",
+    "cif": "B21567722",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3276,
+    "nombre": "EXTINTORES JUCAR, S.L.",
+    "web": "https://extintoresjucar.es/",
+    "cif": "B82976432",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3415,
+    "nombre": "EXTINTORES AVILEXT, S.L.",
+    "web": "https://www.extintoresavilext.es/",
+    "cif": "B05240577",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3115,
+    "nombre": "EXTINTORES BALDIOS S.L.U.",
+    "web": "https://extintoresbaldios.com/",
+    "cif": "B06754113",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3086,
+    "nombre": "EXTINTORES MINAYA, S.L.",
+    "web": "https://extintoresminaya.com/",
+    "cif": "B16298028",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2943,
+    "nombre": "EXTINTORES CANDELA, S.L.",
+    "web": "https://extintorescandela.com/",
+    "cif": "B53357448",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3138,
+    "nombre": "EXTINTORES AGRUPADOS DEL NORTE SL",
+    "web": "https://extintores.com/",
+    "cif": "B39456702",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3671,
+    "nombre": "EXTINTORES AMENEDO E IGLESIAS SL",
+    "web": "https://extintores.com/",
+    "cif": "B19821388",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3128,
+    "nombre": "EXTINTORES LA VALL",
+    "web": "https://extintores.com/",
+    "cif": "B46433017",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3186,
+    "nombre": "EXTINTORES DEL NORTE, S.L.",
+    "web": "https://extintores.com/",
+    "cif": "B09318858",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3159,
+    "nombre": "EXTINTORES LA JANDA S.L.",
+    "web": "https://extintores.com/",
+    "cif": "B72296114",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3386,
+    "nombre": "EXTINTORES CASTELLANO LEONESES S.L.",
+    "web": "https://extintores.com/",
+    "cif": "B09411836",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3085,
+    "nombre": "EXTINTORES J. ATIENZA, S.L.",
+    "web": "https://extintores.com/",
+    "cif": "B92361807",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 2931,
+    "nombre": "EXTINTORES MANTEX",
+    "web": "https://extintoresmantex.es/",
+    "cif": "B45273075",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2719,
+    "nombre": "EXTINTORES CARRERAS, S.L.",
+    "web": "https://extintores.com/",
+    "cif": "B96249958",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 4123,
+    "nombre": "EXTINTORES RECIX SL",
+    "web": "https://www.extintoresrecix.com/",
+    "cif": "B55423537",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3252,
+    "nombre": "EXTINTORES ANTONIO LEÓN, S.L.",
+    "web": "https://www.extintores.es/",
+    "cif": "B18409532",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3348,
+    "nombre": "EXTINTORES MARINEX SL",
+    "web": "https://www.extintores.es/",
+    "cif": "B36822328",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3915,
+    "nombre": "EXTINTORES MERCURY PCI S.L.",
+    "web": "https://www.extintores.es/",
+    "cif": "B56946403",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3894,
+    "nombre": "EXTINTORES INDALO S.L.",
+    "web": "https://www.extintores.es/",
+    "cif": "B16786535",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3344,
+    "nombre": "EXTINTORES Y PROTECCION CONTRA INCENDIOS LIDER SL",
+    "web": "https://extintores.com/",
+    "cif": "B42650358",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 1189,
+    "nombre": "EXTINTORES VALLE UNION S.L.",
+    "web": "https://extintores.com/",
+    "cif": "B30480909",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3146,
+    "nombre": "EXTINTORES PRINCIPADO SL",
+    "web": "https://extintores.com/",
+    "cif": "B33387358",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 4236,
+    "nombre": "Extintores Panorámica AJ",
+    "web": "https://extintores.com/",
+    "cif": "B75727412",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3328,
+    "nombre": "EXTINZAR PCI, S.L.",
+    "web": "https://www.extinzar.es/",
+    "cif": "B99468738",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3204,
+    "nombre": "EXTINTORES TARVI SL",
+    "web": "https://extintorestarvi.es/",
+    "cif": "B73825390",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2684,
+    "nombre": "EXTINTURB MARBELA SL",
+    "web": "https://extinturb.com/",
+    "cif": "B93237923",
+    "matchType": "distinctive: EXTINTURB"
+  },
+  {
+    "id": 3454,
+    "nombre": "EXTINTORES SDA ALICANTE SL",
+    "web": "https://extintores.com/",
+    "cif": "B42601997",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3343,
+    "nombre": "EXTINTORES SUECA",
+    "web": "https://extintores.com/",
+    "cif": "B96549605",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3299,
+    "nombre": "EXTINTORES SILMO, S.L.",
+    "web": "https://extintores.com/",
+    "cif": "B97322572",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 4059,
+    "nombre": "EXTINTORES SEGOVIA S.L.",
+    "web": "https://extintores.com/",
+    "cif": "B40279754",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3463,
+    "nombre": "EXTINTORES SOMIK, S.L.",
+    "web": "https://extintores.com/",
+    "cif": "B86941655",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 2671,
+    "nombre": "EXTINTORES NOVEM, S.L.U",
+    "web": "https://extintores.com/",
+    "cif": "B87579827",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3392,
+    "nombre": "EXTINTORES SERVICOEX-COSMAR SERVICOSMAR, S.L.",
+    "web": "https://www.extintores.es/",
+    "cif": "B50603695",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3403,
+    "nombre": "EXTINTORES VISAU, S.L.",
+    "web": "https://www.extintores.es/",
+    "cif": "B73191082",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 4336,
+    "nombre": "EXTINTORES RUIZ SEGURIDAD, C.B.",
+    "web": "https://extintores.com/",
+    "cif": "E86433554",
+    "matchType": "distinctive: EXTINTORES"
+  },
+  {
+    "id": 3601,
+    "nombre": "FANESPA TECHNOLOGY S.L.",
+    "web": "https://fanespa.com/",
+    "cif": "B09836073",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3994,
+    "nombre": "EXTNOR, CB",
+    "web": "https://www.extnor.es/",
+    "cif": "E74277054",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4697,
+    "nombre": "FACILITY SYSTEMS HIGH SECURITY, S.L.",
+    "web": "https://facility.com/",
+    "cif": "B86604139",
+    "matchType": "core_words: FACILITY,SYSTEMS"
+  },
+  {
+    "id": 3887,
+    "nombre": "FELCA SA",
+    "web": "https://www.felca.com/",
+    "cif": "A08409948",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2791,
+    "nombre": "FLUIDOS MECANIZADOS FLAMESA, S.L.",
+    "web": "https://fluidos.com/",
+    "cif": "B18435651",
+    "matchType": "distinctive: FLUIDOS"
+  },
+  {
+    "id": 3492,
+    "nombre": "FONTANERIA TORREBLANCA S.L.U.",
+    "web": "https://fontaneria.com/",
+    "cif": "B91936781",
+    "matchType": "distinctive: FONTANERIA"
+  },
+  {
+    "id": 4736,
+    "nombre": "FRINSEC SEGURIDAD, S.L",
+    "web": "https://frinsec.com/",
+    "cif": "B73844938",
+    "matchType": "distinctive: FRINSEC"
+  },
+  {
+    "id": 5134,
+    "nombre": "GABRIEL DORADO ALVAREZ",
+    "web": "https://gabriel.com/",
+    "cif": "39033686H",
+    "matchType": "distinctive: GABRIEL"
+  },
+  {
+    "id": 2898,
+    "nombre": "GALLEGA DE SEGURIDAD CONTRA INCENDIOS, S.L.",
+    "web": "https://gallega.com/",
+    "cif": "B15550098",
+    "matchType": "distinctive: GALLEGA"
+  },
+  {
+    "id": 4400,
+    "nombre": "FRANJUS SECURITY MARBELLA S.A.",
+    "web": "https://www.franjus.com/",
+    "cif": "A-29231222",
+    "matchType": "full_name"
+  },
+  {
+    "id": 5039,
+    "nombre": "FRANJUS SECURITY MARBELLA SA",
+    "web": "https://www.franjus.com/",
+    "cif": "A29231222",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4635,
+    "nombre": "GERMINAL JOSE GONZALEZ GUIRADO",
+    "web": "https://germinal.com/",
+    "cif": "27267281E",
+    "matchType": "distinctive: GERMINAL"
+  },
+  {
+    "id": 2917,
+    "nombre": "FV SEGURETAT SEGURFIRE\\, S.L.",
+    "web": "https://fvseguretat.com/",
+    "cif": "B55282545",
+    "matchType": "distinctive: SEGURFIRE"
+  },
+  {
+    "id": 2774,
+    "nombre": "FLAMA PROTECT SOCIEDAD LIMITADA",
+    "web": "https://flama.com/",
+    "cif": "B55357693",
+    "matchType": "core_words: FLAMA,PROTECT"
+  },
+  {
+    "id": 1894,
+    "nombre": "GESTION DE INSTALACION CONTRAINCENDIOS, S.L.",
+    "web": "https://gestion.com/",
+    "cif": "B54498050",
+    "matchType": "distinctive: GESTION"
+  },
+  {
+    "id": 4309,
+    "nombre": "GESTION INTEGRAL DE PROYECTOS MECCANICA SL",
+    "web": "https://gestion.com/",
+    "cif": "B56855059",
+    "matchType": "distinctive: GESTION"
+  },
+  {
+    "id": 2428,
+    "nombre": "GOEXTIN, S.L.",
+    "web": "https://goextin.es/",
+    "cif": "B92574854",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3396,
+    "nombre": "GRUPO SITEG, S.L.",
+    "web": "https://grupositeg.com/",
+    "cif": "B26388892",
+    "matchType": "full_name"
+  },
+  {
+    "id": 5097,
+    "nombre": "GLOBALTEC SEGURIDAD, SL",
+    "web": "https://www.globaltec.com/",
+    "cif": "B62822507",
+    "matchType": "distinctive: GLOBALTEC"
+  },
+  {
+    "id": 3651,
+    "nombre": "GFS",
+    "web": "https://gfs.com/en-us/",
+    "cif": "B56567159",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3422,
+    "nombre": "GRUPO EMPRESARIAL IRC SEGURIDAD, S.L.",
+    "web": "https://domains.atom.com/lpd/name/grupoempresarial.com",
+    "cif": "B76579556",
+    "matchType": "distinctive: EMPRESARIAL"
+  },
+  {
+    "id": 4449,
+    "nombre": "GRUPO ESTRELLA 10 S.A",
+    "web": "https://www.grupoestrella.es/",
+    "cif": "A45312436",
+    "matchType": "distinctive: ESTRELLA"
+  },
+  {
+    "id": 2640,
+    "nombre": "GONZALO 2015 S.L",
+    "web": "https://gonzalo.es/",
+    "cif": "B66590886",
+    "matchType": "distinctive: GONZALO"
+  },
+  {
+    "id": 4432,
+    "nombre": "GRUPO ESPECIAL, S.L. (ANTES S.A.)",
+    "web": "https://grupoespecial.es/",
+    "cif": "A58676214",
+    "matchType": "distinctive: ESPECIAL"
+  },
+  {
+    "id": 2865,
+    "nombre": "GRUPO 69 INCENDIOS SL",
+    "web": "https://www.grupo69incendios.com/",
+    "cif": "B66566530",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3275,
+    "nombre": "GRUPO SOMIK 2014, S.L.",
+    "web": "https://gruposomik.com/",
+    "cif": "B06959902",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3189,
+    "nombre": "HEREDEROS DE JUAN DIEGO PEREZ S.L.",
+    "web": "https://herederos.com/",
+    "cif": "B54429022",
+    "matchType": "distinctive: HEREDEROS"
+  },
+  {
+    "id": 5009,
+    "nombre": "HARKAY SEGURIDAD, S.L.",
+    "web": "https://harkayseguridad.com/",
+    "cif": "B10741197",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4877,
+    "nombre": "GUARDIAN SECURITY & TECHNOLOGIES SYSTEMS, S.L.",
+    "web": "https://www.guardiansecurity.com/",
+    "cif": "B88147764",
+    "matchType": "core_words: GUARDIAN,SYSTEMS"
+  },
+  {
+    "id": 3294,
+    "nombre": "ICS MANTENIMIENTOS, S.L.",
+    "web": "https://icsmantenimientos.com/",
+    "cif": "B85963122",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2617,
+    "nombre": "ICEBA, S.L.",
+    "web": "https://iceba.es/",
+    "cif": "B48535082",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3430,
+    "nombre": "IBERICA DE SEGURIDAD MARITIMA SL",
+    "web": "https://iberica.com/",
+    "cif": "B09863887",
+    "matchType": "distinctive: IBERICA"
+  },
+  {
+    "id": 2588,
+    "nombre": "IBERICA DE MATERIALES Y SERVICIOS, S.L.",
+    "web": "https://iberica.com/",
+    "cif": "B28732253",
+    "matchType": "distinctive: IBERICA"
+  },
+  {
+    "id": 3468,
+    "nombre": "I.D.M. GROUP GLOBAL SERVICES S.L.",
+    "web": "https://id.com/",
+    "cif": "B72475528",
+    "matchType": "distinctive: SERVICES"
+  },
+  {
+    "id": 4298,
+    "nombre": "ICF INGENIEROS REUNIDOS PCI, S.L.",
+    "web": "https://icfingenieros.com/",
+    "cif": "B22576243",
+    "matchType": "distinctive: INGENIEROS"
+  },
+  {
+    "id": 1315,
+    "nombre": "INDUSTRIAS NARANJO INSTALACIONES CONTRA INCENDIOS SL",
+    "web": "https://industrias.com/",
+    "cif": "B87956710",
+    "matchType": "distinctive: INDUSTRIAS"
+  },
+  {
+    "id": 4653,
+    "nombre": "INNOVA SISTEMAS DE LEVANTE S.L.L",
+    "web": "https://innovasistemaslevante.es/",
+    "cif": "B97799787",
+    "matchType": "core_words: INNOVA,LEVANTE"
+  },
+  {
+    "id": 3886,
+    "nombre": "IN2 ELECTRICIDAD, SC",
+    "web": "https://in2electricidad.com/",
+    "cif": "J57820367",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3261,
+    "nombre": "IBERKLIMA MANTENIMIENTOS INTEGRALES, S.L.L.",
+    "web": "https://iberklima.com/",
+    "cif": "B19227198",
+    "matchType": "core_words: IBERKLIMA,MANTENIMIENTOS"
+  },
+  {
+    "id": 3057,
+    "nombre": "IGNISVERICA SEGURIDAD Y PREVENCIÓN, S.L.",
+    "web": "https://ignisverica.com/",
+    "cif": "B98541931",
+    "matchType": "core_words: IGNISVERICA,PREVENCIÓN"
+  },
+  {
+    "id": 4080,
+    "nombre": "INSTAL PROENERG, S.C.",
+    "web": "https://www.instalproenerg.es/",
+    "cif": "J86297462",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4922,
+    "nombre": "INSERPRO SEGURIDAD, S.L.",
+    "web": "https://inserpro.es/",
+    "cif": "B93661452",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4213,
+    "nombre": "INOTEC INGENIERIA CONTRA INCENDIOS",
+    "web": "https://inoteccontraincendios.com/",
+    "cif": "B02762680",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2563,
+    "nombre": "INSTALACIONES GARBU SL",
+    "web": "https://instalacionesgarbu.com/",
+    "cif": "B62148952",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4683,
+    "nombre": "INSTALACIONES TECNOSEGUR, S.L.",
+    "web": "https://www.instalacionestecnosegur.com/",
+    "cif": "B98454754",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4744,
+    "nombre": "INSTALACIONES RODRIGUEZ CONTRERAS, S.L.",
+    "web": "https://instalacionesrodriguez.com/",
+    "cif": "B92611813",
+    "matchType": "distinctive: RODRIGUEZ"
+  },
+  {
+    "id": 2841,
+    "nombre": "INTEGRAL SERVICES JOVIC S.L.",
+    "web": "https://integralservicesjovic.com/",
+    "cif": "B42578633",
+    "matchType": "distinctive: SERVICES"
+  },
+  {
+    "id": 3137,
+    "nombre": "INSTALMAN H.O.M., S.L.",
+    "web": "https://instalman.com/",
+    "cif": "B05255781",
+    "matchType": "distinctive: INSTALMAN"
+  },
+  {
+    "id": 4315,
+    "nombre": "INSTALPROMEG, S.L.",
+    "web": "https://instalpromeg.com/",
+    "cif": "B56954316",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4702,
+    "nombre": "INTERNET TELEFONÍA Y COMUNICACIONES, S.L.",
+    "web": "https://internet.com/",
+    "cif": "B83134130",
+    "matchType": "distinctive: INTERNET"
+  },
+  {
+    "id": 2985,
+    "nombre": "INSTASOL FV BAEZA ENERGIAS RENOVABLES, S.L.",
+    "web": "https://instasol.es/",
+    "cif": "B23806375",
+    "matchType": "distinctive: INSTASOL"
+  },
+  {
+    "id": 4410,
+    "nombre": "IRMA SEGURIDAD Y CONTROL S.A. ANTES (SEGURIDAD CAVADA S.A).",
+    "web": "https://irmaseguridad.es/",
+    "cif": "A78780640",
+    "matchType": "distinctive: CONTROL"
+  },
+  {
+    "id": 5026,
+    "nombre": "INTAN SYSTEM, S.A.",
+    "web": "https://www.intan.de/",
+    "cif": "A10991727",
+    "matchType": "core_words: INTAN,SYSTEM"
+  },
+  {
+    "id": 4311,
+    "nombre": "IRONLOCK SISTEMAS SL",
+    "web": "https://ironlocksistemas.com/",
+    "cif": "B56917297",
+    "matchType": "cif"
+  },
+  {
+    "id": 4965,
+    "nombre": "J SEGURIDAD SERNA, S.L.",
+    "web": "https://jseguridad.com/",
+    "cif": "B42999763",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2731,
+    "nombre": "JUPE SISTEMAS SL",
+    "web": "https://jupesistemas.com/",
+    "cif": "B62768825",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4710,
+    "nombre": "LAE SYSTEMS S.L",
+    "web": "https://laesystems.com/",
+    "cif": "B65986622",
+    "matchType": "distinctive: SYSTEMS"
+  },
+  {
+    "id": 5061,
+    "nombre": "LAXARXA BIN, SL",
+    "web": "https://www.laxarxa.cat/",
+    "cif": "B02966539",
+    "matchType": "distinctive: LAXARXA"
+  },
+  {
+    "id": 2945,
+    "nombre": "LEVANTINA DE INST Y MANT INTEGRAL DE EDIFICIOS, SL",
+    "web": "https://www.levantina.com/",
+    "cif": "B54642632",
+    "matchType": "core_words: LEVANTINA,EDIFICIOS"
+  },
+  {
+    "id": 4308,
+    "nombre": "KEYSTONE SYSTEMS SL",
+    "web": "https://www.keystone.com/",
+    "cif": "B19918499",
+    "matchType": "core_words: KEYSTONE,SYSTEMS"
+  },
+  {
+    "id": 4346,
+    "nombre": "KV SUPRA CONTROL SL",
+    "web": "https://ksc.es/en-gb",
+    "cif": "B70684212",
+    "matchType": "distinctive: CONTROL"
+  },
+  {
+    "id": 3182,
+    "nombre": "LAMANFOC 2018 SOCIEDAD LIMITADA",
+    "web": "https://lamanfoc.com/",
+    "cif": "B55329700",
+    "matchType": "distinctive: LAMANFOC"
+  },
+  {
+    "id": 3281,
+    "nombre": "MANTENIMIENTOS ARMADILLO",
+    "web": "https://mantenimientos.com/",
+    "cif": "B90042151",
+    "matchType": "distinctive: MANTENIMIENTOS"
+  },
+  {
+    "id": 2664,
+    "nombre": "MANTENIMIENTOS CRESPO SL",
+    "web": "https://mantenimientos.com/",
+    "cif": "B93453207",
+    "matchType": "distinctive: MANTENIMIENTOS"
+  },
+  {
+    "id": 3162,
+    "nombre": "MALLORCA INSTALACIONES Y PROYECTOS SL",
+    "web": "https://www.mallorca.com/de",
+    "cif": "B57787400",
+    "matchType": "distinctive: MALLORCA"
+  },
+  {
+    "id": 4133,
+    "nombre": "MANTENIMIENTO INDUSTRIAL 23, S.L.",
+    "web": "https://mantenimientoindustrial.es/",
+    "cif": "B56969058",
+    "matchType": "distinctive: INDUSTRIAL"
+  },
+  {
+    "id": 4509,
+    "nombre": "MAINAKE SEGURA (ANTES JUAN FERNANDEZ ALCAIDE)",
+    "web": "https://mainakesegura.com/",
+    "cif": "24811260X",
+    "matchType": "core_words: MAINAKE,SEGURA"
+  },
+  {
+    "id": 2966,
+    "nombre": "LUBLAN, S.L.",
+    "web": "http://www.lublan.com/",
+    "cif": "B79815320",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3389,
+    "nombre": "MAFECONSA INSTALACIONES TECNICAS S.L.",
+    "web": "https://mafeconsa.com/",
+    "cif": "B90114299",
+    "matchType": "distinctive: MAFECONSA"
+  },
+  {
+    "id": 3167,
+    "nombre": "MEICART, S.L.",
+    "web": "https://meicart.com/",
+    "cif": "B29439734",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2729,
+    "nombre": "MONTAJES AUTOMATICOS EXTINCION Y REFRIGERACION SL",
+    "web": "https://montajes.com/",
+    "cif": "B84559558",
+    "matchType": "distinctive: MONTAJES"
+  },
+  {
+    "id": 4816,
+    "nombre": "MITRIUM-SEGURIDAD Y COMUNICACIONES, S.L.U.",
+    "web": "https://www.mitrium.com/",
+    "cif": "B70502240",
+    "matchType": "core_words: MITRIUM,COMUNICACIONES"
+  },
+  {
+    "id": 3285,
+    "nombre": "NEOEXTINTOR, S.L.",
+    "web": "https://neoextintor.com/",
+    "cif": "B42569533",
+    "matchType": "full_name"
+  },
+  {
+    "id": 5013,
+    "nombre": "MULTISERVICIOS LÓPEZ 24 HORAS, S.L.",
+    "web": "https://multiservicios.com/",
+    "cif": "B04897690",
+    "matchType": "distinctive: MULTISERVICIOS"
+  },
+  {
+    "id": 2706,
+    "nombre": "NEUMAR",
+    "web": "https://neumar.com/",
+    "cif": "B98594393",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4002,
+    "nombre": "NAUTIFIRE, S.L.",
+    "web": "https://nautifire.com/",
+    "cif": "B56539257",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4030,
+    "nombre": "MSCANARIAS INSTALACIONES, SOCIEDAD LIMITADA",
+    "web": "https://mscanarias.es/",
+    "cif": "B10512226",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4273,
+    "nombre": "NEPELCO INSTALACIONES, S.L.",
+    "web": "https://nepelco.com/",
+    "cif": "B21821277",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3333,
+    "nombre": "NO MAS FUEGO S.L.",
+    "web": "https://nomasfuego.es/",
+    "cif": "B01737113",
+    "matchType": "cif"
+  },
+  {
+    "id": 4238,
+    "nombre": "NOREX FIRE SL",
+    "web": "https://www.norexfire.es/es/",
+    "cif": "B55424576",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3271,
+    "nombre": "PREVENCION EMPRESARIAL SOCIEDAD LIMITADA",
+    "web": "https://www.prevencion.com/",
+    "cif": "B43655695",
+    "matchType": "distinctive: PREVENCION"
+  },
+  {
+    "id": 4504,
+    "nombre": "PINISEGUR, S.L.L.",
+    "web": "https://pinisegur.com/",
+    "cif": "B82730672",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4361,
+    "nombre": "POWER GENERATION PROJECTS 2020 SL",
+    "web": "https://www.power.com/?segment=none",
+    "cif": "B05555222",
+    "matchType": "core_words: POWER,GENERATION,PROJECTS"
+  },
+  {
+    "id": 4532,
+    "nombre": "PLAZA SISTEMAS DE SEGURIDAD Y CONTROL, S.L.",
+    "web": "https://pssc.com/",
+    "cif": "B91324350",
+    "matchType": "distinctive: CONTROL"
+  },
+  {
+    "id": 4114,
+    "nombre": "Pandora Calderería S.L.",
+    "web": "https://www.pandora.com/restricted",
+    "cif": "B75367433",
+    "matchType": "distinctive: PANDORA"
+  },
+  {
+    "id": 4489,
+    "nombre": "PENTAGONO INGENIERIA S.L.",
+    "web": "https://www.pentagonoingenieria.es/",
+    "cif": "B81912625",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4988,
+    "nombre": "PRODETECT SEGURIDAD, S.L.",
+    "web": "https://prodetect.com/",
+    "cif": "B44630085",
+    "matchType": "distinctive: PRODETECT"
+  },
+  {
+    "id": 2859,
+    "nombre": "PROSEIM, S.L.",
+    "web": "https://www.proseim.com/",
+    "cif": "B02022093",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4071,
+    "nombre": "PRODISAGUA C.B",
+    "web": "https://prodisagua.com/",
+    "cif": "E45824505",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3962,
+    "nombre": "PROMATEC SERVICIOS INTEGRALES, S.L.U.",
+    "web": "https://www.performancecontracting.com/branch/pci-promatec/",
+    "cif": "B90280454",
+    "matchType": "distinctive: PROMATEC"
+  },
+  {
+    "id": 4891,
+    "nombre": "PROTECT ALARM SOLUTIONS SL",
+    "web": "https://protect.com/",
+    "cif": "B54910740",
+    "matchType": "core_words: PROTECT,SOLUTIONS"
+  },
+  {
+    "id": 5093,
+    "nombre": "PUIGCERDA SEGURETAT, SL",
+    "web": "https://www.puigcerda.cat/ca/",
+    "cif": "B04970091",
+    "matchType": "distinctive: PUIGCERDA"
+  },
+  {
+    "id": 3241,
+    "nombre": "PROYECTOS GENERALES DE PROTECCION Y SERVICIOS SL",
+    "web": "https://www.progesapanama.com/",
+    "cif": "B66367525",
+    "matchType": "distinctive: GENERALES"
+  },
+  {
+    "id": 4129,
+    "nombre": "PROYECTOS GENERALES Y SERVICIOS GRUPO FAMILIAR SL",
+    "web": "https://www.progesapanama.com/",
+    "cif": "B56265903",
+    "matchType": "distinctive: GENERALES"
+  },
+  {
+    "id": 2637,
+    "nombre": "PROTEJA SISTEMA DE SEGURIDAD, S.L",
+    "web": "https://www.proteja.es/",
+    "cif": "B66137282",
+    "matchType": "core_words: PROTEJA,SISTEMA"
+  },
+  {
+    "id": 2570,
+    "nombre": "RIMEGRA EXTINCION S.L.",
+    "web": "https://rimegraextincion.com/",
+    "cif": "B54558291",
+    "matchType": "core_words: RIMEGRA,EXTINCION"
+  },
+  {
+    "id": 4353,
+    "nombre": "RECARFIRE SOCIEDAD COOPERATIVA",
+    "web": "https://recarfire.es/",
+    "cif": "F73960817",
+    "matchType": "distinctive: RECARFIRE"
+  },
+  {
+    "id": 2912,
+    "nombre": "PROYECTOS DE INGENIERIA Y CALIDAD",
+    "web": "https://proyectosingenieria.es/",
+    "cif": "B91011882",
+    "matchType": "distinctive: CALIDAD"
+  },
+  {
+    "id": 4647,
+    "nombre": "SATO SEGURIDAD,S.L.",
+    "web": "https://satoseguridad.com/",
+    "cif": "B73612475",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4127,
+    "nombre": "REFORMAS INTEGRALES PAREZ, S.L.",
+    "web": "https://www.reformasintegrales.com/",
+    "cif": "B70882071",
+    "matchType": "distinctive: REFORMAS"
+  },
+  {
+    "id": 4056,
+    "nombre": "SECUNOR SEGURIDAD, S.L.",
+    "web": "https://www.secunor.es/",
+    "cif": "B56682487",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2967,
+    "nombre": "SANTANA ITURGINTZA ETA INSTALAZIOAK, S.L.",
+    "web": "https://santana.com/",
+    "cif": "B20474656",
+    "matchType": "distinctive: SANTANA"
+  },
+  {
+    "id": 4687,
+    "nombre": "SEGORA SEGURIDAD Y CONTROL, S.L.",
+    "web": "https://segora.es/",
+    "cif": "B93449825",
+    "matchType": "core_words: SEGORA,CONTROL"
+  },
+  {
+    "id": 3964,
+    "nombre": "SEGURBIS PCI, S.L.",
+    "web": "https://segurbis.es/",
+    "cif": "B09944059",
+    "matchType": "distinctive: SEGURBIS"
+  },
+  {
+    "id": 4967,
+    "nombre": "SEGURALIA VIGILANCIA Y PROTECCION SL",
+    "web": "https://www.seguralia.com/",
+    "cif": "B06825384",
+    "matchType": "distinctive: SEGURALIA"
+  },
+  {
+    "id": 3400,
+    "nombre": "SEGUREXT PLUS, S.L.",
+    "web": "https://www.segurextplus.es/",
+    "cif": "B70355722",
+    "matchType": "distinctive: SEGUREXT"
+  },
+  {
+    "id": 3277,
+    "nombre": "SEGURIDAD LEVANTE SL",
+    "web": "https://seguridadlevante.com/",
+    "cif": "B03876612",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3279,
+    "nombre": "SEDEXMA EXTINTORES  S.L",
+    "web": "https://sedexma.es/",
+    "cif": "B93051415",
+    "matchType": "full_name"
+  },
+  {
+    "id": 5128,
+    "nombre": "SEGURETAT EMPORDA, SL",
+    "web": "https://emporda.com/",
+    "cif": "B17630161",
+    "matchType": "distinctive: EMPORDA"
+  },
+  {
+    "id": 4661,
+    "nombre": "SEGURICOR SISTEMAS DE SEGURIDAD",
+    "web": "https://seguricor.com/",
+    "cif": "B14907257",
+    "matchType": "distinctive: SEGURICOR"
+  },
+  {
+    "id": 3074,
+    "nombre": "SEGURIDAD PADRO SL",
+    "web": "https://seguridadpadro.com/",
+    "cif": "B33832056",
+    "matchType": "cif"
+  },
+  {
+    "id": 4542,
+    "nombre": "SEPEVI, S.L.",
+    "web": "https://sepevi.com/",
+    "cif": "B02362358",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4887,
+    "nombre": "SEGURSAT SEGURIDAD, S.L.",
+    "web": "https://segursatseguridad.com/",
+    "cif": "B55199756",
+    "matchType": "distinctive: SEGURSAT"
+  },
+  {
+    "id": 4388,
+    "nombre": "SEGURISUR S.L. (ANTES S.A.)",
+    "web": "https://segurisur.com/",
+    "cif": "A41128026",
+    "matchType": "core_words: SEGURISUR,ANTES"
+  },
+  {
+    "id": 4527,
+    "nombre": "SERASTEL, S.L.",
+    "web": "https://www.serastel.com/",
+    "cif": "B24355778",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4688,
+    "nombre": "SICURMASTER SEGURIDAD, S.L.U.",
+    "web": "https://sicurmaster.com/",
+    "cif": "B76136506",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3228,
+    "nombre": "SEGURIDAD Y EXTINTORES GARAJONAY, S.L.",
+    "web": "https://garajonay.com/",
+    "cif": "B38855615",
+    "matchType": "distinctive: GARAJONAY"
+  },
+  {
+    "id": 2583,
+    "nombre": "SERVICIOS MARITIMOS DE SEGURIDAD, SL",
+    "web": "https://serviciosmaritimos.es/",
+    "cif": "B33995135",
+    "matchType": "distinctive: MARITIMOS"
+  },
+  {
+    "id": 4589,
+    "nombre": "SERVISEGUR JLGG S.L.U.",
+    "web": "https://www.servisegur.com/",
+    "cif": "B87440475",
+    "matchType": "distinctive: SERVISEGUR"
+  },
+  {
+    "id": 2539,
+    "nombre": "SERVICIO Y MANTENIMIENTO DE EXTINTORES",
+    "web": "https://serviciomantenimiento.com/",
+    "cif": "B93041903",
+    "matchType": "distinctive: SERVICIO"
+  },
+  {
+    "id": 2901,
+    "nombre": "SINERGIA FACILITY,S.L.",
+    "web": "https://sinergia.com/",
+    "cif": "B88055108",
+    "matchType": "distinctive: SINERGIA"
+  },
+  {
+    "id": 3288,
+    "nombre": "SINERGIA PARA EL MANTENIMIENTO DE COMUNIDADES, S.L.",
+    "web": "https://sinergia.com/",
+    "cif": "B85991982",
+    "matchType": "distinctive: SINERGIA"
+  },
+  {
+    "id": 3998,
+    "nombre": "SINERGIA DE SEGURIDAD BALEAR SCP",
+    "web": "https://sinergia.com/",
+    "cif": "J44541878",
+    "matchType": "distinctive: SINERGIA"
+  },
+  {
+    "id": 3233,
+    "nombre": "SISTEMAS 4K7",
+    "web": "https://www.sistemas4k7.com/",
+    "cif": "B54830914",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3105,
+    "nombre": "Spartan Seguridad Y Sistemas S.L.",
+    "web": "https://spartan.com/",
+    "cif": "B70608542",
+    "matchType": "distinctive: SPARTAN"
+  },
+  {
+    "id": 3064,
+    "nombre": "SUMINISTROS Y EQUIPAMIENTOS DEL SUR SL",
+    "web": "https://suministros.com/",
+    "cif": "B91176578",
+    "matchType": "distinctive: SUMINISTROS"
+  },
+  {
+    "id": 2788,
+    "nombre": "STEELMAX CALDERERIA SL",
+    "web": "https://steelmax.com/",
+    "cif": "B10739795",
+    "matchType": "distinctive: STEELMAX"
+  },
+  {
+    "id": 4726,
+    "nombre": "SPSEGURIDAD S.L.",
+    "web": "https://spseguridad.es/",
+    "cif": "B44536187",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2015,
+    "nombre": "SUNWATERSPA SL",
+    "web": "https://www.sunwaterspa.com/",
+    "cif": "B57661480",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4379,
+    "nombre": "TECNICOS Y GRUPOS ESPECIALES DE SEGURIDAD S.A.",
+    "web": "https://tecnicos.com/",
+    "cif": "A28780674",
+    "matchType": "distinctive: TECNICOS"
+  },
+  {
+    "id": 4090,
+    "nombre": "SUNFREE ENERGY 2000 S.L.U.",
+    "web": "https://www.sunfree.es/",
+    "cif": "B21965777",
+    "matchType": "core_words: SUNFREE,ENERGY"
+  },
+  {
+    "id": 4112,
+    "nombre": "TECHNICAL BUILD FACILITIES S.L",
+    "web": "https://technical.com/",
+    "cif": "B75613927",
+    "matchType": "distinctive: TECHNICAL"
+  },
+  {
+    "id": 4658,
+    "nombre": "SYSTEMDE 3764, S.L.U.",
+    "web": "https://systemde.com/",
+    "cif": "B54847454",
+    "matchType": "distinctive: SYSTEMDE"
+  },
+  {
+    "id": 2932,
+    "nombre": "TECHNICAL INNOVATION PIPING S.L.",
+    "web": "https://technical.com/",
+    "cif": "B09792805",
+    "matchType": "distinctive: TECHNICAL"
+  },
+  {
+    "id": 3436,
+    "nombre": "TERMIFON ILICITANA, S.L.",
+    "web": "https://termifon.com/",
+    "cif": "B42542944",
+    "matchType": "distinctive: TERMIFON"
+  },
+  {
+    "id": 3978,
+    "nombre": "TECNOLOGIAS DE INCENDIO Y PROTECCIÓN SL",
+    "web": "https://tecnologias.com/",
+    "cif": "B90475021",
+    "matchType": "distinctive: TECNOLOGIAS"
+  },
+  {
+    "id": 4456,
+    "nombre": "TECNOLOGIAS APLICADAS DE SEGURIDAD S.L.",
+    "web": "https://tecnologias.com/",
+    "cif": "B80955461",
+    "matchType": "distinctive: TECNOLOGIAS"
+  },
+  {
+    "id": 4575,
+    "nombre": "TECNOSEL SEGURIDAD",
+    "web": "https://tecnosel.com/",
+    "cif": "B84592583",
+    "matchType": "distinctive: TECNOSEL"
+  },
+  {
+    "id": 4894,
+    "nombre": "TELINFOR SEGURIDAD JG, S.L.",
+    "web": "https://telinfor.com/",
+    "cif": "B87587267",
+    "matchType": "distinctive: TELINFOR"
+  },
+  {
+    "id": 4543,
+    "nombre": "TELYCAN SEGURIDAD, S.L.",
+    "web": "https://telycan.com/",
+    "cif": "B35822956",
+    "matchType": "distinctive: TELYCAN"
+  },
+  {
+    "id": 4161,
+    "nombre": "TECSYSTEM & CONTROL SCP",
+    "web": "https://www.tecsystemcontrol.es/",
+    "cif": "J66556770",
+    "matchType": "core_words: TECSYSTEM,CONTROL"
+  },
+  {
+    "id": 3490,
+    "nombre": "TONI RIERA S.L.U.",
+    "web": "https://toniriera.com/",
+    "cif": "B57265563",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4305,
+    "nombre": "TERSOLAR ELECTRO SL",
+    "web": "https://tersolar.com/",
+    "cif": "B44926392",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4117,
+    "nombre": "TECSYSTEM and CONTROL S.L.",
+    "web": "https://www.se.com/ww/en/about-us/company-profile/history/schneider-electric-history/",
+    "cif": "B66556770",
+    "matchType": "distinctive: CONTROL"
+  },
+  {
+    "id": 2228,
+    "nombre": "TRATEIN PCI INSTALACIONES, SL",
+    "web": "https://trateinpci.es/",
+    "cif": "B16754459",
+    "matchType": "distinctive: TRATEIN"
+  },
+  {
+    "id": 4021,
+    "nombre": "TESEQUIM EXTINTORES Y CONTRAINCENDIOS",
+    "web": "https://tesequim.es/",
+    "cif": "B44761716",
+    "matchType": "core_words: TESEQUIM,EXTINTORES"
+  },
+  {
+    "id": 4862,
+    "nombre": "TESISGA SEGURIDAD, S.L.",
+    "web": "https://www.tesisga.com/",
+    "cif": "B27850262",
+    "matchType": "distinctive: TESISGA"
+  },
+  {
+    "id": 4239,
+    "nombre": "VALLSAN",
+    "web": "https://vallsan.com/",
+    "cif": "B70845714",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4445,
+    "nombre": "UNIVERSAL SEGURIDAD S.L.",
+    "web": "https://universalseguridad.com/",
+    "cif": "B80732084",
+    "matchType": "distinctive: UNIVERSAL"
+  },
+  {
+    "id": 2897,
+    "nombre": "VICTORIA SEGURIDAD, S.L.U.",
+    "web": "https://victoriaseguridad.es/",
+    "cif": "B76505353",
+    "matchType": "full_name"
+  },
+  {
+    "id": 3142,
+    "nombre": "VERFIRE, S.L.",
+    "web": "https://verfire.es/",
+    "cif": "B80243504",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4944,
+    "nombre": "VIBA SEGURIDAD INTELIGENTE, S.L.U",
+    "web": "https://vibaseguridad.es/",
+    "cif": "B86911518",
+    "matchType": "distinctive: INTELIGENTE"
+  },
+  {
+    "id": 4233,
+    "nombre": "XTINCION",
+    "web": "https://xtincion.com/",
+    "cif": "B98502537",
+    "matchType": "full_name"
+  },
+  {
+    "id": 2959,
+    "nombre": "VULCANFIRE, S.L.",
+    "web": "https://vulcanfire.com/",
+    "cif": "B87493110",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4428,
+    "nombre": "VIGILANCIA Y PROTECCION MARIA CARMEN SOLANO IZQUIERDO S.L.",
+    "web": "https://vigilancia.com/",
+    "cif": "B30268254",
+    "matchType": "distinctive: VIGILANCIA"
+  },
+  {
+    "id": 4347,
+    "nombre": "VIMATEC SEGURIDAD, C.B.",
+    "web": "https://vimatecseguridad.com/",
+    "cif": "E73742538",
+    "matchType": "full_name"
+  },
+  {
+    "id": 4424,
+    "nombre": "WALFRIDO STROHECKER S.L. (ANTES WALFRIDO STROHECKER PALLAROLAS)",
+    "web": "https://walfrido.com/",
+    "cif": "B17322819",
+    "matchType": "core_words: WALFRIDO,WALFRIDO"
+  },
+  {
+    "id": 3214,
+    "nombre": "ZAOBRA OBRAS Y SERVICIOS, S.L.",
+    "web": "https://www.zaobra.com/",
+    "cif": "B01652254",
+    "matchType": "core_words: ZAOBRA,OBRAS"
+  },
+  {
+    "id": 3004,
+    "nombre": "WORKING SECURITY ASB JANO,SL",
+    "web": "https://www.working.com/",
+    "cif": "B62359070",
+    "matchType": "distinctive: WORKING"
+  },
+  {
+    "id": 4940,
+    "nombre": "ZARTECH SISTEMS, S.L.",
+    "web": "https://zartech.com/",
+    "cif": "B67611574",
+    "matchType": "distinctive: ZARTECH"
+  },
+  {
+    "id": 3069,
+    "nombre": "WESTFIRE SEGURIDAD, S.L.",
+    "web": "http://westfire.es/",
+    "cif": "B10448835",
+    "matchType": "full_name"
+  }
+]

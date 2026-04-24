@@ -4,14 +4,51 @@ import {
   type FiltrosActivos,
   type Vista,
   type SizeMetric,
+  type Sector,
+  type DealStage,
+  type Tendencia,
   FILTROS_DEFAULT,
 } from "@/types";
 import { isInFilter } from "@/lib/filtros";
 
+/**
+ * Shape real de `properties` en los features GeoJSON que devuelve
+ * `/api/empresas`. Si cambias ese endpoint, sincroniza este tipo.
+ */
+export interface EmpresaFeatureProperties {
+  id: number;
+  cif: string;
+  nombre: string;
+  localidad: string | null;
+  provincia: string | null;
+  ccaa: string | null;
+  sector: Sector | null;
+  dealStage: DealStage | null;
+  ingresos: number | null;
+  margenBruto: number | null;
+  margenBrutoPct: number | null;
+  ebitda: number | null;
+  ebitdaPct: number | null;
+  empleados: number | null;
+  enPerimetro: boolean;
+  bormeAlertasCount: number;
+  hasBormeReciente: boolean;
+  tareasPendientesCount: number;
+  logoUrl: string | null;
+  web: string | null;
+  grupoId: number | null;
+  grupoNombre: string | null;
+  cepreven: string | null;
+  aerme: boolean;
+  score: number | null;
+  tendencia: Tendencia;
+  variacionPct: number | null;
+}
+
 export interface RawFeature {
   type: "Feature";
   geometry: { type: "Point"; coordinates: [number, number] };
-  properties: Record<string, unknown>;
+  properties: EmpresaFeatureProperties;
 }
 
 interface WarRoomState {
@@ -219,7 +256,7 @@ export const useWarRoomStore = create<WarRoomState>()(
         if (!empresasGeoJSON) return [];
         const ccaaSet = new Set<string>();
         empresasGeoJSON.forEach((f) => {
-          if (f.properties.ccaa) ccaaSet.add(f.properties.ccaa as string);
+          if (f.properties.ccaa) ccaaSet.add(f.properties.ccaa);
         });
         return Array.from(ccaaSet).sort();
       },
@@ -229,9 +266,9 @@ export const useWarRoomStore = create<WarRoomState>()(
         if (!empresasGeoJSON) return [];
         const set = new Set<string>();
         empresasGeoJSON.forEach((f) => {
-          // Si hay CCAAAs activas, solo muestra provincias de esas CCAAAs
-          if (filtros.ccaa.length && !filtros.ccaa.includes(f.properties.ccaa as string)) return;
-          if (f.properties.provincia) set.add(f.properties.provincia as string);
+          // Si hay CCAAs activas, solo muestra provincias de esas CCAAs
+          if (filtros.ccaa.length && (f.properties.ccaa === null || !filtros.ccaa.includes(f.properties.ccaa))) return;
+          if (f.properties.provincia) set.add(f.properties.provincia);
         });
         return Array.from(set).sort();
       },
@@ -241,8 +278,8 @@ export const useWarRoomStore = create<WarRoomState>()(
         if (!empresasGeoJSON) return [];
         const grupoMap = new Map<number, string>();
         empresasGeoJSON.forEach((f) => {
-          const id = f.properties.grupoId as number | null;
-          const nombre = f.properties.grupoNombre as string | null;
+          const id = f.properties.grupoId;
+          const nombre = f.properties.grupoNombre;
           if (id && nombre) grupoMap.set(id, nombre);
         });
         return Array.from(grupoMap.entries())
