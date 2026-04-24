@@ -74,6 +74,12 @@ export default function FindersAdminClient() {
         setError(json.issues?.map((i: { message: string }) => i.message).join("; ") || json.error || "Error");
         return;
       }
+      // Guardia extra: el backend confirma la persistencia con passwordSetAt.
+      // Si llega sin él, no confiamos en el status 200 (caso raro de pool).
+      if (!json.passwordSetAt) {
+        setError("El servidor no confirmó la escritura. Reintenta.");
+        return;
+      }
       setSavedPassword(password);
       load();
     } catch (e) {

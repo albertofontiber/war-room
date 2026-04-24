@@ -13,6 +13,11 @@ export const dynamic = "force-dynamic";
  * Solo admins (sesión kind="admin") pueden llamarlo. Guarda bcrypt hash en
  * Finder.passwordHash y marca passwordSetAt = now. La password en plano solo
  * viaja en este request; luego se le pasa al finder por canal seguro.
+ *
+ * Devuelve { ok: true, passwordSetAt } para que el cliente pueda verificar
+ * que la escritura persistió. Si passwordSetAt vuelve null, algo falló
+ * silenciosamente en el pool de conexiones y el cliente debería mostrarlo
+ * al admin en lugar de confiar sólo en el status HTTP.
  */
 export async function POST(
   req: NextRequest,
@@ -20,20 +25,64 @@ export async function POST(
 ) {
   const session = await getServerSession(authOptions);
   if (!session || session.kind !== "admin") {
+    console.warn("[POST /api/finders/:id/password] unauthorized", {
+      hasSession: !!session,
+      kind: session?.kind,
+    });
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const parsed = FinderSetPasswordSchema.safeParse(await req.json());
   if (!parsed.success) return zodError(parsed.error);
 
-  const finder = await prisma.finder.findUnique({ where: { id: params.id } });
+  const finder = await prisma.finder.findUnique({
+    where: { id: params.id },
+    select: { id: true, email: true },
+  });
   if (!finder) return NextResponse.json({ error: "Finder not found" }, { status: 404 });
 
   const hash = await bcrypt.hash(parsed.data.password, 10);
-  await prisma.finder.update({
+  const now = new Date();
+
+  try {
+    await prisma.finder.update({
+      where: { id: params.id },
+      data: { passwordHash: hash, passwordSetAt: now },
+    });
+  } catch (err) {
+    console.error("[POST /api/finders/:id/password] update failed", {
+      finderId: params.id,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    return NextResponse.json({ error: "Write failed" }, { status: 500 });
+  }
+
+  // Verificación de persistencia: releemos el finder para confirmar que la
+  // escritura está visible en la BD. Detecta fallos silenciosos del pool
+  // (raros pero posibles en Supabase serverless).
+  const verify = await prisma.finder.findUnique({
     where: { id: params.id },
-    data: { passwordHash: hash, passwordSetAt: new Date() },
+    select: { passwordHash: true, passwordSetAt: true },
+  });
+  if (!verify?.passwordHash || !verify.passwordSetAt) {
+    console.error("[POST /api/finders/:id/password] write not visible after update", {
+      finderId: params.id,
+      verify,
+    });
+    return NextResponse.json(
+      { error: "Write did not persist — reintenta" },
+      { status: 500 }
+    );
+  }
+
+  console.log("[POST /api/finders/:id/password] password set", {
+    finderId: params.id,
+    email: finder.email,
+    passwordSetAt: verify.passwordSetAt.toISOString(),
   });
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({
+    ok: true,
+    passwordSetAt: verify.passwordSetAt.toISOString(),
+  });
 }
