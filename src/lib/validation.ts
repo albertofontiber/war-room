@@ -68,6 +68,10 @@ export const PerimetroPatchSchema = z.object({
 
 const SECTORES = ["PCI", "seguridad_electronica", "mixto"] as const;
 
+export const LeadLinkSchema = z.object({
+  targetEmpresaId: z.number().int().positive(),
+});
+
 export const LeadCreateSchema = z.object({
   nombre: nonEmptyString,                            // alias visible ("Asher")
   sector: z.enum(SECTORES).nullable().optional(),

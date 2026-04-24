@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import StageChevron from "@/components/StageChevron";
 import { NotasSection, TareasSection, HistorialSection } from "@/components/CrmSections";
 import FinderSelector from "@/components/FinderSelector";
+import LinkLeadModal from "@/components/LinkLeadModal";
 import {
   diasDesde,
   DEAL_STAGE_LABEL,
@@ -259,9 +260,10 @@ type PanelEmpresaProps = {
 };
 
 export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }: PanelEmpresaProps = {}) {
-  const { empresaSeleccionadaId, cerrarPanel, modoPresentacion } =
+  const { empresaSeleccionadaId, cerrarPanel, modoPresentacion, seleccionarEmpresa } =
     useWarRoomStore();
   const router = useRouter();
+  const [linkModalOpen, setLinkModalOpen] = useState(false);
 
   const [empresa, setEmpresa] = useState<EmpresaDetalle | null>(null);
   const [loading, setLoading] = useState(true);
@@ -784,6 +786,25 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
                 )}
               </div>
             </div>
+
+            {/* Vincular lead anónimo a empresa real */}
+            {empresa.esAnonima && (
+              <div className="px-3 pb-2 pt-1 border-t border-wr-amber/10">
+                <button
+                  onClick={() => setLinkModalOpen(true)}
+                  className="w-full flex items-center justify-center gap-2 text-xs bg-wr-blue/10 text-wr-blue border border-wr-blue/30 rounded-md px-3 py-1.5 hover:bg-wr-blue/20 transition-colors"
+                >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+                  </svg>
+                  Vincular a empresa real
+                </button>
+                <p className="text-[9px] text-wr-hint text-center mt-1">
+                  Mueve el CRM a una empresa de la BD y elimina este lead.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Descripción */}
@@ -1025,6 +1046,19 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
           <div className="h-4" />
         </div>
       </div>
+
+      {empresa.esAnonima && (
+        <LinkLeadModal
+          open={linkModalOpen}
+          leadId={empresa.id}
+          leadNombre={empresa.nombre}
+          onClose={() => setLinkModalOpen(false)}
+          onLinked={(targetId) => {
+            onEmpresaChanged?.();
+            seleccionarEmpresa(targetId);
+          }}
+        />
+      )}
     </aside>
   );
 }

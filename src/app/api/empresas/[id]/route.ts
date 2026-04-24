@@ -144,6 +144,7 @@ export async function GET(
       aerme: empresa.aerme,
       enPerimetro: empresa.enPerimetro,
       enPerimetroAt: empresa.enPerimetroAt,
+      esAnonima: empresa.esAnonima,
       scoreInicial: empresa.scoreInicial,
       score: empresa.score,
       updatedAt: empresa.updatedAt,
