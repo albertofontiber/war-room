@@ -44,7 +44,8 @@ src/
   components/
     ChatIA.tsx                            # Chat IA flotante — Claude + SQL sobre datos War Room + CRM (sesión 9, schema CRM ampliado abril 2026)
     WarRoomLayout.tsx                     # Layout raíz — renderiza Mapa | Tabla | Operaciones | Grupos + ChatIA
-    PipelinePageClient.tsx                # Kanban CRM + filtros + ChatIA (montado también aquí)
+    PipelinePageClient.tsx                # Kanban CRM + filtros + ChatIA + botón "+ Lead sin identificar"
+    AddLeadModal.tsx                      # Modal para crear leads anónimos (targets confidenciales sin identidad revelada)
     MapaEspana.tsx                        # Mapa Mapbox con clusters, marcadores, selección área
     Navbar.tsx                            # Barra superior — toggle Mapa/Tabla/Operaciones/Grupos + búsqueda
     Sidebar.tsx                           # Filtros + estadísticas (8 stages CRM + filtro Grupo)
@@ -59,7 +60,7 @@ src/
     normalize.ts                          # Fuente de verdad normalización nombres ⭐ (sesión 8)
     email-daily-summary.ts                # Email mínimo: 3 cifras + link a /daily/[fecha] (Resend)
     email-task-digest.ts                  # Email por usuario: vencidas + hoy + próximos 7 días (Resend)
-    validation.ts                         # Schemas zod para bodies de endpoints CRM (tareas, notas, stage, finder, perímetro, grupo)
+    validation.ts                         # Schemas zod para bodies de endpoints CRM (tareas, notas, stage, finder, perímetro, grupo, leads)
     *.test.ts                             # Suite vitest (lib/crm, lib/format, lib/validation — 47 tests)
     filtros.ts                            # isInFilter()
     prisma.ts                             # Singleton PrismaClient

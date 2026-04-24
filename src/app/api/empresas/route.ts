@@ -26,6 +26,7 @@ export async function GET() {
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const empresas = await prisma.empresa.findMany({
+      where: { esAnonima: false },  // leads anónimos sólo aparecen en /pipeline
       include: {
         grupo: { select: { id: true, nombre: true } },
         financieros: { orderBy: { anio: "desc" } },

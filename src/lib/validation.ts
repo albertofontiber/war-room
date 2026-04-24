@@ -62,6 +62,29 @@ export const PerimetroPatchSchema = z.object({
   enPerimetro: z.boolean(),
 });
 
+// ─── Leads anónimos ───────────────────────────────────────────────────────────
+// Empresa sin identificar (confidencial). Nombre = alias acordado, CIF se
+// auto-genera. Sector/provincia/CCAA/financieros son opcionales pero útiles.
+
+const SECTORES = ["PCI", "seguridad_electronica", "mixto"] as const;
+
+export const LeadCreateSchema = z.object({
+  nombre: nonEmptyString,                            // alias visible ("Asher")
+  sector: z.enum(SECTORES).nullable().optional(),
+  provincia: z.string().nullable().optional(),
+  ccaa: z.string().nullable().optional(),
+  dealStage: z.enum(DEAL_STAGES as [string, ...string[]]),
+  ownerUserId: z.string().nullable().optional(),
+  finderId: z.string().nullable().optional(),
+  // Financieros del último año conocido (se crea un Financiero anio=current-1 o anio custom)
+  anioFinanciero: z.number().int().min(2000).max(2030).nullable().optional(),
+  ingresos: z.number().nullable().optional(),
+  margenBruto: z.number().nullable().optional(),
+  ebitda: z.number().nullable().optional(),
+  empleados: z.number().int().min(0).nullable().optional(),
+  descripcion: z.string().nullable().optional(),
+});
+
 /** Helper común: convierte ZodError → 400 JSON limpio (sin trazas internas). */
 export function zodError(error: z.ZodError): Response {
   const issues = error.issues.map((i) => ({

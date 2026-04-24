@@ -45,6 +45,7 @@ CREATE TABLE "Empresa" (
   "ambitoGeo" TEXT,      -- "E" = estatal | "A" = autonómico (solo seg. electrónica)
   "enPerimetro" BOOLEAN DEFAULT true,  -- true = empresa de interés para M&A
   "anioConstitucion" INT,
+  "esAnonima" BOOLEAN DEFAULT false,   -- true = "lead anónimo" del Pipeline (identidad confidencial; CIF pattern "LEAD-{id}"). Filtrados fuera del mapa, tabla, BORME y stats.
   fuente TEXT DEFAULT 'excel_seed'  -- origen del dato
 );
 

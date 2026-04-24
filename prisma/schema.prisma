@@ -50,6 +50,12 @@ model Empresa {
   scoreInicial     Float?
   score            Float?
   anioConstitucion Int?          // año de constitución (fuente: empresia)
+  // Leads anónimos: la identidad real del target no se conoce (confidencial).
+  // CIF se genera como "LEAD-{id}" internamente. nombre = alias acordado (ej. "Asher").
+  // Una vez revelada la identidad, se usa el endpoint de vinculación para mover
+  // relaciones (tareas, notas, actividades, CrmLog, finder) a la Empresa real y
+  // borrar el lead. Estos no aparecen en mapa, tabla, BORME ni stats del universo.
+  esAnonima        Boolean       @default(false)
   // Control
   fuente           String        @default("excel_seed")
   updatedAt        DateTime      @updatedAt
@@ -72,6 +78,7 @@ model Empresa {
   @@index([nombre])
   @@index([fuente])
   @@index([finderSourceId])
+  @@index([esAnonima])
 }
 
 model Financiero {
