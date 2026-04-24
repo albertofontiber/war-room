@@ -6,6 +6,7 @@ import {
   StageChangeSchema,
   FinderAssignSchema,
   PerimetroPatchSchema,
+  LeadLinkSchema,
 } from "./validation";
 
 describe("TareaCreateSchema", () => {
@@ -98,6 +99,26 @@ describe("FinderAssignSchema", () => {
 
   it("rechaza finderId numérico", () => {
     expect(FinderAssignSchema.safeParse({ finderId: 42 }).success).toBe(false);
+  });
+});
+
+describe("LeadLinkSchema", () => {
+  it("acepta targetEmpresaId entero positivo", () => {
+    expect(LeadLinkSchema.safeParse({ targetEmpresaId: 42 }).success).toBe(true);
+  });
+
+  it("rechaza targetEmpresaId ausente", () => {
+    expect(LeadLinkSchema.safeParse({}).success).toBe(false);
+  });
+
+  it("rechaza targetEmpresaId 0 o negativo", () => {
+    expect(LeadLinkSchema.safeParse({ targetEmpresaId: 0 }).success).toBe(false);
+    expect(LeadLinkSchema.safeParse({ targetEmpresaId: -5 }).success).toBe(false);
+  });
+
+  it("rechaza targetEmpresaId no entero", () => {
+    expect(LeadLinkSchema.safeParse({ targetEmpresaId: 1.5 }).success).toBe(false);
+    expect(LeadLinkSchema.safeParse({ targetEmpresaId: "42" }).success).toBe(false);
   });
 });
 

@@ -69,6 +69,7 @@ export interface EmpresaDetalle {
   aerme: boolean;
   enPerimetro: boolean;
   enPerimetroAt: string | null;
+  esAnonima: boolean;
   scoreInicial: number | null;
   score: number | null;
   updatedAt: string;
