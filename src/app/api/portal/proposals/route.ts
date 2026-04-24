@@ -57,17 +57,11 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  if (existe) {
-    await logFinderAction({
-      finderId: finder.id,
-      action: "propose_target_duplicate",
-    });
-    return NextResponse.json({
-      existe: true,
-      mensaje: "Esta empresa ya está en seguimiento. Gracias de todas formas.",
-    });
-  }
-
+  // Siempre creamos como PENDING: Alberto quiere revisar también los
+  // posibles duplicados (no auto-cerrarlos). Desde el portal el finder
+  // ve "Propuesta enviada" sin distinción. El flag `existe` se usa
+  // sólo para el log de auditoría y lo muestra la vista admin como
+  // "posible duplicado" calculándolo on-the-fly al leer.
   const proposal = await prisma.targetProposal.create({
     data: {
       finderId: finder.id,
@@ -84,11 +78,11 @@ export async function POST(req: NextRequest) {
 
   await logFinderAction({
     finderId: finder.id,
-    action: "propose_target",
+    action: existe ? "propose_target_duplicate" : "propose_target",
     resourceId: String(proposal.id),
   });
 
-  return NextResponse.json({ existe: false, proposal }, { status: 201 });
+  return NextResponse.json({ proposal }, { status: 201 });
 }
 
 /**

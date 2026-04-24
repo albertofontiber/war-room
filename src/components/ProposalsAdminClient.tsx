@@ -18,6 +18,7 @@ type Proposal = {
   reviewedBy: string | null;
   finder: { id: string; name: string; email: string };
   empresa: { id: number; nombre: string } | null;
+  dedupMatch: { id: number; nombre: string; cif: string } | null;
 };
 
 type Status = Proposal["status"] | "ALL";
@@ -114,11 +115,23 @@ export default function ProposalsAdminClient() {
                 <li key={p.id} className="p-4">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <p className="text-sm font-medium text-wr-text">{p.companyName}</p>
                         <span className={`text-[10px] px-2 py-0.5 rounded border ${STATUS_PILL[p.status]}`}>
                           {STATUS_LABEL[p.status]}
                         </span>
+                        {p.dedupMatch && (
+                          <span
+                            className="text-[10px] px-2 py-0.5 rounded border bg-wr-amber/15 text-wr-amber border-wr-amber/40 inline-flex items-center gap-1"
+                            title={`Coincide con empresa #${p.dedupMatch.id}`}
+                          >
+                            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                              <path d="M12 9v4M12 17h.01" />
+                              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                            </svg>
+                            Posible duplicado: {p.dedupMatch.nombre} ({p.dedupMatch.cif})
+                          </span>
+                        )}
                       </div>
                       <p className="text-[11px] text-wr-muted">
                         Finder: {p.finder.name} · {fmtDate(p.createdAt)}
