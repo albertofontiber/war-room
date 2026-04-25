@@ -837,7 +837,7 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
                     }
                   />
                   <KpiRow
-                    label="Margen bruto"
+                    label="GM"
                     value={fmtPct(latestFin.margenBrutoPct)}
                     trend={
                       empresa.tendenciaMargenBruto ? (

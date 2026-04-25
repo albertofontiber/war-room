@@ -195,7 +195,7 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
               <Field label="Ingresos (€)">
                 <input value={ingresos} onChange={(e) => setIngresos(e.target.value)} className="input" placeholder="1500000" />
               </Field>
-              <Field label="Margen bruto (€)">
+              <Field label="GM (€)">
                 <input value={margenBruto} onChange={(e) => setMargenBruto(e.target.value)} className="input" />
               </Field>
               <Field label="EBITDA (€)">

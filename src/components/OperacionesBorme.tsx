@@ -867,7 +867,7 @@ export default function OperacionesBorme() {
                     <th className="px-3 py-2 text-right font-medium cursor-pointer hover:text-wr-text whitespace-nowrap" onClick={() => toggleSort("ebitda")}>
                       EBITDA <SortIcon k="ebitda" activeKey={sortKey} dir={sortDir} />
                     </th>
-                    <th className="px-3 py-2 text-right font-medium text-[9px]">MB%</th>
+                    <th className="px-3 py-2 text-right font-medium text-[9px]">GM%</th>
                     <th className="px-3 py-2 text-center font-medium w-8"></th>
                   </tr>
                 </thead>

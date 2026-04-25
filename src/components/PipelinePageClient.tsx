@@ -178,7 +178,7 @@ export default function PipelinePageClient() {
       Owner: c.ownerName ?? "",
       Finder: c.finderName ?? "",
       "Ingresos (€)": c.ingresos ?? "",
-      "Margen bruto (%)":
+      "GM (%)":
         c.margenBrutoPct != null ? Number(c.margenBrutoPct.toFixed(1)) : "",
       "EBITDA (€)": c.ebitda ?? "",
       "Días en stage": c.diasEnStage ?? "",
