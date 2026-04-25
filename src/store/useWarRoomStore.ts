@@ -89,6 +89,15 @@ interface WarRoomState {
 
   setEmpresasGeoJSON: (features: RawFeature[]) => void;
 
+  /** Actualiza in-place algunas properties de un feature concreto del GeoJSON.
+   * Útil para que mapa y tabla reflejen al instante un cambio que el panel
+   * acaba de persistir en la BD (stage, grupo, perímetro…), sin tener que
+   * recargar todo el GeoJSON. */
+  updateEmpresaInGeoJSON: (
+    id: number,
+    patch: Partial<EmpresaFeatureProperties>
+  ) => void;
+
   setSearchQuery: (query: string) => void;
 
   setFiltro: <K extends keyof FiltrosActivos>(key: K, value: FiltrosActivos[K]) => void;
@@ -143,6 +152,17 @@ export const useWarRoomStore = create<WarRoomState>()(
 
       // ── GeoJSON compartido ───────────────────────────────────────────────
       setEmpresasGeoJSON: (features) => set({ empresasGeoJSON: features }),
+
+      updateEmpresaInGeoJSON: (id, patch) => {
+        const current = get().empresasGeoJSON;
+        if (!current) return;
+        const next = current.map((f) =>
+          f.properties.id === id
+            ? { ...f, properties: { ...f.properties, ...patch } }
+            : f
+        );
+        set({ empresasGeoJSON: next });
+      },
 
       // ── Búsqueda ─────────────────────────────────────────────────────────
       setSearchQuery: (query) => set({ searchQuery: query }),
