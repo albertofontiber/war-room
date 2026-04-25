@@ -570,9 +570,25 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
             )}
           </div>
 
-          {/* ── Modo COMPACTO (mapa/tabla): botón al Pipeline + badge tareas ──────── */}
+          {/* ── Modo COMPACTO (mapa/tabla): chevron + tareas + acceso al Pipeline ── */}
           {!modoDetallado && (
             <div className="space-y-2">
+              <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
+                <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
+                  Funnel
+                </p>
+                <StageChevron
+                  stage={dealStage ?? null}
+                  diasEnStage={
+                    empresa.crmEstado?.fechaEntradaStage
+                      ? diasDesde(empresa.crmEstado.fechaEntradaStage)
+                      : null
+                  }
+                  stageDurations={empresa.stageDurations}
+                  onChange={handleStageChange}
+                />
+              </div>
+
               {empresa.tareasPendientesCount > 0 && (
                 <div className="flex items-center gap-2 text-xs bg-wr-amber/10 text-wr-amber border border-wr-amber/30 rounded-md px-3 py-2">
                   <span className="text-[9px] font-bold bg-wr-amber/20 border border-wr-amber/30 rounded px-1 py-0.5">
