@@ -260,7 +260,7 @@ type PanelEmpresaProps = {
 };
 
 export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }: PanelEmpresaProps = {}) {
-  const { empresaSeleccionadaId, cerrarPanel, modoPresentacion, seleccionarEmpresa } =
+  const { empresaSeleccionadaId, cerrarPanel, modoPresentacion, seleccionarEmpresa, updateEmpresaInGeoJSON } =
     useWarRoomStore();
   const router = useRouter();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
@@ -350,6 +350,9 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
           body: JSON.stringify({ dealStage: nuevo }),
         });
         if (!res.ok) throw new Error(`${res.status}`);
+        // Sincroniza inmediatamente el GeoJSON del store para que mapa y
+        // tabla reflejen el nuevo stage sin recargar la página.
+        updateEmpresaInGeoJSON(empresa.id, { dealStage: nuevo });
         onEmpresaChanged?.();
       } catch (err) {
         console.error("[stage change]", err);
@@ -362,7 +365,7 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
         }
       }
     },
-    [empresa, empresaSeleccionadaId, onEmpresaChanged]
+    [empresa, empresaSeleccionadaId, onEmpresaChanged, updateEmpresaInGeoJSON]
   );
 
   // Open grupo editor
@@ -386,9 +389,15 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
       body: JSON.stringify({ grupoNombre: nombre }),
     })
       .then((r) => r.json())
-      .then((data) => setEmpresa((prev) => prev ? { ...prev, grupo: data.grupo } : prev))
+      .then((data) => {
+        setEmpresa((prev) => prev ? { ...prev, grupo: data.grupo } : prev);
+        updateEmpresaInGeoJSON(empresa.id, {
+          grupoId: data.grupo?.id ?? null,
+          grupoNombre: data.grupo?.nombre ?? null,
+        });
+      })
       .finally(() => { setSavingGrupo(false); setEditingGrupo(false); });
-  }, [empresa]);
+  }, [empresa, updateEmpresaInGeoJSON]);
 
   // Save grupo on Enter / blur
   const saveGrupo = useCallback(async () => {
@@ -403,6 +412,10 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
       if (res.ok) {
         const data = await res.json();
         setEmpresa((prev) => prev ? { ...prev, grupo: data.grupo } : prev);
+        updateEmpresaInGeoJSON(empresa.id, {
+          grupoId: data.grupo?.id ?? null,
+          grupoNombre: data.grupo?.nombre ?? null,
+        });
         if (data.grupo) {
           setAllGrupos((prev) =>
             prev.some((g) => g.id === data.grupo.id)
@@ -415,7 +428,7 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
       setSavingGrupo(false);
       setEditingGrupo(false);
     }
-  }, [empresa, grupoInput, savingGrupo, grupoDropdownOpen]);
+  }, [empresa, grupoInput, savingGrupo, grupoDropdownOpen, updateEmpresaInGeoJSON]);
 
   // Toggle perímetro
   const togglePerimetro = useCallback(async () => {
@@ -428,14 +441,16 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
         body: JSON.stringify({ enPerimetro: !empresa.enPerimetro }),
       });
       if (res.ok) {
+        const nuevoEnPerimetro = !empresa.enPerimetro;
         setEmpresa((prev) =>
-          prev ? { ...prev, enPerimetro: !prev.enPerimetro } : prev
+          prev ? { ...prev, enPerimetro: nuevoEnPerimetro } : prev
         );
+        updateEmpresaInGeoJSON(empresa.id, { enPerimetro: nuevoEnPerimetro });
       }
     } finally {
       setToggling(false);
     }
-  }, [empresa, toggling]);
+  }, [empresa, toggling, updateEmpresaInGeoJSON]);
 
   // Loading state
   if (loading || !empresa) {
