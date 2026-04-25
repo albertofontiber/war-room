@@ -196,7 +196,7 @@ export const useWarRoomStore = create<WarRoomState>()(
           chips.push({ key: "crmStage", label: `CRM: ${v}` })
         );
         filtros.grupoId.forEach((v) =>
-          chips.push({ key: "grupoId", label: `Grupo ID: ${v}` })
+          chips.push({ key: "grupoId", label: v === 0 ? "Sin grupo" : `Grupo ID: ${v}` })
         );
         if (filtros.cepreven !== null) {
           chips.push({

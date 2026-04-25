@@ -136,10 +136,12 @@ export default function TablaEmpresas() {
       const row: Record<string, unknown> = {
         Empresa: r.nombre,
         CIF: r.cif ?? "",
+        Grupo: r.grupoNombre ?? "",
         Ciudad: r.localidad ?? "",
         Provincia: r.provincia,
         Sector: SECTOR_LABEL[r.sector as string] ?? r.sector,
         CRM: DEAL_STAGE_LABEL[r.dealStage as DealStage] ?? r.dealStage ?? "—",
+        Web: r.web ?? "",
       };
       if (!modoPresentacion) {
         row["Ingresos (€)"] = r.ingresos ?? null;

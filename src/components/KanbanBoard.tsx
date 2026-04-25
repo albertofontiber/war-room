@@ -43,6 +43,8 @@ export type KanbanCard = {
   ccaa: string | null;
   provincia: string | null;
   sector: string | null;
+  web: string | null;
+  grupoNombre: string | null;
   dealStage: DealStage | null;
   ingresos: number | null;
   margenBrutoPct: number | null;
