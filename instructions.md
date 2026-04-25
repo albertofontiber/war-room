@@ -1,7 +1,7 @@
 # Fontiber War Room — Instrucciones para Claude
 
 Documento de contexto para continuar el desarrollo entre conversaciones.
-Actualizado: 2026-04-24 (tras PRs #10-#17: leads anónimos + MVP 1.5 portal finders + cleanup)
+Actualizado: 2026-04-25 (tras PRs #10-#21: leads anónimos + MVP 1.5 portal finders + cleanup + ajustes UI)
 
 ---
 
@@ -197,6 +197,10 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 L-V �
 - **Leads anónimos** (PR #8-#10, abril 2026): crear y vincular targets confidenciales sin identidad revelada. `Empresa.esAnonima=true`, CIF placeholder `LEAD-{id}`, aparecen solo en `/pipeline`. Endpoint `POST /api/leads/:id/link` mueve notas/tareas/actividades/CrmLog/Financieros del lead a una empresa real y borra el lead. CrmEstado del lead prevalece sobre el del target. Hasta hoy los leads anónimos vienen de Deale (otro finder fuera del portal). ✅
 - **Portal de finders MVP 1.5** (PRs #11-#14, 2026-04-24): subdominio `portal.fontiber.com`, auth bcrypt gestionada por admins desde `/finders`, Kanban read-only con 6 estados agregados, crear/editar notas/tareas/actividades con ventana 24h, proponer targets nuevos con dedup silencioso, `FinderAccessLog` auditoría. Ver sección 17 para detalles. ✅
 - **Cleanup deuda técnica** (PR #17): `.env.example` en raíz, 33 scripts one-off archivados en `scripts/archive/`, tipificación completa de `RawFeature.properties` en el store Zustand. ✅
+- **Hardening set-password + instructions.md** (PR #18): endpoint `/api/finders/:id/password` valida la persistencia tras `update`, devuelve `passwordSetAt`. Cliente `FindersAdminClient` falla loud si el server no confirma la escritura. ✅
+- **Unificación labels GM** (PR #19): todos los textos visibles dicen "GM" / "GM%" en lugar de "MB" / "Margen bruto". Identificadores internos (`margenBruto*`) intactos. ✅
+- **Filtros sidebar + columnas Excel** (PR #20): pill "Sin grupo" (sentinel `0` en `filtros.grupoId`), pill `on_hold` añadido al filtro CRM, columnas Grupo y Web en el export de Pipeline y Tabla. ✅
+- **StageChevron en modo compacto** (PR #21): el `PanelEmpresa` desde mapa/tabla muestra el bloque Funnel con chevron interactivo (igual que `/pipeline`), permitiendo cambiar el stage sin navegar. ✅
 
 ---
 
@@ -622,6 +626,10 @@ model CrmLog {
 | AQ | MVP 1.5 PR4 — propuestas + FinderAccessLog | Alta | ✅ | PR #14 — dedup silencioso al finder, badge "posible duplicado" admin |
 | AR | Portal propose autocomplete neutro + DUPLICATE silencioso | Media | ✅ | PRs #15 + #16 |
 | AS | Cleanup deuda técnica (scripts/archive/, .env.example, tipos) | Media | ✅ | PR #17 |
+| AT | Hardening set-password endpoint + instructions.md al día | Alta | ✅ | PR #18 |
+| AU | Unificación labels GM (antes "MB" / "Margen bruto") | Baja | ✅ | PR #19 |
+| AV | Filtros sidebar (Sin grupo, on_hold) + Excel grupo/web | Media | ✅ | PR #20 |
+| AW | StageChevron en modo compacto del PanelEmpresa | Media | ✅ | PR #21 |
 | — | **Cut-over Pipedrive** | Alta | ⏳ | Desactivar cron + export + baja suscripción (destructivo) |
 | — | Scoring dinámico modular | Media | ⏳ | Sub-scores tamaño/rentabilidad/crecimiento/etc. |
 | — | Mapa de conexiones / grafo | Media | ⏳ | Personas compartidas entre empresas (PersonaCargo) |
@@ -789,6 +797,8 @@ bormePersonaToCargoKey("GUITARD MALDONADO ALVARO") → "ALVARO GUITARD MALDONADO
 - **Geocoding Nominatim**: cascada dirección→CP→localidad. Rate limit 1.1s. User-Agent: "Fontiber-WarRoom/1.0". Ejecutado para empresas id>3125 con dirección o CP (06/04/2026).
 - **DealStage v2 — 9 valores** con `on_hold` añadido (por tareas ejecutadas en abril 2026). Valores actuales: `"identificado"|"contactado"|"primera_reunion"|"analisis"|"LOI enviada"|"execution"|"portfolio"|"on_hold"|"muerto"`.
 - **Dos subdominios en un solo deployment**: `warroom.fontiber.com` (war room admin) y `portal.fontiber.com` (portal finders). El middleware enruta por host O por path (`/portal/*`, `/api/portal/*`). Vercel project único; NO duplicar deploys.
+- **Filtro "Sin grupo" — sentinel `0` en `filtros.grupoId`**: el array `grupoId: number[]` admite el valor `0` para representar "empresas sin grupo asignado" (los IDs reales de `Grupo` son siempre positivos). `lib/filtros.ts` interpreta `0` como `p.grupoId === null`. El pill "Sin grupo" en el `Sidebar` y los chips activos lo etiquetan como tal en lugar de "Grupo: 0".
+- **Etiqueta GM (gross margin)**: en TODA la UI usar "GM" / "GM%" — nunca "MB" ni "Margen bruto". Los identificadores internos (`margenBruto`, `margenBrutoPct`) sí mantienen el nombre por compatibilidad con Prisma/API. El comentario en `chat-schema.ts` instruye al Chat IA a responder al usuario con "GM".
 
 ---
 
