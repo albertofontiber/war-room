@@ -226,7 +226,7 @@ export const useWarRoomStore = create<WarRoomState>()(
         ) {
           chips.push({
             key: "margenBrutoMin",
-            label: `MB: ${filtros.margenBrutoMin}–${filtros.margenBrutoMax}%`,
+            label: `GM: ${filtros.margenBrutoMin}–${filtros.margenBrutoMax}%`,
           });
         }
         if (

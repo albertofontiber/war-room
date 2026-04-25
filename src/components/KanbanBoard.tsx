@@ -162,8 +162,8 @@ function Card({ card, onClick, blur = false }: { card: KanbanCard; onClick?: () 
           <span className="text-wr-hint">E:</span> {fmtM(card.ebitda, "—")}
         </span>
         {card.margenBrutoPct != null && (
-          <span title="Margen bruto">
-            <span className="text-wr-hint">MB:</span> {card.margenBrutoPct.toFixed(0)}%
+          <span title="GM (gross margin)">
+            <span className="text-wr-hint">GM:</span> {card.margenBrutoPct.toFixed(0)}%
           </span>
         )}
       </div>

@@ -143,7 +143,7 @@ export default function MapTooltip({ x, y, props }: TooltipProps) {
               {fmtM(props.ingresos)}
               <TendenciaIcon dir={props.tendencia} pct={props.variacionPct} />
             </div>
-            <div className="text-wr-hint">Margen bruto</div>
+            <div className="text-wr-hint">GM</div>
             <div className="text-wr-text">
               {props.margenBrutoPct != null
                 ? `${props.margenBrutoPct.toFixed(1)}%`

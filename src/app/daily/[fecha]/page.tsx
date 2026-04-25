@@ -232,7 +232,7 @@ export default async function DailyPage({
                     <th className="text-left px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">Adquirente</th>
                     <th className="text-right px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">Ingresos</th>
                     <th className="text-right px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">EBITDA</th>
-                    <th className="text-right px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">MB%</th>
+                    <th className="text-right px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">GM%</th>
                     <th className="text-center px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest text-wr-hint">BORME</th>
                   </tr>
                 </thead>

@@ -337,7 +337,7 @@ export default function Sidebar() {
       filtros.margenBrutoMax < FILTROS_DEFAULT.margenBrutoMax
     ) {
       chips.push({
-        label: `MB: ${filtros.margenBrutoMin}–${filtros.margenBrutoMax}%`,
+        label: `GM: ${filtros.margenBrutoMin}–${filtros.margenBrutoMax}%`,
         remove: () => {
           setFiltro("margenBrutoMin", FILTROS_DEFAULT.margenBrutoMin);
           setFiltro("margenBrutoMax", FILTROS_DEFAULT.margenBrutoMax);
@@ -539,9 +539,9 @@ export default function Sidebar() {
             formatMax={(v) => (v === Infinity ? "Sin límite" : fmtM(v))}
           />
 
-          {/* ── Margen bruto range slider ── */}
+          {/* ── GM (gross margin) range slider ── */}
           <RangeSliderFiltro
-            label="Margen bruto"
+            label="GM"
             displayMax={100}
             step={1}
             valueMin={filtros.margenBrutoMin}

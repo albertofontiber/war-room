@@ -371,7 +371,7 @@ function SeleccionAreaPanel({
                   {!modoPresentacion && (
                     <>
                       <SortTh col="ingresos">Ingresos</SortTh>
-                      <SortTh col="margenBrutoPct">MB%</SortTh>
+                      <SortTh col="margenBrutoPct">GM%</SortTh>
                       <SortTh col="ebitdaPct">EBITDA%</SortTh>
                       <SortTh col="ebitda">EBITDA</SortTh>
                     </>

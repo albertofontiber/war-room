@@ -55,7 +55,7 @@ CREATE TABLE "Financiero" (
   "empresaId" INT REFERENCES "Empresa"(id),
   anio INT,              -- año del dato financiero
   ingresos FLOAT,        -- ingresos en euros
-  "margenBruto" FLOAT,   -- margen bruto en euros (para %, dividir entre ingresos * 100)
+  "margenBruto" FLOAT,   -- GM (gross margin) en euros (para %, dividir entre ingresos * 100). En las respuestas al usuario, llamarlo "GM" siempre.
   ebitda FLOAT,          -- EBITDA en euros (para %, dividir entre ingresos * 100)
   "resultadoNeto" FLOAT, -- resultado neto en euros
   UNIQUE("empresaId", anio)
