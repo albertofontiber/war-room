@@ -291,8 +291,11 @@ export default function Sidebar() {
       chips.push({ label: `Sector: ${lbl}`, remove: () => toggleFiltroArray("sector", v) });
     });
     filtros.grupoId.forEach((v) => {
-      const grupo = availableGrupos.find((g) => g.id === v);
-      chips.push({ label: `Grupo: ${grupo?.nombre ?? v}`, remove: () => toggleFiltroArray("grupoId", v) });
+      // sentinel 0 = "sin grupo"
+      const label = v === 0
+        ? "Sin grupo"
+        : `Grupo: ${availableGrupos.find((g) => g.id === v)?.nombre ?? v}`;
+      chips.push({ label, remove: () => toggleFiltroArray("grupoId", v) });
     });
     filtros.crmStage.forEach((v) => {
       const lbls: Record<string, string> = {
@@ -303,6 +306,7 @@ export default function Sidebar() {
         "LOI enviada":   "LOI enviada",
         execution:       "Ejecución",
         portfolio:       "Portfolio",
+        on_hold:         "On hold",
         muerto:          "Muerto",
       };
       chips.push({ label: `CRM: ${lbls[v] ?? v}`, remove: () => toggleFiltroArray("crmStage", v) });
@@ -491,6 +495,7 @@ export default function Sidebar() {
                   { value: "LOI enviada",     label: "LOI enviada",  color: "amber"  },
                   { value: "execution",       label: "Ejecución",    color: "orange" },
                   { value: "portfolio",       label: "Portfolio",    color: "green"  },
+                  { value: "on_hold",         label: "On hold",      color: "gray"   },
                   { value: "muerto",          label: "Muerto",       color: "red"    },
                 ] as { value: DealStage; label: string; color: PillColor }[]
               ).map(({ value, label, color }) => (
@@ -507,23 +512,29 @@ export default function Sidebar() {
           </div>
 
           {/* ── Grupo ── */}
-          {availableGrupos.length > 0 && (
-            <div>
-              <SectionLabel>Grupo</SectionLabel>
-              <div className="flex flex-wrap gap-1.5">
-                {availableGrupos.map((g) => (
-                  <TogglePill
-                    key={g.id}
-                    active={filtros.grupoId.includes(g.id)}
-                    onClick={() => toggleFiltroArray("grupoId", g.id)}
-                    color="blue"
-                  >
-                    {g.nombre}
-                  </TogglePill>
-                ))}
-              </div>
+          <div>
+            <SectionLabel>Grupo</SectionLabel>
+            <div className="flex flex-wrap gap-1.5">
+              {/* Pill especial "Sin grupo" — sentinel `0` en filtros.grupoId */}
+              <TogglePill
+                active={filtros.grupoId.includes(0)}
+                onClick={() => toggleFiltroArray("grupoId", 0)}
+                color="gray"
+              >
+                Sin grupo
+              </TogglePill>
+              {availableGrupos.map((g) => (
+                <TogglePill
+                  key={g.id}
+                  active={filtros.grupoId.includes(g.id)}
+                  onClick={() => toggleFiltroArray("grupoId", g.id)}
+                  color="blue"
+                >
+                  {g.nombre}
+                </TogglePill>
+              ))}
             </div>
-          )}
+          </div>
 
           {/* ── Ingresos range slider ── */}
           <RangeSliderFiltro

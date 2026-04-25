@@ -18,7 +18,14 @@ export function isInFilter(
   if (f.provincia.length && (p.provincia === null || !f.provincia.includes(p.provincia))) return false;
   if (f.sector.length && (p.sector === null || !f.sector.includes(p.sector))) return false;
   if (f.grupoId.length) {
-    if (p.grupoId === null || !f.grupoId.includes(p.grupoId)) return false;
+    // Sentinel `0` representa "sin grupo asignado". Si la empresa no tiene
+    // grupo (p.grupoId === null), pasa SOLO si 0 está en el array. Si tiene
+    // grupo, debe estar en el array de IDs.
+    if (p.grupoId === null) {
+      if (!f.grupoId.includes(0)) return false;
+    } else {
+      if (!f.grupoId.includes(p.grupoId)) return false;
+    }
   }
   if (f.crmStage.length) {
     if (!p.dealStage || !f.crmStage.includes(p.dealStage)) return false;

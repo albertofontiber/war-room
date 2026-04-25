@@ -85,6 +85,7 @@ export async function GET(req: NextRequest) {
           },
         },
         finderSource: { select: { id: true, name: true } },
+        grupo: { select: { id: true, nombre: true } },
         // última actividad real (llamada/email/reunión) — excluye tipo=nota
         actividades: {
           where: { tipo: { in: ["llamada", "email", "reunion"] } },
@@ -108,6 +109,8 @@ export async function GET(req: NextRequest) {
       ccaa: string | null;
       provincia: string | null;
       sector: string | null;
+      web: string | null;
+      grupoNombre: string | null;
       dealStage: DealStage | null;
       ingresos: number | null;
       margenBrutoPct: number | null;
@@ -148,6 +151,8 @@ export async function GET(req: NextRequest) {
         ccaa: e.ccaa,
         provincia: e.provincia,
         sector: e.sector,
+        web: e.web,
+        grupoNombre: e.grupo?.nombre ?? null,
         dealStage: (e.crmEstado?.dealStage as DealStage | undefined) ?? null,
         ingresos,
         margenBrutoPct,
