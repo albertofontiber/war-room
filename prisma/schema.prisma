@@ -229,6 +229,7 @@ model User {
   crmLogs         CrmLog[]
   actividades     Actividad[]
   crmEstadosOwner CrmEstado[]       @relation("CrmOwner")
+  notificaciones  Notificacion[]
 }
 
 model Nota {
@@ -375,4 +376,22 @@ model FinderAccessLog {
 
   @@index([finderId])
   @@index([action, createdAt])
+}
+
+// Notificaciones in-app dirigidas a admins (User). Genérico para soportar
+// futuros tipos (tareas vencidas, BORME, etc.) — por ahora solo se emite
+// "proposal_new" desde POST /api/portal/proposals.
+model Notificacion {
+  id         Int       @id @default(autoincrement())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  tipo       String    // "proposal_new" (futuros: "task_due", "borme_signal", ...)
+  titulo     String
+  mensaje    String    @db.Text
+  link       String?   // ruta dentro del war room (ej. "/finders/proposals?status=PENDING")
+  leida      Boolean   @default(false)
+  leidaAt    DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId, leida, createdAt])
 }

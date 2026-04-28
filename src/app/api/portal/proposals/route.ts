@@ -4,6 +4,7 @@ import { requireCurrentFinder } from "@/lib/finder-session";
 import { ProposalCreateSchema, zodError } from "@/lib/validation";
 import { normalizePersona } from "@/lib/normalize";
 import { logFinderAction } from "@/lib/finder-access-log";
+import { notifyAdmins } from "@/lib/notifications";
 
 export const dynamic = "force-dynamic";
 
@@ -80,6 +81,19 @@ export async function POST(req: NextRequest) {
     finderId: finder.id,
     action: existe ? "propose_target_duplicate" : "propose_target",
     resourceId: String(proposal.id),
+  });
+
+  // Notifica a los admins (in-app + email). Fire-and-forget: si falla, la
+  // propuesta ya está creada y registrada en el log; no bloqueamos al finder.
+  const dupSuffix = existe ? " (posible duplicado)" : "";
+  const cifLine = cif ? `\nCIF: ${cif}` : "";
+  notifyAdmins({
+    tipo: "proposal_new",
+    titulo: `Nueva propuesta de ${finder.name}: ${body.companyName.trim()}${dupSuffix}`,
+    mensaje: `${finder.name} ha propuesto un nuevo target.\n\nEmpresa: ${body.companyName.trim()}${cifLine}\n\nRevísala desde Propuestas de finders.`,
+    link: "/finders/proposals?status=PENDING",
+  }).catch((err) => {
+    console.error("[POST /api/portal/proposals] notifyAdmins failed", err);
   });
 
   return NextResponse.json({ proposal }, { status: 201 });

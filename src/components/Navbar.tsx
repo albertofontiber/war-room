@@ -5,6 +5,7 @@ import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import type { Vista } from "@/types";
+import NotificationsBell from "@/components/NotificationsBell";
 
 export default function Navbar() {
   const {
@@ -266,6 +267,8 @@ export default function Navbar() {
         </svg>
       </button>
 
+      {/* Notificaciones */}
+      <NotificationsBell />
 
       {/* Admin: gestión de finders */}
       <button
