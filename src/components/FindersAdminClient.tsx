@@ -318,7 +318,7 @@ export default function FindersAdminClient() {
                       Password fijada el <span className="font-semibold">{formatDate(pwdModal.passwordSetAt)}</span>.
                     </p>
                     <p className="text-[11px] text-wr-hint">
-                      Por seguridad la contraseña no se puede recuperar (está hasheada). Si el finder la perdió o quieres rotarla, púlsalo "Cambiar password".
+                      Por seguridad la contraseña no se puede recuperar (está hasheada). Si el finder la perdió o quieres rotarla, pulsa &laquo;Cambiar password&raquo;.
                     </p>
                   </div>
                   <div className="flex justify-end gap-2 pt-2 border-t border-wr-border">
