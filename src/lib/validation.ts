@@ -76,6 +76,14 @@ export const FinderSetPasswordSchema = z.object({
   password: z.string().min(10, "La contraseña debe tener al menos 10 caracteres"),
 });
 
+export const FinderCreateSchema = z.object({
+  email: z.string().trim().toLowerCase().email("Email inválido"),
+  name: nonEmptyString.max(100),
+  commissionPct: z.number().min(0).max(100).nullable().optional(),
+  // Password inicial obligatoria — el admin la genera o la escribe en el modal.
+  password: z.string().min(10, "La contraseña debe tener al menos 10 caracteres"),
+});
+
 // ─── Portal finders: notas, tareas y actividades ─────────────────────────────
 // Los schemas del portal son un subset de los del war room. No permiten
 // setear autores (se infieren de la sesión) ni flags de admin
