@@ -19,15 +19,39 @@ function generatePassword(): string {
   return out;
 }
 
+function formatDate(iso: string | null): string {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 export default function FindersAdminClient() {
   const [finders, setFinders] = useState<Finder[]>([]);
   const [loading, setLoading] = useState(true);
-  const [modalFinder, setModalFinder] = useState<Finder | null>(null);
-  const [password, setPassword] = useState("");
-  const [copied, setCopied] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
+  // Modal de password (set/reset). NO auto-genera al abrir.
+  const [pwdModal, setPwdModal] = useState<Finder | null>(null);
+  const [pwdEditMode, setPwdEditMode] = useState(false); // true cuando se pulsa "Cambiar"
+  const [pwdValue, setPwdValue] = useState("");
+  const [pwdSubmitting, setPwdSubmitting] = useState(false);
+  const [pwdError, setPwdError] = useState<string | null>(null);
   const [savedPassword, setSavedPassword] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  // Modal de creación de finder.
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createForm, setCreateForm] = useState({
+    name: "",
+    email: "",
+    commissionPct: "",
+    password: "",
+  });
+  const [createSubmitting, setCreateSubmitting] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [createdPassword, setCreatedPassword] = useState<string | null>(null);
 
   const load = () => {
     setLoading(true);
@@ -39,55 +63,128 @@ export default function FindersAdminClient() {
 
   useEffect(() => { load(); }, []);
 
-  const openModal = (f: Finder) => {
-    setModalFinder(f);
-    setPassword(generatePassword());
+  // ─── Password modal ──────────────────────────────────────────────────────
+  const openPwdModal = (f: Finder) => {
+    setPwdModal(f);
+    setPwdEditMode(!f.passwordSetAt); // si nunca tuvo password, abrimos directo en modo edición
+    setPwdValue(f.passwordSetAt ? "" : generatePassword());
+    setPwdError(null);
+    setSavedPassword(null);
     setCopied(false);
-    setError(null);
-    setSavedPassword(null);
   };
 
-  const closeModal = () => {
-    setModalFinder(null);
-    setPassword("");
+  const closePwdModal = () => {
+    setPwdModal(null);
+    setPwdEditMode(false);
+    setPwdValue("");
     setSavedPassword(null);
-    setError(null);
+    setPwdError(null);
   };
 
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(password);
+  const handlePwdCopy = async (value: string) => {
+    await navigator.clipboard.writeText(value);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSave = async () => {
-    if (!modalFinder) return;
-    setSubmitting(true); setError(null);
+  const handlePwdSave = async () => {
+    if (!pwdModal) return;
+    setPwdSubmitting(true);
+    setPwdError(null);
     try {
-      const res = await fetch(`/api/finders/${modalFinder.id}/password`, {
+      const res = await fetch(`/api/finders/${pwdModal.id}/password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password: pwdValue }),
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json.issues?.map((i: { message: string }) => i.message).join("; ") || json.error || "Error");
+        setPwdError(
+          json.issues?.map((i: { message: string }) => i.message).join("; ") ||
+            json.error ||
+            "Error"
+        );
         return;
       }
-      // Guardia extra: el backend confirma la persistencia con passwordSetAt.
-      // Si llega sin él, no confiamos en el status 200 (caso raro de pool).
       if (!json.passwordSetAt) {
-        setError("El servidor no confirmó la escritura. Reintenta.");
+        setPwdError("El servidor no confirmó la escritura. Reintenta.");
         return;
       }
-      setSavedPassword(password);
+      setSavedPassword(pwdValue);
       load();
     } catch (e) {
-      setError(String(e));
+      setPwdError(String(e));
     } finally {
-      setSubmitting(false);
+      setPwdSubmitting(false);
     }
   };
+
+  // ─── Create finder modal ─────────────────────────────────────────────────
+  const openCreateModal = () => {
+    setCreateOpen(true);
+    setCreateForm({
+      name: "",
+      email: "",
+      commissionPct: "",
+      password: generatePassword(),
+    });
+    setCreateError(null);
+    setCreatedPassword(null);
+    setCopied(false);
+  };
+
+  const closeCreateModal = () => {
+    setCreateOpen(false);
+    setCreateForm({ name: "", email: "", commissionPct: "", password: "" });
+    setCreateError(null);
+    setCreatedPassword(null);
+  };
+
+  const handleCreate = async () => {
+    setCreateSubmitting(true);
+    setCreateError(null);
+    try {
+      const body: {
+        name: string;
+        email: string;
+        password: string;
+        commissionPct?: number;
+      } = {
+        name: createForm.name.trim(),
+        email: createForm.email.trim(),
+        password: createForm.password,
+      };
+      if (createForm.commissionPct.trim()) {
+        const n = parseFloat(createForm.commissionPct.replace(",", "."));
+        if (!isNaN(n)) body.commissionPct = n;
+      }
+      const res = await fetch("/api/finders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setCreateError(
+          json.issues?.map((i: { message: string }) => i.message).join("; ") ||
+            json.error ||
+            "Error"
+        );
+        return;
+      }
+      setCreatedPassword(createForm.password);
+      load();
+    } catch (e) {
+      setCreateError(String(e));
+    } finally {
+      setCreateSubmitting(false);
+    }
+  };
+
+  const createValid =
+    createForm.name.trim().length > 0 &&
+    /\S+@\S+\.\S+/.test(createForm.email.trim()) &&
+    createForm.password.length >= 10;
 
   return (
     <div className="min-h-screen bg-wr-bg text-wr-text p-8">
@@ -100,6 +197,12 @@ export default function FindersAdminClient() {
             </p>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={openCreateModal}
+              className="text-xs px-3 py-1.5 rounded bg-wr-blue text-white hover:bg-blue-500"
+            >
+              + Nuevo finder
+            </button>
             <a href="/finders/proposals" className="text-xs text-wr-blue hover:underline">
               Revisar propuestas →
             </a>
@@ -145,10 +248,10 @@ export default function FindersAdminClient() {
                   </td>
                   <td className="px-4 py-2 text-right">
                     <button
-                      onClick={() => openModal(f)}
+                      onClick={() => openPwdModal(f)}
                       className="text-[11px] px-2 py-1 rounded bg-wr-blue/10 border border-wr-blue/30 text-wr-blue hover:bg-wr-blue/20"
                     >
-                      {f.passwordSetAt ? "Resetear password" : "Set password"}
+                      {f.passwordSetAt ? "Gestionar password" : "Set password"}
                     </button>
                   </td>
                 </tr>
@@ -158,10 +261,11 @@ export default function FindersAdminClient() {
         </div>
       </div>
 
-      {modalFinder && (
+      {/* ─── Modal: Set/Reset password ───────────────────────────────────── */}
+      {pwdModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-          onClick={closeModal}
+          onClick={closePwdModal}
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -170,69 +274,231 @@ export default function FindersAdminClient() {
             <div className="px-5 py-3 border-b border-wr-border flex items-center justify-between">
               <div>
                 <h2 className="text-sm font-semibold">
-                  {savedPassword ? "Password activa" : (modalFinder.passwordSetAt ? "Resetear password" : "Nueva password")}
+                  {savedPassword
+                    ? "Password activa"
+                    : pwdEditMode
+                    ? (pwdModal.passwordSetAt ? "Cambiar password" : "Nueva password")
+                    : "Password del finder"}
                 </h2>
                 <p className="text-[10px] text-wr-hint mt-0.5">
-                  {modalFinder.name} · {modalFinder.email}
+                  {pwdModal.name} · {pwdModal.email}
                 </p>
               </div>
-              <button onClick={closeModal} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
+              <button onClick={closePwdModal} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
             </div>
 
             <div className="p-5 space-y-3 text-xs">
-              {!savedPassword ? (
+              {savedPassword ? (
                 <>
-                  <label className="block">
-                    <span className="text-[10px] text-wr-muted uppercase tracking-wider">Contraseña (mínimo 10 caracteres)</span>
-                    <div className="mt-1 flex gap-2">
-                      <input
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="flex-1 bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-wr-text font-mono text-sm focus:outline-none focus:border-wr-blue"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setPassword(generatePassword())}
-                        className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text"
-                      >
-                        Regenerar
-                      </button>
-                    </div>
-                  </label>
-
-                  <div className="rounded border border-wr-amber/30 bg-wr-amber/5 p-2 text-[11px] text-wr-muted">
-                    {modalFinder.passwordSetAt
-                      ? "Si guardas, la password anterior deja de funcionar inmediatamente."
-                      : "El finder podrá iniciar sesión en el portal con su email y esta contraseña."}
-                  </div>
-
-                  {error && <p className="text-wr-red text-[11px]">{error}</p>}
-
-                  <div className="flex justify-end gap-2 pt-2 border-t border-wr-border">
-                    <button onClick={closeModal} disabled={submitting}
-                      className="text-xs px-3 py-1.5 bg-wr-surface2 border border-wr-border rounded text-wr-muted hover:text-wr-text">
-                      Cancelar
+                  <p className="text-wr-text">
+                    Copia la contraseña y pásala al finder por canal seguro (WhatsApp/Signal). No se vuelve a mostrar.
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 font-mono text-sm text-wr-text">
+                      {savedPassword}
+                    </code>
+                    <button
+                      onClick={() => handlePwdCopy(savedPassword)}
+                      className="text-[10px] px-2 py-1 rounded bg-wr-blue/10 border border-wr-blue/30 text-wr-blue hover:bg-wr-blue/20"
+                    >
+                      {copied ? "¡Copiada!" : "Copiar"}
                     </button>
-                    <button onClick={handleSave} disabled={submitting || password.length < 10}
-                      className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500 disabled:opacity-40">
-                      {submitting ? "Guardando…" : "Guardar"}
+                  </div>
+                  <div className="flex justify-end pt-2 border-t border-wr-border">
+                    <button onClick={closePwdModal} className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500">
+                      Hecho
+                    </button>
+                  </div>
+                </>
+              ) : !pwdEditMode ? (
+                <>
+                  <div className="rounded border border-wr-border bg-wr-surface2/40 p-3 space-y-1">
+                    <p className="text-[10px] text-wr-muted uppercase tracking-wider">Estado</p>
+                    <p className="text-wr-text">
+                      Password fijada el <span className="font-semibold">{formatDate(pwdModal.passwordSetAt)}</span>.
+                    </p>
+                    <p className="text-[11px] text-wr-hint">
+                      Por seguridad la contraseña no se puede recuperar (está hasheada). Si el finder la perdió o quieres rotarla, púlsalo "Cambiar password".
+                    </p>
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2 border-t border-wr-border">
+                    <button
+                      onClick={closePwdModal}
+                      className="text-xs px-3 py-1.5 bg-wr-surface2 border border-wr-border rounded text-wr-muted hover:text-wr-text"
+                    >
+                      Cerrar
+                    </button>
+                    <button
+                      onClick={() => {
+                        setPwdEditMode(true);
+                        setPwdValue(generatePassword());
+                      }}
+                      className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500"
+                    >
+                      Cambiar password
                     </button>
                   </div>
                 </>
               ) : (
                 <>
-                  <p className="text-wr-text">Copia la contraseña y pásala al finder por canal seguro (WhatsApp/Signal). No se vuelve a mostrar.</p>
+                  <label className="block">
+                    <span className="text-[10px] text-wr-muted uppercase tracking-wider">Contraseña (mínimo 10 caracteres)</span>
+                    <div className="mt-1 flex gap-2">
+                      <input
+                        value={pwdValue}
+                        onChange={(e) => setPwdValue(e.target.value)}
+                        className="flex-1 bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-wr-text font-mono text-sm focus:outline-none focus:border-wr-blue"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setPwdValue(generatePassword())}
+                        className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text"
+                      >
+                        Generar
+                      </button>
+                    </div>
+                  </label>
+
+                  <div className="rounded border border-wr-amber/30 bg-wr-amber/5 p-2 text-[11px] text-wr-muted">
+                    {pwdModal.passwordSetAt
+                      ? "Si guardas, la password anterior deja de funcionar inmediatamente."
+                      : "El finder podrá iniciar sesión en el portal con su email y esta contraseña."}
+                  </div>
+
+                  {pwdError && <p className="text-wr-red text-[11px]">{pwdError}</p>}
+
+                  <div className="flex justify-end gap-2 pt-2 border-t border-wr-border">
+                    <button
+                      onClick={pwdModal.passwordSetAt ? () => setPwdEditMode(false) : closePwdModal}
+                      disabled={pwdSubmitting}
+                      className="text-xs px-3 py-1.5 bg-wr-surface2 border border-wr-border rounded text-wr-muted hover:text-wr-text"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handlePwdSave}
+                      disabled={pwdSubmitting || pwdValue.length < 10}
+                      className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500 disabled:opacity-40"
+                    >
+                      {pwdSubmitting ? "Guardando…" : "Guardar"}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Modal: Create finder ────────────────────────────────────────── */}
+      {createOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          onClick={closeCreateModal}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-[480px] max-w-[92vw] bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
+          >
+            <div className="px-5 py-3 border-b border-wr-border flex items-center justify-between">
+              <h2 className="text-sm font-semibold">
+                {createdPassword ? "Finder creado" : "Nuevo finder"}
+              </h2>
+              <button onClick={closeCreateModal} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
+            </div>
+
+            <div className="p-5 space-y-3 text-xs">
+              {createdPassword ? (
+                <>
+                  <p className="text-wr-text">
+                    Finder creado correctamente. Copia la contraseña y pásala por canal seguro (WhatsApp/Signal). No se vuelve a mostrar.
+                  </p>
                   <div className="flex items-center gap-2">
                     <code className="flex-1 bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 font-mono text-sm text-wr-text">
-                      {savedPassword}
+                      {createdPassword}
                     </code>
-                    <button onClick={handleCopy} className="text-[10px] px-2 py-1 rounded bg-wr-blue/10 border border-wr-blue/30 text-wr-blue hover:bg-wr-blue/20">
+                    <button
+                      onClick={() => handlePwdCopy(createdPassword)}
+                      className="text-[10px] px-2 py-1 rounded bg-wr-blue/10 border border-wr-blue/30 text-wr-blue hover:bg-wr-blue/20"
+                    >
                       {copied ? "¡Copiada!" : "Copiar"}
                     </button>
                   </div>
                   <div className="flex justify-end pt-2 border-t border-wr-border">
-                    <button onClick={closeModal} className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500">
+                    <button onClick={closeCreateModal} className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500">
                       Hecho
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <label className="block">
+                    <span className="text-[10px] text-wr-muted uppercase tracking-wider">Nombre</span>
+                    <input
+                      value={createForm.name}
+                      onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                      placeholder="Nombre completo"
+                      className="mt-1 w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-wr-text focus:outline-none focus:border-wr-blue"
+                    />
+                  </label>
+
+                  <label className="block">
+                    <span className="text-[10px] text-wr-muted uppercase tracking-wider">Email</span>
+                    <input
+                      type="email"
+                      value={createForm.email}
+                      onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
+                      placeholder="finder@empresa.com"
+                      className="mt-1 w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-wr-text focus:outline-none focus:border-wr-blue"
+                    />
+                  </label>
+
+                  <label className="block">
+                    <span className="text-[10px] text-wr-muted uppercase tracking-wider">Comisión % (opcional)</span>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={createForm.commissionPct}
+                      onChange={(e) => setCreateForm({ ...createForm, commissionPct: e.target.value })}
+                      placeholder="ej. 1.5"
+                      className="mt-1 w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-wr-text focus:outline-none focus:border-wr-blue"
+                    />
+                  </label>
+
+                  <label className="block">
+                    <span className="text-[10px] text-wr-muted uppercase tracking-wider">Contraseña inicial (mínimo 10)</span>
+                    <div className="mt-1 flex gap-2">
+                      <input
+                        value={createForm.password}
+                        onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
+                        className="flex-1 bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-wr-text font-mono text-sm focus:outline-none focus:border-wr-blue"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setCreateForm({ ...createForm, password: generatePassword() })}
+                        className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text"
+                      >
+                        Generar
+                      </button>
+                    </div>
+                  </label>
+
+                  {createError && <p className="text-wr-red text-[11px]">{createError}</p>}
+
+                  <div className="flex justify-end gap-2 pt-2 border-t border-wr-border">
+                    <button
+                      onClick={closeCreateModal}
+                      disabled={createSubmitting}
+                      className="text-xs px-3 py-1.5 bg-wr-surface2 border border-wr-border rounded text-wr-muted hover:text-wr-text"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleCreate}
+                      disabled={createSubmitting || !createValid}
+                      className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500 disabled:opacity-40"
+                    >
+                      {createSubmitting ? "Creando…" : "Crear finder"}
                     </button>
                   </div>
                 </>
