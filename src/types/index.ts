@@ -143,7 +143,9 @@ export interface FiltrosActivos {
   provincia: string[];
   sector: Sector[];
   grupoId: number[];
-  crmStage: DealStage[];
+  // DealStage real ("identificado", "contactado", ...) + sentinel "sin_crm"
+  // para filtrar empresas sin CrmEstado o con dealStage=null.
+  crmStage: (DealStage | "sin_crm")[];
   ingresosMin: number;
   ingresosMax: number;
   margenBrutoMin: number;

@@ -213,7 +213,10 @@ export const useWarRoomStore = create<WarRoomState>()(
           chips.push({ key: "sector", label: `Sector: ${v}` })
         );
         filtros.crmStage.forEach((v) =>
-          chips.push({ key: "crmStage", label: `CRM: ${v}` })
+          chips.push({
+            key: "crmStage",
+            label: v === "sin_crm" ? "CRM: Sin CRM" : `CRM: ${v}`,
+          })
         );
         filtros.grupoId.forEach((v) =>
           chips.push({ key: "grupoId", label: v === 0 ? "Sin grupo" : `Grupo ID: ${v}` })

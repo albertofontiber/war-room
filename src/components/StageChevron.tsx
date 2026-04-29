@@ -159,7 +159,7 @@ export default function StageChevron({
               <span className="flex items-center gap-2">
                 <span
                   className="w-2 h-2 rounded-full flex-shrink-0"
-                  style={{ background: stage ? DEAL_STAGE_COLOR[stage] : "#94a3b8" }}
+                  style={{ background: stage ? DEAL_STAGE_COLOR[stage] : "#6b7280" }}
                 />
                 {stage ? DEAL_STAGE_LABEL[stage] : "Sin CRM"}
               </span>
@@ -167,6 +167,20 @@ export default function StageChevron({
             </button>
             {menuOpen && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-wr-surface border border-wr-border rounded-lg shadow-xl z-50 overflow-hidden">
+                {/* "Sin CRM": dealStage = null. Distinto de "Identificado". */}
+                <button
+                  onClick={() => { onChange(null); setMenuOpen(false); }}
+                  className={`w-full text-left text-xs px-3 py-1.5 flex items-center gap-2 hover:bg-wr-surface2 transition-colors ${
+                    stage === null || stage === undefined ? "text-wr-text font-medium bg-wr-surface2/50" : "text-wr-muted"
+                  }`}
+                >
+                  <span
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ background: "#6b7280" }}
+                  />
+                  Sin CRM
+                </button>
+                <div className="border-t border-wr-border" />
                 {DEAL_STAGES.map((s) => (
                   <button
                     key={s}
@@ -182,17 +196,6 @@ export default function StageChevron({
                     {DEAL_STAGE_LABEL[s]}
                   </button>
                 ))}
-                {stage && (
-                  <>
-                    <div className="border-t border-wr-border" />
-                    <button
-                      onClick={() => { onChange(null); setMenuOpen(false); }}
-                      className="w-full text-left text-xs px-3 py-1.5 text-wr-red hover:bg-wr-red/10 transition-colors"
-                    >
-                      Sacar del funnel
-                    </button>
-                  </>
-                )}
               </div>
             )}
           </div>

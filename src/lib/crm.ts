@@ -20,7 +20,7 @@ export const DEAL_STAGES: DealStage[] = [
 
 /** Display label en español para UI. */
 export const DEAL_STAGE_LABEL: Record<DealStage, string> = {
-  identificado: "Sin CRM / Identificado",
+  identificado: "Identificado",
   contactado: "Contactado",
   primera_reunion: "1ª reunión realizada",
   analisis: "Análisis",
@@ -30,6 +30,20 @@ export const DEAL_STAGE_LABEL: Record<DealStage, string> = {
   on_hold: "On hold",
   muerto: "Muerto",
 };
+
+/**
+ * Sentinel para "Sin CRM" en filtros y selectores.
+ * Una empresa está "Sin CRM" cuando no tiene `crmEstado` o su `dealStage` es null.
+ * Se distingue conceptualmente de "Identificado" (primer stage del funnel real).
+ */
+export const SIN_CRM_SENTINEL = "sin_crm" as const;
+export type SinCrm = typeof SIN_CRM_SENTINEL;
+export const SIN_CRM_LABEL = "Sin CRM";
+/** Color para tarjetas/leyenda de "Sin CRM" — más apagado que `identificado`. */
+export const SIN_CRM_COLOR = "#6b7280"; // gris-500
+
+/** Filtro CRM combinable: stage real o el sentinel "sin_crm". */
+export type CrmStageFilter = DealStage | SinCrm;
 
 /** Color hex por stage — mantiene paridad con el mapa. */
 export const DEAL_STAGE_COLOR: Record<DealStage, string> = {
