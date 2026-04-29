@@ -639,13 +639,31 @@ export default function MapaEspana() {
     };
   }, [geojson, updateClusterMarkers]);
 
-  // ── onIdle: re-ensure custom icons (lost on reuseMaps remount) + update clusters ──
-  // With reuseMaps, onLoad does NOT fire after a tab-switch remount, so iconsReady
-  // stays false and symbol markers (segelec/mixto) disappear. Fix: re-add icons on
-  // the first idle after remount (hasImage guard prevents duplicate uploads).
-  const handleIdle = useCallback(() => {
-    const map = mapRef.current?.getMap();
-    if (map) {
+  // ── Asegurar custom icons al montar (independiente de eventos Mapbox) ───
+  //
+  // Bug reportado por Alberto (2026-05-01): tras volver de la tabla al mapa,
+  // faltaban features Mixto/Seg.Electrónica aisladas (~5 con sus filtros). El
+  // remount reseteaba `iconsReady` a `false`, pero `reuseMaps` reusa el map y
+  // NO dispara `onLoad`. Solo `onIdle` los re-cargaba, con timing impredecible.
+  // Mientras `iconsReady=false`, los Layer condicionales `markers-segelec` y
+  // `markers-mixto` no estaban montados → features aisladas (sin cluster) no
+  // aparecían.
+  //
+  // Fix: cargar los íconos en un useEffect propio que poll-retry hasta que
+  // mapRef.current esté disponible. No depende de eventos del Map. Idempotente
+  // vía `map.hasImage` guard. El setIconsReady(true) se hace aquí mismo en
+  // cuanto los íconos están registrados, sin esperar a idle.
+  useEffect(() => {
+    let cancelled = false;
+    let retryTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const ensureIcons = () => {
+      if (cancelled) return;
+      const map = mapRef.current?.getMap();
+      if (!map) {
+        retryTimeout = setTimeout(ensureIcons, 50);
+        return;
+      }
       if (!map.hasImage("shape-square")) {
         const sq = createShapeIcon("square");
         if (sq) map.addImage("shape-square", sq, { sdf: true });
@@ -654,8 +672,23 @@ export default function MapaEspana() {
         const hex = createShapeIcon("hexagon");
         if (hex) map.addImage("shape-hexagon", hex, { sdf: true });
       }
-      setIconsReady(true);
-    }
+      // Solo seteamos true si los dos íconos están realmente disponibles.
+      if (map.hasImage("shape-square") && map.hasImage("shape-hexagon")) {
+        setIconsReady(true);
+      }
+    };
+
+    ensureIcons();
+    return () => {
+      cancelled = true;
+      if (retryTimeout) clearTimeout(retryTimeout);
+    };
+  }, [mounted]);
+
+  // handleIdle ahora solo refresca cluster markers (defense in depth contra
+  // race conditions de timing entre source data y querySourceFeatures).
+  // Los íconos los gestiona el useEffect de arriba.
+  const handleIdle = useCallback(() => {
     updateClusterMarkers();
   }, [updateClusterMarkers]);
 
