@@ -201,6 +201,13 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 L-V �
 - **Unificación labels GM** (PR #19): todos los textos visibles dicen "GM" / "GM%" en lugar de "MB" / "Margen bruto". Identificadores internos (`margenBruto*`) intactos. ✅
 - **Filtros sidebar + columnas Excel** (PR #20): pill "Sin grupo" (sentinel `0` en `filtros.grupoId`), pill `on_hold` añadido al filtro CRM, columnas Grupo y Web en el export de Pipeline y Tabla. ✅
 - **StageChevron en modo compacto** (PR #21): el `PanelEmpresa` desde mapa/tabla muestra el bloque Funnel con chevron interactivo (igual que `/pipeline`), permitiendo cambiar el stage sin navegar. ✅
+- **Notificaciones in-app + email cuando un finder propone target** (PR #25, 2026-04-28): nuevo modelo `Notificacion` (genérico para futuros eventos), endpoint `GET/PATCH /api/notificaciones`, helper `notifyAdmins()` (in-app + email Resend con override `NOTIFICATION_EMAIL_TO`), campana en topbar del Navbar con badge de no-leídas y polling 30s. Hook fire-and-forget en `POST /api/portal/proposals` dispara `tipo: "proposal_new"` para todos los admins activos. ✅
+- **Crear finder desde la web + password estática** (PR #26 + hotfix #27, 2026-04-28): botón "+ Nuevo finder" en `/finders` con modal (nombre, email, comisión, password inicial generable o manual). El modal de "Gestionar password" ya **NO auto-genera** al abrir — muestra "Fijada el {fecha}" y un botón explícito "Cambiar password" para entrar en modo edición. Endpoint `POST /api/finders` crea con bcrypt + `passwordSetAt` en una transacción. ✅
+- **Editar finder + header /finders en una línea** (PR #29, 2026-04-29): botón "Editar" por finder con modal (nombre, email único, comisión, toggle activo/inactivo). Endpoint `PATCH /api/finders/:id` con `FinderUpdateSchema`. `GET /api/finders` acepta `?includeInactive=1` (la página `/finders` lo pasa; el resto de consumidores siguen recibiendo solo activos). ✅
+- **Fix fechaLimite Invalid input** (PR #28, 2026-04-29): `nullableDateString` en `validation.ts` ahora acepta también `yyyy-mm-dd` (formato nativo del `<input type="date">`). Antes solo aceptaba ISO 8601 con offset, lo que rompía la creación de tareas desde el panel de empresa. ✅
+- **Separar "Sin CRM" de "Identificado"** (PR #30, 2026-04-29): nuevas constantes en `lib/crm.ts` (`SIN_CRM_SENTINEL = "sin_crm"`, `SIN_CRM_LABEL`, `SIN_CRM_COLOR = "#6b7280"`), `FiltrosActivos.crmStage` admite `(DealStage | "sin_crm")[]`. Sidebar añade pill "Sin CRM" antes de "Identificado". Mapa: rama explícita para `identificado` (slate `#94a3b8`); default cambia a gris-500 (`#6b7280`) para empresas sin `dealStage`. Leyenda separa las dos entradas. `StageChevron` añade "Sin CRM" como primera opción del dropdown. ✅
+- **Fix mapa cluster markers stale** (PR #31, 2026-04-29): los pie-chart markers de cluster solo se actualizaban en `onMoveEnd`/`onIdle` de Mapbox. Al cambiar filtros sin mover el mapa, el state `clusterMarkers` se quedaba con datos viejos (síntoma: filtros nuevos → 0 pines en el mapa pese a 58 empresas en el sidebar). Fix: `useEffect` que dispara `updateClusterMarkers` cuando cambia `geojson`, con doble `setTimeout` (50ms + 250ms) para dejar que Mapbox digiera el data update. ✅
+- **Unificar buscador del Navbar** (PR #32, 2026-04-29): el buscador del topbar ahora funciona en cualquier página (antes el dropdown salía vacío fuera del mapa porque `empresasGeoJSON` solo se cargaba al montar `MapaEspana`). El `Navbar` dispara el fetch de `/api/empresas` lazy si el store está vacío. Eliminada la barra "Nombre o CIF" duplicada de `/pipeline` — el filtro local del kanban se mantiene como input dentro de `PipelineFiltros` entre los demás filtros (CCAA, Provincia, Sector, …). ✅
 
 ---
 
@@ -605,7 +612,7 @@ model CrmLog {
 | I | Web enrichment | Baja | ⏳ | Logos, LinkedIn — bloqueado por SSL scraping |
 | — | Registros seg. electrónica otras CCAA | Media | ⏳ | Andalucía, Madrid, Valencia... |
 
-### Estado abril 2026 (tras PRs #2-#17)
+### Estado abril 2026 (tras PRs #2-#32)
 
 | # | Tarea | Prioridad | Estado | Notas |
 |---|---|---|---|---|
@@ -630,6 +637,13 @@ model CrmLog {
 | AU | Unificación labels GM (antes "MB" / "Margen bruto") | Baja | ✅ | PR #19 |
 | AV | Filtros sidebar (Sin grupo, on_hold) + Excel grupo/web | Media | ✅ | PR #20 |
 | AW | StageChevron en modo compacto del PanelEmpresa | Media | ✅ | PR #21 |
+| AX | Notificaciones in-app + email proposal_new + campana en Navbar | Alta | ✅ | PR #25 |
+| AY | Crear finder desde web + password estática (no auto-genera al abrir) | Media | ✅ | PRs #26 + #27 (hotfix ESLint) |
+| AZ | Editar finder (email, comisión, activo/inactivo) + header 1 línea | Media | ✅ | PR #29 |
+| BA | Fix fechaLimite — aceptar yyyy-mm-dd del HTML date input | Alta | ✅ | PR #28 |
+| BB | Separar "Sin CRM" de "Identificado" en sidebar/mapa/leyenda/selector | Media | ✅ | PR #30 |
+| BC | Fix cluster markers stale al cambiar filtros del mapa | Alta | ✅ | PR #31 |
+| BD | Unificar buscador (Navbar funciona en /pipeline + cualquier página) | Media | ✅ | PR #32 |
 | — | **Cut-over Pipedrive** | Alta | ⏳ | Desactivar cron + export + baja suscripción (destructivo) |
 | — | Scoring dinámico modular | Media | ⏳ | Sub-scores tamaño/rentabilidad/crecimiento/etc. |
 | — | Mapa de conexiones / grafo | Media | ⏳ | Personas compartidas entre empresas (PersonaCargo) |
@@ -808,10 +822,25 @@ Subdominio `portal.fontiber.com` construido en 4 PRs (#11-#14, cerrados 2026-04-
 
 ### Flujo de alta de un finder
 
-1. Admin crea el registro en `Finder` (email + nombre + commissionPct).
-2. Admin entra a `/finders` (war room), pulsa **Set password** en la fila. Se genera una password aleatoria (14 chars), el modal la muestra una vez, admin la copia y la envía al finder por canal seguro (WhatsApp/Signal).
-3. El backend `POST /api/finders/:id/password` hace bcrypt hash + `passwordSetAt=now`. Desde 2026-04-24 el endpoint verifica la persistencia releyendo el registro y devuelve `{ok, passwordSetAt}` para que el cliente falle loud si el pool de Supabase no confirmó el write.
+Desde PR #26 (2026-04-28) la creación es íntegra desde la web — antes solo vía SQL/script.
+
+1. Admin entra a `/finders` y pulsa **+ Nuevo finder**. Modal con nombre, email, comisión opcional, password inicial (input editable + botón "Generar" para una aleatoria de 14 chars).
+2. `POST /api/finders` (zod `FinderCreateSchema`) crea el registro con bcrypt hash + `passwordSetAt=now` en una transacción. Email único — 409 si choca.
+3. La password se enseña **una sola vez** con botón "Copiar". Admin la pasa al finder por canal seguro (WhatsApp/Signal). No se vuelve a mostrar.
 4. Finder entra en `portal.fontiber.com`, formulario email + password.
+
+### Edición y desactivación de finders (PR #29, 2026-04-29)
+
+- Cada fila de `/finders` lleva botón **Editar** → modal con nombre, email, comisión y toggle activo/inactivo.
+- `PATCH /api/finders/:id` (`FinderUpdateSchema`): todos los campos opcionales pero al menos uno. Email único (409 si choca).
+- `active=false` no permite login (el provider `finder-credentials` en `auth.ts` rechaza `!finder.active`); las filas inactivas aparecen atenuadas.
+- `GET /api/finders` acepta `?includeInactive=1` para listar todos. La página `/finders` lo pasa; el resto de consumidores (selector "asignar a finder" en la ficha de empresa) sigue recibiendo solo activos.
+
+### Gestión de password (PRs #26 + #27, 2026-04-28)
+
+- Antes el modal de password auto-generaba una nueva cada vez al abrir. Ahora muestra **"Fijada el {fecha}"** y un botón explícito **"Cambiar password"** que entra en modo edición con input vacío + "Generar". Permite abrir el modal sin riesgo.
+- La password ya almacenada **no es recuperable** (bcrypt). Si el finder la perdió, hay que rotarla → se enseña una vez, se copia, se envía.
+- `POST /api/finders/:id/password` releé el registro tras `update` y devuelve `{ok, passwordSetAt}` para que el cliente falle loud si el pool de Supabase no confirmó el write.
 
 ### Qué ve el finder (portal.fontiber.com)
 
@@ -901,3 +930,67 @@ Campo `autorId` de `Nota` y `Tarea` pasó a `nullable` en PR #11 para permitir e
 - **Nunca** exponer `pipedriveOrgId`, `financieros`, `grupoId`, `ownerUserId`, `BORME`, `CrmLog` ni el stage interno real al finder.
 - **Nunca** revelar si una empresa está en seguimiento: el dedup de propuestas es silencioso, el label `DUPLICATE` se enmascara como "Cerrada", el autocomplete del form muestra "Sugerencias" (nombre genérico) sin información de estado.
 - **Siempre** filtrar por `finderSourceId === finder.id` AND `esAnonima=false` en todos los endpoints del portal. Leads anónimos (que vienen de Deale, otro finder fuera del portal) no existen para los finders del portal.
+
+---
+
+## 18. Notificaciones in-app + email (PR #25, 2026-04-28)
+
+Sistema genérico para notificar a admins de eventos discretos. Por ahora solo se emite `tipo: "proposal_new"` desde `POST /api/portal/proposals`, pero el modelo soporta futuros tipos (`task_due`, `borme_signal`, etc.) sin migración.
+
+### Modelo
+
+```prisma
+model Notificacion {
+  id        Int       @id @default(autoincrement())
+  userId    String
+  user      User      @relation(...)
+  tipo      String    // "proposal_new" (futuros: "task_due", "borme_signal", ...)
+  titulo    String
+  mensaje   String    @db.Text
+  link      String?   // ruta interna del war room (ej. "/finders/proposals?status=PENDING")
+  leida     Boolean   @default(false)
+  leidaAt   DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, leida, createdAt])
+}
+```
+
+### Helper `notifyAdmins` (`src/lib/notifications.ts`)
+
+Recibe `{ tipo, titulo, mensaje, link?, email? }`. Pasos:
+
+1. Lee `User where role="admin" AND active=true`.
+2. `prisma.notificacion.createMany` — una fila por admin.
+3. Si `email !== false` y hay `RESEND_API_KEY`, envía email vía Resend (mismo `FROM` que los digests).
+4. Recipientes: por defecto los emails de los admins. Se pueden override con env `NOTIFICATION_EMAIL_TO` (CSV) — útil mientras solo Alberto recibe; cuando entre Gabriel basta con quitar el override.
+
+Fire-and-forget: si Resend falla solo loguea, no rompe la operación que disparó la notificación.
+
+### Endpoint `/api/notificaciones`
+
+- `GET ?unreadOnly=1&limit=20` → `{ items, unreadCount }` filtrado por session user. Solo `kind === "admin"`.
+- `PATCH` body `{ ids: number[] }` o `{ markAllRead: true }` → marca leídas (con `leidaAt`).
+
+### UI — `NotificationsBell` en topbar
+
+- Componente cliente entre el botón de modo presentación y el de finders.
+- Polling cada 30s contra `/api/notificaciones?limit=10`.
+- Badge rojo con count de no-leídas (>9 → "9+").
+- Click abre dropdown 360px con últimas 10. Click en una notificación marca leída (optimista) y navega al `link`.
+- Botón "Marcar todas leídas" llama PATCH con `markAllRead: true`.
+
+### Hook actual: `proposal_new`
+
+`POST /api/portal/proposals` tras `logFinderAction` invoca:
+
+```ts
+notifyAdmins({
+  tipo: "proposal_new",
+  titulo: `Nueva propuesta de ${finder.name}: ${companyName}${duplicado ? " (posible duplicado)" : ""}`,
+  mensaje: `…\n\nEmpresa: …\nCIF: …\n\nRevísala desde Propuestas de finders.`,
+  link: "/finders/proposals?status=PENDING",
+});
+```
+
+Fire-and-forget con `.catch(...)` — la propuesta + log pasan siempre aunque la notificación falle.
