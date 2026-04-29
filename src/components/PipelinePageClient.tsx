@@ -207,12 +207,6 @@ export default function PipelinePageClient() {
           {data.total} {data.total === 1 ? "empresa" : "empresas"}
           {loading && " · cargando…"}
         </span>
-        <input
-          value={filters.q}
-          onChange={(e) => setFilters({ ...filters, q: e.target.value })}
-          placeholder="Nombre o CIF…"
-          className="w-52 bg-wr-surface2 border border-wr-border rounded-md px-2 py-1 text-[11px] text-wr-text placeholder:text-wr-hint focus:outline-none focus:border-wr-blue"
-        />
         <PipelineFiltros
           filters={filters}
           onChange={setFilters}
