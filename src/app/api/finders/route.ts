@@ -9,24 +9,29 @@ export const dynamic = "force-dynamic";
 
 /**
  * GET /api/finders
- * Lista de finders activos. Usado para el selector de "asignar a finder" en la ficha
- * de empresa. También lo consumirá en el futuro `/admin/finders` cuando se cree.
+ * Lista de finders. Por defecto solo activos (para el selector "asignar a finder"
+ * en la ficha de empresa). Pasa ?includeInactive=1 para listar también inactivos
+ * (lo usa la página /finders para gestionar todos).
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+    const includeInactive =
+      new URL(req.url).searchParams.get("includeInactive") === "1";
+
     const finders = await prisma.finder.findMany({
-      where: { active: true },
+      where: includeInactive ? {} : { active: true },
       select: {
         id: true,
         name: true,
         email: true,
         commissionPct: true,
+        active: true,
         passwordSetAt: true,
       },
-      orderBy: { name: "asc" },
+      orderBy: [{ active: "desc" }, { name: "asc" }],
     });
     return NextResponse.json(finders);
   } catch (err) {

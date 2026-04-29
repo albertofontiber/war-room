@@ -7,6 +7,7 @@ type Finder = {
   name: string;
   email: string;
   commissionPct: number | null;
+  active: boolean;
   passwordSetAt: string | null;
 };
 
@@ -53,9 +54,20 @@ export default function FindersAdminClient() {
   const [createError, setCreateError] = useState<string | null>(null);
   const [createdPassword, setCreatedPassword] = useState<string | null>(null);
 
+  // Modal de edición de finder.
+  const [editModal, setEditModal] = useState<Finder | null>(null);
+  const [editForm, setEditForm] = useState({
+    name: "",
+    email: "",
+    commissionPct: "",
+    active: true,
+  });
+  const [editSubmitting, setEditSubmitting] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+
   const load = () => {
     setLoading(true);
-    fetch("/api/finders")
+    fetch("/api/finders?includeInactive=1")
       .then((r) => r.json())
       .then((data) => setFinders(Array.isArray(data) ? data : []))
       .finally(() => setLoading(false));
@@ -186,17 +198,84 @@ export default function FindersAdminClient() {
     /\S+@\S+\.\S+/.test(createForm.email.trim()) &&
     createForm.password.length >= 10;
 
+  // ─── Edit finder modal ───────────────────────────────────────────────────
+  const openEditModal = (f: Finder) => {
+    setEditModal(f);
+    setEditForm({
+      name: f.name,
+      email: f.email,
+      commissionPct: f.commissionPct != null ? String(f.commissionPct) : "",
+      active: f.active,
+    });
+    setEditError(null);
+  };
+
+  const closeEditModal = () => {
+    setEditModal(null);
+    setEditError(null);
+  };
+
+  const handleEditSave = async () => {
+    if (!editModal) return;
+    setEditSubmitting(true);
+    setEditError(null);
+    try {
+      const body: {
+        name?: string;
+        email?: string;
+        commissionPct?: number | null;
+        active?: boolean;
+      } = {};
+      if (editForm.name.trim() !== editModal.name) body.name = editForm.name.trim();
+      if (editForm.email.trim().toLowerCase() !== editModal.email.toLowerCase())
+        body.email = editForm.email.trim();
+      const pctRaw = editForm.commissionPct.trim();
+      const pctParsed = pctRaw ? parseFloat(pctRaw.replace(",", ".")) : null;
+      const pctCurrent = editModal.commissionPct;
+      if (pctParsed !== pctCurrent) body.commissionPct = pctParsed;
+      if (editForm.active !== editModal.active) body.active = editForm.active;
+      if (Object.keys(body).length === 0) {
+        closeEditModal();
+        return;
+      }
+      const res = await fetch(`/api/finders/${editModal.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setEditError(
+          json.issues?.map((i: { message: string }) => i.message).join("; ") ||
+            json.error ||
+            "Error"
+        );
+        return;
+      }
+      load();
+      closeEditModal();
+    } catch (e) {
+      setEditError(String(e));
+    } finally {
+      setEditSubmitting(false);
+    }
+  };
+
+  const editValid =
+    editForm.name.trim().length > 0 &&
+    /\S+@\S+\.\S+/.test(editForm.email.trim());
+
   return (
     <div className="min-h-screen bg-wr-bg text-wr-text p-8">
-      <div className="max-w-4xl mx-auto">
-        <header className="mb-6 flex items-center justify-between">
-          <div>
+      <div className="max-w-5xl mx-auto">
+        <header className="mb-6 flex items-center justify-between gap-4 flex-nowrap">
+          <div className="min-w-0 flex-1">
             <h1 className="text-lg font-semibold">Finders</h1>
             <p className="text-wr-hint text-xs mt-0.5">
               Gestión de acceso al portal. La password solo se muestra una vez — cópiala y pásala al finder por canal seguro.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-shrink-0 whitespace-nowrap">
             <button
               onClick={openCreateModal}
               className="text-xs px-3 py-1.5 rounded bg-wr-blue text-white hover:bg-blue-500"
@@ -204,7 +283,7 @@ export default function FindersAdminClient() {
               + Nuevo finder
             </button>
             <a href="/finders/proposals" className="text-xs text-wr-blue hover:underline">
-              Revisar propuestas →
+              Propuestas →
             </a>
             <a href="/" className="text-xs text-wr-blue hover:underline">← War Room</a>
           </div>
@@ -217,28 +296,43 @@ export default function FindersAdminClient() {
                 <th className="text-left px-4 py-2 font-semibold">Nombre</th>
                 <th className="text-left px-4 py-2 font-semibold">Email</th>
                 <th className="text-left px-4 py-2 font-semibold">Comisión</th>
+                <th className="text-left px-4 py-2 font-semibold">Estado</th>
                 <th className="text-left px-4 py-2 font-semibold">Portal</th>
                 <th className="px-4 py-2"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-wr-border">
               {loading && (
-                <tr><td colSpan={5} className="px-4 py-6 text-center text-wr-hint">Cargando…</td></tr>
+                <tr><td colSpan={6} className="px-4 py-6 text-center text-wr-hint">Cargando…</td></tr>
               )}
               {!loading && finders.length === 0 && (
-                <tr><td colSpan={5} className="px-4 py-6 text-center text-wr-hint">No hay finders activos.</td></tr>
+                <tr><td colSpan={6} className="px-4 py-6 text-center text-wr-hint">No hay finders.</td></tr>
               )}
               {finders.map((f) => (
-                <tr key={f.id} className="hover:bg-wr-surface2/40">
+                <tr
+                  key={f.id}
+                  className={`hover:bg-wr-surface2/40 ${f.active ? "" : "opacity-60"}`}
+                >
                   <td className="px-4 py-2 font-medium">{f.name}</td>
                   <td className="px-4 py-2 text-wr-muted">{f.email}</td>
                   <td className="px-4 py-2 text-wr-muted">
                     {f.commissionPct != null ? `${f.commissionPct}%` : "—"}
                   </td>
                   <td className="px-4 py-2">
-                    {f.passwordSetAt ? (
+                    {f.active ? (
                       <span className="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/30">
                         <span className="w-1.5 h-1.5 rounded-full bg-green-400" /> Activo
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded bg-wr-red/10 text-wr-red border border-wr-red/30">
+                        <span className="w-1.5 h-1.5 rounded-full bg-wr-red" /> Inactivo
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-2">
+                    {f.passwordSetAt ? (
+                      <span className="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded bg-wr-blue/10 text-wr-blue border border-wr-blue/30">
+                        <span className="w-1.5 h-1.5 rounded-full bg-wr-blue" /> Con acceso
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded bg-wr-amber/10 text-wr-amber border border-wr-amber/30">
@@ -246,12 +340,18 @@ export default function FindersAdminClient() {
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-2 text-right">
+                  <td className="px-4 py-2 text-right whitespace-nowrap">
+                    <button
+                      onClick={() => openEditModal(f)}
+                      className="text-[11px] px-2 py-1 mr-2 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text"
+                    >
+                      Editar
+                    </button>
                     <button
                       onClick={() => openPwdModal(f)}
                       className="text-[11px] px-2 py-1 rounded bg-wr-blue/10 border border-wr-blue/30 text-wr-blue hover:bg-wr-blue/20"
                     >
-                      {f.passwordSetAt ? "Gestionar password" : "Set password"}
+                      {f.passwordSetAt ? "Password" : "Set password"}
                     </button>
                   </td>
                 </tr>
@@ -503,6 +603,93 @@ export default function FindersAdminClient() {
                   </div>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Modal: Edit finder ──────────────────────────────────────────── */}
+      {editModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          onClick={closeEditModal}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-[480px] max-w-[92vw] bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
+          >
+            <div className="px-5 py-3 border-b border-wr-border flex items-center justify-between">
+              <h2 className="text-sm font-semibold">Editar finder</h2>
+              <button onClick={closeEditModal} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
+            </div>
+
+            <div className="p-5 space-y-3 text-xs">
+              <label className="block">
+                <span className="text-[10px] text-wr-muted uppercase tracking-wider">Nombre</span>
+                <input
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className="mt-1 w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-wr-text focus:outline-none focus:border-wr-blue"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-[10px] text-wr-muted uppercase tracking-wider">Email</span>
+                <input
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                  className="mt-1 w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-wr-text focus:outline-none focus:border-wr-blue"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-[10px] text-wr-muted uppercase tracking-wider">Comisión % (vacío = sin comisión)</span>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={editForm.commissionPct}
+                  onChange={(e) => setEditForm({ ...editForm, commissionPct: e.target.value })}
+                  placeholder="ej. 1.5"
+                  className="mt-1 w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-wr-text focus:outline-none focus:border-wr-blue"
+                />
+              </label>
+
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={editForm.active}
+                  onChange={(e) => setEditForm({ ...editForm, active: e.target.checked })}
+                  className="w-4 h-4 accent-wr-blue"
+                />
+                <span className="text-wr-text">
+                  Finder activo
+                  <span className="text-wr-hint ml-2">
+                    {editForm.active
+                      ? "(puede iniciar sesión en el portal)"
+                      : "(no podrá iniciar sesión, aunque tenga password)"}
+                  </span>
+                </span>
+              </label>
+
+              {editError && <p className="text-wr-red text-[11px]">{editError}</p>}
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-wr-border">
+                <button
+                  onClick={closeEditModal}
+                  disabled={editSubmitting}
+                  className="text-xs px-3 py-1.5 bg-wr-surface2 border border-wr-border rounded text-wr-muted hover:text-wr-text"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleEditSave}
+                  disabled={editSubmitting || !editValid}
+                  className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500 disabled:opacity-40"
+                >
+                  {editSubmitting ? "Guardando…" : "Guardar"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
