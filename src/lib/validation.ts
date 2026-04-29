@@ -94,6 +94,17 @@ export const FinderCreateSchema = z.object({
   password: z.string().min(10, "La contraseña debe tener al menos 10 caracteres"),
 });
 
+// PATCH /api/finders/:id — todos los campos opcionales pero al menos uno.
+// La password NO se cambia desde aquí; eso vive en POST /api/finders/:id/password.
+export const FinderUpdateSchema = z
+  .object({
+    email: z.string().trim().toLowerCase().email("Email inválido").optional(),
+    name: nonEmptyString.max(100).optional(),
+    commissionPct: z.number().min(0).max(100).nullable().optional(),
+    active: z.boolean().optional(),
+  })
+  .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
+
 // ─── Portal finders: notas, tareas y actividades ─────────────────────────────
 // Los schemas del portal son un subset de los del war room. No permiten
 // setear autores (se infieren de la sesión) ni flags de admin
