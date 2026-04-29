@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 
 export type PipelineFilters = {
-  q: string;
   ccaa: string[];
   provincia: string[];
   sector: ("PCI" | "seguridad_electronica" | "mixto")[];
@@ -14,7 +13,6 @@ export type PipelineFilters = {
 };
 
 export const EMPTY_FILTERS: PipelineFilters = {
-  q: "",
   ccaa: [],
   provincia: [],
   sector: [],
@@ -49,7 +47,6 @@ export default function PipelineFiltros({
 }: Props) {
   const count = useMemo(() => {
     let n = 0;
-    if (filters.q.trim()) n++;
     if (filters.ccaa.length) n++;
     if (filters.provincia.length) n++;
     if (filters.sector.length) n++;
@@ -80,15 +77,6 @@ export default function PipelineFiltros({
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      {/* Nombre / CIF — filtro local del kanban (la búsqueda global del Navbar
-          va a una empresa concreta; esto reduce el listado in situ). */}
-      <input
-        value={filters.q}
-        onChange={(e) => onChange({ ...filters, q: e.target.value })}
-        placeholder="Nombre / CIF…"
-        className="w-44 bg-wr-surface2 border border-wr-border rounded-md px-2 py-1 text-[10px] text-wr-text placeholder:text-wr-hint focus:outline-none focus:border-wr-blue"
-      />
-
       {/* CCAA */}
       <MultiSelect
         label="CCAA"

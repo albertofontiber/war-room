@@ -60,7 +60,6 @@ const EMPTY_META: PipelineMeta = { ccaa: [], provincia: [], owners: [], finders:
 
 function buildQuery(f: PipelineFilters): URLSearchParams {
   const p = new URLSearchParams();
-  if (f.q.trim()) p.set("q", f.q.trim());
   if (f.ccaa.length) p.set("ccaa", f.ccaa.join(","));
   if (f.provincia.length) p.set("provincia", f.provincia.join(","));
   if (f.sector.length) p.set("sector", f.sector.join(","));
