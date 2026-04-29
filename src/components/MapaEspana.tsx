@@ -443,7 +443,7 @@ type GeoJSONFC = {
   features: Array<{ type: "Feature"; geometry: { type: "Point"; coordinates: [number, number] }; properties: Props }>;
 };
 
-const INTERACTIVE = ["clusters", "markers-pci", "markers-segelec", "markers-mixto", "markers-bg"];
+const INTERACTIVE = ["markers-pci", "markers-segelec", "markers-mixto", "markers-bg"];
 
 export default function MapaEspana() {
   const mapRef = useRef<MapRef>(null);
@@ -559,19 +559,23 @@ export default function MapaEspana() {
     if (b) setMapBounds({ west: b.getWest(), south: b.getSouth(), east: b.getEast(), north: b.getNorth() });
   }, [setMapBounds]);
 
-  // ── Cluster pie markers (Supercluster JS, determinista) ──────────────────
+  // ── Cluster pies + features individuales — Supercluster JS único ────────
   //
   // Antes (PRs #31/#35/#36/#37): los pies se calculaban via `querySourceFeatures`
   // contra el cluster interno de Mapbox. Eso introducía dependencias de timing
-  // (cuándo está cargado el source, cuándo es safe leer, listeners, etc.) que
-  // generaron 4 bugs sucesivos. El fix definitivo es no depender de Mapbox
-  // para el cálculo: usamos `supercluster` en JS puro (mismo motor que Mapbox
-  // usa internamente, mismos parámetros → mismo resultado) sobre el `geojson`
-  // filtrado, derivado deterministicamente de los filtros + el viewport.
+  // que generaron 4 bugs sucesivos.
   //
-  // Mapbox sigue clusterizando internamente para que los Layers de markers
-  // individuales (`["!", ["has", "point_count"]]`) sigan funcionando con los
-  // mismos params → ambos sistemas convergen sin divergencia.
+  // Iteración previa de este Nivel 2: Supercluster JS para los pies + cluster
+  // Mapbox para los individuales. Resultado: AMBOS sistemas pueden divergir
+  // sutilmente en qué consideran cluster vs individual aunque tengan los
+  // mismos params → faltan features en el render.
+  //
+  // Iteración definitiva (esta): Supercluster JS es la **única** fuente de
+  // verdad. Particionamos el output de getClusters() en:
+  //   - clusters (>=2) → renderizamos como <Marker> React (pies)
+  //   - individuales  → los pasamos al Source Mapbox SIN clustering;
+  //                     los Layers `markers-pci/segelec/mixto` los dibujan.
+  // Imposible que diverjan: solo hay un cálculo de clustering en toda la app.
 
   type ClusterAggregateProps = {
     s_id: number;
@@ -621,57 +625,69 @@ export default function MapaEspana() {
     return sc;
   }, [geojson]);
 
-  // Computar pies del viewport actual. Determinista: deps explícitas, sin
-  // listeners ni timeouts. Cambia cuando cambian filtros (vía clusterIndex),
-  // bounds o zoom.
-  const clusterMarkers = useMemo<ClusterMarker[]>(() => {
-    if (!clusterIndex) return [];
+  // Particionar el output de getClusters en clusters (>=2) e individuales.
+  // Determinista: deps explícitas, sin listeners ni timeouts. Cambia cuando
+  // cambian filtros (vía clusterIndex), bounds o zoom.
+  //
+  // Importante: el Source Mapbox YA NO clusteriza (cluster: false en el
+  // <Source>). Mapbox sólo dibuja las individuales que pasamos en
+  // `individualFeatures`. Así Supercluster JS es la ÚNICA fuente de verdad
+  // sobre qué se considera cluster vs individual — imposible que diverjan.
+  const { clusterMarkers, individualFeatures } = useMemo<{
+    clusterMarkers: ClusterMarker[];
+    individualFeatures: GeoJSONFC["features"];
+  }>(() => {
+    if (!clusterIndex) return { clusterMarkers: [], individualFeatures: [] };
     // Si aún no hay bounds (primer render antes de onLoad/onMoveEnd), usar
-    // bbox del mundo para devolver TODOS los clusters. Mapbox solo pintará
-    // los que estén en el viewport visible.
+    // bbox del mundo para devolver TODOS los items. Mapbox sólo pintará los
+    // que estén en el viewport visible.
     const bbox: [number, number, number, number] = mapBounds
       ? [mapBounds.west, mapBounds.south, mapBounds.east, mapBounds.north]
       : [-180, -85, 180, 85];
     const zoom = Math.floor(mapViewState.zoom);
     const items = clusterIndex.getClusters(bbox, zoom);
 
-    const markers: ClusterMarker[] = [];
+    const clusters: ClusterMarker[] = [];
+    const individuals: GeoJSONFC["features"] = [];
+
     for (const item of items) {
-      const props = item.properties as
-        | (ClusterAggregateProps & { cluster: true; cluster_id: number; point_count: number })
-        | EmpresaFeatureProperties;
-      // Solo nos quedamos con clusters reales (>=2 features); las features
-      // individuales las renderizan los Layers Mapbox.
-      if (!("cluster" in props) || props.cluster !== true) continue;
-      const cp = props as ClusterAggregateProps & {
-        cluster: true; cluster_id: number; point_count: number;
-      };
-      const [lng, lat] = (item.geometry as GeoJSON.Point).coordinates;
-      const stageCounts: Record<string, number> = {
-        identificado:    cp.s_id,
-        contactado:      cp.s_ct,
-        primera_reunion: cp.s_pr,
-        analisis:        cp.s_an,
-        "LOI enviada":   cp.s_lo,
-        execution:       cp.s_ex,
-        portfolio:       cp.s_po,
-        muerto:          cp.s_mu,
-      };
-      const knownSum = Object.values(stageCounts).reduce((a, v) => a + v, 0);
-      // Sin CRM (dealStage null) = total - todos los stages conocidos.
-      // Lo agregamos a "identificado" para mantener el comportamiento histórico
-      // del pie chart (gris). Si en el futuro queremos un sector "Sin CRM"
-      // aparte en el pie, separar aquí.
-      stageCounts["identificado"] += Math.max(0, cp.point_count - knownSum);
-      markers.push({
-        id: cp.cluster_id,
-        lng,
-        lat,
-        count: cp.point_count,
-        stageCounts,
-      });
+      const props = item.properties;
+      if (props && "cluster" in props && props.cluster === true) {
+        const cp = props as ClusterAggregateProps & {
+          cluster: true; cluster_id: number; point_count: number;
+        };
+        const [lng, lat] = (item.geometry as GeoJSON.Point).coordinates;
+        const stageCounts: Record<string, number> = {
+          identificado:    cp.s_id,
+          contactado:      cp.s_ct,
+          primera_reunion: cp.s_pr,
+          analisis:        cp.s_an,
+          "LOI enviada":   cp.s_lo,
+          execution:       cp.s_ex,
+          portfolio:       cp.s_po,
+          muerto:          cp.s_mu,
+        };
+        const knownSum = Object.values(stageCounts).reduce((a, v) => a + v, 0);
+        // Sin CRM (dealStage null) = total - todos los stages conocidos.
+        // Lo agregamos a "identificado" para mantener el comportamiento
+        // histórico del pie chart (gris). Si en el futuro queremos un sector
+        // "Sin CRM" aparte en el pie, separar aquí.
+        stageCounts["identificado"] += Math.max(0, cp.point_count - knownSum);
+        clusters.push({
+          id: cp.cluster_id,
+          lng,
+          lat,
+          count: cp.point_count,
+          stageCounts,
+        });
+      } else {
+        // Feature individual — Supercluster preserva las propiedades originales.
+        individuals.push(
+          item as unknown as GeoJSONFC["features"][number]
+        );
+      }
     }
-    return markers;
+    return { clusterMarkers: clusters, individualFeatures: individuals };
   }, [clusterIndex, mapBounds, mapViewState.zoom]);
 
   // ── Asegurar custom icons al montar (independiente de eventos Mapbox) ───
@@ -779,7 +795,9 @@ export default function MapaEspana() {
     setDrawMouse(null);
   }, []);
 
-  // Click — add draw point OR select empresa / zoom cluster
+  // Click sobre un Layer Mapbox individual = seleccionar empresa.
+  // Los clicks sobre pies de cluster los maneja el <ClusterPie onClick> abajo
+  // (los pies son <Marker> React, no Layers Mapbox).
   const handleClick = useCallback(
     (e: MapMouseEvent) => {
       if (drawMode) {
@@ -789,21 +807,8 @@ export default function MapaEspana() {
       }
       const feature = e.features?.[0];
       if (!feature) return;
-
-      if (feature.properties?.cluster) {
-        const clusterId = feature.properties.cluster_id as number;
-        const source = mapRef.current
-          ?.getMap()
-          .getSource("empresas") as mapboxgl.GeoJSONSource;
-        source?.getClusterExpansionZoom(clusterId, (err, zoom) => {
-          if (err || zoom == null) return;
-          const coords = (feature.geometry as GeoJSON.Point).coordinates as [number, number];
-          mapRef.current?.getMap().easeTo({ center: coords, zoom: zoom + 0.5 });
-        });
-      } else {
-        const id = feature.properties?.id as number;
-        if (id) seleccionarEmpresa(id);
-      }
+      const id = feature.properties?.id as number;
+      if (id) seleccionarEmpresa(id);
     },
     [drawMode, seleccionarEmpresa]
   );
@@ -927,36 +932,23 @@ export default function MapaEspana() {
         <Source
             id="empresas"
             type="geojson"
-            data={(geojson ?? { type: "FeatureCollection", features: [] }) as unknown as GeoJSON.FeatureCollection}
-            cluster
-            clusterMaxZoom={10}
-            clusterRadius={50}
+            data={{
+              type: "FeatureCollection",
+              features: individualFeatures,
+            } as unknown as GeoJSON.FeatureCollection}
           >
-            {/* ── Cluster circles — hidden, kept for click interaction detection ── */}
-            <Layer
-              id="clusters"
-              type="circle"
-              filter={["has", "point_count"]}
-              paint={{
-                "circle-color": "rgba(0,0,0,0)",
-                "circle-radius": [
-                  "step", ["get", "point_count"],
-                  16, 5, 22, 20, 28,
-                ],
-                "circle-stroke-width": 0,
-                "circle-opacity": 0,
-              }}
-            />
+            {/* Mapbox YA NO clusteriza este source. Las features que aquí
+                llegan son SOLO las que Supercluster JS considera individuales
+                (cluster=false). Los Layers `markers-*` ya no necesitan filtro
+                ["!", ["has", "point_count"]] — ninguna feature tendrá esa
+                propiedad. Los clusters se renderizan como <Marker> arriba en
+                el JSX. Una sola fuente de verdad: clusterIndex (Supercluster). */}
 
             {/* ── BORME pulsing ring (amber) ── */}
             <Layer
               id="borme-ring"
               type="circle"
-              filter={[
-                "all",
-                ["!", ["has", "point_count"]],
-                ["boolean", ["get", "hasBormeReciente"], false],
-              ]}
+              filter={["boolean", ["get", "hasBormeReciente"], false]}
               paint={{
                 "circle-radius": 8,
                 "circle-color": "rgba(0,0,0,0)",
@@ -970,11 +962,7 @@ export default function MapaEspana() {
             <Layer
               id="markers-pci"
               type="circle"
-              filter={[
-                "all",
-                ["!", ["has", "point_count"]],
-                ["==", ["get", "sector"], "PCI"],
-              ]}
+              filter={["==", ["get", "sector"], "PCI"]}
               layout={{
                 "circle-sort-key": ["case", ["boolean", ["get", "enPerimetro"], false], 1, 0] as unknown as number,
               }}
@@ -993,11 +981,7 @@ export default function MapaEspana() {
               <Layer
                 id="markers-segelec"
                 type="symbol"
-                filter={[
-                  "all",
-                  ["!", ["has", "point_count"]],
-                  ["==", ["get", "sector"], "seguridad_electronica"],
-                ]}
+                filter={["==", ["get", "sector"], "seguridad_electronica"]}
                 layout={{
                   "icon-image": "shape-square",
                   "icon-size": iconSizeExpr as unknown as number,
@@ -1017,11 +1001,7 @@ export default function MapaEspana() {
               <Layer
                 id="markers-mixto"
                 type="symbol"
-                filter={[
-                  "all",
-                  ["!", ["has", "point_count"]],
-                  ["==", ["get", "sector"], "mixto"],
-                ]}
+                filter={["==", ["get", "sector"], "mixto"]}
                 layout={{
                   "icon-image": "shape-hexagon",
                   "icon-size": iconSizeExpr as unknown as number,
@@ -1048,9 +1028,17 @@ export default function MapaEspana() {
             <ClusterPie
               marker={marker}
               onClick={() => {
+                // Zoom exacto necesario para expandir este cluster, calculado
+                // por Supercluster JS. Mejor UX que un zoom genérico +2.
+                const expansionZoom = clusterIndex
+                  ? clusterIndex.getClusterExpansionZoom(marker.id)
+                  : null;
+                const targetZoom = expansionZoom != null
+                  ? expansionZoom + 0.5
+                  : (mapRef.current?.getMap().getZoom() ?? 8) + 2;
                 mapRef.current?.getMap().easeTo({
                   center: [marker.lng, marker.lat],
-                  zoom: (mapRef.current.getMap().getZoom() ?? 8) + 2,
+                  zoom: targetZoom,
                   duration: 400,
                 });
               }}
