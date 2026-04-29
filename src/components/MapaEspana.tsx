@@ -573,11 +573,7 @@ export default function MapaEspana() {
   // individuales (`["!", ["has", "point_count"]]`) sigan funcionando con los
   // mismos params → ambos sistemas convergen sin divergencia.
 
-  type ClusterFeatureProps = {
-    cluster: true;
-    cluster_id: number;
-    point_count: number;
-    point_count_abbreviated: string | number;
+  type ClusterAggregateProps = {
     s_id: number;
     s_ct: number;
     s_pr: number;
@@ -588,8 +584,14 @@ export default function MapaEspana() {
     s_mu: number;
   };
 
-  const supercluster = useMemo(() => {
-    return new Supercluster<EmpresaFeatureProperties, ClusterFeatureProps>({
+  // Index de Supercluster — se reconstruye atomicamente cuando cambia el
+  // conjunto filtrado. Lo hacemos en useMemo (no useEffect) para evitar el
+  // race condition "useMemo de getClusters corre antes que useEffect de load".
+  // Coste: ~10-30ms para reconstruir 5k features. Se ejecuta solo cuando
+  // cambian los filtros (geojson nueva referencia), no en cada pan/zoom.
+  const clusterIndex = useMemo(() => {
+    if (!geojson || geojson.features.length === 0) return null;
+    const sc = new Supercluster<EmpresaFeatureProperties, ClusterAggregateProps>({
       radius: 50,        // mismo clusterRadius que el Source Mapbox
       maxZoom: 10,       // mismo clusterMaxZoom
       map: (props) => ({
@@ -601,7 +603,7 @@ export default function MapaEspana() {
         s_ex: props.dealStage === "execution"       ? 1 : 0,
         s_po: props.dealStage === "portfolio"       ? 1 : 0,
         s_mu: props.dealStage === "muerto"          ? 1 : 0,
-      }) as ClusterFeatureProps,
+      }),
       reduce: (acc, props) => {
         acc.s_id += props.s_id;
         acc.s_ct += props.s_ct;
@@ -613,21 +615,17 @@ export default function MapaEspana() {
         acc.s_mu += props.s_mu;
       },
     });
-  }, []);
-
-  // Recargar el índice cuando cambia el conjunto filtrado.
-  useEffect(() => {
-    if (!geojson) return;
-    supercluster.load(
+    sc.load(
       geojson.features as Array<GeoJSON.Feature<GeoJSON.Point, EmpresaFeatureProperties>>
     );
-  }, [supercluster, geojson]);
+    return sc;
+  }, [geojson]);
 
   // Computar pies del viewport actual. Determinista: deps explícitas, sin
-  // listeners ni timeouts. Cambia cuando cambian filtros (vía geojson),
+  // listeners ni timeouts. Cambia cuando cambian filtros (vía clusterIndex),
   // bounds o zoom.
   const clusterMarkers = useMemo<ClusterMarker[]>(() => {
-    if (!geojson) return [];
+    if (!clusterIndex) return [];
     // Si aún no hay bounds (primer render antes de onLoad/onMoveEnd), usar
     // bbox del mundo para devolver TODOS los clusters. Mapbox solo pintará
     // los que estén en el viewport visible.
@@ -635,15 +633,19 @@ export default function MapaEspana() {
       ? [mapBounds.west, mapBounds.south, mapBounds.east, mapBounds.north]
       : [-180, -85, 180, 85];
     const zoom = Math.floor(mapViewState.zoom);
-    const items = supercluster.getClusters(bbox, zoom);
+    const items = clusterIndex.getClusters(bbox, zoom);
 
     const markers: ClusterMarker[] = [];
     for (const item of items) {
-      const props = item.properties as ClusterFeatureProps | EmpresaFeatureProperties;
+      const props = item.properties as
+        | (ClusterAggregateProps & { cluster: true; cluster_id: number; point_count: number })
+        | EmpresaFeatureProperties;
       // Solo nos quedamos con clusters reales (>=2 features); las features
       // individuales las renderizan los Layers Mapbox.
       if (!("cluster" in props) || props.cluster !== true) continue;
-      const cp = props as ClusterFeatureProps;
+      const cp = props as ClusterAggregateProps & {
+        cluster: true; cluster_id: number; point_count: number;
+      };
       const [lng, lat] = (item.geometry as GeoJSON.Point).coordinates;
       const stageCounts: Record<string, number> = {
         identificado:    cp.s_id,
@@ -670,7 +672,7 @@ export default function MapaEspana() {
       });
     }
     return markers;
-  }, [supercluster, geojson, mapBounds, mapViewState.zoom]);
+  }, [clusterIndex, mapBounds, mapViewState.zoom]);
 
   // ── Asegurar custom icons al montar (independiente de eventos Mapbox) ───
   //
