@@ -25,8 +25,13 @@ export const dynamic = "force-dynamic";
  *   ?provincia=...
  *   ?sector=PCI|seguridad_electronica|mixto
  *   ?owner=<userId>     (filtra por CrmEstado.ownerUserId)
- *   ?q=<text>           (busca en nombre/CIF — simple includes case-insensitive)
+ *   ?finder=<finderId>|__none__  (filtra por Empresa.finderSourceId)
  *   ?conTarea=true      (solo empresas con al menos una tarea pendiente)
+ *   ?diasSinActividadMin=<n>     (post-filter en código sobre actividad reciente)
+ *
+ * Nota: la búsqueda por nombre/CIF NO está aquí. La barra global del Navbar
+ * (war room top) cubre ese caso de uso. Si en el futuro se reactiva el filtro
+ * de listado por texto, añadir `?q=` y el bloque `OR` sobre nombre/cif.
  */
 export async function GET(req: NextRequest) {
   try {
@@ -39,7 +44,6 @@ export async function GET(req: NextRequest) {
     const sector = url.searchParams.get("sector")?.split(",").filter(Boolean) ?? [];
     const owner = url.searchParams.get("owner") ?? null;
     const finder = url.searchParams.get("finder") ?? null;
-    const q = url.searchParams.get("q")?.trim().toLowerCase() ?? "";
     const conTarea = url.searchParams.get("conTarea") === "true";
     const diasSinActividadMinParam = url.searchParams.get("diasSinActividadMin");
     const diasSinActividadMin = diasSinActividadMinParam
@@ -58,14 +62,6 @@ export async function GET(req: NextRequest) {
           ? { finderSourceId: null }
           : finder
           ? { finderSourceId: finder }
-          : {}),
-        ...(q
-          ? {
-              OR: [
-                { nombre: { contains: q, mode: "insensitive" } },
-                { cif: { contains: q, mode: "insensitive" } },
-              ],
-            }
           : {}),
         ...(conTarea
           ? {
