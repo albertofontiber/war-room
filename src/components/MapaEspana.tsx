@@ -589,6 +589,24 @@ export default function MapaEspana() {
     setClusterMarkers(markers);
   }, []);
 
+  // ── Refresh cluster markers cuando cambia el conjunto filtrado ────────────
+  //
+  // Bug previo (Alberto, 2026-04-29): con filtros activos el sidebar contaba
+  // 58 empresas pero el mapa mostraba 0 pines. La causa: los pie-chart markers
+  // de cluster solo se actualizaban en `onMoveEnd` y `onIdle`. Cuando el usuario
+  // cambia un filtro sin mover el mapa, Mapbox no siempre dispara `idle` antes
+  // de que pase el render de React, así que `clusterMarkers` (state) se queda
+  // con los markers viejos (que ya no se corresponden con clusters reales) o
+  // vacío. Forzar la actualización aquí garantiza que tras cualquier cambio del
+  // geojson filtrado los pies se re-dibujen. El doble setTimeout da margen para
+  // que Mapbox digiera el data update y el clustering interno se rehaga.
+  useEffect(() => {
+    if (!geojson) return;
+    const t1 = setTimeout(() => updateClusterMarkers(), 50);
+    const t2 = setTimeout(() => updateClusterMarkers(), 250);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [geojson, updateClusterMarkers]);
+
   // ── onIdle: re-ensure custom icons (lost on reuseMaps remount) + update clusters ──
   // With reuseMaps, onLoad does NOT fire after a tab-switch remount, so iconsReady
   // stays false and symbol markers (segelec/mixto) disappear. Fix: re-add icons on
