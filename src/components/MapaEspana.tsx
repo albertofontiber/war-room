@@ -586,33 +586,57 @@ export default function MapaEspana() {
 
   // ── Refresh cluster markers cuando el source termina de re-clusterizar ────
   //
-  // Bug previo (Alberto, 2026-04-29 y 2026-04-30): con filtros activos el
-  // sidebar/tabla contaban N empresas pero el mapa solo mostraba algunas
-  // (faltaban pies de cluster). La causa: los pies dependen del state
-  // `clusterMarkers` que solo se actualizaba en `onMoveEnd` y `onIdle`. Si el
-  // usuario cambia filtros sin mover el mapa, Mapbox no siempre dispara `idle`
-  // antes del render de React.
+  // Historial del bug (Alberto, 2026-04-29, 04-30 y 05-01):
+  //   - Filtros aplicados: sidebar/tabla cuentan N empresas, mapa muestra <N pines.
+  //   - PR #31: doble setTimeout 50/250ms — frágil con muchos filtros.
+  //   - PR #35: listener `sourcedata` de Mapbox — fix definitivo para "no se
+  //     ven al cambiar filtros sin mover el mapa".
+  //   - 05-01: bug residual al volver al mapa desde la tabla — faltan ~4 features.
+  //     Causa: `sourcedata` se dispara MUCHAS veces durante la carga (parsing,
+  //     tile indexing, clustering interno). El primer disparo con
+  //     `isSourceLoaded=true` puede llegar antes de que el clustering esté
+  //     estable; `querySourceFeatures` devuelve clusters incompletos.
+  //     También: si `mapRef.current` aún no está listo en el primer render del
+  //     remount, el effect retornaba sin instalar el listener.
   //
-  // Fix anterior (PR #31) usaba doble setTimeout 50ms+250ms, frágil con
-  // muchos filtros activos: el clustering interno tarda más en re-organizarse.
-  //
-  // Fix definitivo: escuchar el evento nativo `sourcedata` de Mapbox y reaccionar
-  // cuando el source `empresas` ha terminado de cargar. Es el evento canónico
-  // que Mapbox emite cuando los tiles internos del clustering están listos.
+  // Fix:
+  //   1. Debounce 150ms tras el último `sourcedata` — espera al final de la
+  //      ráfaga de eventos para que el clustering esté estable.
+  //   2. Retry si `mapRef.current` no está disponible en el primer render
+  //      (poll cada 50ms hasta que esté).
   useEffect(() => {
     if (!geojson) return;
-    const map = mapRef.current?.getMap();
-    if (!map) return;
+    let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+    let retryTimeout: ReturnType<typeof setTimeout> | null = null;
+    let detach: (() => void) | null = null;
 
-    const handler = (e: mapboxgl.MapSourceDataEvent) => {
-      if (e.sourceId === "empresas" && e.isSourceLoaded) {
-        updateClusterMarkers();
+    const setup = () => {
+      const map = mapRef.current?.getMap();
+      if (!map) {
+        retryTimeout = setTimeout(setup, 50);
+        return;
       }
+
+      const debounced = () => {
+        if (debounceTimeout) clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => updateClusterMarkers(), 150);
+      };
+
+      const handler = (e: mapboxgl.MapSourceDataEvent) => {
+        if (e.sourceId === "empresas" && e.isSourceLoaded) debounced();
+      };
+      map.on("sourcedata", handler);
+      if (map.isSourceLoaded("empresas")) debounced();
+      detach = () => map.off("sourcedata", handler);
     };
-    map.on("sourcedata", handler);
-    // Si el source ya está cargado al montar este efecto, dispara una vez.
-    if (map.isSourceLoaded("empresas")) updateClusterMarkers();
-    return () => { map.off("sourcedata", handler); };
+
+    setup();
+
+    return () => {
+      if (retryTimeout) clearTimeout(retryTimeout);
+      if (debounceTimeout) clearTimeout(debounceTimeout);
+      if (detach) detach();
+    };
   }, [geojson, updateClusterMarkers]);
 
   // ── onIdle: re-ensure custom icons (lost on reuseMaps remount) + update clusters ──
