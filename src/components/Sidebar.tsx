@@ -488,6 +488,9 @@ export default function Sidebar() {
             <div className="grid grid-cols-2 gap-1.5">
               {(
                 [
+                  // "sin_crm" sentinel: empresas sin CrmEstado o con dealStage=null.
+                  // Distinto de "identificado" (primer stage real del funnel).
+                  { value: "sin_crm",         label: "Sin CRM",      color: "gray"   },
                   { value: "identificado",    label: "Identificado", color: "gray"   },
                   { value: "contactado",      label: "Contactado",   color: "sky"    },
                   { value: "primera_reunion", label: "1ª reunión",   color: "blue"   },
@@ -497,7 +500,7 @@ export default function Sidebar() {
                   { value: "portfolio",       label: "Portfolio",    color: "green"  },
                   { value: "on_hold",         label: "On hold",      color: "gray"   },
                   { value: "muerto",          label: "Muerto",       color: "red"    },
-                ] as { value: DealStage; label: string; color: PillColor }[]
+                ] as { value: DealStage | "sin_crm"; label: string; color: PillColor }[]
               ).map(({ value, label, color }) => (
                 <TogglePill
                   key={value}

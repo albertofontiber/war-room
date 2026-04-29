@@ -27,6 +27,7 @@ const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
 const CRM_COLOR = [
   "case",
+  ["==", ["get", "dealStage"], "identificado"],    "#94a3b8",  // slate — primer stage del funnel
   ["==", ["get", "dealStage"], "contactado"],      "#38bdf8",  // sky
   ["==", ["get", "dealStage"], "primera_reunion"], "#3b82f6",  // blue
   ["==", ["get", "dealStage"], "analisis"],        "#8b5cf6",  // violet
@@ -35,7 +36,7 @@ const CRM_COLOR = [
   ["==", ["get", "dealStage"], "portfolio"],       "#22c55e",  // green
   ["==", ["get", "dealStage"], "on_hold"],         "#a8a29e",  // stone — en pausa
   ["==", ["get", "dealStage"], "muerto"],          "#ef4444",  // red
-  "#94a3b8",  // slate — sin CRM / identificado
+  "#6b7280",  // gris-500 — Sin CRM (dealStage null o sin CrmEstado)
 ] as const;
 
 
@@ -1109,7 +1110,8 @@ export default function MapaEspana() {
         <div className="border-t border-wr-border mt-1.5 pt-1.5 space-y-1">
           <p className="text-wr-hint uppercase tracking-wider mb-1">CRM</p>
           {[
-            ["#94a3b8", "Sin CRM / Identificado"],
+            ["#6b7280", "Sin CRM"],
+            ["#94a3b8", "Identificado"],
             ["#38bdf8", "Contactado"],
             ["#3b82f6", "1ª reunión realizada"],
             ["#8b5cf6", "Análisis"],

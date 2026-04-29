@@ -28,7 +28,15 @@ export function isInFilter(
     }
   }
   if (f.crmStage.length) {
-    if (!p.dealStage || !f.crmStage.includes(p.dealStage)) return false;
+    // El array puede contener stages reales y el sentinel "sin_crm".
+    // - "sin_crm" matchea empresas con dealStage null (sin CrmEstado o stage limpio).
+    // - Stages reales matchean por igualdad estricta.
+    const wantsSinCrm = f.crmStage.includes("sin_crm");
+    if (!p.dealStage) {
+      if (!wantsSinCrm) return false;
+    } else {
+      if (!f.crmStage.includes(p.dealStage)) return false;
+    }
   }
   if (f.cepreven !== null) {
     const hasCep = p.cepreven != null && p.cepreven !== "";
