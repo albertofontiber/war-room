@@ -40,11 +40,6 @@ const CRM_COLOR = [
 ] as const;
 
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _OPACITY_EXPR = [
-  "case", ["boolean", ["get", "enFiltro"], true], 1, 0.15,
-] as const;
-
 function makeSizeExpr(metric: "ingresos" | "ebitda") {
   // Mínimo 10px para que cualquier empresa sea visible en el mapa
   const breaks =
@@ -589,22 +584,35 @@ export default function MapaEspana() {
     setClusterMarkers(markers);
   }, []);
 
-  // ── Refresh cluster markers cuando cambia el conjunto filtrado ────────────
+  // ── Refresh cluster markers cuando el source termina de re-clusterizar ────
   //
-  // Bug previo (Alberto, 2026-04-29): con filtros activos el sidebar contaba
-  // 58 empresas pero el mapa mostraba 0 pines. La causa: los pie-chart markers
-  // de cluster solo se actualizaban en `onMoveEnd` y `onIdle`. Cuando el usuario
-  // cambia un filtro sin mover el mapa, Mapbox no siempre dispara `idle` antes
-  // de que pase el render de React, así que `clusterMarkers` (state) se queda
-  // con los markers viejos (que ya no se corresponden con clusters reales) o
-  // vacío. Forzar la actualización aquí garantiza que tras cualquier cambio del
-  // geojson filtrado los pies se re-dibujen. El doble setTimeout da margen para
-  // que Mapbox digiera el data update y el clustering interno se rehaga.
+  // Bug previo (Alberto, 2026-04-29 y 2026-04-30): con filtros activos el
+  // sidebar/tabla contaban N empresas pero el mapa solo mostraba algunas
+  // (faltaban pies de cluster). La causa: los pies dependen del state
+  // `clusterMarkers` que solo se actualizaba en `onMoveEnd` y `onIdle`. Si el
+  // usuario cambia filtros sin mover el mapa, Mapbox no siempre dispara `idle`
+  // antes del render de React.
+  //
+  // Fix anterior (PR #31) usaba doble setTimeout 50ms+250ms, frágil con
+  // muchos filtros activos: el clustering interno tarda más en re-organizarse.
+  //
+  // Fix definitivo: escuchar el evento nativo `sourcedata` de Mapbox y reaccionar
+  // cuando el source `empresas` ha terminado de cargar. Es el evento canónico
+  // que Mapbox emite cuando los tiles internos del clustering están listos.
   useEffect(() => {
     if (!geojson) return;
-    const t1 = setTimeout(() => updateClusterMarkers(), 50);
-    const t2 = setTimeout(() => updateClusterMarkers(), 250);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+
+    const handler = (e: mapboxgl.MapSourceDataEvent) => {
+      if (e.sourceId === "empresas" && e.isSourceLoaded) {
+        updateClusterMarkers();
+      }
+    };
+    map.on("sourcedata", handler);
+    // Si el source ya está cargado al montar este efecto, dispara una vez.
+    if (map.isSourceLoaded("empresas")) updateClusterMarkers();
+    return () => { map.off("sourcedata", handler); };
   }, [geojson, updateClusterMarkers]);
 
   // ── onIdle: re-ensure custom icons (lost on reuseMaps remount) + update clusters ──
@@ -871,7 +879,6 @@ export default function MapaEspana() {
                 "all",
                 ["!", ["has", "point_count"]],
                 ["boolean", ["get", "hasBormeReciente"], false],
-                ["boolean", ["get", "enFiltro"], true],
               ]}
               paint={{
                 "circle-radius": 8,
@@ -890,7 +897,6 @@ export default function MapaEspana() {
                 "all",
                 ["!", ["has", "point_count"]],
                 ["==", ["get", "sector"], "PCI"],
-                ["boolean", ["get", "enFiltro"], true],
               ]}
               layout={{
                 "circle-sort-key": ["case", ["boolean", ["get", "enPerimetro"], false], 1, 0] as unknown as number,
@@ -914,7 +920,6 @@ export default function MapaEspana() {
                   "all",
                   ["!", ["has", "point_count"]],
                   ["==", ["get", "sector"], "seguridad_electronica"],
-                  ["boolean", ["get", "enFiltro"], true],
                 ]}
                 layout={{
                   "icon-image": "shape-square",
@@ -939,7 +944,6 @@ export default function MapaEspana() {
                   "all",
                   ["!", ["has", "point_count"]],
                   ["==", ["get", "sector"], "mixto"],
-                  ["boolean", ["get", "enFiltro"], true],
                 ]}
                 layout={{
                   "icon-image": "shape-hexagon",
