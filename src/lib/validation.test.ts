@@ -42,6 +42,26 @@ describe("TareaCreateSchema", () => {
       expect(r.success, `tipo=${t}`).toBe(true);
     }
   });
+
+  it("acepta fechaLimite en formato yyyy-mm-dd (HTML date input)", () => {
+    const r = TareaCreateSchema.safeParse({ titulo: "x", fechaLimite: "2026-04-29" });
+    expect(r.success).toBe(true);
+  });
+
+  it("acepta fechaLimite en ISO 8601 con offset", () => {
+    const r = TareaCreateSchema.safeParse({ titulo: "x", fechaLimite: "2026-04-29T10:00:00+02:00" });
+    expect(r.success).toBe(true);
+  });
+
+  it("acepta fechaLimite vacía o null", () => {
+    expect(TareaCreateSchema.safeParse({ titulo: "x", fechaLimite: "" }).success).toBe(true);
+    expect(TareaCreateSchema.safeParse({ titulo: "x", fechaLimite: null }).success).toBe(true);
+  });
+
+  it("rechaza fechaLimite con formato distinto (dd/mm/yyyy, etc.)", () => {
+    expect(TareaCreateSchema.safeParse({ titulo: "x", fechaLimite: "29/04/2026" }).success).toBe(false);
+    expect(TareaCreateSchema.safeParse({ titulo: "x", fechaLimite: "2026-04" }).success).toBe(false);
+  });
 });
 
 describe("TareaUpdateSchema", () => {

@@ -11,8 +11,18 @@ import { DEAL_STAGES, TAREA_TIPOS } from "@/lib/crm";
 
 const trimmedString = z.string().trim();
 const nonEmptyString = trimmedString.min(1);
+// Acepta:
+//   - ISO 8601 con offset: "2026-04-29T10:00:00+02:00" (datetime-local con TZ)
+//   - "yyyy-mm-dd": el formato nativo del <input type="date"> de HTML (sin hora ni offset)
+//   - string vacío o null para limpiar el campo
+// El endpoint de tareas hace `new Date(fechaLimite)` que parsea ambos formatos correctamente.
 const nullableDateString = z
-  .union([z.string().datetime({ offset: true }), z.string().length(0), z.null()])
+  .union([
+    z.string().datetime({ offset: true }),
+    z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Formato de fecha inválido (yyyy-mm-dd)"),
+    z.string().length(0),
+    z.null(),
+  ])
   .optional();
 
 export const TareaCreateSchema = z.object({
