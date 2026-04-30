@@ -64,6 +64,17 @@ type ActividadRow = {
 async function main() {
   const apply = process.env.APPLY === "1";
 
+  // 0. Asegura la columna `Tarea.resultado` antes de cualquier insert.
+  // El cliente Prisma ya está regenerado con el campo en el schema, pero la
+  // columna física no se crea hasta `prisma db push`. Como el script INSERTA
+  // con resultado, la añadimos aquí (idempotente — IF NOT EXISTS).
+  if (apply) {
+    await prisma.$executeRawUnsafe(
+      `ALTER TABLE "Tarea" ADD COLUMN IF NOT EXISTS "resultado" TEXT`
+    );
+    console.log("✓ Columna Tarea.resultado garantizada (ALTER IF NOT EXISTS).");
+  }
+
   // 1. ¿Existe la tabla Actividad en esta BD?
   const tableExists = await prisma.$queryRaw<{ exists: boolean }[]>`
     SELECT EXISTS (
@@ -93,51 +104,10 @@ async function main() {
   let toNotas = 0;
   let toTareas = 0;
   const tipoCount: Record<string, number> = {};
-
   for (const a of actividades) {
     tipoCount[a.tipo] = (tipoCount[a.tipo] ?? 0) + 1;
-
-    if (a.tipo === "nota") {
-      // → Nota (contenido = texto, createdAt = fecha)
-      if (apply) {
-        await prisma.nota.create({
-          data: {
-            empresaId: a.empresaId,
-            contenido: a.texto ?? "(sin contenido)",
-            autorId: a.autorId,
-            autorFinderId: a.autorFinderId,
-            visibleAFinder: false,
-            createdAt: a.fecha,
-            updatedAt: a.sincronizadoAt,
-          },
-        });
-      }
-      toNotas++;
-    } else {
-      // → Tarea completada
-      const tipoNuevo = TIPO_MAP[a.tipo] ?? "otra";
-      const titulo = TIPO_LABEL[a.tipo] ?? "Otra";
-      if (apply) {
-        await prisma.tarea.create({
-          data: {
-            empresaId: a.empresaId,
-            tipo: tipoNuevo,
-            titulo,
-            descripcion: null,
-            resultado: a.texto,
-            fechaLimite: a.fecha,
-            completada: true,
-            completadaAt: a.fecha,
-            autorId: a.autorId,
-            autorFinderId: a.autorFinderId,
-            asignadoId: null,
-            asignadoFinderId: null,
-            createdAt: a.sincronizadoAt,
-          },
-        });
-      }
-      toTareas++;
-    }
+    if (a.tipo === "nota") toNotas++;
+    else toTareas++;
   }
 
   console.log(`Plan:`);
@@ -145,12 +115,58 @@ async function main() {
   console.log(`  → Tareas: ${toTareas}`);
   console.log(`Tipos origen: ${JSON.stringify(tipoCount)}`);
 
-  if (apply) {
-    const deleted = await prisma.$executeRaw`DELETE FROM "Actividad"`;
-    console.log(`\nVaciada tabla Actividad (${deleted} filas). Próximo paso: \`npx prisma db push\` para dropear la tabla.`);
-  } else {
+  if (!apply) {
     console.log("\nDry-run completo. Ejecuta con APPLY=1 para aplicar cambios.");
+    return;
   }
+
+  // Transacción atómica: o se inserta todo + se vacía Actividad, o nada.
+  // Si falla un insert (red, validación, etc.) la BD queda intacta y se puede
+  // re-ejecutar el script sin riesgo de duplicados.
+  await prisma.$transaction(
+    async (tx) => {
+      for (const a of actividades) {
+        if (a.tipo === "nota") {
+          await tx.nota.create({
+            data: {
+              empresaId: a.empresaId,
+              contenido: a.texto ?? "(sin contenido)",
+              autorId: a.autorId,
+              autorFinderId: a.autorFinderId,
+              visibleAFinder: false,
+              createdAt: a.fecha,
+              updatedAt: a.sincronizadoAt,
+            },
+          });
+        } else {
+          const tipoNuevo = TIPO_MAP[a.tipo] ?? "otra";
+          const titulo = TIPO_LABEL[a.tipo] ?? "Otra";
+          await tx.tarea.create({
+            data: {
+              empresaId: a.empresaId,
+              tipo: tipoNuevo,
+              titulo,
+              descripcion: null,
+              resultado: a.texto,
+              fechaLimite: a.fecha,
+              completada: true,
+              completadaAt: a.fecha,
+              autorId: a.autorId,
+              autorFinderId: a.autorFinderId,
+              asignadoId: null,
+              asignadoFinderId: null,
+              createdAt: a.sincronizadoAt,
+            },
+          });
+        }
+      }
+      const deleted = await tx.$executeRaw`DELETE FROM "Actividad"`;
+      console.log(`✓ Vaciada tabla Actividad (${deleted} filas).`);
+    },
+    { timeout: 120_000, maxWait: 10_000 }
+  );
+
+  console.log(`\nMigración completada. Próximo paso: \`npx prisma db push\` para dropear la tabla.`);
 }
 
 main()
