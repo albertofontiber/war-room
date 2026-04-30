@@ -15,7 +15,7 @@ import Map, {
   type MapMouseEvent,
 } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
-import type mapboxgl from "mapbox-gl";
+import Supercluster from "supercluster";
 import { useWarRoomStore, type EmpresaFeatureProperties } from "@/store/useWarRoomStore";
 import { isInFilter } from "@/lib/filtros";
 import { fmtM, fmtPct } from "@/lib/format";
@@ -182,17 +182,6 @@ const PIE_STAGES: { key: string; color: string }[] = [
   { key: "portfolio",       color: "#22c55e" },
   { key: "muerto",          color: "#ef4444" },
 ];
-
-const STAGE_PROP_KEY: Record<string, string> = {
-  identificado:    "s_id",
-  contactado:      "s_ct",
-  primera_reunion: "s_pr",
-  analisis:        "s_an",
-  "LOI enviada":   "s_lo",
-  execution:       "s_ex",
-  portfolio:       "s_po",
-  muerto:          "s_mu",
-};
 
 interface ClusterMarker {
   id: number;
@@ -454,7 +443,7 @@ type GeoJSONFC = {
   features: Array<{ type: "Feature"; geometry: { type: "Point"; coordinates: [number, number] }; properties: Props }>;
 };
 
-const INTERACTIVE = ["clusters", "markers-pci", "markers-segelec", "markers-mixto", "markers-bg"];
+const INTERACTIVE = ["markers-pci", "markers-segelec", "markers-mixto", "markers-bg"];
 
 export default function MapaEspana() {
   const mapRef = useRef<MapRef>(null);
@@ -463,20 +452,20 @@ export default function MapaEspana() {
     sizeMetric,
     seleccionarEmpresa,
     searchQuery,
+    empresasGeoJSON,
     setEmpresasGeoJSON,
     flyToEmpresaId,
     setFlyToEmpresaId,
     mapViewState,
     setMapViewState,
+    mapBounds,
     setMapBounds,
     panelAbierto,
   } = useWarRoomStore();
 
-  const [rawGeoJSON, setRawGeoJSON] = useState<GeoJSONFC | null>(null);
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
   const [iconsReady, setIconsReady] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [clusterMarkers, setClusterMarkers] = useState<ClusterMarker[]>([]);
 
   // ── Draw-polygon state ─────────────────────────────────────────────────
   const closingRef = useRef(false);
@@ -495,17 +484,30 @@ export default function MapaEspana() {
     return () => clearTimeout(t);
   }, [panelAbierto]);
 
-  // Fetch GeoJSON once on mount — share raw features with the store for Sidebar
+  // ── Fuente de verdad del geojson ──────────────────────────────────────
+  // Nivel 2 (audit_pre_cutover.md #16, 2026-05-01): el fetch de /api/empresas
+  // vive ya en `Navbar` (PR #32) y se hidrata al `empresasGeoJSON` del store.
+  // MapaEspana ya NO hace fetch local. Si `empresasGeoJSON` aún no está
+  // disponible (componente montó antes que Navbar), hace fetch como fallback.
+  // En la práctica el Navbar siempre va por delante.
   useEffect(() => {
+    if (empresasGeoJSON) return;
+    let cancelled = false;
     fetch("/api/empresas")
       .then((r) => r.json())
-      .then((data: GeoJSONFC) => {
-        setRawGeoJSON(data);
-        setEmpresasGeoJSON(data.features ?? []);
+      .then((data) => {
+        if (!cancelled) setEmpresasGeoJSON(data?.features ?? []);
       })
       .catch(console.error);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return () => { cancelled = true; };
+  }, [empresasGeoJSON, setEmpresasGeoJSON]);
+
+  const rawGeoJSON = useMemo<GeoJSONFC | null>(
+    () => empresasGeoJSON
+      ? { type: "FeatureCollection" as const, features: empresasGeoJSON as GeoJSONFC["features"] }
+      : null,
+    [empresasGeoJSON]
+  );
 
   // FlyTo when triggered from Sidebar
   useEffect(() => {
@@ -557,95 +559,158 @@ export default function MapaEspana() {
     if (b) setMapBounds({ west: b.getWest(), south: b.getSouth(), east: b.getEast(), north: b.getNorth() });
   }, [setMapBounds]);
 
-  // Load custom shape icons when map loads
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // ── Cluster pie markers ────────────────────────────────────────────────────
-  const updateClusterMarkers = useCallback(() => {
-    const map = mapRef.current?.getMap();
-    if (!map) return;
-    const features = map.querySourceFeatures("empresas", { filter: ["has", "point_count"] });
-    const seen = new Set<number>();
-    const markers: ClusterMarker[] = [];
-    for (const f of features) {
-      const id = f.id as number;
-      if (seen.has(id)) continue;
-      seen.add(id);
-      const p = f.properties as Record<string, number>;
-      const coords = (f.geometry as GeoJSON.Point).coordinates;
-      const stageCounts: Record<string, number> = {};
-      for (const [stage, propKey] of Object.entries(STAGE_PROP_KEY)) {
-        stageCounts[stage] = p[propKey] ?? 0;
+  // ── Cluster pies + features individuales — Supercluster JS único ────────
+  //
+  // Antes (PRs #31/#35/#36/#37): los pies se calculaban via `querySourceFeatures`
+  // contra el cluster interno de Mapbox. Eso introducía dependencias de timing
+  // que generaron 4 bugs sucesivos.
+  //
+  // Iteración previa de este Nivel 2: Supercluster JS para los pies + cluster
+  // Mapbox para los individuales. Resultado: AMBOS sistemas pueden divergir
+  // sutilmente en qué consideran cluster vs individual aunque tengan los
+  // mismos params → faltan features en el render.
+  //
+  // Iteración definitiva (esta): Supercluster JS es la **única** fuente de
+  // verdad. Particionamos el output de getClusters() en:
+  //   - clusters (>=2) → renderizamos como <Marker> React (pies)
+  //   - individuales  → los pasamos al Source Mapbox SIN clustering;
+  //                     los Layers `markers-pci/segelec/mixto` los dibujan.
+  // Imposible que diverjan: solo hay un cálculo de clustering en toda la app.
+
+  type ClusterAggregateProps = {
+    s_id: number;
+    s_ct: number;
+    s_pr: number;
+    s_an: number;
+    s_lo: number;
+    s_ex: number;
+    s_po: number;
+    s_mu: number;
+  };
+
+  // Index de Supercluster — se reconstruye atomicamente cuando cambia el
+  // conjunto filtrado. Lo hacemos en useMemo (no useEffect) para evitar el
+  // race condition "useMemo de getClusters corre antes que useEffect de load".
+  // Coste: ~10-30ms para reconstruir 5k features. Se ejecuta solo cuando
+  // cambian los filtros (geojson nueva referencia), no en cada pan/zoom.
+  const clusterIndex = useMemo(() => {
+    if (!geojson || geojson.features.length === 0) return null;
+    const sc = new Supercluster<EmpresaFeatureProperties, ClusterAggregateProps>({
+      radius: 50,        // mismo clusterRadius que el Source Mapbox
+      maxZoom: 10,       // mismo clusterMaxZoom
+      map: (props) => ({
+        s_id: props.dealStage === "identificado"    ? 1 : 0,
+        s_ct: props.dealStage === "contactado"      ? 1 : 0,
+        s_pr: props.dealStage === "primera_reunion" ? 1 : 0,
+        s_an: props.dealStage === "analisis"        ? 1 : 0,
+        s_lo: props.dealStage === "LOI enviada"     ? 1 : 0,
+        s_ex: props.dealStage === "execution"       ? 1 : 0,
+        s_po: props.dealStage === "portfolio"       ? 1 : 0,
+        s_mu: props.dealStage === "muerto"          ? 1 : 0,
+      }),
+      reduce: (acc, props) => {
+        acc.s_id += props.s_id;
+        acc.s_ct += props.s_ct;
+        acc.s_pr += props.s_pr;
+        acc.s_an += props.s_an;
+        acc.s_lo += props.s_lo;
+        acc.s_ex += props.s_ex;
+        acc.s_po += props.s_po;
+        acc.s_mu += props.s_mu;
+      },
+    });
+    sc.load(
+      geojson.features as Array<GeoJSON.Feature<GeoJSON.Point, EmpresaFeatureProperties>>
+    );
+    return sc;
+  }, [geojson]);
+
+  // Particionar el output de getClusters en clusters (>=2) e individuales.
+  // Determinista: deps explícitas, sin listeners ni timeouts. Cambia cuando
+  // cambian filtros (vía clusterIndex), bounds o zoom.
+  //
+  // Importante: el Source Mapbox YA NO clusteriza (cluster: false en el
+  // <Source>). Mapbox sólo dibuja las individuales que pasamos en
+  // `individualFeatures`. Así Supercluster JS es la ÚNICA fuente de verdad
+  // sobre qué se considera cluster vs individual — imposible que diverjan.
+  const { clusterMarkers, individualFeatures } = useMemo<{
+    clusterMarkers: ClusterMarker[];
+    individualFeatures: GeoJSONFC["features"];
+  }>(() => {
+    if (!clusterIndex) return { clusterMarkers: [], individualFeatures: [] };
+    // Si aún no hay bounds (primer render antes de onLoad/onMoveEnd), usar
+    // bbox del mundo para devolver TODOS los items. Mapbox sólo pintará los
+    // que estén en el viewport visible.
+    const bbox: [number, number, number, number] = mapBounds
+      ? [mapBounds.west, mapBounds.south, mapBounds.east, mapBounds.north]
+      : [-180, -85, 180, 85];
+    const zoom = Math.floor(mapViewState.zoom);
+    const items = clusterIndex.getClusters(bbox, zoom);
+
+    const clusters: ClusterMarker[] = [];
+    const individuals: GeoJSONFC["features"] = [];
+
+    for (const item of items) {
+      const props = item.properties;
+      if (props && "cluster" in props && props.cluster === true) {
+        const cp = props as ClusterAggregateProps & {
+          cluster: true; cluster_id: number; point_count: number;
+        };
+        const [lng, lat] = (item.geometry as GeoJSON.Point).coordinates;
+        const stageCounts: Record<string, number> = {
+          identificado:    cp.s_id,
+          contactado:      cp.s_ct,
+          primera_reunion: cp.s_pr,
+          analisis:        cp.s_an,
+          "LOI enviada":   cp.s_lo,
+          execution:       cp.s_ex,
+          portfolio:       cp.s_po,
+          muerto:          cp.s_mu,
+        };
+        const knownSum = Object.values(stageCounts).reduce((a, v) => a + v, 0);
+        // Sin CRM (dealStage null) = total - todos los stages conocidos.
+        // Lo agregamos a "identificado" para mantener el comportamiento
+        // histórico del pie chart (gris). Si en el futuro queremos un sector
+        // "Sin CRM" aparte en el pie, separar aquí.
+        stageCounts["identificado"] += Math.max(0, cp.point_count - knownSum);
+        clusters.push({
+          id: cp.cluster_id,
+          lng,
+          lat,
+          count: cp.point_count,
+          stageCounts,
+        });
+      } else {
+        // Feature individual — Supercluster preserva las propiedades originales.
+        individuals.push(
+          item as unknown as GeoJSONFC["features"][number]
+        );
       }
-      // sin CRM = total - all known stages
-      const knownSum = Object.values(stageCounts).reduce((a, v) => a + v, 0);
-      stageCounts["identificado"] = (stageCounts["identificado"] ?? 0) + Math.max(0, p.point_count - knownSum);
-      markers.push({ id, lng: coords[0], lat: coords[1], count: p.point_count, stageCounts });
     }
-    setClusterMarkers(markers);
-  }, []);
+    return { clusterMarkers: clusters, individualFeatures: individuals };
+  }, [clusterIndex, mapBounds, mapViewState.zoom]);
 
-  // ── Refresh cluster markers cuando el source termina de re-clusterizar ────
+  // ── Asegurar custom icons al montar (independiente de eventos Mapbox) ───
   //
-  // Historial del bug (Alberto, 2026-04-29, 04-30 y 05-01):
-  //   - Filtros aplicados: sidebar/tabla cuentan N empresas, mapa muestra <N pines.
-  //   - PR #31: doble setTimeout 50/250ms — frágil con muchos filtros.
-  //   - PR #35: listener `sourcedata` de Mapbox — fix definitivo para "no se
-  //     ven al cambiar filtros sin mover el mapa".
-  //   - 05-01: bug residual al volver al mapa desde la tabla — faltan ~4 features.
-  //     Causa: `sourcedata` se dispara MUCHAS veces durante la carga (parsing,
-  //     tile indexing, clustering interno). El primer disparo con
-  //     `isSourceLoaded=true` puede llegar antes de que el clustering esté
-  //     estable; `querySourceFeatures` devuelve clusters incompletos.
-  //     También: si `mapRef.current` aún no está listo en el primer render del
-  //     remount, el effect retornaba sin instalar el listener.
+  // Con reuseMaps, onLoad NO se dispara al remount (e.g. al volver de tabla
+  // → mapa). Si dependemos solo de onLoad/onIdle para cargar los íconos,
+  // los Layers condicionales `{iconsReady && <Layer markers-segelec/mixto/>}`
+  // pueden quedar sin montar mientras tanto. Resultado: features
+  // Mixto/Seg.Electrónica aisladas no se renderizan.
   //
-  // Fix:
-  //   1. Debounce 150ms tras el último `sourcedata` — espera al final de la
-  //      ráfaga de eventos para que el clustering esté estable.
-  //   2. Retry si `mapRef.current` no está disponible en el primer render
-  //      (poll cada 50ms hasta que esté).
+  // Fix: poll-retry hasta tener mapRef.current y cargar los íconos
+  // directamente. No depende de eventos del Map. Idempotente vía hasImage.
   useEffect(() => {
-    if (!geojson) return;
-    let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+    let cancelled = false;
     let retryTimeout: ReturnType<typeof setTimeout> | null = null;
-    let detach: (() => void) | null = null;
 
-    const setup = () => {
+    const ensureIcons = () => {
+      if (cancelled) return;
       const map = mapRef.current?.getMap();
       if (!map) {
-        retryTimeout = setTimeout(setup, 50);
+        retryTimeout = setTimeout(ensureIcons, 50);
         return;
       }
-
-      const debounced = () => {
-        if (debounceTimeout) clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => updateClusterMarkers(), 150);
-      };
-
-      const handler = (e: mapboxgl.MapSourceDataEvent) => {
-        if (e.sourceId === "empresas" && e.isSourceLoaded) debounced();
-      };
-      map.on("sourcedata", handler);
-      if (map.isSourceLoaded("empresas")) debounced();
-      detach = () => map.off("sourcedata", handler);
-    };
-
-    setup();
-
-    return () => {
-      if (retryTimeout) clearTimeout(retryTimeout);
-      if (debounceTimeout) clearTimeout(debounceTimeout);
-      if (detach) detach();
-    };
-  }, [geojson, updateClusterMarkers]);
-
-  // ── onIdle: re-ensure custom icons (lost on reuseMaps remount) + update clusters ──
-  // With reuseMaps, onLoad does NOT fire after a tab-switch remount, so iconsReady
-  // stays false and symbol markers (segelec/mixto) disappear. Fix: re-add icons on
-  // the first idle after remount (hasImage guard prevents duplicate uploads).
-  const handleIdle = useCallback(() => {
-    const map = mapRef.current?.getMap();
-    if (map) {
       if (!map.hasImage("shape-square")) {
         const sq = createShapeIcon("square");
         if (sq) map.addImage("shape-square", sq, { sdf: true });
@@ -654,10 +719,22 @@ export default function MapaEspana() {
         const hex = createShapeIcon("hexagon");
         if (hex) map.addImage("shape-hexagon", hex, { sdf: true });
       }
-      setIconsReady(true);
-    }
-    updateClusterMarkers();
-  }, [updateClusterMarkers]);
+      if (map.hasImage("shape-square") && map.hasImage("shape-hexagon")) {
+        setIconsReady(true);
+      }
+    };
+
+    ensureIcons();
+    return () => {
+      cancelled = true;
+      if (retryTimeout) clearTimeout(retryTimeout);
+    };
+  }, [mounted]);
+
+  // No-op handler: dejado por compatibilidad con la prop onIdle del Map.
+  // Antes refrescaba clusterMarkers; ahora los pies se calculan
+  // deterministicamente vía useMemo, sin depender de eventos Mapbox.
+  const handleIdle = useCallback(() => {}, []);
 
   const handleMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap();
@@ -718,7 +795,9 @@ export default function MapaEspana() {
     setDrawMouse(null);
   }, []);
 
-  // Click — add draw point OR select empresa / zoom cluster
+  // Click sobre un Layer Mapbox individual = seleccionar empresa.
+  // Los clicks sobre pies de cluster los maneja el <ClusterPie onClick> abajo
+  // (los pies son <Marker> React, no Layers Mapbox).
   const handleClick = useCallback(
     (e: MapMouseEvent) => {
       if (drawMode) {
@@ -728,21 +807,8 @@ export default function MapaEspana() {
       }
       const feature = e.features?.[0];
       if (!feature) return;
-
-      if (feature.properties?.cluster) {
-        const clusterId = feature.properties.cluster_id as number;
-        const source = mapRef.current
-          ?.getMap()
-          .getSource("empresas") as mapboxgl.GeoJSONSource;
-        source?.getClusterExpansionZoom(clusterId, (err, zoom) => {
-          if (err || zoom == null) return;
-          const coords = (feature.geometry as GeoJSON.Point).coordinates as [number, number];
-          mapRef.current?.getMap().easeTo({ center: coords, zoom: zoom + 0.5 });
-        });
-      } else {
-        const id = feature.properties?.id as number;
-        if (id) seleccionarEmpresa(id);
-      }
+      const id = feature.properties?.id as number;
+      if (id) seleccionarEmpresa(id);
     },
     [drawMode, seleccionarEmpresa]
   );
@@ -821,13 +887,15 @@ export default function MapaEspana() {
         mapboxAccessToken={TOKEN}
         initialViewState={mapViewState}
         onMoveEnd={(e) => {
+          // Actualizar viewState dispara automáticamente el useMemo de
+          // clusterMarkers (depende de mapBounds + zoom). No hace falta
+          // llamar a una función imperativa.
           setMapViewState({
             longitude: e.viewState.longitude,
             latitude: e.viewState.latitude,
             zoom: e.viewState.zoom,
           });
           saveBounds();
-          updateClusterMarkers();
         }}
         style={{ width: "100%", height: "100%" }}
         mapStyle="mapbox://styles/mapbox/dark-v11"
@@ -864,46 +932,23 @@ export default function MapaEspana() {
         <Source
             id="empresas"
             type="geojson"
-            data={(geojson ?? { type: "FeatureCollection", features: [] }) as unknown as GeoJSON.FeatureCollection}
-            cluster
-            clusterMaxZoom={10}
-            clusterRadius={50}
-            clusterProperties={{
-              s_id: ["+", ["case", ["==", ["get", "dealStage"], "identificado"],    1, 0]],
-              s_ct: ["+", ["case", ["==", ["get", "dealStage"], "contactado"],      1, 0]],
-              s_pr: ["+", ["case", ["==", ["get", "dealStage"], "primera_reunion"], 1, 0]],
-              s_an: ["+", ["case", ["==", ["get", "dealStage"], "analisis"],        1, 0]],
-              s_lo: ["+", ["case", ["==", ["get", "dealStage"], "LOI enviada"],     1, 0]],
-              s_ex: ["+", ["case", ["==", ["get", "dealStage"], "execution"],       1, 0]],
-              s_po: ["+", ["case", ["==", ["get", "dealStage"], "portfolio"],       1, 0]],
-              s_mu: ["+", ["case", ["==", ["get", "dealStage"], "muerto"],          1, 0]],
-            }}
+            data={{
+              type: "FeatureCollection",
+              features: individualFeatures,
+            } as unknown as GeoJSON.FeatureCollection}
           >
-            {/* ── Cluster circles — hidden, kept for click interaction detection ── */}
-            <Layer
-              id="clusters"
-              type="circle"
-              filter={["has", "point_count"]}
-              paint={{
-                "circle-color": "rgba(0,0,0,0)",
-                "circle-radius": [
-                  "step", ["get", "point_count"],
-                  16, 5, 22, 20, 28,
-                ],
-                "circle-stroke-width": 0,
-                "circle-opacity": 0,
-              }}
-            />
+            {/* Mapbox YA NO clusteriza este source. Las features que aquí
+                llegan son SOLO las que Supercluster JS considera individuales
+                (cluster=false). Los Layers `markers-*` ya no necesitan filtro
+                ["!", ["has", "point_count"]] — ninguna feature tendrá esa
+                propiedad. Los clusters se renderizan como <Marker> arriba en
+                el JSX. Una sola fuente de verdad: clusterIndex (Supercluster). */}
 
             {/* ── BORME pulsing ring (amber) ── */}
             <Layer
               id="borme-ring"
               type="circle"
-              filter={[
-                "all",
-                ["!", ["has", "point_count"]],
-                ["boolean", ["get", "hasBormeReciente"], false],
-              ]}
+              filter={["boolean", ["get", "hasBormeReciente"], false]}
               paint={{
                 "circle-radius": 8,
                 "circle-color": "rgba(0,0,0,0)",
@@ -917,11 +962,7 @@ export default function MapaEspana() {
             <Layer
               id="markers-pci"
               type="circle"
-              filter={[
-                "all",
-                ["!", ["has", "point_count"]],
-                ["==", ["get", "sector"], "PCI"],
-              ]}
+              filter={["==", ["get", "sector"], "PCI"]}
               layout={{
                 "circle-sort-key": ["case", ["boolean", ["get", "enPerimetro"], false], 1, 0] as unknown as number,
               }}
@@ -940,11 +981,7 @@ export default function MapaEspana() {
               <Layer
                 id="markers-segelec"
                 type="symbol"
-                filter={[
-                  "all",
-                  ["!", ["has", "point_count"]],
-                  ["==", ["get", "sector"], "seguridad_electronica"],
-                ]}
+                filter={["==", ["get", "sector"], "seguridad_electronica"]}
                 layout={{
                   "icon-image": "shape-square",
                   "icon-size": iconSizeExpr as unknown as number,
@@ -964,11 +1001,7 @@ export default function MapaEspana() {
               <Layer
                 id="markers-mixto"
                 type="symbol"
-                filter={[
-                  "all",
-                  ["!", ["has", "point_count"]],
-                  ["==", ["get", "sector"], "mixto"],
-                ]}
+                filter={["==", ["get", "sector"], "mixto"]}
                 layout={{
                   "icon-image": "shape-hexagon",
                   "icon-size": iconSizeExpr as unknown as number,
@@ -995,9 +1028,17 @@ export default function MapaEspana() {
             <ClusterPie
               marker={marker}
               onClick={() => {
+                // Zoom exacto necesario para expandir este cluster, calculado
+                // por Supercluster JS. Mejor UX que un zoom genérico +2.
+                const expansionZoom = clusterIndex
+                  ? clusterIndex.getClusterExpansionZoom(marker.id)
+                  : null;
+                const targetZoom = expansionZoom != null
+                  ? expansionZoom + 0.5
+                  : (mapRef.current?.getMap().getZoom() ?? 8) + 2;
                 mapRef.current?.getMap().easeTo({
                   center: [marker.lng, marker.lat],
-                  zoom: (mapRef.current.getMap().getZoom() ?? 8) + 2,
+                  zoom: targetZoom,
                   duration: 400,
                 });
               }}
