@@ -44,17 +44,26 @@ export default function WarRoomLayout() {
         {/* Navbar 44px fijo */}
         <Navbar />
 
-        {/* Contenido principal: mapa, tabla, operaciones o grupos */}
-        <main className="flex-1 overflow-hidden">
-          {vistaActual === "mapa" && <MapaEspana />}
-          {vistaActual === "tabla" && <TablaEmpresas />}
-          {vistaActual === "operaciones" && <OperacionesBorme />}
-          {vistaActual === "grupos" && <GruposView />}
-        </main>
-      </div>
+        {/* Contenedor relative para que el panel pueda flotar como overlay
+            sobre el mapa/tabla sin empujarlo. El panel arranca bajo el Navbar
+            (porque está dentro del flex-col después de él). */}
+        <div className="flex-1 relative overflow-hidden">
+          <main className="absolute inset-0">
+            {vistaActual === "mapa" && <MapaEspana />}
+            {vistaActual === "tabla" && <TablaEmpresas />}
+            {vistaActual === "operaciones" && <OperacionesBorme />}
+            {vistaActual === "grupos" && <GruposView />}
+          </main>
 
-      {/* ── Panel lateral derecho 340px — solo en mapa/tabla/grupos ── */}
-      {panelAbierto && vistaActual !== "operaciones" && <PanelEmpresa />}
+          {/* Panel lateral derecho 560px — overlay sobre el contenido,
+              solo en mapa/tabla/grupos. */}
+          {panelAbierto && vistaActual !== "operaciones" && (
+            <div className="absolute top-0 right-0 bottom-0 w-[560px] z-20 shadow-2xl shadow-black/40 flex">
+              <PanelEmpresa />
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* ── Chat IA flotante ── */}
       <ChatIA />
