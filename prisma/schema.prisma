@@ -66,7 +66,6 @@ model Empresa {
   personasCargo    PersonaCargo[]
   crmEstado        CrmEstado?
   crmLogs          CrmLog[]
-  actividades      Actividad[]
   notas            Nota[]
   tareas           Tarea[]
   // CRM finder module
@@ -188,29 +187,15 @@ model CrmLog {
   @@index([autorFinderId])
 }
 
-model Actividad {
-  id             Int       @id @default(autoincrement())
-  empresaId      Int
-  empresa        Empresa   @relation(fields: [empresaId], references: [id])
-  pipedriveId    String?   @unique // null para actividades nativas War Room, set para legacy Pipedrive
-  tipo           String    // "nota"|"llamada"|"email"|"reunion"
-  texto          String?   @db.Text
-  autor          String?   // legacy string (Pipedrive)
-  // Autor: solo uno de los dos tiene valor.
-  autorId        String?
-  autorUser      User?     @relation(fields: [autorId], references: [id])
-  autorFinderId  String?
-  autorFinder    Finder?   @relation("ActividadAutorFinder", fields: [autorFinderId], references: [id])
-  fecha          DateTime
-  sincronizadoAt DateTime  @default(now())
-
-  @@index([empresaId, fecha])
-  @@index([autorId])
-  @@index([autorFinderId])
-}
-
 // ─────────────────────────────────────────────────────────────
-// CRM module — MVP 1 (users, notas generales, tareas)
+// CRM module — MVP 1 (users, notas, tareas)
+//
+// Tarea es el modelo unificado de "trabajo a hacer" Y "registro histórico":
+//   - completada=false → tarea pendiente (futuro)
+//   - completada=true + resultado != null → registro histórico de algo ya hecho
+//
+// El antiguo modelo Actividad (registro de llamadas/emails/reuniones legacy
+// Pipedrive) se fusionó en Tarea — ver scripts/migrate-actividades-a-tareas-y-notas.ts.
 // ─────────────────────────────────────────────────────────────
 
 model User {
@@ -227,7 +212,6 @@ model User {
   tareasCreadas   Tarea[]           @relation("TareaAutor")
   tareasAsignadas Tarea[]           @relation("TareaAsignado")
   crmLogs         CrmLog[]
-  actividades     Actividad[]
   crmEstadosOwner CrmEstado[]       @relation("CrmOwner")
   notificaciones  Notificacion[]
 }
@@ -260,12 +244,19 @@ model Tarea {
   id                  Int       @id @default(autoincrement())
   empresaId           Int
   empresa             Empresa   @relation(fields: [empresaId], references: [id])
-  tipo                String    @default("otra") // contacto_linkedin|mensaje_whatsapp|llamada|reunion_presencial|otra
+  // Tipo de la acción. "email" se añadió tras la fusión con el antiguo Actividad.
+  tipo                String    @default("otra") // contacto_linkedin|mensaje_whatsapp|llamada|videollamada|reunion_presencial|email|otra
   titulo              String
   descripcion         String?   @db.Text
+  // Fecha asociada al item. Puede ser pasada (registro histórico) o futura (tarea pendiente).
+  // Nombre legacy "fechaLimite" — se mantuvo al unificar Tarea+Actividad para evitar migración SQL.
   fechaLimite         DateTime?
   completada          Boolean   @default(false)
   completadaAt        DateTime?
+  // Notas post-evento. Se rellena al marcar completada=true: qué pasó en la
+  // reunión/llamada/email, próximos pasos, etc. El autor puede editar este campo
+  // siempre (incluso con completada=true), porque es texto libre histórico.
+  resultado           String?   @db.Text
   // Asignado: solo uno de los dos. Si un admin asigna a otro admin → asignadoId.
   // Si asigna al finder del deal → asignadoFinderId. Los finders solo pueden
   // autoasignarse (asignadoFinderId = su id) o crear tareas sin asignar.
@@ -315,7 +306,6 @@ model Finder {
   notasAutor        Nota[]            @relation("NotaAutorFinder")
   tareasAutor       Tarea[]           @relation("TareaAutorFinder")
   tareasAsignadas   Tarea[]           @relation("TareaAsignadoFinder")
-  actividadesAutor  Actividad[]       @relation("ActividadAutorFinder")
   crmLogsAutor      CrmLog[]          @relation("CrmLogAutorFinder")
 }
 

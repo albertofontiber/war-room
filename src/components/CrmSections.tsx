@@ -23,6 +23,7 @@ type Tarea = {
   tipo: TareaTipo;
   titulo: string;
   descripcion: string | null;
+  resultado: string | null;
   fechaLimite: string | null;
   completada: boolean;
   completadaAt: string | null;
@@ -34,10 +35,12 @@ type Tarea = {
 
 type HistorialItem = {
   id: string;
-  kind: "actividad" | "stage" | "tarea_completada";
+  // Tras la fusión Tarea+Actividad solo quedan dos kinds; las llamadas/emails/
+  // reuniones legacy ahora son `tarea_completada` con `meta.tipo` del enum.
+  kind: "stage" | "tarea_completada";
   fecha: string;
   autor: string | null;
-  autorKind?: "admin" | "finder" | "pipedrive" | null;
+  autorKind?: "admin" | "finder" | null;
   texto: string;
   meta?: Record<string, unknown>;
 };
@@ -669,13 +672,11 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
 // ─── Sección HISTORIAL ────────────────────────────────────────────────────
 
 const KIND_LABEL: Record<HistorialItem["kind"], string> = {
-  actividad: "Actividad",
   stage: "Cambio de stage",
   tarea_completada: "Tarea completada",
 };
 
 const KIND_COLOR: Record<HistorialItem["kind"], string> = {
-  actividad: "text-wr-blue",
   stage: "text-wr-amber",
   tarea_completada: "text-wr-green",
 };
@@ -742,13 +743,6 @@ export function HistorialSection({ empresaId }: { empresaId: number }) {
                       title={TAREA_TIPO_LABEL[tareaTipo as TareaTipo]}
                     >
                       {TAREA_TIPO_ICON[tareaTipo as TareaTipo]} {TAREA_TIPO_LABEL[tareaTipo as TareaTipo]}
-                    </span>
-                  </div>
-                )}
-                {item.kind === "actividad" && item.meta?.tipo != null && (
-                  <div className="mb-1">
-                    <span className="text-[9px] bg-wr-surface2 border border-wr-border rounded px-1 py-0.5 text-wr-muted whitespace-nowrap inline-block">
-                      {String(item.meta.tipo)}
                     </span>
                   </div>
                 )}

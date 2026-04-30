@@ -11,12 +11,16 @@ export type DealStage =
   | "portfolio"
   | "on_hold"
   | "muerto";
+// Tipos para Tarea (modelo unificado tras la fusión Tarea+Actividad).
+// "email" se incorporó del antiguo modelo Actividad. Una "actividad histórica"
+// es ahora una Tarea con completada=true + resultado != null.
 export type TareaTipo =
   | "contacto_linkedin"
   | "mensaje_whatsapp"
   | "llamada"
   | "videollamada"
   | "reunion_presencial"
+  | "email"
   | "otra";
 export type TipoActo =
   | "adquisicion"
@@ -24,7 +28,6 @@ export type TipoActo =
   | "cambio_titular"
   | "fusion"
   | "otros";
-export type TipoActividad = "nota" | "llamada" | "email" | "reunion";
 export type Tendencia = "up" | "flat" | "down";
 export type SizeMetric = "ingresos" | "ebitda";
 export type Vista = "mapa" | "tabla" | "operaciones" | "grupos";
@@ -97,13 +100,8 @@ export interface EmpresaDetalle {
     urlBorme: string | null;
     leido: boolean;
   }[];
-  actividades: {
-    id: number;
-    tipo: TipoActividad;
-    texto: string | null;
-    autor: string | null;
-    fecha: string;
-  }[];
+  // Última Tarea completada — alimenta el stat "Última actividad" de PanelEmpresa.
+  ultimaActividad: { fecha: string; tipo: string } | null;
   tareasPendientesCount: number;
 }
 

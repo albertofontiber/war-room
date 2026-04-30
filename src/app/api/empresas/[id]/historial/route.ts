@@ -20,9 +20,11 @@ function tareaIconLabel(tipo: string): string {
  * GET /api/empresas/[id]/historial
  *
  * Timeline cronológico unificado (eventos ocurridos, no elementos pendientes):
- *   - Actividad (llamadas, emails, reuniones — legacy de Pipedrive)
  *   - CrmLog (cambios de stage)
- *   - Tarea **completadas** (1 sola entrada por tarea, en su fecha de cierre)
+ *   - Tarea **completadas** (1 sola entrada por tarea, en su fecha de cierre).
+ *     Tras la fusión Tarea+Actividad esto incluye también las antiguas actividades
+ *     (llamadas, emails, reuniones legacy Pipedrive) — todas migraron a Tarea
+ *     completada=true con resultado=texto original.
  *
  * NO incluye: tareas pendientes (se ven en la sección Tareas) ni notas generales.
  *
@@ -41,15 +43,7 @@ export async function GET(
       return NextResponse.json({ error: "Invalid empresa id" }, { status: 400 });
     }
 
-    const [actividades, logs, tareasCompletadas] = await Promise.all([
-      prisma.actividad.findMany({
-        where: { empresaId, tipo: { in: ["llamada", "email", "reunion"] } },
-        include: {
-          autorUser: { select: { id: true, name: true } },
-          autorFinder: { select: { id: true, name: true } },
-        },
-        orderBy: { fecha: "desc" },
-      }),
+    const [logs, tareasCompletadas] = await Promise.all([
       prisma.crmLog.findMany({
         where: { empresaId },
         include: {
@@ -71,35 +65,16 @@ export async function GET(
     ]);
 
     type Item = {
-      kind: "actividad" | "stage" | "tarea_completada";
+      kind: "stage" | "tarea_completada";
       fecha: string;
       autor: string | null;
-      autorKind: "admin" | "finder" | "pipedrive" | null;
+      autorKind: "admin" | "finder" | null;
       texto: string;
       meta?: Record<string, unknown>;
       id: string;
     };
 
     const items: Item[] = [];
-
-    for (const a of actividades) {
-      const autorKind: Item["autorKind"] = a.autorFinder
-        ? "finder"
-        : a.autorUser
-        ? "admin"
-        : a.pipedriveId
-        ? "pipedrive"
-        : null;
-      items.push({
-        id: `act-${a.id}`,
-        kind: "actividad",
-        fecha: a.fecha.toISOString(),
-        autor: a.autorFinder?.name ?? a.autorUser?.name ?? a.autor ?? null,
-        autorKind,
-        texto: a.texto ?? "",
-        meta: { tipo: a.tipo, pipedrive: !!a.pipedriveId },
-      });
-    }
 
     for (const l of logs) {
       const texto =
@@ -121,6 +96,10 @@ export async function GET(
 
     for (const t of tareasCompletadas) {
       const completadaPorFinder = !!t.asignadoFinder || (!t.asignado && !!t.autorFinder);
+      // Resultado (notas post-evento) tiene prioridad sobre descripcion (la nota
+      // inicial al crear la tarea). Para actividades migradas el resultado lleva
+      // el texto original.
+      const detalle = t.resultado ?? t.descripcion;
       items.push({
         id: `tarea-done-${t.id}`,
         kind: "tarea_completada",
@@ -132,9 +111,7 @@ export async function GET(
           t.autor?.name ??
           null,
         autorKind: completadaPorFinder ? "finder" : "admin",
-        texto: `${tareaIconLabel(t.tipo)} · ${t.titulo}${
-          t.descripcion ? ` — ${t.descripcion}` : ""
-        }`,
+        texto: `${tareaIconLabel(t.tipo)} · ${t.titulo}${detalle ? ` — ${detalle}` : ""}`,
         meta: { tareaId: t.id, tipo: t.tipo },
       });
     }

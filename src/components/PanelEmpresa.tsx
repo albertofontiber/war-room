@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { fmt, fmtM, fmtPct, fmtDate, fmtMillions } from "@/lib/format";
-import type { EmpresaDetalle, TipoActividad } from "@/types";
+import type { EmpresaDetalle } from "@/types";
 import { getBormeTipo } from "@/lib/borme-constants";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -38,14 +38,6 @@ const SECTOR_LABEL: Record<string, string> = {
   seguridad_electronica: "Seg. Electrónica",
   mixto: "Mixto",
 };
-
-const ACTIVIDAD_ICON: Record<TipoActividad, string> = {
-  nota: "N",
-  llamada: "T",
-  email: "E",
-  reunion: "R",
-};
-
 
 function bormeContexto(tipoActo: string, grupoNombre: string | null | undefined): string | null {
   if (!grupoNombre) return null;
@@ -650,9 +642,7 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
                 />
 
                 {(() => {
-                  const ultimaAct = empresa.actividades?.find(
-                    (a) => a.tipo !== "nota"
-                  );
+                  const ultimaAct = empresa.ultimaActividad;
                   const fechaEntrada = empresa.crmEstado?.fechaEntradaStage;
                   const diasActividad = ultimaAct ? diasDesde(ultimaAct.fecha) : null;
                   const diasEntrada = fechaEntrada ? diasDesde(fechaEntrada) : null;
@@ -976,38 +966,9 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
             </>
           )}
 
-          {/* Actividades CRM */}
-          {empresa.actividades.length > 0 && (
-            <>
-              <Separator className="bg-wr-border" />
-              <div>
-                <SectionLabel>
-                  Actividades ({empresa.actividades.length})
-                </SectionLabel>
-                <div className="space-y-2">
-                  {empresa.actividades.map((a) => (
-                    <div
-                      key={a.id}
-                      className="flex items-start gap-2 text-xs"
-                    >
-                      <div className="w-5 h-5 rounded bg-wr-surface2 border border-wr-border text-wr-muted text-[9px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
-                        {ACTIVIDAD_ICON[a.tipo as TipoActividad] ?? "?"}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-wr-text leading-snug line-clamp-2">
-                          {a.texto || "Sin descripción"}
-                        </p>
-                        <p className="text-wr-hint text-[10px] mt-0.5">
-                          {a.autor && `${a.autor} · `}
-                          {fmtDate(a.fecha)}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
+          {/* Las actividades históricas ahora viven en el HistorialSection
+              (mezclado con cambios de stage) — antes era una sección aparte
+              que iteraba `empresa.actividades`. */}
 
           {/* Alertas BORME */}
           {empresa.bormeAlertas.length > 0 && (

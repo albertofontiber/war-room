@@ -33,6 +33,7 @@ export async function PATCH(
     if (body.tipo !== undefined) data.tipo = body.tipo as TareaTipo;
     if (body.titulo !== undefined) data.titulo = body.titulo;
     if (body.descripcion !== undefined) data.descripcion = body.descripcion?.trim() || null;
+    if (body.resultado !== undefined) data.resultado = body.resultado?.trim() || null;
     if (body.fechaLimite !== undefined)
       data.fechaLimite = body.fechaLimite ? new Date(body.fechaLimite) : null;
     if (body.asignadoId !== undefined) data.asignadoId = body.asignadoId || null;

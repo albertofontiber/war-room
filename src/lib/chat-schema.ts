@@ -114,18 +114,9 @@ CREATE TABLE "CrmLog" (
   "createdAt" TIMESTAMP DEFAULT NOW()
 );
 
--- Actividades CRM (llamadas, emails, reuniones — NOTA: las notas generales ya NO viven aquí, están en tabla "Nota")
--- Actividades CUENTAN para el contador "días sin actividad" del pipeline
-CREATE TABLE "Actividad" (
-  id SERIAL PRIMARY KEY,
-  "empresaId" INT REFERENCES "Empresa"(id),
-  "pipedriveId" TEXT UNIQUE,          -- null para actividades nativas War Room, set para legacy Pipedrive
-  tipo TEXT,                          -- "nota"|"llamada"|"email"|"reunion"
-  texto TEXT,
-  autor TEXT,                         -- legacy string
-  "autorId" TEXT REFERENCES "User"(id),
-  fecha TIMESTAMP
-);
+-- (La tabla "Actividad" se eliminó al fusionarla con "Tarea". Lo que antes
+--  eran llamadas/emails/reuniones legacy Pipedrive ahora son filas de "Tarea"
+--  con completada=true y "resultado" rellenado con el texto original.)
 
 -- Usuarios admin del War Room (MVP 1). Finders tienen tabla aparte (ver más abajo).
 CREATE TABLE "User" (
@@ -148,14 +139,18 @@ CREATE TABLE "Nota" (
   "updatedAt" TIMESTAMP
 );
 
--- Tareas accionables (llamadas programadas, mensajes LinkedIn, reuniones…)
+-- Tareas accionables (modelo unificado: trabajo a hacer + registro histórico).
+-- Tras fusionar la antigua tabla Actividad, una "tarea" puede representar tanto
+-- algo pendiente (completada=false) como un evento ya ocurrido (completada=true
+-- + "resultado" relleno con lo que pasó).
 CREATE TABLE "Tarea" (
   id SERIAL PRIMARY KEY,
   "empresaId" INT REFERENCES "Empresa"(id),
-  tipo TEXT DEFAULT 'otra',           -- "contacto_linkedin"|"mensaje_whatsapp"|"llamada"|"videollamada"|"reunion_presencial"|"otra"
+  tipo TEXT DEFAULT 'otra',           -- "contacto_linkedin"|"mensaje_whatsapp"|"llamada"|"videollamada"|"reunion_presencial"|"email"|"otra"
   titulo TEXT,
-  descripcion TEXT,
-  "fechaLimite" TIMESTAMP,
+  descripcion TEXT,                   -- lo que se pensaba al crear la tarea
+  resultado TEXT,                     -- notas post-evento al completar (qué pasó, próximos pasos)
+  "fechaLimite" TIMESTAMP,            -- nombre legacy: la fecha asociada al item (puede ser pasada o futura)
   completada BOOLEAN DEFAULT false,
   "completadaAt" TIMESTAMP,
   "asignadoId" TEXT REFERENCES "User"(id),  -- usuario al que está asignada
@@ -210,12 +205,12 @@ CREATE TABLE "TargetProposal" (
 - sector "mixto" = empresa que opera tanto en PCI como en seguridad electrónica
 
 ### CRM (MVP 1 desde abril 2026)
-- El War Room es la fuente de verdad del CRM; Pipedrive se está deprecando. Campos "pipedriveOrgId", "Actividad.pipedriveId" son legacy read-only.
+- El War Room es la fuente de verdad del CRM; Pipedrive se está deprecando. Campo "pipedriveOrgId" es legacy read-only.
 - Stages del funnel (9 valores en "CrmEstado.dealStage"): "identificado", "contactado", "primera_reunion", "analisis", "LOI enviada", "execution", "portfolio", "on_hold", "muerto".
 - "fechaEntradaStage" indica cuándo la empresa entró al stage ACTUAL (para calcular "días en stage").
-- Autoría: cada Nota, Tarea, CrmLog y Actividad tiene "autorId" apuntando a User.
-- Tareas: "completada=false" = pendiente. "fechaLimite < now()" = vencida. Tareas pendientes por stage/owner son un KPI útil.
-- Notas generales viven en "Nota" (separado de "Actividad"). NO cuentan como actividad para el contador "días sin actividad" del Kanban — solo "Actividad" de tipos llamada/email/reunion cuenta.
+- Autoría: cada Nota, Tarea y CrmLog tiene "autorId" apuntando a User.
+- Tarea es el modelo unificado de acciones CRM. "completada=false" = pendiente. "completada=true" = registro histórico de algo ya hecho (con "resultado" relleno). "fechaLimite < now() AND completada=false" = vencida.
+- Notas generales viven en "Nota" (separado de "Tarea"). NO cuentan como actividad para el contador "días sin actividad" del Kanban — solo Tareas completadas cuentan.
 - Finders: un finder externo que "trae" empresas. "Empresa.finderSourceId" indica qué finder introdujo la empresa. Las reglas del portal de finders (sanitización, mapping de stages) entrarán en MVP 1.5.
 `;
 
@@ -245,8 +240,8 @@ ${DB_SCHEMA}
 ## Preguntas CRM frecuentes
 - "mis tareas pendientes" / "qué tengo que hacer hoy" → filtra "Tarea" con completada=false, JOIN con "User" por "asignadoId".
 - "empresas estancadas en X stage" → "CrmEstado" donde dealStage='X' y "fechaEntradaStage" < NOW() - INTERVAL 'N days'.
-- "últimas actividades de una empresa" → "Actividad" WHERE "empresaId"=X ORDER BY fecha DESC.
-- "días sin contactar a una empresa" → NOW() - MAX("Actividad".fecha) filtrando "Actividad".tipo IN ('llamada','email','reunion') (NO tipo='nota').
+- "últimas actividades de una empresa" → "Tarea" WHERE "empresaId"=X AND completada=true ORDER BY "completadaAt" DESC.
+- "días sin contactar a una empresa" → NOW() - MAX("Tarea"."completadaAt") WHERE "Tarea".completada=true.
 - "empresas traídas por un finder" → Empresa WHERE "finderSourceId"=X.
 - "conversion rate por stage" → count(*) por dealStage en CrmLog eventos stage_changed.
 - Al hablar de tareas/notas/actividades muestra SIEMPRE el nombre de la empresa (JOIN con Empresa) y el autor (JOIN con User) cuando estén disponibles.

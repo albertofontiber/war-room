@@ -64,9 +64,17 @@ describe("isValidTareaTipo", () => {
     expect(isValidTareaTipo("contacto_linkedin")).toBe(true);
   });
 
+  it("valida 'email' (añadido tras fusión Tarea+Actividad)", () => {
+    expect(isValidTareaTipo("email")).toBe(true);
+  });
+
   it("rechaza tipos desconocidos", () => {
     expect(isValidTareaTipo("linkedin")).toBe(false);
     expect(isValidTareaTipo(null)).toBe(false);
+  });
+
+  it("rechaza 'nota' (vive en modelo Nota, no en Tarea.tipo)", () => {
+    expect(isValidTareaTipo("nota")).toBe(false);
   });
 });
 
