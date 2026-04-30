@@ -11,7 +11,7 @@
  *   otros                    → Tarea (tipo='otra',             completada=true)
  *
  * Para tareas migradas:
- *   - titulo  = TAREA_TIPO_LABEL[tipo] (ej. "Llamada")
+ *   - titulo  = etiqueta legible del tipo (ej. "Llamada")
  *   - resultado = actividad.texto (es lo que pasó)
  *   - fechaLimite = actividad.fecha
  *   - completadaAt = actividad.fecha
@@ -24,11 +24,13 @@
  *   npx tsx scripts/migrate-actividades-a-tareas-y-notas.ts          # dry-run
  *   APPLY=1 npx tsx scripts/migrate-actividades-a-tareas-y-notas.ts  # ejecuta
  *
- * Es idempotente: si la tabla Actividad está vacía o no existe, sale sin tocar nada.
+ * Es idempotente: si la tabla Actividad no existe (ya dropeada) o está vacía,
+ * sale sin hacer nada.
  *
- * IMPORTANTE: ejecutar ANTES de `prisma db push` sobre el schema nuevo (sin modelo
- * Actividad). El cliente de Prisma de este script asume que el schema TODAVÍA
- * declara Actividad.
+ * Implementación: usa SQL crudo ($queryRaw / $executeRaw) para no depender del
+ * Prisma Client tipado — el schema.prisma ya no declara `Actividad` y el cliente
+ * regenerado no expone `prisma.actividad`. La tabla `Actividad` sigue existiendo
+ * físicamente en BD hasta que `prisma db push` la dropee.
  */
 
 import { PrismaClient } from "@prisma/client";
@@ -48,18 +50,41 @@ const TIPO_MAP: Record<string, string> = {
   reunion: "reunion_presencial",
 };
 
+type ActividadRow = {
+  id: number;
+  empresaId: number;
+  tipo: string;
+  texto: string | null;
+  autorId: string | null;
+  autorFinderId: string | null;
+  fecha: Date;
+  sincronizadoAt: Date;
+};
+
 async function main() {
   const apply = process.env.APPLY === "1";
 
-  // @ts-expect-error — el modelo Actividad sigue declarado en schema.prisma cuando
-  // se ejecuta este script. Tras db:push se borrará. El @ts-expect-error evita que
-  // el compilador falle DESPUÉS de la migración cuando ya no exista el modelo.
-  const actividades = await prisma.actividad.findMany({
-    orderBy: { fecha: "asc" },
-  });
+  // 1. ¿Existe la tabla Actividad en esta BD?
+  const tableExists = await prisma.$queryRaw<{ exists: boolean }[]>`
+    SELECT EXISTS (
+      SELECT 1 FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_name = 'Actividad'
+    ) AS "exists"
+  `;
+  if (!tableExists[0]?.exists) {
+    console.log("La tabla Actividad ya no existe — nada que migrar.");
+    return;
+  }
+
+  // 2. Leer todas las Actividad por SQL.
+  const actividades = await prisma.$queryRaw<ActividadRow[]>`
+    SELECT id, "empresaId", tipo, texto, "autorId", "autorFinderId", fecha, "sincronizadoAt"
+    FROM "Actividad"
+    ORDER BY fecha ASC
+  `;
 
   if (actividades.length === 0) {
-    console.log("Sin actividades que migrar. Tabla vacía o ya migrada.");
+    console.log("Tabla Actividad vacía. Nada que migrar.");
     return;
   }
 
@@ -73,7 +98,7 @@ async function main() {
     tipoCount[a.tipo] = (tipoCount[a.tipo] ?? 0) + 1;
 
     if (a.tipo === "nota") {
-      // → Nota
+      // → Nota (contenido = texto, createdAt = fecha)
       if (apply) {
         await prisma.nota.create({
           data: {
@@ -121,9 +146,8 @@ async function main() {
   console.log(`Tipos origen: ${JSON.stringify(tipoCount)}`);
 
   if (apply) {
-    // @ts-expect-error — ver arriba.
-    const { count } = await prisma.actividad.deleteMany({});
-    console.log(`\nVaciada tabla Actividad (${count} filas). Próximo paso: \`npm run db:push\`.`);
+    const deleted = await prisma.$executeRaw`DELETE FROM "Actividad"`;
+    console.log(`\nVaciada tabla Actividad (${deleted} filas). Próximo paso: \`npx prisma db push\` para dropear la tabla.`);
   } else {
     console.log("\nDry-run completo. Ejecuta con APPLY=1 para aplicar cambios.");
   }
