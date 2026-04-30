@@ -55,6 +55,7 @@ export async function PATCH(
       autorFinderId: true,
       asignadoFinderId: true,
       completada: true,
+      resultado: true,
       empresa: { select: { id: true, nombre: true } },
       titulo: true,
       tipo: true,
@@ -95,6 +96,13 @@ export async function PATCH(
   const isCompletingNow =
     body.completada === true && !tarea.completada;
 
+  // Detecta cambio real del campo resultado para notificar (sin contar el caso
+  // en que se manda junto con `completada=true` — ese ya genera "task_completed").
+  const isEditingResultadoOnly =
+    body.resultado !== undefined &&
+    !isCompletingNow &&
+    (body.resultado ?? null) !== (tarea.resultado ?? null);
+
   const updated = await prisma.tarea.update({
     where: { id: tareaId },
     data: {
@@ -134,6 +142,23 @@ export async function PATCH(
       tipo: "task_completed",
       titulo: `${finder.name}: tarea completada en ${tarea.empresa.nombre}`,
       mensaje: `${tipoLabel} — ${updated.titulo}`,
+      link: `/?empresa=${tarea.empresa.id}`,
+      email: false,
+    }).catch((err) =>
+      console.error("[portal/tareas PATCH] notifyAdmins error:", err)
+    );
+  } else if (isEditingResultadoOnly) {
+    // El finder editó/añadió las notas post-evento de una tarea (sin completarla
+    // de nuevo). Manda una campanita propia con un preview del nuevo texto.
+    const tipoLabel = TAREA_TIPO_LABEL[updated.tipo as TareaTipo] ?? updated.tipo;
+    const nuevo = updated.resultado ?? "";
+    const preview = nuevo
+      ? (nuevo.length > 140 ? nuevo.slice(0, 140) + "…" : nuevo)
+      : "(notas eliminadas)";
+    await notifyAdmins({
+      tipo: "task_resultado_edited",
+      titulo: `${finder.name}: notas post-evento en ${tarea.empresa.nombre}`,
+      mensaje: `${tipoLabel} — ${updated.titulo}\n\n${preview}`,
       link: `/?empresa=${tarea.empresa.id}`,
       email: false,
     }).catch((err) =>
