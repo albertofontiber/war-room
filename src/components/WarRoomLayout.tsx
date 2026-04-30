@@ -39,22 +39,29 @@ export default function WarRoomLayout() {
       {/* ── Sidebar izquierdo 260px ── */}
       <Sidebar />
 
-      {/* ── Área central (flex-1) ── */}
+      {/* ── Área central (flex-1): Navbar arriba + (main + panel) debajo ── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Navbar 44px fijo */}
+        {/* Navbar 44px fijo, full-width del área central */}
         <Navbar />
 
-        {/* Contenido principal: mapa, tabla, operaciones o grupos */}
-        <main className="flex-1 overflow-hidden">
-          {vistaActual === "mapa" && <MapaEspana />}
-          {vistaActual === "tabla" && <TablaEmpresas />}
-          {vistaActual === "operaciones" && <OperacionesBorme />}
-          {vistaActual === "grupos" && <GruposView />}
-        </main>
-      </div>
+        {/* Contenido + panel lateral, ambos bajo el Navbar */}
+        <div className="flex-1 flex min-h-0 overflow-hidden">
+          <main className="flex-1 overflow-hidden min-w-0">
+            {vistaActual === "mapa" && <MapaEspana />}
+            {vistaActual === "tabla" && <TablaEmpresas />}
+            {vistaActual === "operaciones" && <OperacionesBorme />}
+            {vistaActual === "grupos" && <GruposView />}
+          </main>
 
-      {/* ── Panel lateral derecho 340px — solo en mapa/tabla/grupos ── */}
-      {panelAbierto && vistaActual !== "operaciones" && <PanelEmpresa />}
+          {/* Panel lateral derecho — solo en mapa/tabla/grupos. Ancho 560px;
+              en /pipeline el componente padre define su propio wrapper. */}
+          {panelAbierto && vistaActual !== "operaciones" && (
+            <div className="w-[560px] flex-shrink-0 flex">
+              <PanelEmpresa />
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* ── Chat IA flotante ── */}
       <ChatIA />

@@ -18,7 +18,6 @@ import {
   DEAL_STAGE_PILL_CLASS,
 } from "@/lib/crm";
 import type { DealStage } from "@/types";
-import { useRouter } from "next/navigation";
 import {
   ComposedChart,
   Bar,
@@ -243,18 +242,19 @@ function HistoricoChart({ financieros }: { financieros: FinRow[] }) {
 // ─── Component ─────────────────────────────────────────────────────────────
 
 type PanelEmpresaProps = {
-  /** Si true (default en /pipeline), muestra las secciones CRM expandidas.
-   * Si false (mapa/tabla), las oculta y muestra botón "Ver detalle en Pipeline". */
-  modoDetallado?: boolean;
   /** Callback al cambiar campos persistentes que afectan a vistas externas (Kanban).
    * Se dispara tras cambio de stage o asignación de finder exitosos. */
   onEmpresaChanged?: () => void;
 };
 
-export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }: PanelEmpresaProps = {}) {
+// Tarjeta unificada — antes había una versión compacta (mapa/tabla, 340px) y
+// otra detallada (/pipeline, full-width). Ahora una sola: ancho fijo 560px en
+// home (WarRoomLayout) y 100% del wrapper en /pipeline (PipelinePageClient lo
+// envuelve en un div con su propio ancho). En ambos casos muestra todo
+// (Funnel + Finder + CrmSections), sin branching.
+export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {}) {
   const { empresaSeleccionadaId, cerrarPanel, modoPresentacion, seleccionarEmpresa, updateEmpresaInGeoJSON } =
     useWarRoomStore();
-  const router = useRouter();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
 
   const [empresa, setEmpresa] = useState<EmpresaDetalle | null>(null);
@@ -447,7 +447,7 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
   // Loading state
   if (loading || !empresa) {
     return (
-      <aside className={`${modoDetallado ? "w-full" : "w-[340px] flex-shrink-0"} bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right`}>
+      <aside className="w-full bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
         <div className="flex items-center justify-between p-4 border-b border-wr-border">
           <div className="h-3 w-24 bg-wr-surface2 rounded animate-pulse" />
           <button
@@ -483,7 +483,7 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
     : DEAL_STAGE_PILL_CLASS.identificado;
 
   return (
-    <aside className={`${modoDetallado ? "w-full" : "w-[340px] flex-shrink-0"} bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right`}>
+    <aside className="w-full bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <div className="flex items-start gap-3 p-4 border-b border-wr-border">
         {empresa.logoUrl ? (
@@ -577,54 +577,12 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
             )}
           </div>
 
-          {/* ── Modo COMPACTO (mapa/tabla): chevron + tareas + acceso al Pipeline ── */}
-          {!modoDetallado && (
-            <div className="space-y-2">
-              <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
-                <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
-                  Funnel
-                </p>
-                <StageChevron
-                  stage={dealStage ?? null}
-                  diasEnStage={
-                    empresa.crmEstado?.fechaEntradaStage
-                      ? diasDesde(empresa.crmEstado.fechaEntradaStage)
-                      : null
-                  }
-                  stageDurations={empresa.stageDurations}
-                  onChange={handleStageChange}
-                />
-              </div>
-
-              {empresa.tareasPendientesCount > 0 && (
-                <div className="flex items-center gap-2 text-xs bg-wr-amber/10 text-wr-amber border border-wr-amber/30 rounded-md px-3 py-2">
-                  <span className="text-[9px] font-bold bg-wr-amber/20 border border-wr-amber/30 rounded px-1 py-0.5">
-                    {empresa.tareasPendientesCount}T
-                  </span>
-                  <span>
-                    {empresa.tareasPendientesCount === 1
-                      ? "1 tarea pendiente"
-                      : `${empresa.tareasPendientesCount} tareas pendientes`}
-                  </span>
-                </div>
-              )}
-              <button
-                onClick={() => router.push("/pipeline")}
-                className="w-full flex items-center justify-center gap-2 text-xs bg-wr-blue/10 text-wr-blue border border-wr-blue/30 rounded-md px-3 py-2 hover:bg-wr-blue/20 transition-colors"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
-                </svg>
-                Ver detalle en Pipeline
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M7 17L17 7M7 7h10v10" />
-                </svg>
-              </button>
-            </div>
-          )}
-
-          {/* ── Modo DETALLADO (/pipeline): chevron + historial + tareas + notas */}
-          {modoDetallado && (
+          {/* ── Sección CRM (chevron + finder + tareas/historial/notas) ─── */}
+          {/* Antes había una versión compacta (mapa/tabla) y otra detallada
+              (/pipeline). Tras la unificación: siempre se muestra todo. La
+              navegación al Kanban se hace desde la pestaña "Pipeline" del
+              Navbar — el botón redundante se eliminó. */}
+          {(
             <>
               <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
                 <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">

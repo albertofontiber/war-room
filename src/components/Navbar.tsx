@@ -132,7 +132,7 @@ export default function Navbar() {
       </div>
 
       {/* Search */}
-      <div className="flex-1 max-w-lg relative">
+      <div className="flex-1 max-w-3xl relative">
         <div className="relative">
           <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 text-wr-hint" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
