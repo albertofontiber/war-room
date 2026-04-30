@@ -684,14 +684,34 @@ const KIND_COLOR: Record<HistorialItem["kind"], string> = {
 export function HistorialSection({ empresaId }: { empresaId: number }) {
   const [items, setItems] = useState<HistorialItem[]>([]);
   const [open, setOpen] = useState(false);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (!open) return;
+  const reload = useCallback(() => {
     fetch(`/api/empresas/${empresaId}/historial`, { cache: "no-store" })
       .then((r) => r.json())
       .then(setItems)
       .catch(() => setItems([]));
-  }, [empresaId, open]);
+  }, [empresaId]);
+
+  useEffect(() => {
+    if (!open) return;
+    reload();
+  }, [open, reload]);
+
+  const borrarTarea = async (tareaId: number) => {
+    if (!confirm("¿Borrar esta tarea del historial? Acción irreversible.")) return;
+    setDeletingId(tareaId);
+    try {
+      const res = await fetch(`/api/tareas/${tareaId}`, { method: "DELETE" });
+      if (!res.ok) {
+        alert(`Error al borrar: ${res.status}`);
+        return;
+      }
+      reload();
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
@@ -714,6 +734,7 @@ export function HistorialSection({ empresaId }: { empresaId: number }) {
           {items.map((item) => {
             // Para tareas completadas, el meta incluye el tipo de tarea → chip
             const tareaTipo = item.meta?.tipo as string | undefined;
+            const tareaId = item.meta?.tareaId as number | undefined;
             const esTareaValida =
               item.kind === "tarea_completada" && tareaTipo && (TAREA_TIPOS as string[]).includes(tareaTipo);
             // Quitar el prefijo ("{icono} {label} · ") del texto si ya vamos a mostrar el chip
@@ -723,10 +744,13 @@ export function HistorialSection({ empresaId }: { empresaId: number }) {
                   ""
                 )
               : item.texto;
+            // Solo las tareas completadas son borrables. Los cambios de stage
+            // (CrmLog) son auditoría inmutable.
+            const esBorrable = item.kind === "tarea_completada" && typeof tareaId === "number";
             return (
               <div
                 key={item.id}
-                className="bg-wr-surface rounded border border-wr-border p-2 text-xs"
+                className="group bg-wr-surface rounded border border-wr-border p-2 text-xs"
               >
                 <div className="flex items-center justify-between mb-0.5 gap-2">
                   <span
@@ -734,7 +758,19 @@ export function HistorialSection({ empresaId }: { empresaId: number }) {
                   >
                     {KIND_LABEL[item.kind]}
                   </span>
-                  <span className="text-[9px] text-wr-hint flex-shrink-0">{fmtDate(item.fecha)}</span>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span className="text-[9px] text-wr-hint">{fmtDate(item.fecha)}</span>
+                    {esBorrable && (
+                      <button
+                        onClick={() => borrarTarea(tareaId!)}
+                        disabled={deletingId === tareaId}
+                        title="Borrar tarea del historial"
+                        className="opacity-0 group-hover:opacity-60 hover:opacity-100 text-[10px] text-wr-red disabled:opacity-30"
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
                 </div>
                 {esTareaValida && (
                   <div className="mb-1">
