@@ -655,32 +655,56 @@ async function main() {
   });
   console.log("✅ 3 empresas asignadas al finder de prueba (e4, e6, e10)");
 
-  // ─── ACTIVIDADES CRM ─────────────────────────────────────────────────────
-  const actividadesData = [
+  // ─── HISTORIAL CRM (Tareas completadas — antes Actividades) ──────────────
+  // Tras la fusión Tarea+Actividad, sembramos eventos históricos como tareas
+  // ya completadas con `resultado` relleno con lo que pasó.
+  const historicoData = [
     // E3 Protectio Norte — NBO
-    { empresaId: e3.id, pipedriveId: "ACT-3001", tipo: "reunion",  texto: "Reunión con CEO y CFO para presentar LOI. Muy receptivos. Pendiente de recibir financieros auditados 2023.", autor: "alberto", fecha: new Date("2026-02-14") },
-    { empresaId: e3.id, pipedriveId: "ACT-3002", tipo: "email",    texto: "Envío de NDA firmado y cuestionario de due diligence preliminar.", autor: "alberto", fecha: new Date("2026-01-28") },
-    { empresaId: e3.id, pipedriveId: "ACT-3003", tipo: "llamada",  texto: "Call con el abogado de la familia. Confirman disposición a vender 100%. Timeline: cierre antes de Q4 2026.", autor: "gabriel", fecha: new Date("2026-01-15") },
+    { empresaId: e3.id, tipo: "reunion_presencial", titulo: "Reunión presencial", resultado: "Reunión con CEO y CFO para presentar LOI. Muy receptivos. Pendiente de recibir financieros auditados 2023.", fecha: new Date("2026-02-14") },
+    { empresaId: e3.id, tipo: "email",              titulo: "Email",              resultado: "Envío de NDA firmado y cuestionario de due diligence preliminar.", fecha: new Date("2026-01-28") },
+    { empresaId: e3.id, tipo: "llamada",            titulo: "Llamada",            resultado: "Call con el abogado de la familia. Confirman disposición a vender 100%. Timeline: cierre antes de Q4 2026.", fecha: new Date("2026-01-15") },
     // E7 Chubb — exclusividad
-    { empresaId: e7.id, pipedriveId: "ACT-7001", tipo: "reunion",  texto: "Kick-off due diligence. Equipo de Carrier presente. Revisión de contratos de mantenimiento y pipeline comercial.", autor: "alberto", fecha: new Date("2026-03-10") },
-    { empresaId: e7.id, pipedriveId: "ACT-7002", tipo: "nota",     texto: "ATENCIÓN: Carrier solicitando exclusividad prolongada 30 días adicionales. Evaluar impacto en otras opciones estratégicas.", autor: "gabriel", fecha: new Date("2026-03-18") },
-    { empresaId: e7.id, pipedriveId: "ACT-7003", tipo: "email",    texto: "Solicitud de documentación adicional: certificados ATEX, registros de instalación en aeropuertos.", autor: "gabriel", fecha: new Date("2026-03-05") },
+    { empresaId: e7.id, tipo: "reunion_presencial", titulo: "Reunión presencial", resultado: "Kick-off due diligence. Equipo de Carrier presente. Revisión de contratos de mantenimiento y pipeline comercial.", fecha: new Date("2026-03-10") },
+    { empresaId: e7.id, tipo: "email",              titulo: "Email",              resultado: "Solicitud de documentación adicional: certificados ATEX, registros de instalación en aeropuertos.", fecha: new Date("2026-03-05") },
     // E8 Catalunya Fire — NBO
-    { empresaId: e8.id, pipedriveId: "ACT-8001", tipo: "llamada",  texto: "Primera llamada con socios. Interés en encontrar socio industrial que mantenga autonomía operativa.", autor: "alberto", fecha: new Date("2026-02-20") },
-    { empresaId: e8.id, pipedriveId: "ACT-8002", tipo: "reunion",  texto: "Visita a instalaciones. Buen estado del equipo técnico. Se detecta subinversión en herramientas en los últimos 2 años.", autor: "gabriel", fecha: new Date("2026-03-01") },
+    { empresaId: e8.id, tipo: "llamada",            titulo: "Llamada",            resultado: "Primera llamada con socios. Interés en encontrar socio industrial que mantenga autonomía operativa.", fecha: new Date("2026-02-20") },
+    { empresaId: e8.id, tipo: "reunion_presencial", titulo: "Reunión presencial", resultado: "Visita a instalaciones. Buen estado del equipo técnico. Se detecta subinversión en herramientas en los últimos 2 años.", fecha: new Date("2026-03-01") },
     // E9 Andalufuego — portfolio
-    { empresaId: e9.id, pipedriveId: "ACT-9001", tipo: "nota",     texto: "Integración completada. Reporting Q4 2025 en línea con plan de negocio. EBITDA +1pp vs presupuesto.", autor: "alberto", fecha: new Date("2026-01-20") },
-    { empresaId: e9.id, pipedriveId: "ACT-9002", tipo: "reunion",  texto: "Board quarterly. Análisis de pipeline de contratos H1 2026. Foco en Aeropuerto de Sevilla (licitación mayo).", autor: "gabriel", fecha: new Date("2026-02-05") },
+    { empresaId: e9.id, tipo: "reunion_presencial", titulo: "Reunión presencial", resultado: "Board quarterly. Análisis de pipeline de contratos H1 2026. Foco en Aeropuerto de Sevilla (licitación mayo).", fecha: new Date("2026-02-05") },
   ];
 
-  for (const act of actividadesData) {
-    await prisma.actividad.upsert({
-      where: { pipedriveId: act.pipedriveId },
-      update: {},
-      create: { ...act, sincronizadoAt: new Date() },
+  for (const ev of historicoData) {
+    await prisma.tarea.create({
+      data: {
+        empresaId: ev.empresaId,
+        tipo: ev.tipo,
+        titulo: ev.titulo,
+        descripcion: null,
+        resultado: ev.resultado,
+        fechaLimite: ev.fecha,
+        completada: true,
+        completadaAt: ev.fecha,
+      },
     });
   }
-  console.log("✅ Actividades CRM creadas (10)");
+  console.log("✅ Histórico CRM (8 tareas completadas)");
+
+  // Las antiguas actividades tipo "nota" (e.g. ACT-7002, ACT-9001) son ahora
+  // notas independientes en el modelo Nota.
+  await prisma.nota.create({
+    data: {
+      empresaId: e7.id,
+      contenido: "ATENCIÓN: Carrier solicitando exclusividad prolongada 30 días adicionales. Evaluar impacto en otras opciones estratégicas.",
+      createdAt: new Date("2026-03-18"),
+    },
+  });
+  await prisma.nota.create({
+    data: {
+      empresaId: e9.id,
+      contenido: "Integración completada. Reporting Q4 2025 en línea con plan de negocio. EBITDA +1pp vs presupuesto.",
+      createdAt: new Date("2026-01-20"),
+    },
+  });
 
   console.log("\n🎯 Seed completado:");
   console.log("   Grupos:      4");
@@ -688,7 +712,7 @@ async function main() {
   console.log("   Financieros: 45 (valores absolutos €; % calculados en API)");
   console.log("   BORME:        4 alertas");
   console.log("   CRM:         12 estados (3 sin contactar)");
-  console.log("   Actividades: 10");
+  console.log("   Histórico:   10 (8 tareas completadas + 2 notas)");
 }
 
 main()

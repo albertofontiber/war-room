@@ -11,7 +11,6 @@ import {
   PortalNotaCreateSchema,
   PortalTareaCreateSchema,
   PortalTareaUpdateSchema,
-  PortalActividadCreateSchema,
   ProposalCreateSchema,
   ProposalReviewSchema,
 } from "./validation";
@@ -36,11 +35,28 @@ describe("TareaCreateSchema", () => {
     expect(r.success).toBe(false);
   });
 
-  it("acepta todos los tipos válidos", () => {
-    for (const t of ["contacto_linkedin", "mensaje_whatsapp", "llamada", "videollamada", "reunion_presencial", "otra"]) {
+  it("acepta todos los tipos válidos (incluye email tras fusión Tarea+Actividad)", () => {
+    for (const t of [
+      "contacto_linkedin",
+      "mensaje_whatsapp",
+      "llamada",
+      "videollamada",
+      "reunion_presencial",
+      "email",
+      "otra",
+    ]) {
       const r = TareaCreateSchema.safeParse({ titulo: "x", tipo: t });
       expect(r.success, `tipo=${t}`).toBe(true);
     }
+  });
+
+  it("acepta completada=true + resultado en create (formulario 'Ya hecho')", () => {
+    const r = TareaCreateSchema.safeParse({
+      titulo: "Llamada",
+      completada: true,
+      resultado: "Hablamos del próximo paso, manda email el viernes",
+    });
+    expect(r.success).toBe(true);
   });
 
   it("acepta fechaLimite en formato yyyy-mm-dd (HTML date input)", () => {
@@ -203,23 +219,27 @@ describe("PortalTareaUpdateSchema", () => {
   it("rechaza body vacío", () => {
     expect(PortalTareaUpdateSchema.safeParse({}).success).toBe(false);
   });
+  it("acepta resultado solo (notas post-evento)", () => {
+    expect(PortalTareaUpdateSchema.safeParse({ resultado: "salió bien" }).success).toBe(true);
+  });
+  it("acepta resultado=null para limpiar", () => {
+    expect(PortalTareaUpdateSchema.safeParse({ resultado: null }).success).toBe(true);
+  });
 });
 
-describe("PortalActividadCreateSchema", () => {
-  it("acepta tipo + texto", () => {
-    const r = PortalActividadCreateSchema.safeParse({
+describe("PortalTareaCreateSchema (modo 'Ya hecho')", () => {
+  it("acepta completada=true + resultado", () => {
+    const r = PortalTareaCreateSchema.safeParse({
+      titulo: "Llamada",
       tipo: "llamada",
-      texto: "Primera conversación con el fundador",
+      completada: true,
+      resultado: "Hablamos del precio",
     });
     expect(r.success).toBe(true);
   });
-  it("rechaza tipo inválido", () => {
-    expect(PortalActividadCreateSchema.safeParse({ tipo: "café", texto: "x" }).success).toBe(false);
-  });
-  it("acepta todos los tipos válidos", () => {
-    for (const t of ["nota", "llamada", "email", "reunion"]) {
-      expect(PortalActividadCreateSchema.safeParse({ tipo: t }).success, `tipo=${t}`).toBe(true);
-    }
+  it("acepta tipo email (nuevo tras fusión Actividad)", () => {
+    const r = PortalTareaCreateSchema.safeParse({ titulo: "x", tipo: "email" });
+    expect(r.success).toBe(true);
   });
 });
 

@@ -8,12 +8,11 @@ export const dynamic = "force-dynamic";
 /**
  * POST /api/leads/:id/link — vincula un lead anónimo a una empresa real.
  *
- * Mueve Nota, Tarea, Actividad, CrmLog, FinderNote, TargetProposal y Financiero
- * (los del lead; el del target ya existente se respeta si colisiona año) al
- * target. El CrmEstado del lead prevalece (stage, fechaEntradaStage, ownerUser);
- * si el target tenía uno se descarta. Si el target no tenía finderSourceId y el
- * lead sí, lo hereda. Deja un CrmLog en el target marcando el merge y borra el
- * lead.
+ * Mueve Nota, Tarea, CrmLog, FinderNote, TargetProposal y Financiero (los del
+ * lead; el del target ya existente se respeta si colisiona año) al target.
+ * El CrmEstado del lead prevalece (stage, fechaEntradaStage, ownerUser); si el
+ * target tenía uno se descarta. Si el target no tenía finderSourceId y el lead
+ * sí, lo hereda. Deja un CrmLog en el target marcando el merge y borra el lead.
  */
 export async function POST(
   req: NextRequest,
@@ -61,7 +60,6 @@ export async function POST(
       // 1. Mover relaciones con FK simple a Empresa (empresaId)
       await tx.nota.updateMany({ where: { empresaId: leadId }, data: { empresaId: targetEmpresaId } });
       await tx.tarea.updateMany({ where: { empresaId: leadId }, data: { empresaId: targetEmpresaId } });
-      await tx.actividad.updateMany({ where: { empresaId: leadId }, data: { empresaId: targetEmpresaId } });
       await tx.crmLog.updateMany({ where: { empresaId: leadId }, data: { empresaId: targetEmpresaId } });
       await tx.finderNote.updateMany({ where: { empresaId: leadId }, data: { empresaId: targetEmpresaId } });
       await tx.targetProposal.updateMany({ where: { empresaId: leadId }, data: { empresaId: targetEmpresaId } });

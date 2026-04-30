@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
  * Lista de empresas del funnel, agrupadas por dealStage, con los datos
  * necesarios para pintar cada tarjeta del Kanban:
  *   - nombre, CIF, ingresos, EBITDA, margen%, owner
- *   - última actividad (excluye tipo=nota, que no cuenta)
+ *   - última actividad (= última Tarea completada, tras unificación Tarea+Actividad)
  *   - nº tareas pendientes
  *   - días en stage actual
  *
@@ -82,12 +82,14 @@ export async function GET(req: NextRequest) {
         },
         finderSource: { select: { id: true, name: true } },
         grupo: { select: { id: true, nombre: true } },
-        // última actividad real (llamada/email/reunión) — excluye tipo=nota
-        actividades: {
-          where: { tipo: { in: ["llamada", "email", "reunion"] } },
-          orderBy: { fecha: "desc" },
+        // última actividad real = última Tarea completada (la fusión Tarea+Actividad
+        // hizo que llamadas/emails/reuniones legacy migraran a Tarea.completada=true).
+        // Notas no cuentan — viven en su propio modelo.
+        tareas: {
+          where: { completada: true, completadaAt: { not: null } },
+          orderBy: { completadaAt: "desc" },
           take: 1,
-          select: { fecha: true, tipo: true },
+          select: { completadaAt: true, tipo: true },
         },
         _count: {
           select: {
@@ -130,8 +132,9 @@ export async function GET(req: NextRequest) {
         ingresos && margenBruto ? (margenBruto / ingresos) * 100 : null;
       const ebitda = fin?.ebitda ?? null;
 
-      const ultima = e.actividades[0] ?? null;
-      const diasSinActividad = ultima ? diasDesde(ultima.fecha) : null;
+      const ultima = e.tareas[0] ?? null;
+      const ultimaFecha = ultima?.completadaAt ?? null;
+      const diasSinActividad = ultimaFecha ? diasDesde(ultimaFecha) : null;
 
       // Usamos SOLO fechaEntradaStage. No caer a updatedAt: el cron Pipedrive
       // bombea updatedAt diariamente, lo que haría que diasEnStage siempre fuera 0
@@ -157,8 +160,8 @@ export async function GET(req: NextRequest) {
         ownerName: e.crmEstado?.ownerUser?.name ?? e.crmEstado?.owner ?? null,
         finderName: e.finderSource?.name ?? null,
         finderId: e.finderSource?.id ?? null,
-        ultimaActividad: ultima
-          ? { fecha: ultima.fecha.toISOString(), tipo: ultima.tipo }
+        ultimaActividad: ultima && ultimaFecha
+          ? { fecha: ultimaFecha.toISOString(), tipo: ultima.tipo }
           : null,
         diasSinActividad,
         diasEnStage,

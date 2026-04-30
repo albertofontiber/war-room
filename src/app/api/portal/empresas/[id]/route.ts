@@ -18,8 +18,9 @@ export const dynamic = "force-dynamic";
  * Historial:
  *   - `Nota` creadas por el finder (siempre visibles)
  *   - `Nota` de admins con `visibleAFinder=true`
- *   - `Tarea` (propias del finder, autoasignadas o asignadas a él)
- *   - `Actividad` del finder
+ *   - `Tarea` (propias del finder, autoasignadas o asignadas a él) — modelo
+ *     unificado: pendientes (completada=false) y registros históricos
+ *     (completada=true, con `resultado` rellenado).
  *
  * NO incluye: CIF, financieros, grupo, owner interno, BORME, CrmLog,
  * notas internas de admins, ni nada privado.
@@ -80,7 +81,9 @@ export async function GET(
     },
   });
 
-  // Tareas: autoasignadas/creadas por él o asignadas a él por admins
+  // Tareas: autoasignadas/creadas por él o asignadas a él por admins.
+  // Tras la fusión Tarea+Actividad, esto incluye registros históricos
+  // (completada=true + resultado) además de las pendientes.
   const tareas = await prisma.tarea.findMany({
     where: {
       empresaId: id,
@@ -95,24 +98,12 @@ export async function GET(
       tipo: true,
       titulo: true,
       descripcion: true,
+      resultado: true,
       fechaLimite: true,
       completada: true,
       completadaAt: true,
       createdAt: true,
       autor: { select: { name: true } },
-      autorFinder: { select: { name: true } },
-    },
-  });
-
-  // Actividades del finder
-  const actividades = await prisma.actividad.findMany({
-    where: { empresaId: id, autorFinderId: finder.id },
-    orderBy: { fecha: "desc" },
-    select: {
-      id: true,
-      tipo: true,
-      texto: true,
-      fecha: true,
       autorFinder: { select: { name: true } },
     },
   });
@@ -127,6 +118,5 @@ export async function GET(
     ...empresa,
     notas,
     tareas,
-    actividades,
   });
 }

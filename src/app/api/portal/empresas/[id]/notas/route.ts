@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder } from "@/lib/finder-session";
 import { logFinderAction } from "@/lib/finder-access-log";
+import { notifyAdmins } from "@/lib/notifications";
 import { PortalNotaCreateSchema, zodError } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
@@ -30,7 +31,7 @@ export async function POST(
 
   const empresa = await prisma.empresa.findFirst({
     where: { id, finderSourceId: finder.id, esAnonima: false },
-    select: { id: true },
+    select: { id: true, nombre: true },
   });
   if (!empresa) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
@@ -55,6 +56,18 @@ export async function POST(
     action: "add_note",
     resourceId: String(nota.id),
   });
+
+  // Campanita in-app a admins (sin email — irá en el digest diario).
+  const preview = nota.contenido.length > 140
+    ? nota.contenido.slice(0, 140) + "…"
+    : nota.contenido;
+  await notifyAdmins({
+    tipo: "note_added",
+    titulo: `${finder.name}: nueva nota en ${empresa.nombre}`,
+    mensaje: preview,
+    link: `/?empresa=${empresa.id}`,
+    email: false,
+  }).catch((err) => console.error("[portal/notas POST] notifyAdmins error:", err));
 
   return NextResponse.json(nota, { status: 201 });
 }

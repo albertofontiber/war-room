@@ -35,11 +35,13 @@ export async function GET() {
         ccaa: true,
         sector: true,
         crmEstado: { select: { dealStage: true, fechaEntradaStage: true } },
-        actividades: {
-          where: { tipo: { in: ["llamada", "email", "reunion"] } },
-          orderBy: { fecha: "desc" },
+        // Última "actividad" = última Tarea completada (la fusión Tarea+Actividad
+        // hizo que llamadas/emails/reuniones legacy migraran a Tarea.completada=true).
+        tareas: {
+          where: { completada: true, completadaAt: { not: null } },
+          orderBy: { completadaAt: "desc" },
           take: 1,
-          select: { fecha: true, tipo: true },
+          select: { completadaAt: true, tipo: true },
         },
         _count: {
           select: {
@@ -74,7 +76,8 @@ export async function GET() {
     const tarjetas: Card[] = empresas.map((e) => {
       const stage = (e.crmEstado?.dealStage as DealStage | undefined) ?? "identificado";
       const status = FINDER_STATUS_MAP[stage] ?? "Pendiente";
-      const ultima = e.actividades[0] ?? null;
+      const ultima = e.tareas[0] ?? null;
+      const ultimaFecha = ultima?.completadaAt ?? null;
       return {
         id: e.id,
         nombre: e.nombre,
@@ -85,10 +88,10 @@ export async function GET() {
         diasEnStatus: e.crmEstado?.fechaEntradaStage
           ? diasDesde(e.crmEstado.fechaEntradaStage)
           : null,
-        ultimaActividad: ultima
-          ? { fecha: ultima.fecha.toISOString(), tipo: ultima.tipo }
+        ultimaActividad: ultima && ultimaFecha
+          ? { fecha: ultimaFecha.toISOString(), tipo: ultima.tipo }
           : null,
-        diasSinActividad: ultima ? diasDesde(ultima.fecha) : null,
+        diasSinActividad: ultimaFecha ? diasDesde(ultimaFecha) : null,
         tareasPendientes: e._count.tareas,
       };
     });

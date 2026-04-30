@@ -9,6 +9,7 @@ import {
   FINDER_STATUS_PILL,
   TAREA_TIPOS,
   TAREA_TIPO_LABEL,
+  TAREA_TIPO_ICON,
 } from "@/lib/crm";
 import type { FinderStatus } from "@/lib/crm";
 import type { DealStage, TareaTipo } from "@/types";
@@ -25,18 +26,12 @@ type Tarea = {
   tipo: string;
   titulo: string;
   descripcion: string | null;
+  resultado: string | null;
   fechaLimite: string | null;
   completada: boolean;
   completadaAt: string | null;
   createdAt: string;
   autor?: { name: string } | null;
-  autorFinder?: { name: string } | null;
-};
-type Actividad = {
-  id: number;
-  tipo: string;
-  texto: string | null;
-  fecha: string;
   autorFinder?: { name: string } | null;
 };
 
@@ -54,7 +49,6 @@ type Target = {
   crmEstado: { dealStage: DealStage | null; fechaEntradaStage: string | null } | null;
   notas: Nota[];
   tareas: Tarea[];
-  actividades: Actividad[];
 };
 
 const SECTOR_LABEL: Record<string, string> = {
@@ -62,18 +56,6 @@ const SECTOR_LABEL: Record<string, string> = {
   seguridad_electronica: "Seg. electrónica",
   mixto: "Mixto",
 };
-
-const ACTIVIDAD_TIPOS = [
-  { value: "llamada", label: "Llamada" },
-  { value: "email", label: "Email" },
-  { value: "reunion", label: "Reunión" },
-  { value: "nota", label: "Nota de interacción" },
-];
-
-const EDIT_WINDOW_MS = 24 * 60 * 60 * 1000;
-function withinEditWindow(createdAt: string) {
-  return Date.now() - new Date(createdAt).getTime() < EDIT_WINDOW_MS;
-}
 
 export default function PortalTargetClient({
   empresaId,
@@ -188,7 +170,6 @@ export default function PortalTargetClient({
             )}
 
             <TareasSection empresaId={empresaId} tareas={target.tareas} onChanged={load} />
-            <ActividadesSection empresaId={empresaId} actividades={target.actividades} onChanged={load} />
             <NotasSection empresaId={empresaId} notas={target.notas} onChanged={load} />
           </div>
         )}
@@ -217,32 +198,48 @@ function SectionHeader({ title, count, onAdd, adding }: { title: string; count: 
   );
 }
 
+// Sección unificada Tareas + Actividades históricas. El finder elige al crear:
+//   - "Pendiente" → completada=false, fecha futura sugerida.
+//   - "Ya hecho"  → completada=true + caja Resultado/Notas post-evento.
+// Ambos viven como Tarea internamente. Una vez creada, el item puede pasar de
+// pendiente → hecho rellenando el resultado al completar.
 function TareasSection({ empresaId, tareas, onChanged }: { empresaId: number; tareas: Tarea[]; onChanged: () => void }) {
   const [adding, setAdding] = useState(false);
+  const [modo, setModo] = useState<"pendiente" | "hecho">("pendiente");
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [tipo, setTipo] = useState<TareaTipo>("otra");
-  const [fechaLimite, setFechaLimite] = useState("");
+  const [resultado, setResultado] = useState("");
+  const [tipo, setTipo] = useState<TareaTipo>("llamada");
+  const [fecha, setFecha] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const reset = () => {
-    setTitulo(""); setDescripcion(""); setTipo("otra"); setFechaLimite("");
-    setError(null); setAdding(false);
+    setModo("pendiente"); setTitulo(""); setDescripcion(""); setResultado("");
+    setTipo("llamada"); setFecha(""); setError(null); setAdding(false);
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const completada = modo === "hecho";
+    // Si "Ya hecho" sin título explícito, se autogenera desde el tipo.
+    const tituloEfectivo = titulo.trim() || (completada ? TAREA_TIPO_LABEL[tipo] : "");
+    if (!tituloEfectivo) {
+      setError("El título es obligatorio para tareas pendientes.");
+      return;
+    }
     setSubmitting(true); setError(null);
     try {
       const res = await fetch(`/api/portal/empresas/${empresaId}/tareas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          titulo,
+          titulo: tituloEfectivo,
           descripcion: descripcion || null,
+          resultado: completada ? (resultado || null) : null,
           tipo,
-          fechaLimite: fechaLimite ? new Date(fechaLimite).toISOString() : null,
+          fechaLimite: fecha ? new Date(fecha).toISOString() : null,
+          completada,
         }),
       });
       const json = await res.json();
@@ -259,52 +256,105 @@ function TareasSection({ empresaId, tareas, onChanged }: { empresaId: number; ta
     }
   };
 
-  const toggleCompletada = async (t: Tarea) => {
-    const res = await fetch(`/api/portal/tareas/${t.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ completada: !t.completada }),
+  // Orden: pendientes primero (por fecha asc), luego completadas (más recientes primero).
+  const ordered = useMemo(() => {
+    const pendientes = tareas.filter((t) => !t.completada).sort((a, b) => {
+      const fa = a.fechaLimite ?? a.createdAt;
+      const fb = b.fechaLimite ?? b.createdAt;
+      return fa < fb ? -1 : fa > fb ? 1 : 0;
     });
-    if (res.ok) onChanged();
-  };
-
-  const remove = async (t: Tarea) => {
-    if (!confirm("¿Borrar esta tarea?")) return;
-    const res = await fetch(`/api/portal/tareas/${t.id}`, { method: "DELETE" });
-    if (res.ok) onChanged();
-  };
+    const hechas = tareas.filter((t) => t.completada).sort((a, b) => {
+      const fa = a.completadaAt ?? a.createdAt;
+      const fb = b.completadaAt ?? b.createdAt;
+      return fa > fb ? -1 : fa < fb ? 1 : 0;
+    });
+    return [...pendientes, ...hechas];
+  }, [tareas]);
 
   return (
     <section>
-      <SectionHeader title="Tareas" count={tareas.length} onAdd={() => setAdding(true)} adding={adding} />
+      <SectionHeader title="Tareas y actividad" count={tareas.length} onAdd={() => setAdding(true)} adding={adding} />
 
       {adding && (
         <form onSubmit={submit} className="bg-wr-surface border border-wr-border rounded-lg p-3 space-y-2 mb-3">
-          <input
-            autoFocus value={titulo} onChange={(e) => setTitulo(e.target.value)}
-            placeholder="Título (obligatorio)"
-            className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue"
-            required
-          />
-          <textarea
-            value={descripcion} onChange={(e) => setDescripcion(e.target.value)}
-            placeholder="Descripción (opcional)" rows={2}
-            className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
-          />
+          {/* Toggle Pendiente / Ya hecho */}
+          <div className="flex gap-1 p-0.5 bg-wr-surface2 border border-wr-border rounded">
+            <button
+              type="button"
+              onClick={() => setModo("pendiente")}
+              className={`flex-1 text-[11px] py-1 rounded transition-colors ${
+                modo === "pendiente"
+                  ? "bg-wr-blue text-white"
+                  : "text-wr-muted hover:text-wr-text"
+              }`}
+            >
+              Pendiente
+            </button>
+            <button
+              type="button"
+              onClick={() => setModo("hecho")}
+              className={`flex-1 text-[11px] py-1 rounded transition-colors ${
+                modo === "hecho"
+                  ? "bg-wr-green text-white"
+                  : "text-wr-muted hover:text-wr-text"
+              }`}
+            >
+              Ya hecho
+            </button>
+          </div>
+
           <div className="grid grid-cols-2 gap-2">
-            <select value={tipo} onChange={(e) => setTipo(e.target.value as TareaTipo)} className="bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text">
-              {TAREA_TIPOS.map((t) => (<option key={t} value={t}>{TAREA_TIPO_LABEL[t]}</option>))}
-            </select>
-            <input type="date" value={fechaLimite} onChange={(e) => setFechaLimite(e.target.value)}
+            <select
+              value={tipo}
+              onChange={(e) => setTipo(e.target.value as TareaTipo)}
               className="bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text"
+            >
+              {TAREA_TIPOS.map((t) => (
+                <option key={t} value={t}>{TAREA_TIPO_LABEL[t]}</option>
+              ))}
+            </select>
+            <input
+              type="date"
+              value={fecha}
+              onChange={(e) => setFecha(e.target.value)}
+              className="bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text"
+              title={modo === "pendiente" ? "Cuándo está prevista (opcional)" : "Cuándo ocurrió (opcional, por defecto hoy)"}
             />
           </div>
+
+          <input
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+            placeholder={modo === "pendiente"
+              ? "Título (obligatorio)"
+              : `Título (opcional, por defecto "${TAREA_TIPO_LABEL[tipo]}")`}
+            className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue"
+          />
+
+          {modo === "pendiente" ? (
+            <textarea
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+              placeholder="Descripción (opcional)"
+              rows={2}
+              className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
+            />
+          ) : (
+            <textarea
+              value={resultado}
+              onChange={(e) => setResultado(e.target.value)}
+              placeholder="Notas post-evento: qué pasó, próximos pasos…"
+              rows={3}
+              className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
+            />
+          )}
+
           {error && <p className="text-wr-red text-[11px]">{error}</p>}
           <div className="flex justify-end gap-2 pt-1">
             <button type="button" onClick={reset} className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text">
               Cancelar
             </button>
-            <button type="submit" disabled={submitting || !titulo.trim()}
+            <button type="submit" disabled={submitting}
               className="text-[10px] px-2 py-1 rounded bg-wr-blue text-white hover:bg-blue-500 disabled:opacity-40">
               {submitting ? "Guardando…" : "Guardar"}
             </button>
@@ -313,46 +363,184 @@ function TareasSection({ empresaId, tareas, onChanged }: { empresaId: number; ta
       )}
 
       {tareas.length === 0 && !adding ? (
-        <p className="text-xs text-wr-hint italic">Sin tareas.</p>
+        <p className="text-xs text-wr-hint italic">Sin tareas ni actividad registrada.</p>
       ) : (
         <div className="space-y-2">
-          {tareas.map((t) => {
-            const canEdit = !!t.autorFinder && withinEditWindow(t.createdAt);
-            return (
-              <div key={t.id} className={`group p-3 rounded-lg border ${t.completada ? "border-wr-border bg-wr-surface2/30 opacity-60" : "border-wr-border bg-wr-surface"}`}>
-                <div className="flex items-start gap-2">
-                  <button
-                    onClick={() => toggleCompletada(t)}
-                    aria-label={t.completada ? "Marcar como pendiente" : "Marcar como completada"}
-                    className={`w-3.5 h-3.5 mt-0.5 rounded border flex-shrink-0 transition-colors ${
-                      t.completada ? "bg-wr-green border-wr-green" : "border-wr-border hover:border-wr-blue"
-                    }`}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-xs ${t.completada ? "line-through text-wr-muted" : "text-wr-text"}`}>{t.titulo}</p>
-                    {t.descripcion && <p className="text-[11px] text-wr-muted mt-0.5">{t.descripcion}</p>}
-                    <p className="text-[10px] text-wr-hint mt-1">
-                      {t.fechaLimite && <>Vence {fmtDate(t.fechaLimite)} · </>}
-                      {t.autorFinder?.name ?? t.autor?.name}
-                      {t.autor?.name && !t.autorFinder && <span className="ml-1 text-wr-blue">· Fontiber</span>}
-                    </p>
-                  </div>
-                  {canEdit && (
-                    <button
-                      onClick={() => remove(t)}
-                      title="Borrar (ventana 24h)"
-                      className="opacity-0 group-hover:opacity-60 text-[10px] text-wr-red hover:opacity-100"
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          {ordered.map((t) => (
+            <TareaCard key={t.id} tarea={t} onChanged={onChanged} />
+          ))}
         </div>
       )}
     </section>
+  );
+}
+
+function TareaCard({ tarea, onChanged }: { tarea: Tarea; onChanged: () => void }) {
+  const [editingResultado, setEditingResultado] = useState(false);
+  const [resultadoDraft, setResultadoDraft] = useState(tarea.resultado ?? "");
+  const [completing, setCompleting] = useState(false);
+  const [resultadoOnComplete, setResultadoOnComplete] = useState("");
+
+  const isMine = !!tarea.autorFinder;
+
+  const patch = async (body: Record<string, unknown>) => {
+    const res = await fetch(`/api/portal/tareas/${tarea.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) onChanged();
+    return res.ok;
+  };
+
+  const remove = async () => {
+    if (!confirm("¿Borrar esta tarea?")) return;
+    const res = await fetch(`/api/portal/tareas/${tarea.id}`, { method: "DELETE" });
+    if (res.ok) onChanged();
+  };
+
+  const tipoLabel = TAREA_TIPO_LABEL[tarea.tipo as TareaTipo] ?? tarea.tipo;
+  const tipoIcon = TAREA_TIPO_ICON[tarea.tipo as TareaTipo] ?? "·";
+  const fechaToShow = tarea.completada
+    ? tarea.completadaAt ?? tarea.fechaLimite ?? tarea.createdAt
+    : tarea.fechaLimite;
+
+  return (
+    <div className={`group p-3 rounded-lg border ${tarea.completada ? "border-wr-border bg-wr-surface2/30" : "border-wr-border bg-wr-surface"}`}>
+      <div className="flex items-start gap-2">
+        <button
+          onClick={() => {
+            if (tarea.completada) {
+              // Re-abrir: simple toggle, sin resultado.
+              patch({ completada: false });
+            } else {
+              // Completar: si tiene resultado pre-rellenado, marcamos directo;
+              // si no, mostramos textarea para rellenarlo en el momento.
+              setCompleting(true);
+            }
+          }}
+          aria-label={tarea.completada ? "Marcar como pendiente" : "Marcar como completada"}
+          className={`w-3.5 h-3.5 mt-0.5 rounded border flex-shrink-0 transition-colors ${
+            tarea.completada ? "bg-wr-green border-wr-green" : "border-wr-border hover:border-wr-blue"
+          }`}
+        />
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] text-wr-hint uppercase tracking-wider">
+            <span className="font-semibold">{tipoIcon} {tipoLabel}</span>
+            {fechaToShow && <> · {fmtDate(fechaToShow)}</>}
+            {tarea.completada && <span className="ml-1 text-wr-green">· Hecho</span>}
+          </p>
+          <p className={`text-xs mt-0.5 ${tarea.completada ? "text-wr-muted" : "text-wr-text"}`}>
+            {tarea.titulo}
+          </p>
+          {tarea.descripcion && (
+            <p className="text-[11px] text-wr-muted mt-0.5">{tarea.descripcion}</p>
+          )}
+
+          {/* Resultado / notas post-evento */}
+          {(tarea.resultado || tarea.completada) && !completing && (
+            <div className="mt-2 border-t border-wr-border/50 pt-2">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-[10px] text-wr-hint uppercase tracking-wider font-semibold">
+                  Resultado / notas post-evento
+                </p>
+                {isMine && !editingResultado && (
+                  <button
+                    onClick={() => { setResultadoDraft(tarea.resultado ?? ""); setEditingResultado(true); }}
+                    className="text-[10px] text-wr-blue opacity-0 group-hover:opacity-100"
+                  >
+                    {tarea.resultado ? "Editar" : "Añadir"}
+                  </button>
+                )}
+              </div>
+              {editingResultado ? (
+                <>
+                  <textarea
+                    value={resultadoDraft}
+                    onChange={(e) => setResultadoDraft(e.target.value)}
+                    rows={3}
+                    placeholder="Qué pasó, próximos pasos…"
+                    className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
+                  />
+                  <div className="flex justify-end gap-2 mt-1">
+                    <button
+                      onClick={() => setEditingResultado(false)}
+                      className="text-[10px] px-2 py-0.5 rounded bg-wr-surface2 border border-wr-border text-wr-muted"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={async () => {
+                        const ok = await patch({ resultado: resultadoDraft || null });
+                        if (ok) setEditingResultado(false);
+                      }}
+                      className="text-[10px] px-2 py-0.5 rounded bg-wr-blue text-white"
+                    >
+                      Guardar
+                    </button>
+                  </div>
+                </>
+              ) : tarea.resultado ? (
+                <p className="text-[11px] text-wr-text whitespace-pre-wrap leading-snug">{tarea.resultado}</p>
+              ) : (
+                <p className="text-[11px] text-wr-hint italic">Sin notas post-evento.</p>
+              )}
+            </div>
+          )}
+
+          {/* Rellenar resultado al completar */}
+          {completing && (
+            <div className="mt-2 border-t border-wr-border/50 pt-2 space-y-1">
+              <p className="text-[10px] text-wr-hint uppercase tracking-wider font-semibold">
+                Notas post-evento (opcional)
+              </p>
+              <textarea
+                value={resultadoOnComplete}
+                onChange={(e) => setResultadoOnComplete(e.target.value)}
+                rows={3}
+                placeholder="Qué pasó, próximos pasos…"
+                autoFocus
+                className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
+              />
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => { setCompleting(false); setResultadoOnComplete(""); }}
+                  className="text-[10px] px-2 py-0.5 rounded bg-wr-surface2 border border-wr-border text-wr-muted"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={async () => {
+                    const ok = await patch({
+                      completada: true,
+                      ...(resultadoOnComplete ? { resultado: resultadoOnComplete } : {}),
+                    });
+                    if (ok) { setCompleting(false); setResultadoOnComplete(""); }
+                  }}
+                  className="text-[10px] px-2 py-0.5 rounded bg-wr-green text-white"
+                >
+                  Marcar como hecha
+                </button>
+              </div>
+            </div>
+          )}
+
+          <p className="text-[10px] text-wr-hint mt-1">
+            {tarea.autorFinder?.name ?? tarea.autor?.name}
+            {tarea.autor?.name && !tarea.autorFinder && <span className="ml-1 text-wr-blue">· Fontiber</span>}
+          </p>
+        </div>
+        {isMine && !tarea.completada && (
+          <button
+            onClick={remove}
+            title="Borrar"
+            className="opacity-0 group-hover:opacity-60 text-[10px] text-wr-red hover:opacity-100"
+          >
+            ×
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -430,7 +618,6 @@ function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; nota
         <ul className="space-y-2">
           {notas.map((n) => {
             const esFinder = !!n.autorFinder;
-            const canEdit = esFinder && withinEditWindow(n.createdAt);
             return (
               <li key={n.id} className="group bg-wr-surface border border-wr-border rounded-lg p-3">
                 {editingId === n.id ? (
@@ -453,7 +640,7 @@ function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; nota
                         {n.autorFinder?.name ?? n.autor?.name ?? "—"} · {fmtDate(n.createdAt)}
                         {!esFinder && <span className="ml-1 text-wr-blue">· Fontiber</span>}
                       </p>
-                      {canEdit && (
+                      {esFinder && (
                         <div className="opacity-0 group-hover:opacity-80 flex gap-1">
                           <button onClick={() => startEdit(n)} className="text-[10px] text-wr-blue">Editar</button>
                           <span className="text-wr-hint">·</span>
@@ -462,113 +649,6 @@ function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; nota
                       )}
                     </div>
                   </>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </section>
-  );
-}
-
-function ActividadesSection({ empresaId, actividades, onChanged }: { empresaId: number; actividades: Actividad[]; onChanged: () => void }) {
-  const [adding, setAdding] = useState(false);
-  const [tipo, setTipo] = useState("llamada");
-  const [texto, setTexto] = useState("");
-  const [fecha, setFecha] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const reset = () => { setTipo("llamada"); setTexto(""); setFecha(""); setError(null); setAdding(false); };
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true); setError(null);
-    try {
-      const res = await fetch(`/api/portal/empresas/${empresaId}/actividades`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tipo, texto: texto || null,
-          fecha: fecha ? new Date(fecha).toISOString() : undefined,
-        }),
-      });
-      const json = await res.json();
-      if (!res.ok) {
-        setError(json.issues?.map((i: { message: string }) => i.message).join("; ") || json.error || "Error");
-        return;
-      }
-      reset(); onChanged();
-    } catch (e) { setError(String(e)); }
-    finally { setSubmitting(false); }
-  };
-
-  const remove = async (id: number) => {
-    if (!confirm("¿Borrar esta actividad?")) return;
-    const res = await fetch(`/api/portal/actividades/${id}`, { method: "DELETE" });
-    if (res.ok) onChanged();
-  };
-
-  const orderedActividades = useMemo(
-    () => [...actividades].sort((a, b) => (a.fecha < b.fecha ? 1 : -1)),
-    [actividades]
-  );
-
-  return (
-    <section>
-      <SectionHeader title="Actividades" count={actividades.length} onAdd={() => setAdding(true)} adding={adding} />
-
-      {adding && (
-        <form onSubmit={submit} className="bg-wr-surface border border-wr-border rounded-lg p-3 space-y-2 mb-3">
-          <div className="grid grid-cols-2 gap-2">
-            <select value={tipo} onChange={(e) => setTipo(e.target.value)} className="bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text">
-              {ACTIVIDAD_TIPOS.map((t) => (<option key={t.value} value={t.value}>{t.label}</option>))}
-            </select>
-            <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)}
-              className="bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text"
-              title="Fecha (opcional, por defecto hoy)"
-            />
-          </div>
-          <textarea
-            autoFocus value={texto} onChange={(e) => setTexto(e.target.value)} rows={3}
-            placeholder="Qué ha pasado en la llamada/reunión/email…"
-            className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
-          />
-          {error && <p className="text-wr-red text-[11px]">{error}</p>}
-          <div className="flex justify-end gap-2">
-            <button type="button" onClick={reset} className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted">
-              Cancelar
-            </button>
-            <button type="submit" disabled={submitting}
-              className="text-[10px] px-2 py-1 rounded bg-wr-blue text-white hover:bg-blue-500 disabled:opacity-40">
-              {submitting ? "Guardando…" : "Guardar"}
-            </button>
-          </div>
-        </form>
-      )}
-
-      {actividades.length === 0 && !adding ? (
-        <p className="text-xs text-wr-hint italic">Sin actividades registradas.</p>
-      ) : (
-        <ul className="space-y-2">
-          {orderedActividades.map((a) => {
-            const canEdit = withinEditWindow(a.fecha);
-            const label = ACTIVIDAD_TIPOS.find((t) => t.value === a.tipo)?.label ?? a.tipo;
-            return (
-              <li key={a.id} className="group bg-wr-surface border border-wr-border rounded-lg p-3 flex gap-2">
-                <div className="w-5 flex-shrink-0 text-center text-[10px] font-bold text-wr-muted">{label[0]}</div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[10px] text-wr-hint font-semibold uppercase tracking-wider">{label} · {fmtDate(a.fecha)}</p>
-                  {a.texto && <p className="text-xs text-wr-text whitespace-pre-wrap leading-snug mt-1">{a.texto}</p>}
-                </div>
-                {canEdit && (
-                  <button
-                    onClick={() => remove(a.id)}
-                    title="Borrar (ventana 24h)"
-                    className="opacity-0 group-hover:opacity-60 text-[10px] text-wr-red hover:opacity-100"
-                  >
-                    ×
-                  </button>
                 )}
               </li>
             );

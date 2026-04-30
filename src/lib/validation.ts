@@ -31,6 +31,10 @@ export const TareaCreateSchema = z.object({
   descripcion: z.string().nullable().optional(),
   fechaLimite: nullableDateString,
   asignadoId: z.string().nullable().optional(),
+  // Si se crea ya como histórico (acción ya hecha), pasa completada=true desde
+  // el formulario "Ya hecho". Resultado opcional para narrar lo que pasó.
+  completada: z.boolean().optional(),
+  resultado: z.string().nullable().optional(),
 });
 
 export const TareaUpdateSchema = z
@@ -41,6 +45,7 @@ export const TareaUpdateSchema = z
     fechaLimite: nullableDateString,
     asignadoId: z.string().nullable().optional(),
     completada: z.boolean().optional(),
+    resultado: z.string().nullable().optional(),
   })
   .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
 
@@ -105,12 +110,13 @@ export const FinderUpdateSchema = z
   })
   .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
 
-// ─── Portal finders: notas, tareas y actividades ─────────────────────────────
+// ─── Portal finders: notas y tareas ──────────────────────────────────────────
 // Los schemas del portal son un subset de los del war room. No permiten
 // setear autores (se infieren de la sesión) ni flags de admin
 // (visibleAFinder, asignadoId a un User, etc.).
-
-const ACTIVIDAD_TIPOS = ["nota", "llamada", "email", "reunion"] as const;
+//
+// Tras la fusión Tarea+Actividad, el endpoint de actividades desapareció: una
+// "actividad histórica" es una Tarea con completada=true desde el inicio.
 
 export const PortalNotaCreateSchema = z.object({
   contenido: nonEmptyString,
@@ -125,6 +131,9 @@ export const PortalTareaCreateSchema = z.object({
   titulo: nonEmptyString,
   descripcion: z.string().nullable().optional(),
   fechaLimite: nullableDateString,
+  // Si el finder crea desde el form "Ya hecho", llega completada=true + resultado.
+  completada: z.boolean().optional(),
+  resultado: z.string().nullable().optional(),
 });
 
 export const PortalTareaUpdateSchema = z
@@ -134,20 +143,7 @@ export const PortalTareaUpdateSchema = z
     descripcion: z.string().nullable().optional(),
     fechaLimite: nullableDateString,
     completada: z.boolean().optional(),
-  })
-  .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
-
-export const PortalActividadCreateSchema = z.object({
-  tipo: z.enum(ACTIVIDAD_TIPOS),
-  texto: z.string().nullable().optional(),
-  fecha: z.string().datetime({ offset: true }).optional(),
-});
-
-export const PortalActividadUpdateSchema = z
-  .object({
-    tipo: z.enum(ACTIVIDAD_TIPOS).optional(),
-    texto: z.string().nullable().optional(),
-    fecha: z.string().datetime({ offset: true }).optional(),
+    resultado: z.string().nullable().optional(),
   })
   .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
 

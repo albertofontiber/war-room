@@ -51,16 +51,12 @@ export async function GET(
           leido: true,
         },
       },
-      actividades: {
-        orderBy: { fecha: "desc" },
-        take: 20,
-        select: {
-          id: true,
-          tipo: true,
-          texto: true,
-          autor: true,
-          fecha: true,
-        },
+      // Última "actividad" = última Tarea completada (tras unificación Tarea+Actividad).
+      tareas: {
+        where: { completada: true, completadaAt: { not: null } },
+        orderBy: { completadaAt: "desc" },
+        take: 1,
+        select: { completadaAt: true, tipo: true },
       },
       _count: {
         select: {
@@ -156,7 +152,9 @@ export async function GET(
       finderSource: empresa.finderSource,
       stageDurations,
       bormeAlertas: empresa.bormeAlertas,
-      actividades: empresa.actividades,
+      ultimaActividad: empresa.tareas[0]?.completadaAt
+        ? { fecha: empresa.tareas[0].completadaAt.toISOString(), tipo: empresa.tareas[0].tipo }
+        : null,
       tareasPendientesCount: empresa._count.tareas,
     },
     { headers: { "Cache-Control": "no-store" } }

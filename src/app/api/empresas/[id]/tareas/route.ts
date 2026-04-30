@@ -70,15 +70,19 @@ export async function POST(
 
     const parsed = TareaCreateSchema.safeParse(await req.json());
     if (!parsed.success) return zodError(parsed.error);
-    const { tipo, titulo, descripcion, fechaLimite, asignadoId } = parsed.data;
+    const { tipo, titulo, descripcion, fechaLimite, asignadoId, completada, resultado } = parsed.data;
 
+    const isCompletada = completada === true;
     const tarea = await prisma.tarea.create({
       data: {
         empresaId,
         tipo: (tipo ?? "otra") as TareaTipo,
         titulo,
         descripcion: descripcion?.trim() || null,
+        resultado: resultado?.trim() || null,
         fechaLimite: fechaLimite ? new Date(fechaLimite) : null,
+        completada: isCompletada,
+        completadaAt: isCompletada ? new Date() : null,
         asignadoId: asignadoId || null,
         autorId: user.id,
       },

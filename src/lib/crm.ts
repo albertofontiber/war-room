@@ -96,6 +96,9 @@ export const SIDE_STAGES: DealStage[] = ["on_hold", "muerto"];
 export const TERMINAL_STAGES: DealStage[] = ["portfolio", "on_hold", "muerto"];
 
 // ─── Tareas ────────────────────────────────────────────────────────────────
+// Tarea es el modelo unificado: tarea pendiente (completada=false) o actividad
+// histórica (completada=true + resultado != null). "email" se añadió tras fusionar
+// el antiguo modelo Actividad.
 
 export const TAREA_TIPOS: TareaTipo[] = [
   "contacto_linkedin",
@@ -103,6 +106,7 @@ export const TAREA_TIPOS: TareaTipo[] = [
   "llamada",
   "videollamada",
   "reunion_presencial",
+  "email",
   "otra",
 ];
 
@@ -112,6 +116,7 @@ export const TAREA_TIPO_LABEL: Record<TareaTipo, string> = {
   llamada: "Llamada",
   videollamada: "Videollamada",
   reunion_presencial: "Reunión presencial",
+  email: "Email",
   otra: "Otra",
 };
 
@@ -121,6 +126,7 @@ export const TAREA_TIPO_ICON: Record<TareaTipo, string> = {
   llamada: "☏",
   videollamada: "▶",
   reunion_presencial: "👥",
+  email: "@",
   otra: "·",
 };
 
