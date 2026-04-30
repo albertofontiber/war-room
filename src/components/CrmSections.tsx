@@ -231,10 +231,10 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
                     {n.autorFinder ? <FinderBadge name={n.autorFinder.name} /> : <span>{n.autor?.name ?? "—"}</span>}
                     <span className="text-wr-hint">· {fmtDate(n.createdAt)}</span>
                   </span>
-                  {/* Los admins solo pueden editar/borrar notas de otros admins. Las
-                     del finder son suyas y deben gestionarlas desde el portal. */}
-                  {!n.autorFinder && (
-                    <span className="flex gap-1.5 items-center">
+                  <span className="flex gap-1.5 items-center">
+                    {/* Editar: solo notas de admin. Editar texto literal escrito por
+                       un finder lo tergiversaría — no procede. */}
+                    {!n.autorFinder && (
                       <button
                         onClick={() => {
                           setEditing(n.id);
@@ -248,19 +248,22 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
                           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                         </svg>
                       </button>
-                      <button
-                        onClick={() => borrar(n.id)}
-                        className="hover:text-wr-red p-0.5"
-                        title="Borrar"
-                      >
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M3 6h18" />
-                          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                        </svg>
-                      </button>
-                    </span>
-                  )}
+                    )}
+                    {/* Borrar: el admin puede borrar cualquier nota (admin o finder).
+                       Mismo principio que el botón borrar del Historial — el admin
+                       tiene control total sobre el contenido visible en su war room. */}
+                    <button
+                      onClick={() => borrar(n.id)}
+                      className="hover:text-wr-red p-0.5"
+                      title="Borrar"
+                    >
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M3 6h18" />
+                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                      </svg>
+                    </button>
+                  </span>
                 </div>
               </>
             )}
@@ -765,9 +768,13 @@ export function HistorialSection({ empresaId }: { empresaId: number }) {
                         onClick={() => borrarTarea(tareaId!)}
                         disabled={deletingId === tareaId}
                         title="Borrar tarea del historial"
-                        className="opacity-0 group-hover:opacity-60 hover:opacity-100 text-[10px] text-wr-red disabled:opacity-30"
+                        className="opacity-0 group-hover:opacity-60 hover:text-wr-red hover:opacity-100 disabled:opacity-30 text-wr-hint p-0.5"
                       >
-                        ×
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M3 6h18" />
+                          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                        </svg>
                       </button>
                     )}
                   </div>
