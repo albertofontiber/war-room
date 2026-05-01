@@ -170,7 +170,7 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
         <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
           Notas {open && `(${notas.length})`}
         </p>
-        <span className="text-[10px] text-wr-hint">{open ? "▾" : "▸"}</span>
+        <span className="text-base text-wr-muted leading-none">{open ? "▾" : "▸"}</span>
       </button>
 
       {open && (
@@ -459,7 +459,7 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
           <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
             Tareas {open && `(${pendientes} pendientes)`}
           </p>
-          <span className="text-[10px] text-wr-hint mr-2">{open ? "▾" : "▸"}</span>
+          <span className="text-base text-wr-muted leading-none mr-2">{open ? "▾" : "▸"}</span>
         </button>
         {open && (
           <button
@@ -751,7 +751,7 @@ export function HistorialSection({ empresaId }: { empresaId: number }) {
         <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
           Historial {open && `(${items.length})`}
         </p>
-        <span className="text-[10px] text-wr-hint">{open ? "▾" : "▸"}</span>
+        <span className="text-base text-wr-muted leading-none">{open ? "▾" : "▸"}</span>
       </button>
       {open && (
         <div className="space-y-1.5 max-h-80 overflow-y-auto">
