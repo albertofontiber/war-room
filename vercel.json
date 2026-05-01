@@ -1,10 +1,6 @@
 {
   "crons": [
     {
-      "path": "/api/cron/pipedrive",
-      "schedule": "0 20 * * 1-5"
-    },
-    {
       "path": "/api/cron/borme",
       "schedule": "0 20 * * 1-5"
     },
