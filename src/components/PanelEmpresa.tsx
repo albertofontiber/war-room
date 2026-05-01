@@ -256,6 +256,9 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
     useWarRoomStore();
   const router = useRouter();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
+  // Sub-sección CRM (Funnel) collapsible. Default cerrada para que la
+  // financiera y BORME sean lo primero visible al abrir el panel.
+  const [funnelOpen, setFunnelOpen] = useState(false);
 
   const [empresa, setEmpresa] = useState<EmpresaDetalle | null>(null);
   const [loading, setLoading] = useState(true);
@@ -447,7 +450,7 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
   // Loading state
   if (loading || !empresa) {
     return (
-      <aside className={`${modoDetallado ? "w-full" : "w-[340px] flex-shrink-0"} bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right`}>
+      <aside className="w-full bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
         <div className="flex items-center justify-between p-4 border-b border-wr-border">
           <div className="h-3 w-24 bg-wr-surface2 rounded animate-pulse" />
           <button
@@ -483,7 +486,7 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
     : DEAL_STAGE_PILL_CLASS.identificado;
 
   return (
-    <aside className={`${modoDetallado ? "w-full" : "w-[340px] flex-shrink-0"} bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right`}>
+    <aside className="w-full bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <div className="flex items-start gap-3 p-4 border-b border-wr-border">
         {empresa.logoUrl ? (
@@ -581,19 +584,27 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
           {!modoDetallado && (
             <div className="space-y-2">
               <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
-                <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
-                  Funnel
-                </p>
-                <StageChevron
-                  stage={dealStage ?? null}
-                  diasEnStage={
-                    empresa.crmEstado?.fechaEntradaStage
-                      ? diasDesde(empresa.crmEstado.fechaEntradaStage)
-                      : null
-                  }
-                  stageDurations={empresa.stageDurations}
-                  onChange={handleStageChange}
-                />
+                <button
+                  onClick={() => setFunnelOpen((v) => !v)}
+                  className="w-full flex items-center justify-between"
+                >
+                  <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
+                    Funnel
+                  </p>
+                  <span className="text-[10px] text-wr-hint">{funnelOpen ? "▾" : "▸"}</span>
+                </button>
+                {funnelOpen && (
+                  <StageChevron
+                    stage={dealStage ?? null}
+                    diasEnStage={
+                      empresa.crmEstado?.fechaEntradaStage
+                        ? diasDesde(empresa.crmEstado.fechaEntradaStage)
+                        : null
+                    }
+                    stageDurations={empresa.stageDurations}
+                    onChange={handleStageChange}
+                  />
+                )}
               </div>
 
               {empresa.tareasPendientesCount > 0 && (
@@ -627,9 +638,16 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
           {modoDetallado && (
             <>
               <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
-                <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
-                  Funnel
-                </p>
+                <button
+                  onClick={() => setFunnelOpen((v) => !v)}
+                  className="w-full flex items-center justify-between"
+                >
+                  <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
+                    Funnel
+                  </p>
+                  <span className="text-[10px] text-wr-hint">{funnelOpen ? "▾" : "▸"}</span>
+                </button>
+                {funnelOpen && (<>
                 <StageChevron
                   stage={dealStage ?? null}
                   diasEnStage={
@@ -705,6 +723,7 @@ export default function PanelEmpresa({ modoDetallado = false, onEmpresaChanged }
                     }}
                   />
                 </div>
+                </>)}
               </div>
 
               <TareasSection empresaId={empresa.id} />

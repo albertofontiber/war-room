@@ -92,6 +92,7 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<number | null>(null);
   const [editContent, setEditContent] = useState("");
+  const [open, setOpen] = useState(false);
 
   const load = useCallback(() => {
     fetch(`/api/empresas/${empresaId}/notas`, { cache: "no-store" })
@@ -100,9 +101,10 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
       .catch(() => setNotas([]));
   }, [empresaId]);
 
+  // Solo carga al abrir (lazy) — evita N requests al montar el panel.
   useEffect(() => {
-    load();
-  }, [load]);
+    if (open) load();
+  }, [open, load]);
 
   async function crear() {
     if (!nueva.trim()) return;
@@ -161,12 +163,18 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
 
   return (
     <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
-      <div className="flex items-center justify-between">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between"
+      >
         <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
-          Notas ({notas.length})
+          Notas {open && `(${notas.length})`}
         </p>
-      </div>
+        <span className="text-[10px] text-wr-hint">{open ? "▾" : "▸"}</span>
+      </button>
 
+      {open && (
+      <>
       <div className="space-y-1.5">
         <textarea
           value={nueva}
@@ -271,6 +279,8 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
           </div>
         ))}
       </div>
+      </>
+      )}
     </div>
   );
 }
@@ -296,6 +306,7 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
   const [editDescripcion, setEditDescripcion] = useState("");
   const [editFechaLimite, setEditFechaLimite] = useState("");
   const [editAsignadoId, setEditAsignadoId] = useState("");
+  const [open, setOpen] = useState(false);
 
   const load = useCallback(() => {
     const url = new URL(
@@ -309,16 +320,18 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
       .catch(() => setTareas([]));
   }, [empresaId, incluirCompletadas]);
 
+  // Solo carga al abrir (lazy) — evita N requests al montar el panel.
   useEffect(() => {
-    load();
-  }, [load]);
+    if (open) load();
+  }, [open, load]);
 
   useEffect(() => {
+    if (!open) return;
     fetch("/api/users?role=admin", { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => Array.isArray(data) && setUsers(data))
       .catch(() => setUsers([]));
-  }, []);
+  }, [open]);
 
   async function crear() {
     if (!titulo.trim()) return;
@@ -439,17 +452,27 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
   return (
     <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
       <div className="flex items-center justify-between">
-        <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
-          Tareas ({pendientes} pendientes)
-        </p>
         <button
-          onClick={() => setIncluirCompletadas((v) => !v)}
-          className="text-[10px] text-wr-hint hover:text-wr-text"
+          onClick={() => setOpen((v) => !v)}
+          className="flex-1 flex items-center justify-between"
         >
-          {incluirCompletadas ? "Ocultar hechas" : "Ver hechas"}
+          <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
+            Tareas {open && `(${pendientes} pendientes)`}
+          </p>
+          <span className="text-[10px] text-wr-hint mr-2">{open ? "▾" : "▸"}</span>
         </button>
+        {open && (
+          <button
+            onClick={() => setIncluirCompletadas((v) => !v)}
+            className="text-[10px] text-wr-hint hover:text-wr-text"
+          >
+            {incluirCompletadas ? "Ocultar hechas" : "Ver hechas"}
+          </button>
+        )}
       </div>
 
+      {open && (
+      <>
       <div className="space-y-1.5">
         <div className="grid grid-cols-3 gap-1.5">
           <select
@@ -669,6 +692,8 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
           );
         })}
       </div>
+      </>
+      )}
     </div>
   );
 }

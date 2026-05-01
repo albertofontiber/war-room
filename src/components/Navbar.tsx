@@ -131,8 +131,10 @@ export default function Navbar() {
         </span>
       </div>
 
-      {/* Search */}
-      <div className="flex-1 max-w-lg relative">
+      {/* Search: ocupa todo el espacio disponible hasta max-w-3xl. Sin separador
+         flex-1 detrás (rompía el max-width al competir por el espacio); en su
+         lugar, ml-auto en el primer elemento del cluster derecho. */}
+      <div className="flex-1 max-w-3xl relative">
         <div className="relative">
           <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 text-wr-hint" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
@@ -181,17 +183,17 @@ export default function Navbar() {
         )}
       </div>
 
-      <div className="flex-1" />
-
       {/* Modo presentación */}
       {modoPresentacion && (
-        <span className="text-xs font-semibold tracking-widest text-wr-amber border border-wr-amber/30 bg-wr-amber/10 px-2.5 py-1 rounded-md uppercase">
+        <span className="ml-auto text-xs font-semibold tracking-widest text-wr-amber border border-wr-amber/30 bg-wr-amber/10 px-2.5 py-1 rounded-md uppercase">
           Modo Presentación
         </span>
       )}
 
-      {/* Toggle Mapa / Tabla / Operaciones / Grupos / Pipeline */}
-      <div className="flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5">
+      {/* Toggle Mapa / Tabla / Operaciones / Grupos / Pipeline.
+          ml-auto empuja todo el cluster derecho hacia la derecha cuando no
+          hay banner de Modo Presentación (que ya tiene su propio ml-auto). */}
+      <div className={`${modoPresentacion ? "" : "ml-auto"} flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5`}>
         <button
           onClick={() => goToVista("mapa")}
           className={`px-3 py-1 text-xs rounded transition-colors ${
