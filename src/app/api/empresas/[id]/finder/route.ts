@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { FinderAssignSchema, zodError } from "@/lib/validation";
+import { auditLog } from "@/lib/audit-log";
+import { getCurrentUser } from "@/lib/user-from-session";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +41,11 @@ export async function PATCH(
       }
     }
 
+    const user = await getCurrentUser();
+    const prev = await prisma.empresa.findUnique({
+      where: { id: empresaId },
+      select: { finderSourceId: true },
+    });
     const empresa = await prisma.empresa.update({
       where: { id: empresaId },
       data: { finderSourceId: finderId },
@@ -48,6 +55,17 @@ export async function PATCH(
         finderSource: { select: { id: true, name: true, email: true } },
       },
     });
+    if (prev && prev.finderSourceId !== empresa.finderSourceId) {
+      void auditLog({
+        actorType: "admin",
+        actorId: user?.id ?? null,
+        action: "update",
+        entityType: "empresa",
+        entityId: empresaId,
+        before: { finderSourceId: prev.finderSourceId },
+        after: { finderSourceId: empresa.finderSourceId },
+      });
+    }
 
     return NextResponse.json(empresa);
   } catch (err) {

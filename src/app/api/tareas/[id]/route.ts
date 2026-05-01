@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { TareaUpdateSchema, zodError } from "@/lib/validation";
+import { auditLog, diffFields } from "@/lib/audit-log";
 import type { TareaTipo } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -42,6 +43,13 @@ export async function PATCH(
       data.completadaAt = body.completada ? new Date() : null;
     }
 
+    const prev = await prisma.tarea.findUnique({
+      where: { id: tareaId },
+      select: {
+        tipo: true, titulo: true, descripcion: true, resultado: true,
+        fechaLimite: true, completada: true, asignadoId: true,
+      },
+    });
     const tarea = await prisma.tarea.update({
       where: { id: tareaId },
       data,
@@ -50,6 +58,28 @@ export async function PATCH(
         asignado: { select: { id: true, name: true } },
       },
     });
+    if (prev) {
+      const diff = diffFields(prev, {
+        tipo: tarea.tipo,
+        titulo: tarea.titulo,
+        descripcion: tarea.descripcion,
+        resultado: tarea.resultado,
+        fechaLimite: tarea.fechaLimite,
+        completada: tarea.completada,
+        asignadoId: tarea.asignadoId,
+      });
+      if (Object.keys(diff.after).length > 0) {
+        void auditLog({
+          actorType: "admin",
+          actorId: user.id,
+          action: "update",
+          entityType: "tarea",
+          entityId: tareaId,
+          before: diff.before,
+          after: diff.after,
+        });
+      }
+    }
     return NextResponse.json(tarea);
   } catch (err) {
     console.error("[PATCH tarea]", err);
@@ -70,7 +100,24 @@ export async function DELETE(
       return NextResponse.json({ error: "Invalid tarea id" }, { status: 400 });
     }
 
+    const prev = await prisma.tarea.findUnique({
+      where: { id: tareaId },
+      select: {
+        tipo: true, titulo: true, descripcion: true, resultado: true,
+        fechaLimite: true, completada: true, empresaId: true,
+      },
+    });
     await prisma.tarea.delete({ where: { id: tareaId } });
+    if (prev) {
+      void auditLog({
+        actorType: "admin",
+        actorId: user.id,
+        action: "delete",
+        entityType: "tarea",
+        entityId: tareaId,
+        before: prev,
+      });
+    }
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[DELETE tarea]", err);

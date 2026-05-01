@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { GrupoAssignSchema, zodError } from "@/lib/validation";
+import { auditLog } from "@/lib/audit-log";
+import { getCurrentUser } from "@/lib/user-from-session";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +11,7 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
+    const user = await getCurrentUser();
     const id = parseInt(params.id);
     if (isNaN(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
@@ -31,6 +34,10 @@ export async function PATCH(
       }
     }
 
+    const prev = await prisma.empresa.findUnique({
+      where: { id },
+      select: { grupoId: true, grupo: { select: { nombre: true } } },
+    });
     const empresa = await prisma.empresa.update({
       where: { id },
       data: { grupoId },
@@ -40,6 +47,17 @@ export async function PATCH(
         grupo: { select: { id: true, nombre: true } },
       },
     });
+    if (prev && prev.grupoId !== empresa.grupoId) {
+      void auditLog({
+        actorType: "admin",
+        actorId: user?.id ?? null,
+        action: "update",
+        entityType: "empresa",
+        entityId: id,
+        before: { grupoId: prev.grupoId, grupoNombre: prev.grupo?.nombre ?? null },
+        after: { grupoId: empresa.grupoId, grupoNombre: empresa.grupo?.nombre ?? null },
+      });
+    }
 
     return NextResponse.json(empresa);
   } catch (error) {

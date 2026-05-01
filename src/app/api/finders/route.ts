@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { FinderCreateSchema, zodError } from "@/lib/validation";
+import { auditLog } from "@/lib/audit-log";
+import { getCurrentUser } from "@/lib/user-from-session";
 
 export const dynamic = "force-dynamic";
 
@@ -91,6 +93,19 @@ export async function POST(req: NextRequest) {
       },
     });
     console.log("[POST /api/finders] created", { id: finder.id, email: finder.email });
+    const user = await getCurrentUser();
+    void auditLog({
+      actorType: "admin",
+      actorId: user?.id ?? null,
+      action: "create",
+      entityType: "finder",
+      entityId: finder.id,
+      after: {
+        email: finder.email,
+        name: finder.name,
+        commissionPct: finder.commissionPct,
+      },
+    });
     return NextResponse.json(finder, { status: 201 });
   } catch (err) {
     console.error("[POST /api/finders] create failed", err);

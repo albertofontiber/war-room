@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder, canEditWithin24h } from "@/lib/finder-session";
 import { PortalNotaUpdateSchema, zodError } from "@/lib/validation";
+import { auditLog } from "@/lib/audit-log";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +52,10 @@ export async function PATCH(
     return NextResponse.json({ error: res.error }, { status: res.status });
   }
 
+  const prev = await prisma.nota.findUnique({
+    where: { id: res.notaId },
+    select: { contenido: true },
+  });
   const nota = await prisma.nota.update({
     where: { id: res.notaId },
     data: { contenido: parsed.data.contenido },
@@ -61,6 +66,17 @@ export async function PATCH(
       autorFinder: { select: { name: true } },
     },
   });
+  if (prev && prev.contenido !== nota.contenido) {
+    void auditLog({
+      actorType: "finder",
+      actorId: finder.id,
+      action: "update",
+      entityType: "nota",
+      entityId: nota.id,
+      before: { contenido: prev.contenido },
+      after: { contenido: nota.contenido },
+    });
+  }
   return NextResponse.json(nota);
 }
 
@@ -80,6 +96,20 @@ export async function DELETE(
     return NextResponse.json({ error: res.error }, { status: res.status });
   }
 
+  const prev = await prisma.nota.findUnique({
+    where: { id: res.notaId },
+    select: { contenido: true, empresaId: true },
+  });
   await prisma.nota.delete({ where: { id: res.notaId } });
+  if (prev) {
+    void auditLog({
+      actorType: "finder",
+      actorId: finder.id,
+      action: "delete",
+      entityType: "nota",
+      entityId: res.notaId,
+      before: prev,
+    });
+  }
   return NextResponse.json({ ok: true });
 }

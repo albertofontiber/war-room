@@ -385,3 +385,36 @@ model Notificacion {
 
   @@index([userId, leida, createdAt])
 }
+
+// ─────────────────────────────────────────────────────────────
+// AuditLog — trazabilidad genérica de cambios en el war room
+// ─────────────────────────────────────────────────────────────
+//
+// Registra creaciones/ediciones/borrados de entidades sensibles. Complementa
+// los logs específicos existentes (CrmLog para stages, FinderAccessLog para
+// el portal del finder) — esos se mantienen como están y NO se duplican aquí.
+//
+// El actor se identifica por (actorType, actorId):
+//   - actorType="admin" → actorId = User.id
+//   - actorType="finder" → actorId = Finder.id
+//   - actorType="system" → actorId = null (cron, migración, etc.)
+//
+// `before`/`after` capturan SOLO los campos que cambiaron (no el registro
+// entero), para ahorrar espacio. En `create` solo hay `after`; en `delete`
+// solo hay `before`.
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorType   String   // "admin" | "finder" | "system"
+  actorId     String?
+  action      String   // "create" | "update" | "delete"
+  entityType  String   // "empresa" | "tarea" | "nota" | "finder"
+  entityId    String?  // string para soportar tanto Int (Tarea/Nota/Empresa) como String (Finder/User)
+  before      Json?
+  after       Json?
+  metadata    Json?    // contexto extra (ip, userAgent, ruta, etc.)
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId, createdAt])
+  @@index([actorType, actorId, createdAt])
+  @@index([createdAt])
+}

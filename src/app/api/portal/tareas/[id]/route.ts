@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder } from "@/lib/finder-session";
 import { notifyAdmins } from "@/lib/notifications";
+import { auditLog, diffFields } from "@/lib/audit-log";
 import { TAREA_TIPO_LABEL } from "@/lib/crm";
 import type { TareaTipo } from "@/types";
 import { PortalTareaUpdateSchema, zodError } from "@/lib/validation";
@@ -135,6 +136,33 @@ export async function PATCH(
     },
   });
 
+  // AuditLog del cambio (compara prev vs updated y registra solo campos cambiados).
+  const diff = diffFields(
+    {
+      tipo: tarea.tipo,
+      titulo: tarea.titulo,
+      resultado: tarea.resultado,
+      completada: tarea.completada,
+    },
+    {
+      tipo: updated.tipo,
+      titulo: updated.titulo,
+      resultado: updated.resultado,
+      completada: updated.completada,
+    }
+  );
+  if (Object.keys(diff.after).length > 0) {
+    void auditLog({
+      actorType: "finder",
+      actorId: finder.id,
+      action: "update",
+      entityType: "tarea",
+      entityId: tareaId,
+      before: diff.before,
+      after: diff.after,
+    });
+  }
+
   // Campanita admin si el finder acaba de completar la tarea.
   if (isCompletingNow) {
     const tipoLabel = TAREA_TIPO_LABEL[updated.tipo as TareaTipo] ?? updated.tipo;
@@ -185,7 +213,10 @@ export async function DELETE(
 
   const tarea = await prisma.tarea.findFirst({
     where: { id: tareaId, autorFinderId: finder.id },
-    select: { id: true, completada: true },
+    select: {
+      id: true, completada: true, tipo: true, titulo: true,
+      descripcion: true, resultado: true, fechaLimite: true, empresaId: true,
+    },
   });
   if (!tarea) return NextResponse.json({ error: "Not found" }, { status: 404 });
   if (tarea.completada) {
@@ -196,5 +227,17 @@ export async function DELETE(
   }
 
   await prisma.tarea.delete({ where: { id: tareaId } });
+  void auditLog({
+    actorType: "finder",
+    actorId: finder.id,
+    action: "delete",
+    entityType: "tarea",
+    entityId: tareaId,
+    before: {
+      tipo: tarea.tipo, titulo: tarea.titulo, descripcion: tarea.descripcion,
+      resultado: tarea.resultado, fechaLimite: tarea.fechaLimite,
+      empresaId: tarea.empresaId,
+    },
+  });
   return NextResponse.json({ ok: true });
 }

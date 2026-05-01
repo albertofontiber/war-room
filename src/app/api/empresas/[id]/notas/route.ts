@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { NotaCreateSchema, zodError } from "@/lib/validation";
+import { auditLog } from "@/lib/audit-log";
 
 export const dynamic = "force-dynamic";
 
@@ -67,6 +68,14 @@ export async function POST(
         autor: { select: { id: true, name: true } },
         autorFinder: { select: { id: true, name: true } },
       },
+    });
+    void auditLog({
+      actorType: "admin",
+      actorId: user.id,
+      action: "create",
+      entityType: "nota",
+      entityId: nota.id,
+      after: { contenido: nota.contenido, empresaId },
     });
     return NextResponse.json(nota, { status: 201 });
   } catch (err) {
