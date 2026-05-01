@@ -35,7 +35,14 @@ export async function GET(req: NextRequest) {
       },
       orderBy: [{ active: "desc" }, { name: "asc" }],
     });
-    return NextResponse.json(finders);
+    // Cache HTTP: lista de finders cambia raramente (alta/baja, edición de
+    // datos). 60s + SWR de 1h reduce la latencia del selector "asignar finder"
+    // que aparece en la ficha de empresa.
+    return NextResponse.json(finders, {
+      headers: {
+        "Cache-Control": "private, max-age=60, stale-while-revalidate=3600",
+      },
+    });
   } catch (err) {
     console.error("[GET /api/finders]", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });

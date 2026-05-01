@@ -3,14 +3,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
-
 /**
  * GET /api/crm/pipeline-meta
  *
  * Devuelve las opciones únicas para los selectores de filtros del Kanban:
  * CCAAs, provincias y owners activos. Siempre sobre el conjunto en perímetro
  * (independiente de los filtros aplicados por el usuario).
+ *
+ * Cache HTTP: las CCAAs/provincias del universo cambian raramente y los
+ * owners/finders aún más. 5 min de cache + 1h SWR es seguro.
  */
 export async function GET() {
   try {
@@ -41,12 +42,19 @@ export async function GET() {
       if (e.provincia) provinciaSet.add(e.provincia);
     }
 
-    return NextResponse.json({
-      ccaa: Array.from(ccaaSet).sort(),
-      provincia: Array.from(provinciaSet).sort(),
-      owners: users.map((u) => ({ value: u.id, label: u.name })),
-      finders: finders.map((f) => ({ value: f.id, label: f.name })),
-    });
+    return NextResponse.json(
+      {
+        ccaa: Array.from(ccaaSet).sort(),
+        provincia: Array.from(provinciaSet).sort(),
+        owners: users.map((u) => ({ value: u.id, label: u.name })),
+        finders: finders.map((f) => ({ value: f.id, label: f.name })),
+      },
+      {
+        headers: {
+          "Cache-Control": "private, max-age=300, stale-while-revalidate=3600",
+        },
+      }
+    );
   } catch (err) {
     console.error("[GET pipeline-meta]", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });

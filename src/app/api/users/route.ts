@@ -3,12 +3,12 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
-
 /**
  * GET /api/users?role=admin
  * Lista de usuarios activos filtrada por rol (default: admin). Usado para los
  * selectores de "asignado a" y "owner" en la UI.
+ *
+ * Cache HTTP: la lista cambia raramente — 5 min de cache + 1h SWR.
  */
 export async function GET(req: Request) {
   try {
@@ -22,7 +22,11 @@ export async function GET(req: Request) {
       select: { id: true, name: true, email: true, role: true },
       orderBy: { name: "asc" },
     });
-    return NextResponse.json(users);
+    return NextResponse.json(users, {
+      headers: {
+        "Cache-Control": "private, max-age=300, stale-while-revalidate=3600",
+      },
+    });
   } catch (err) {
     console.error("[GET /api/users]", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
