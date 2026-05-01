@@ -74,7 +74,7 @@ describe("diffFields", () => {
   it("undefined ≠ null (cambia si pasamos explícitamente undefined)", () => {
     const prev = { x: null as unknown };
     const next = { x: undefined };
-    const { before, after } = diffFields(prev, next);
+    const { after } = diffFields(prev, next);
     // shallowEqual considera null !== undefined → SÍ es cambio.
     expect(after).toHaveProperty("x");
   });
