@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { calcTendencia } from "@/lib/tendencia";
-
-export const dynamic = "force-dynamic";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+
+// Quitamos `force-dynamic` para permitir cache HTTP. La respuesta es la misma
+// para cualquier admin autenticado (no varía por usuario), así que la CDN
+// puede servirla. Igualmente sigue siendo dynamic en la práctica por el
+// `getServerSession`. El payload se cachea con `Cache-Control: private`
+// (no compartido entre clientes) y SWR de 1h.
 
 // Deterministic coordinate jitter based on CIF — prevents pins from stacking exactly
 // Range: ±0.0004° ≈ ±44m (well within same-city accuracy, eliminates overlap)
@@ -25,28 +29,41 @@ export async function GET() {
     const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+    const cutoff7d = new Date();
+    cutoff7d.setDate(cutoff7d.getDate() - 7);
+    const PULSE_TIPOS = ["fusion", "adquisicion", "posible_adquisicion"];
+
     const empresas = await prisma.empresa.findMany({
       where: { esAnonima: false },  // leads anónimos sólo aparecen en /pipeline
       include: {
         grupo: { select: { id: true, nombre: true } },
-        financieros: { orderBy: { anio: "desc" } },
+        // Solo los 2 últimos años: el primero alimenta `latestFin` y los dos
+        // juntos `calcTendencia`. Antes traíamos todos (~3-5 por empresa).
+        financieros: {
+          orderBy: { anio: "desc" },
+          take: 2,
+          select: { anio: true, ingresos: true, margenBruto: true, ebitda: true },
+        },
         crmEstado: {
           select: { dealStage: true, pipedriveOrgId: true },
         },
+        // Solo necesitamos saber si HAY alguna alerta reciente de M&A — no la
+        // lista entera. Hacemos un take:1 con where filtrado.
         bormeAlertas: {
-          select: { id: true, fecha: true, tipoActo: true },
+          where: { fecha: { gte: cutoff7d }, tipoActo: { in: PULSE_TIPOS } },
+          take: 1,
+          select: { id: true },
         },
         _count: {
           select: {
             tareas: { where: { completada: false } },
+            // Count total de alertas BORME (todos los tipos, sin filtro de
+            // fecha) para `bormeAlertasCount` que se muestra en el UI.
+            bormeAlertas: true,
           },
         },
       },
     });
-
-    const cutoff7d = new Date();
-    cutoff7d.setDate(cutoff7d.getDate() - 7);
-    const PULSE_TIPOS = new Set(["fusion", "adquisicion", "posible_adquisicion"]);
 
     const features = empresas
       .filter((e) => e.lat !== null && e.lng !== null)
@@ -64,10 +81,8 @@ export async function GET() {
 
         const tendenciaIngresos = calcTendencia(empresa.financieros, "ingresos");
 
-        const bormeAlertasCount = empresa.bormeAlertas.length;
-        const hasBormeReciente = empresa.bormeAlertas.some(
-          (a) => PULSE_TIPOS.has(a.tipoActo) && new Date(a.fecha) > cutoff7d
-        );
+        const bormeAlertasCount = empresa._count.bormeAlertas;
+        const hasBormeReciente = empresa.bormeAlertas.length > 0;
 
         const dealStage = empresa.crmEstado?.dealStage ?? null;
         const tareasPendientesCount = empresa._count.tareas;
@@ -120,7 +135,11 @@ export async function GET() {
       { type: "FeatureCollection", features },
       {
         headers: {
-          "Cache-Control": "no-store",
+          // Browser cachea 60s; sirve stale hasta 1h mientras revalida en
+          // background. El universo cambia con BORME nocturno + ediciones
+          // puntuales del CRM — 60s de stale es seguro. `private` evita que
+          // proxies compartidos cacheen entre usuarios distintos.
+          "Cache-Control": "private, max-age=60, stale-while-revalidate=3600",
         },
       }
     );

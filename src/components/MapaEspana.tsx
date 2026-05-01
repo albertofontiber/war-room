@@ -453,7 +453,6 @@ export default function MapaEspana() {
     seleccionarEmpresa,
     searchQuery,
     empresasGeoJSON,
-    setEmpresasGeoJSON,
     flyToEmpresaId,
     setFlyToEmpresaId,
     mapViewState,
@@ -484,23 +483,11 @@ export default function MapaEspana() {
     return () => clearTimeout(t);
   }, [panelAbierto]);
 
-  // ── Fuente de verdad del geojson ──────────────────────────────────────
-  // Nivel 2 (audit_pre_cutover.md #16, 2026-05-01): el fetch de /api/empresas
-  // vive ya en `Navbar` (PR #32) y se hidrata al `empresasGeoJSON` del store.
-  // MapaEspana ya NO hace fetch local. Si `empresasGeoJSON` aún no está
-  // disponible (componente montó antes que Navbar), hace fetch como fallback.
-  // En la práctica el Navbar siempre va por delante.
-  useEffect(() => {
-    if (empresasGeoJSON) return;
-    let cancelled = false;
-    fetch("/api/empresas")
-      .then((r) => r.json())
-      .then((data) => {
-        if (!cancelled) setEmpresasGeoJSON(data?.features ?? []);
-      })
-      .catch(console.error);
-    return () => { cancelled = true; };
-  }, [empresasGeoJSON, setEmpresasGeoJSON]);
+  // El fetch de /api/empresas vive en Navbar (hydrateEmpresas, race-safe).
+  // Antes había un fallback aquí + en Sidebar — los 3 efectos arrancaban en el
+  // mismo tick y la guarda `if (geoJSON)` no detenía las réplicas porque
+  // setState aún no había propagado. Ahora MapaEspana consume del store sin
+  // fetch propio (audit perf 2026-05-01).
 
   const rawGeoJSON = useMemo<GeoJSONFC | null>(
     () => empresasGeoJSON
