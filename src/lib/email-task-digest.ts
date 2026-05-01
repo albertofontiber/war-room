@@ -20,7 +20,7 @@ import { TAREA_TIPO_LABEL } from "@/lib/crm";
 import type { TareaTipo } from "@/types";
 
 const FROM     = process.env.SUMMARY_EMAIL_FROM ?? "warroom@fontiber.com";
-const BASE_URL = "https://warroom.fontiber.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://warroom.fontiber.com";
 
 type TareaRow = {
   id: number;

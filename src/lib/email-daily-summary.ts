@@ -11,7 +11,7 @@ import { prisma } from "@/lib/prisma";
 
 const TO       = process.env.SUMMARY_EMAIL_TO   ?? "alberto@fontiber.com,gabriel@fontiber.com";
 const FROM     = process.env.SUMMARY_EMAIL_FROM ?? "warroom@fontiber.com";
-const BASE_URL = "https://warroom.fontiber.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://warroom.fontiber.com";
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 export async function sendDailySummary(
