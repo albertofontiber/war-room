@@ -11,9 +11,10 @@ export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
+  // Fail-closed si CRON_SECRET no está configurado (antes quedaba público).
   const secret = req.headers.get("authorization")?.replace("Bearer ", "");
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && secret !== cronSecret) {
+  if (!cronSecret || secret !== cronSecret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

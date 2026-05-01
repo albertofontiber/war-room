@@ -9,6 +9,8 @@
  */
 
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { GRUPOS_SENALES } from "@/lib/borme-senales";
 import { bormePersonaToCargoKey } from "@/lib/normalize";
@@ -58,6 +60,13 @@ interface PersonaCompartida {
 
 export async function GET() {
   try {
+    // Solo admins. Cruza personas con cargos en múltiples empresas — info
+    // sensible para detectar señales de M&A.
+    const session = await getServerSession(authOptions);
+    if (!session || session.kind !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     // 1. Leer todos los PersonaCargo vigentes con datos de empresa
     const cargos = await prisma.personaCargo.findMany({
       where: { vigente: true },
