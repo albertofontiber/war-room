@@ -5,12 +5,14 @@ import { useEffect } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
-import TablaEmpresas from "@/components/TablaEmpresas";
-import PanelEmpresa from "@/components/PanelEmpresa";
-import OperacionesBorme from "@/components/OperacionesBorme";
-import GruposView from "@/components/GruposView";
-import ChatIA from "@/components/ChatIA";
 
+// Lazy-load de componentes pesados (audit perf 2026-05-01). Antes todos
+// estaban en el First Load JS aunque la vista activa solo monte uno:
+//   - MapaEspana: Mapbox GL JS ~480KB gz
+//   - PanelEmpresa: recharts ~95KB gz
+//   - ChatIA: @ai-sdk + react-markdown ~80KB gz
+//   - TablaEmpresas, OperacionesBorme, GruposView: 30KB gz combinados
+// Todos `ssr: false` porque dependen de APIs del cliente (Mapbox, store…).
 const MapaEspana = dynamic(() => import("@/components/MapaEspana"), {
   ssr: false,
   loading: () => (
@@ -19,6 +21,34 @@ const MapaEspana = dynamic(() => import("@/components/MapaEspana"), {
     </div>
   ),
 });
+const TablaEmpresas = dynamic(() => import("@/components/TablaEmpresas"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-wr-bg">
+      <p className="text-wr-muted text-sm">Cargando tabla…</p>
+    </div>
+  ),
+});
+const OperacionesBorme = dynamic(() => import("@/components/OperacionesBorme"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-wr-bg">
+      <p className="text-wr-muted text-sm">Cargando operaciones…</p>
+    </div>
+  ),
+});
+const GruposView = dynamic(() => import("@/components/GruposView"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-wr-bg">
+      <p className="text-wr-muted text-sm">Cargando grupos…</p>
+    </div>
+  ),
+});
+const PanelEmpresa = dynamic(() => import("@/components/PanelEmpresa"), {
+  ssr: false,
+});
+const ChatIA = dynamic(() => import("@/components/ChatIA"), { ssr: false });
 
 export default function WarRoomLayout() {
   const { vistaActual, panelAbierto, seleccionarEmpresa } = useWarRoomStore();
