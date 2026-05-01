@@ -24,8 +24,9 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Solo admins. Antes solo verificaba que hubiera sesión con email.
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
+    if (!session || session.kind !== "admin" || !session.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
