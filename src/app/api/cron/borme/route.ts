@@ -18,9 +18,12 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   // ── Auth ──────────────────────────────────────────────────────────────────
+  // Si CRON_SECRET no está configurado, fail-closed: no se ejecuta el cron.
+  // Antes el patrón `if (cronSecret && secret !== cronSecret)` dejaba el
+  // endpoint público cuando la env var no estaba.
   const secret = req.headers.get("authorization")?.replace("Bearer ", "");
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && secret !== cronSecret) {
+  if (!cronSecret || secret !== cronSecret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

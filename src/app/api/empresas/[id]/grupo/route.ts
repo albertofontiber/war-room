@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { GrupoAssignSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
@@ -11,6 +13,13 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Solo admins. Antes este endpoint solo llamaba `getCurrentUser()` (que
+    // devuelve null silente sin sesión) y nunca verificaba el resultado, así
+    // que cualquier anónimo podía reasignar grupos.
+    const session = await getServerSession(authOptions);
+    if (!session || session.kind !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const user = await getCurrentUser();
     const id = parseInt(params.id);
     if (isNaN(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });

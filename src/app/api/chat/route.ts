@@ -28,7 +28,10 @@ function addLimit(sql: string): string {
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
-  if (!session) {
+  // Solo admins. El chat ejecuta SELECT arbitrario sobre toda la BD vía
+  // prisma.$queryRawUnsafe — un finder con sesión activa no debe poder leer
+  // CIFs, financieros, password hashes, etc.
+  if (!session || session.kind !== "admin") {
     return new Response("Unauthorized", { status: 401 });
   }
 
