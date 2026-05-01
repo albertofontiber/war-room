@@ -66,8 +66,13 @@ interface WarRoomState {
   mapViewState: { longitude: number; latitude: number; zoom: number };
   mapBounds: { west: number; south: number; east: number; north: number } | null;
 
-  // ── GeoJSON compartido (cargado por MapaEspana, consumido por Sidebar) ────
+  // ── GeoJSON compartido (un único fetch desde Navbar; consumido por
+  //    Sidebar, MapaEspana, etc.). `empresasLoading` es flag de idempotencia
+  //    para evitar la triple-fetch que había antes (audit perf 2026-05-01):
+  //    los 3 useEffect montaban en el mismo tick y la guarda `if (geoJSON)`
+  //    no detenía las réplicas porque setState aún no había propagado.
   empresasGeoJSON: RawFeature[] | null;
+  empresasLoading: boolean;
 
   // ── Búsqueda ─────────────────────────────────────────────────────────────
   searchQuery: string;
@@ -88,6 +93,10 @@ interface WarRoomState {
   setMapBounds: (bounds: { west: number; south: number; east: number; north: number } | null) => void;
 
   setEmpresasGeoJSON: (features: RawFeature[]) => void;
+  /** Carga `/api/empresas` solo si aún no se ha cargado y no hay un fetch en
+   * vuelo. Llamar desde el primer componente que monte (Navbar). Resto de
+   * componentes consumen `empresasGeoJSON` del store sin hacer fetch propio. */
+  hydrateEmpresas: () => Promise<void>;
 
   /** Actualiza in-place algunas properties de un feature concreto del GeoJSON.
    * Útil para que mapa y tabla reflejen al instante un cambio que el panel
@@ -128,6 +137,7 @@ export const useWarRoomStore = create<WarRoomState>()(
       mapViewState: { longitude: -3.7, latitude: 40.4, zoom: 5.5 },
       mapBounds: null,
       empresasGeoJSON: null,
+      empresasLoading: false,
       searchQuery: "",
       filtros: { ...FILTROS_DEFAULT },
 
@@ -152,6 +162,25 @@ export const useWarRoomStore = create<WarRoomState>()(
 
       // ── GeoJSON compartido ───────────────────────────────────────────────
       setEmpresasGeoJSON: (features) => set({ empresasGeoJSON: features }),
+
+      hydrateEmpresas: async () => {
+        const state = get();
+        // Idempotente: si ya hay datos o un fetch en vuelo, no relanza.
+        if (state.empresasGeoJSON !== null || state.empresasLoading) return;
+        set({ empresasLoading: true });
+        try {
+          const r = await fetch("/api/empresas");
+          if (!r.ok) throw new Error(`API ${r.status}`);
+          const data = await r.json();
+          if (data?.type === "FeatureCollection" && Array.isArray(data.features)) {
+            set({ empresasGeoJSON: data.features });
+          }
+        } catch (err) {
+          console.error("[hydrateEmpresas]", err);
+        } finally {
+          set({ empresasLoading: false });
+        }
+      },
 
       updateEmpresaInGeoJSON: (id, patch) => {
         const current = get().empresasGeoJSON;

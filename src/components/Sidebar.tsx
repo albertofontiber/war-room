@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { fmtM } from "@/lib/format";
@@ -225,7 +225,6 @@ export default function Sidebar() {
     toggleFiltroArray,
     resetFiltros,
     empresasGeoJSON,
-    setEmpresasGeoJSON,
     getVisiblesCount,
     getAvailableCCAA,
     getAvailableProvincias,
@@ -250,22 +249,8 @@ export default function Sidebar() {
     return { total: empresasGeoJSON.length, enPipeline, enPerimetro, bormeAlertas };
   }, [empresasGeoJSON]);
 
-  // ── Fetch propio: si MapaEspana no está montado aún, el sidebar carga datos solo ──
-  useEffect(() => {
-    if (empresasGeoJSON !== null) return;
-    fetch("/api/empresas")
-      .then((r) => {
-        if (!r.ok) throw new Error(`API ${r.status}`);
-        return r.json();
-      })
-      .then((data) => {
-        if (data?.type === "FeatureCollection" && Array.isArray(data.features)) {
-          setEmpresasGeoJSON(data.features);
-        }
-      })
-      .catch(console.error);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // El fetch de /api/empresas vive en Navbar (hydrateEmpresas, race-safe).
+  // Sidebar consume `empresasGeoJSON` del store sin hacer fetch propio.
 
   const visiblesCount = getVisiblesCount();
 

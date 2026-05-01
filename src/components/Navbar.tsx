@@ -11,29 +11,20 @@ export default function Navbar() {
   const {
     vistaActual, setVista, modoPresentacion, toggleModoPresentacion,
     sizeMetric, setSizeMetric, setSearchQuery,
-    empresasGeoJSON, setEmpresasGeoJSON, seleccionarEmpresa, setFlyToEmpresaId,
+    empresasGeoJSON, hydrateEmpresas, seleccionarEmpresa, setFlyToEmpresaId,
   } = useWarRoomStore();
   const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
   const onPipelinePage = pathname === "/pipeline";
 
-  // Asegura que el store tiene empresasGeoJSON poblado para que el buscador
-  // funcione en cualquier página (Mapa carga el geojson, pero /pipeline,
-  // /finders, etc. no — sin esto, el dropdown del buscador queda vacío fuera
-  // del mapa). Se ejecuta solo si está null/undefined; el resto de páginas
-  // que ya lo cargan no disparan un segundo fetch.
+  // Único owner del fetch de /api/empresas. Sidebar y MapaEspana antes hacían
+  // su propio fetch como fallback, pero los 3 efectos arrancaban en el mismo
+  // tick y la guarda `if (geoJSON)` no detenía las réplicas (race detectado en
+  // audit perf 2026-05-01). hydrateEmpresas() es idempotente y race-safe.
   useEffect(() => {
-    if (empresasGeoJSON) return;
-    let cancelled = false;
-    fetch("/api/empresas")
-      .then((r) => r.json())
-      .then((data) => {
-        if (!cancelled) setEmpresasGeoJSON(data?.features ?? []);
-      })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, [empresasGeoJSON, setEmpresasGeoJSON]);
+    void hydrateEmpresas();
+  }, [hydrateEmpresas]);
 
   // Cambio de vista homogéneo: si estamos en /pipeline, navega a "/" y setea la vista
   // del War Room; si estamos en "/", cambia la vista sin navegar.
