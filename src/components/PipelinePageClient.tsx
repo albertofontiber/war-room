@@ -253,10 +253,7 @@ export default function PipelinePageClient() {
         </div>
         {panelAbierto && empresaSeleccionadaId != null && (
           <div className="absolute top-0 right-0 bottom-0 w-[50%] min-w-[520px] max-w-[720px] shadow-2xl shadow-black/50 z-20 flex">
-            <PanelEmpresa
-              modoDetallado
-              onEmpresaChanged={() => loadPipeline(filters)}
-            />
+            <PanelEmpresa onEmpresaChanged={() => loadPipeline(filters)} />
           </div>
         )}
       </div>
