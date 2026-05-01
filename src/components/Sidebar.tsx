@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { fmtM } from "@/lib/format";
