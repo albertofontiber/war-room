@@ -257,8 +257,11 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
   const { empresaSeleccionadaId, cerrarPanel, modoPresentacion, seleccionarEmpresa, updateEmpresaInGeoJSON } =
     useWarRoomStore();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
-  // Sub-sección CRM (Funnel) collapsible. Default cerrada para que la
-  // financiera y BORME sean lo primero visible al abrir el panel.
+  // Bloque CRM agrupado (Funnel + Tareas + Historial + Notas) collapsible.
+  // Default cerrado para que la financiera y BORME sean lo primero visible al
+  // abrir el panel; el usuario expande "CRM" cuando quiere ver el detalle.
+  const [crmOpen, setCrmOpen] = useState(false);
+  // Sub-sección Funnel (dentro del bloque CRM) collapsible individualmente.
   const [funnelOpen, setFunnelOpen] = useState(false);
 
   const [empresa, setEmpresa] = useState<EmpresaDetalle | null>(null);
@@ -581,13 +584,23 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
             )}
           </div>
 
-          {/* ── Sección CRM unificada (idéntica en Mapa, Tabla, Grupos y Pipeline) ── */}
-          {/* Funnel + Tareas + Historial + Notas — sub-secciones collapsibles
-              default-cerradas (PR #46) para que la financiera sea lo primero
-              visible. La unificación del 2026-05-01 eliminó el branching
-              modoDetallado y el botón "Ver detalle en Pipeline" (la pestaña
-              Pipeline del Navbar ya cubre la navegación al Kanban). */}
-          <>
+          {/* ── Bloque CRM (Funnel + Tareas + Historial + Notas) ── */}
+          {/* Wrapper colapsable, default cerrado: la financiera y BORME son
+              lo primero visible al abrir el panel; el usuario expande "CRM"
+              cuando quiere ver el detalle. Las 4 sub-secciones internas
+              siguen siendo colapsables individualmente. */}
+          <div className="rounded-lg border border-wr-blue/30 bg-wr-blue/5">
+            <button
+              onClick={() => setCrmOpen((v) => !v)}
+              className="w-full flex items-center justify-between px-3 py-2"
+            >
+              <p className="text-[10px] font-bold text-wr-blue uppercase tracking-widest">
+                CRM
+              </p>
+              <span className="text-base text-wr-blue leading-none">{crmOpen ? "▾" : "▸"}</span>
+            </button>
+            {crmOpen && (
+            <div className="px-3 pb-3 space-y-2">
               <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
                 <button
                   onClick={() => setFunnelOpen((v) => !v)}
@@ -596,7 +609,7 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
                   <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
                     Funnel
                   </p>
-                  <span className="text-[10px] text-wr-hint">{funnelOpen ? "▾" : "▸"}</span>
+                  <span className="text-base text-wr-muted leading-none">{funnelOpen ? "▾" : "▸"}</span>
                 </button>
                 {funnelOpen && (<>
                 <StageChevron
@@ -680,7 +693,9 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
               <TareasSection empresaId={empresa.id} />
               <HistorialSection empresaId={empresa.id} />
               <NotasSection empresaId={empresa.id} />
-            </>
+            </div>
+            )}
+          </div>
 
           {/* ── Sección GESTIÓN ─────────────────────────────────────────── */}
           <div className="rounded-lg border border-wr-amber/20 bg-wr-amber/5">
