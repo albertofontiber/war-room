@@ -3,7 +3,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+// Sin `force-dynamic` para permitir cache HTTP. Lista de grupos cambia
+// raramente (solo al crear/asignar grupo desde un panel) — 60s de cache
+// + SWR de 1h reduce mucho la latencia del PanelEmpresa al abrir.
 
 export async function GET() {
   try {
@@ -18,7 +20,11 @@ export async function GET() {
       select: { id: true, nombre: true },
       orderBy: { nombre: "asc" },
     });
-    return NextResponse.json(grupos);
+    return NextResponse.json(grupos, {
+      headers: {
+        "Cache-Control": "private, max-age=60, stale-while-revalidate=3600",
+      },
+    });
   } catch (error) {
     console.error("GET /api/grupos", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });
