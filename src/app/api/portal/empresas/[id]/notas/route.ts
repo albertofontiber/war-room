@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder } from "@/lib/finder-session";
 import { logFinderAction } from "@/lib/finder-access-log";
 import { notifyAdmins } from "@/lib/notifications";
+import { auditLog } from "@/lib/audit-log";
 import { PortalNotaCreateSchema, zodError } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
@@ -55,6 +56,15 @@ export async function POST(
     finderId: finder.id,
     action: "add_note",
     resourceId: String(nota.id),
+  });
+
+  void auditLog({
+    actorType: "finder",
+    actorId: finder.id,
+    action: "create",
+    entityType: "nota",
+    entityId: nota.id,
+    after: { contenido: nota.contenido, empresaId: id },
   });
 
   // Campanita in-app a admins (sin email — irá en el digest diario).

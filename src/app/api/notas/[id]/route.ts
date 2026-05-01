@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { NotaUpdateSchema, zodError } from "@/lib/validation";
+import { auditLog } from "@/lib/audit-log";
 
 export const dynamic = "force-dynamic";
 
@@ -26,11 +27,26 @@ export async function PATCH(
     const parsed = NotaUpdateSchema.safeParse(await req.json());
     if (!parsed.success) return zodError(parsed.error);
 
+    const prev = await prisma.nota.findUnique({
+      where: { id: notaId },
+      select: { contenido: true },
+    });
     const nota = await prisma.nota.update({
       where: { id: notaId },
       data: { contenido: parsed.data.contenido },
       include: { autor: { select: { id: true, name: true } } },
     });
+    if (prev && prev.contenido !== nota.contenido) {
+      void auditLog({
+        actorType: "admin",
+        actorId: user.id,
+        action: "update",
+        entityType: "nota",
+        entityId: notaId,
+        before: { contenido: prev.contenido },
+        after: { contenido: nota.contenido },
+      });
+    }
     return NextResponse.json(nota);
   } catch (err) {
     console.error("[PATCH nota]", err);
@@ -54,7 +70,21 @@ export async function DELETE(
       return NextResponse.json({ error: "Invalid nota id" }, { status: 400 });
     }
 
+    const prev = await prisma.nota.findUnique({
+      where: { id: notaId },
+      select: { contenido: true, empresaId: true, autorId: true, autorFinderId: true },
+    });
     await prisma.nota.delete({ where: { id: notaId } });
+    if (prev) {
+      void auditLog({
+        actorType: "admin",
+        actorId: user.id,
+        action: "delete",
+        entityType: "nota",
+        entityId: notaId,
+        before: prev,
+      });
+    }
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[DELETE nota]", err);

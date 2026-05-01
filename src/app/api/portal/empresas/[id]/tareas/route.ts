@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder } from "@/lib/finder-session";
 import { logFinderAction } from "@/lib/finder-access-log";
 import { notifyAdmins } from "@/lib/notifications";
+import { auditLog } from "@/lib/audit-log";
 import { TAREA_TIPO_LABEL } from "@/lib/crm";
 import type { TareaTipo } from "@/types";
 import { PortalTareaCreateSchema, zodError } from "@/lib/validation";
@@ -77,6 +78,23 @@ export async function POST(
     finderId: finder.id,
     action: "add_task",
     resourceId: String(tarea.id),
+  });
+
+  void auditLog({
+    actorType: "finder",
+    actorId: finder.id,
+    action: "create",
+    entityType: "tarea",
+    entityId: tarea.id,
+    after: {
+      empresaId: id,
+      tipo: tarea.tipo,
+      titulo: tarea.titulo,
+      descripcion: tarea.descripcion,
+      resultado: tarea.resultado,
+      fechaLimite: tarea.fechaLimite,
+      completada: tarea.completada,
+    },
   });
 
   // Campanita in-app a admins (sin email — irá en el digest diario).

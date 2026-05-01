@@ -5,6 +5,8 @@ import { getServerSession } from "next-auth";
 export const dynamic = "force-dynamic";
 import { authOptions } from "@/lib/auth";
 import { PerimetroPatchSchema, zodError } from "@/lib/validation";
+import { auditLog } from "@/lib/audit-log";
+import { getCurrentUser } from "@/lib/user-from-session";
 
 export async function PATCH(
   req: Request,
@@ -14,6 +16,7 @@ export async function PATCH(
     const session = await getServerSession(authOptions);
     if (!session)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const user = await getCurrentUser();
 
     const id = parseInt(params.id, 10);
     if (isNaN(id))
@@ -22,6 +25,10 @@ export async function PATCH(
     const parsed = PerimetroPatchSchema.safeParse(await req.json());
     if (!parsed.success) return zodError(parsed.error);
 
+    const prev = await prisma.empresa.findUnique({
+      where: { id },
+      select: { enPerimetro: true },
+    });
     const empresa = await prisma.empresa.update({
       where: { id },
       data: {
@@ -30,6 +37,17 @@ export async function PATCH(
       },
       select: { id: true, enPerimetro: true, enPerimetroAt: true },
     });
+    if (prev && prev.enPerimetro !== empresa.enPerimetro) {
+      void auditLog({
+        actorType: "admin",
+        actorId: user?.id ?? null,
+        action: "update",
+        entityType: "empresa",
+        entityId: id,
+        before: { enPerimetro: prev.enPerimetro },
+        after: { enPerimetro: empresa.enPerimetro },
+      });
+    }
 
     return NextResponse.json(empresa);
   } catch (error) {

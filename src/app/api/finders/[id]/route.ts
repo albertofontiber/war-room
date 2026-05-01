@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { FinderUpdateSchema, zodError } from "@/lib/validation";
+import { auditLog, diffFields } from "@/lib/audit-log";
+import { getCurrentUser } from "@/lib/user-from-session";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +35,7 @@ export async function PATCH(
 
   const finder = await prisma.finder.findUnique({
     where: { id: params.id },
-    select: { id: true, email: true },
+    select: { id: true, email: true, name: true, commissionPct: true, active: true },
   });
   if (!finder) return NextResponse.json({ error: "Finder not found" }, { status: 404 });
 
@@ -75,6 +77,22 @@ export async function PATCH(
       id: params.id,
       changes: Object.keys(data),
     });
+    const user = await getCurrentUser();
+    const diff = diffFields(
+      { email: finder.email, name: finder.name, commissionPct: finder.commissionPct, active: finder.active },
+      { email: updated.email, name: updated.name, commissionPct: updated.commissionPct, active: updated.active },
+    );
+    if (Object.keys(diff.after).length > 0) {
+      void auditLog({
+        actorType: "admin",
+        actorId: user?.id ?? null,
+        action: "update",
+        entityType: "finder",
+        entityId: params.id,
+        before: diff.before,
+        after: diff.after,
+      });
+    }
     return NextResponse.json(updated);
   } catch (err) {
     console.error("[PATCH /api/finders/:id] update failed", err);

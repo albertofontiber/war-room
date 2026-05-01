@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { TareaCreateSchema, zodError } from "@/lib/validation";
+import { auditLog } from "@/lib/audit-log";
 import type { TareaTipo } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -91,6 +92,23 @@ export async function POST(
         autorFinder: { select: { id: true, name: true } },
         asignado: { select: { id: true, name: true } },
         asignadoFinder: { select: { id: true, name: true } },
+      },
+    });
+    void auditLog({
+      actorType: "admin",
+      actorId: user.id,
+      action: "create",
+      entityType: "tarea",
+      entityId: tarea.id,
+      after: {
+        empresaId,
+        tipo: tarea.tipo,
+        titulo: tarea.titulo,
+        descripcion: tarea.descripcion,
+        resultado: tarea.resultado,
+        fechaLimite: tarea.fechaLimite,
+        completada: tarea.completada,
+        asignadoId: tarea.asignadoId,
       },
     });
     return NextResponse.json(tarea, { status: 201 });

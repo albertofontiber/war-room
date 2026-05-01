@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { FinderSetPasswordSchema, zodError } from "@/lib/validation";
+import { auditLog } from "@/lib/audit-log";
+import { getCurrentUser } from "@/lib/user-from-session";
 
 export const dynamic = "force-dynamic";
 
@@ -79,6 +81,18 @@ export async function POST(
     finderId: params.id,
     email: finder.email,
     passwordSetAt: verify.passwordSetAt.toISOString(),
+  });
+
+  // Auditamos el evento (sin guardar la password ni el hash — solo el cambio).
+  const user = await getCurrentUser();
+  void auditLog({
+    actorType: "admin",
+    actorId: user?.id ?? null,
+    action: "update",
+    entityType: "finder",
+    entityId: params.id,
+    after: { passwordSetAt: verify.passwordSetAt.toISOString() },
+    metadata: { event: "password_set" },
   });
 
   return NextResponse.json({
