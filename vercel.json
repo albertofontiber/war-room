@@ -1,9 +1,6 @@
 {
+  "_comment": "El cron pipedrive se pausó el 2026-05-01 porque sobrescribía dealStage manual del war room (8 empresas afectadas, ver scripts/detect-cron-reversions.ts). El cut-over Pipedrive completo (borrar endpoint, cancelar suscripción, exportar histórico) queda pendiente de sesión dedicada.",
   "crons": [
-    {
-      "path": "/api/cron/pipedrive",
-      "schedule": "0 20 * * 1-5"
-    },
     {
       "path": "/api/cron/borme",
       "schedule": "0 20 * * 1-5"
