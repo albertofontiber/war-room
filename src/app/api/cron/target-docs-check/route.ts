@@ -3,14 +3,18 @@
  * Vercel cron job — lunes 07:30 UTC.
  *
  * Fallback al trigger en PATCH /stage para empresas que ya están en stage
- * `primera_reunion` o más avanzado pero sin docs poblados (porque entraron
- * antes de que existiera el feature, o porque la creación falló esa vez).
+ * con docs pero sin URLs poblados (porque entraron antes de que existiera
+ * el feature, o porque la creación falló esa vez).
  *
  * Estrategia:
- *   1. Pasada 1 — matcher: si ya existe carpeta/página en OneDrive/Notion
- *      con el nombre normalizado de la empresa, popular sin crear nada.
- *   2. Pasada 2 — auto-create: para las que sigan sin URLs tras el matcher,
- *      crear carpeta + 3 subcarpetas + página Notion.
+ *   1. Pasada 1 — matcher (todos los stages con docs, incluido on_hold/
+ *      muerto): si ya existe carpeta/página en OneDrive/Notion con el
+ *      nombre normalizado de la empresa, popular sin crear nada.
+ *   2. Pasada 2 — auto-create (solo stages ACTIVOS): para las que sigan
+ *      sin URLs tras el matcher, crear carpeta + 3 subcarpetas + página
+ *      Notion. Excluye on_hold/muerto deliberadamente: no se crean docs
+ *      para empresas pausadas o descartadas — si están sin docs, es
+ *      probablemente porque nunca llegaron a 1ª reunión real.
  *   3. Notificar el resultado consolidado a admins.
  *
  * No bloqueante: si una empresa falla, sigue con la siguiente y reporta
@@ -27,6 +31,9 @@ import { log } from "@/lib/logger";
 export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 
+// Stages a partir de los cuales una empresa puede TENER docs (rango amplio:
+// también on_hold/muerto, por si en su día estuvieron en stages activos
+// y se les creó carpeta).
 const STAGES_WITH_DOCS = [
   "primera_reunion",
   "analisis",
@@ -36,6 +43,16 @@ const STAGES_WITH_DOCS = [
   "on_hold",
   "muerto",
 ];
+
+// Stages para los que SÍ creamos docs cuando faltan. Excluye on_hold/muerto:
+// si una empresa pausada/descartada nunca tuvo docs, no las creamos ahora.
+const ACTIVE_STAGES_FOR_CREATION = new Set([
+  "primera_reunion",
+  "analisis",
+  "LOI enviada",
+  "execution",
+  "portfolio",
+]);
 
 export async function GET(req: NextRequest) {
   // Auth de cron: el mismo CRON_SECRET de Vercel.
@@ -52,17 +69,22 @@ export async function GET(req: NextRequest) {
         oneDriveUrl: null,
         notionUrl: null,
       },
-      select: { id: true, nombre: true, nombreComercial: true },
+      select: {
+        id: true,
+        nombre: true,
+        nombreComercial: true,
+        crmEstado: { select: { dealStage: true } },
+      },
       orderBy: { nombre: "asc" },
     });
 
     log.info("cron/target-docs-check", `${empresasSinUrls.length} empresas sin URLs`);
 
     if (empresasSinUrls.length === 0) {
-      return NextResponse.json({ ok: true, total: 0, matched: 0, created: 0, errors: 0 });
+      return NextResponse.json({ ok: true, total: 0, matched: 0, created: 0, errors: 0, skipped: 0 });
     }
 
-    // Pasada 1 — matcher
+    // Pasada 1 — matcher (todos los stages con docs)
     const matches = await matchEmpresasLinks(empresasSinUrls);
     let matched = 0;
     const stillNeedCreation: typeof empresasSinUrls = [];
@@ -78,21 +100,27 @@ export async function GET(req: NextRequest) {
         // Si ambos quedaron poblados, no necesita creación. Si solo uno, tampoco
         // recreamos lo que falta (asumimos que el user lo creará manual con
         // alias). Solo creamos cuando AMBOS siguen vacíos tras matcher.
-        if (!patch.oneDriveUrl || !patch.notionUrl) {
-          // partial — dejamos como está
-        }
       } else {
         stillNeedCreation.push(e);
       }
     }
 
-    // Pasada 2 — auto-create para las que sigan sin nada
+    // Pasada 2 — auto-create SOLO para empresas en stages activos.
+    // Las en on_hold/muerto sin URLs se quedan así: se omite la creación.
     let created = 0;
     let errors = 0;
+    let skipped = 0;
     const errorDetails: string[] = [];
     const createdNames: string[] = [];
+    const skippedNames: string[] = [];
 
     for (const e of stillNeedCreation) {
+      const stage = e.crmEstado?.dealStage;
+      if (!stage || !ACTIVE_STAGES_FOR_CREATION.has(stage)) {
+        skipped++;
+        skippedNames.push(`${e.nombre} (${stage ?? "?"})`);
+        continue;
+      }
       try {
         const result = await createEmpresaLinks(e.nombre);
         await prisma.empresa.update({
@@ -110,7 +138,8 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Notificación consolidada (solo si hubo cambios o errores).
+    // Notificación consolidada (solo si hubo cambios o errores; skipped no
+    // se notifica porque el comportamiento es por diseño).
     if (matched + created + errors > 0) {
       const partes: string[] = [];
       if (matched > 0) partes.push(`✅ ${matched} empresas vinculadas a docs ya existentes`);
@@ -118,6 +147,8 @@ export async function GET(req: NextRequest) {
         partes.push(`✨ ${created} carpetas + páginas creadas: ${createdNames.join(", ")}`);
       if (errors > 0)
         partes.push(`⚠️ ${errors} fallos:\n${errorDetails.slice(0, 5).join("\n")}`);
+      if (skipped > 0)
+        partes.push(`(${skipped} omitidas por estar en on_hold/muerto sin docs)`);
 
       await notifyAdmins({
         tipo: "docs_cron_check",
@@ -135,7 +166,9 @@ export async function GET(req: NextRequest) {
       matched,
       created,
       errors,
+      skipped,
       errorDetails,
+      skippedNames,
     });
   } catch (err) {
     log.error("cron/target-docs-check", err);
