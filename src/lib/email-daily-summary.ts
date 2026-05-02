@@ -22,7 +22,7 @@ export async function sendDailySummary(
   const resend = new Resend(apiKey);
 
   // By default query from yesterday midnight — the cron runs at 08:00 (06:00 UTC)
-  // the morning after BORME and Pipedrive have updated (previous evening).
+  // the morning after BORME has updated (previous evening).
   const todayStart = options?.since ?? (() => {
     const d = new Date(); d.setDate(d.getDate() - 1); d.setHours(0, 0, 0, 0); return d;
   })();

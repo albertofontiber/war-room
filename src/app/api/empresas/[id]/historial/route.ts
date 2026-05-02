@@ -23,7 +23,7 @@ function tareaIconLabel(tipo: string): string {
  *   - CrmLog (cambios de stage)
  *   - Tarea **completadas** (1 sola entrada por tarea, en su fecha de cierre).
  *     Tras la fusión Tarea+Actividad esto incluye también las antiguas actividades
- *     (llamadas, emails, reuniones legacy Pipedrive) — todas migraron a Tarea
+ *     (llamadas, emails, reuniones legacy) — todas migraron a Tarea
  *     completada=true con resultado=texto original.
  *
  * NO incluye: tareas pendientes (se ven en la sección Tareas) ni notas generales.

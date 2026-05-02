@@ -142,10 +142,9 @@ export async function GET(req: NextRequest) {
       const ultimaFecha = ultima?.completadaAt ?? null;
       const diasSinActividad = ultimaFecha ? diasDesde(ultimaFecha) : null;
 
-      // Usamos SOLO fechaEntradaStage. No caer a updatedAt: el cron Pipedrive
-      // bombea updatedAt diariamente, lo que haría que diasEnStage siempre fuera 0
-      // para empresas sin fechaEntradaStage real (engañoso). Si está null, diasEnStage
-      // queda null y la UI muestra "—".
+      // Usamos SOLO fechaEntradaStage; no caer a updatedAt como heurística (lo
+      // cambia cualquier edición y daría diasEnStage=0 engañoso). Si está null,
+      // diasEnStage queda null y la UI muestra "—".
       const fechaEntrada = e.crmEstado?.fechaEntradaStage ?? null;
       const diasEnStage = fechaEntrada ? diasDesde(fechaEntrada) : null;
 

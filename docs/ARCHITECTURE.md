@@ -41,7 +41,6 @@
 flowchart TB
     %% ========== INGESTA ==========
     I1[📥 INGESTA<br>multi-fuente] --> I2[Excel master]
-    I1 --> I3[Pipedrive API]
     I1 --> I4[BORME diario]
     I1 --> I5[Empresia.es]
     I1 --> I6[Registros CCAA<br>Mossos · Ertzaintza]
@@ -97,7 +96,7 @@ flowchart TB
 
 **Cómo leer el diagrama:**
 
-- **INGESTA** (azul, arriba): seis fuentes alimentan la BD. Algunas son automáticas y diarias (BORME, Pipedrive); otras puntuales (Excel master, scraping empresia.es); otras manuales desde la propia app (leads anónimos, targets que aportan finders).
+- **INGESTA** (azul, arriba): cinco fuentes alimentan la BD. Una es automática y diaria (BORME); otras puntuales (Excel master, scraping empresia.es); otras manuales desde la propia app (leads anónimos, targets que aportan finders).
 - **DB** (verde, centro): Supabase Postgres + Prisma. Es el único punto de la verdad. Todas las vistas leen de aquí.
 - **CONSULTA** (naranja, abajo): seis vistas para Alberto/Gabriel + un portal completamente separado para los finders externos + Chat IA + emails automáticos.
 
@@ -178,27 +177,23 @@ sequenceDiagram
 ```mermaid
 flowchart TB
     A[📊 Excel master<br><i>seed inicial 4.500 empresas<br>+ updates manuales</i>] --> Norm[Normalize<br><i>nombres, CIFs, provincias</i>]
-    B[🔄 Pipedrive API<br><i>cron diario L-V 22:00</i>] --> Match[CIF-first matching<br><i>contra Empresa.cif</i>]
     C[📰 BORME PDFs<br><i>cron diario L-V 22:00</i>] --> Class[Clasificador<br><i>tipoActo + grupo + persona</i>]
     D[🕷️ Empresia.es<br><i>scraping trimestral</i>] --> Cargo[PersonaCargo<br><i>directivos vigentes</i>]
     E[📋 Registros CCAA<br><i>Mossos, Ertzaintza, ...</i>] --> Norm
     F[➕ Manual<br><i>leads anónimos<br>propuestas finders</i>] --> DB
 
     Norm --> DB
-    Match --> DB
     Class --> DB
     Cargo --> DB
 
     DB[(🗄️ Supabase<br>Empresa · Financiero<br>BormeAlerta · PersonaCargo<br>CrmEstado · CrmLog · Actividad<br>Nota · Tarea · Finder · TargetProposal)]
 
     style A fill:#bbdefb,stroke:#000000,color:#000000,stroke-width:2px
-    style B fill:#bbdefb,stroke:#000000,color:#000000,stroke-width:2px
     style C fill:#bbdefb,stroke:#000000,color:#000000,stroke-width:2px
     style D fill:#bbdefb,stroke:#000000,color:#000000,stroke-width:2px
     style E fill:#bbdefb,stroke:#000000,color:#000000,stroke-width:2px
     style F fill:#bbdefb,stroke:#000000,color:#000000,stroke-width:2px
     style Norm fill:#fff59d,stroke:#000000,color:#000000,stroke-width:2px
-    style Match fill:#fff59d,stroke:#000000,color:#000000,stroke-width:2px
     style Class fill:#fff59d,stroke:#000000,color:#000000,stroke-width:2px
     style Cargo fill:#fff59d,stroke:#000000,color:#000000,stroke-width:2px
     style DB fill:#a5d6a7,stroke:#000000,color:#000000,stroke-width:3px
@@ -214,11 +209,7 @@ flowchart TB
 
 > **Por qué un Excel y no scraping puro:** la curaduría inicial requiere juicio humano (qué es PCI puro vs mixto, qué empresas se incluyen en perímetro). El Excel captura ese juicio. Las actualizaciones puntuales (registros nuevos de CCAA, financieros nuevos) se hacen sobre el mismo Excel y se importan con un script.
 
-**(2) Pipedrive API** — Fontiber gestionaba el funnel en Pipedrive antes del War Room. Un cron diario sincroniza el estado de cada deal (stage, owner, próxima actividad). El matching empresa↔deal usa `CIF` como clave primaria (custom field de Pipedrive), con fallbacks por nombre normalizado.
-
-> **Por qué CIF y no nombre:** los nombres mutan (puntuación, "S.L." vs "SL", paréntesis con alias). El CIF es estable y único. El matching CIF-first acierta en el 95% de casos sin trabajo manual.
->
-> **Estado actual:** Pipedrive entra en cut-over en próximas semanas. El CRM nativo del War Room (CrmEstado + CrmLog + Actividad + Nota + Tarea) ya está operativo y reemplaza Pipedrive. Tras el cut-over, el cron Pipedrive se desactivará y los nuevos cambios solo viven en War Room.
+**(2) Pipedrive — DEPRECADA (cut-over 2026-05-02)** — Fontiber gestionaba el funnel en Pipedrive antes del War Room. Hubo un cron diario de sincronización que se pausó en PR #47 (2026-05-01) y se eliminó el 2026-05-02 junto con todos los scripts y referencias en código. El CRM nativo (CrmEstado + CrmLog + Tarea + Nota) es ahora la fuente única de verdad. La columna legacy `pipedriveOrgId` y el string `owner` se dropean en una migración Prisma posterior.
 
 **(3) BORME diario** — el Boletín Oficial del Registro Mercantil publica todos los días (L-V) los actos jurídicos del registro: constituciones, fusiones, adquisiciones, nombramientos, ceses, disoluciones. El cron a las 22:00 CEST descarga los PDFs del día (los del propio día — a esa hora ya están publicados completos), los parsea y clasifica.
 
@@ -241,7 +232,7 @@ flowchart TB
    - **Leads anónimos**: Alberto/Gabriel pueden crear targets confidenciales (CIF placeholder `LEAD-{id}`, nombre = alias acordado). No aparecen en mapa/tabla/BORME, solo en `/pipeline`. Cuando se desvela la identidad real, el endpoint `POST /api/leads/:id/link` mueve todas las relaciones (notas, tareas, actividades, CrmLog) a la empresa real y borra el lead.
    - **Propuestas de finders**: el portal externo permite a finders proponer targets nuevos. El backend hace dedup silencioso (CIF exacto + nombre normalizado) y crea `TargetProposal` con `status=PENDING` para que admin lo revise.
 
-**El normalizador (`src/lib/normalize.ts`) es la fuente única de verdad** para comparar nombres entre fuentes. Convierte _"Soluciones Fire, SL"_ y _"SOLUCIONES FIRE S.L."_ al mismo token canónico. Sin esto, una empresa aparecería duplicada cada vez que entra desde Excel + Pipedrive + BORME.
+**El normalizador (`src/lib/normalize.ts`) es la fuente única de verdad** para comparar nombres entre fuentes. Convierte _"Soluciones Fire, SL"_ y _"SOLUCIONES FIRE S.L."_ al mismo token canónico. Sin esto, una empresa aparecería duplicada cada vez que entra desde Excel + BORME.
 
 ---
 
@@ -436,7 +427,6 @@ flowchart LR
 | Cron | Schedule | Qué hace |
 |---|---|---|
 | `/api/cron/borme` | L-V 20:00 UTC (22:00 CEST) | Descarga BORME del día, parsea, clasifica, escribe `BormeAlerta` + upsert `PersonaCargo` |
-| `/api/cron/pipedrive` | L-V 20:00 UTC | Sync Pipedrive → `CrmEstado`, log de cambios → `CrmLog` |
 | `/api/cron/daily-summary` | Ma-Sa 06:00 UTC (08:00 CEST) | Email a Alberto/Gabriel con 3 cifras + link a `/daily/YYYY-MM-DD` |
 | `/api/cron/task-digest` | L-V 07:00 UTC | Email por usuario con sus tareas vencidas / hoy / próximos 7 días |
 
@@ -445,7 +435,7 @@ flowchart LR
 - **Auth de los crons**: cada endpoint exige `Authorization: Bearer ${CRON_SECRET}`. Vercel inyecta el secret en sus invocaciones programadas. Si alguien llama el endpoint desde fuera sin el secret → 401.
 - **Resend** (provider de email): instanciado dentro de cada función (no a nivel módulo). Las plantillas se generan inline; templates JSX/MJML serían sobre-ingeniería para 2 emails.
 - **Página `/daily/[fecha]`** es **pública** (sin auth) — está en el matcher excluido del middleware. Permite que el email enlace directamente al detalle sin login.
-- **Idempotencia**: tanto BORME como Pipedrive usan upsert/findFirst+update. Reejecutar un cron del mismo día no duplica datos.
+- **Idempotencia**: BORME usa upsert/findFirst+update. Reejecutar el cron del mismo día no duplica datos.
 - **El BORME procesa el día EN CURSO** (no el del día anterior). A las 22:00 CEST el BORME del día ya está completo y publicado.
 
 ---
@@ -622,7 +612,7 @@ Detecta zona portal por **tres vías** (cualquiera basta):
 
 - `CRON_SECRET` env var, comprobado con `Authorization: Bearer` en cada endpoint cron.
 - Endpoints de cron sin el header válido → 401 (verificado tras incidente histórico de 500s).
-- Resend, Anthropic, Pipedrive, Mapbox tokens están en Vercel env, nunca hardcoded ni en el cliente (salvo `NEXT_PUBLIC_MAPBOX_TOKEN` que es el único de cliente — Mapbox tokens son revocables y se restringen por dominio en su dashboard).
+- Resend, Anthropic, Mapbox tokens están en Vercel env, nunca hardcoded ni en el cliente (salvo `NEXT_PUBLIC_MAPBOX_TOKEN` que es el único de cliente — Mapbox tokens son revocables y se restringen por dominio en su dashboard).
 
 ---
 
@@ -648,7 +638,7 @@ Detecta zona portal por **tres vías** (cualquiera basta):
 
 ### A corto plazo (próximas 1-2 sesiones)
 
-- **Cut-over Pipedrive**: desactivar el cron de Pipedrive en `vercel.json`, exportar histórico a OneDrive, dar de baja la suscripción. Acción destructiva pendiente de confirmación.
+- **Cut-over Pipedrive**: ✅ código limpio el 2026-05-02 (cron, scripts, link UI). Falta drop de columnas legacy `pipedriveOrgId` y `owner` (Fase B), export histórico a OneDrive y baja de suscripción (acciones manuales).
 - **Bug set-password en prod (PR #18 endurecido)**: si reaparece, hay logs nuevos para diagnosticar.
 
 ### A medio plazo (siguiente trimestre)
@@ -666,7 +656,7 @@ Detecta zona portal por **tres vías** (cualquiera basta):
 ### Deuda técnica
 
 - `MapaEspana.tsx` (1130 líneas) → dividir en `useMapFiltering` hook + `<GeoJSONLayer/>` + `<MapHUD/>`. Refactor grande.
-- Deprecar `owner` (string legacy de Pipedrive) en favor de `ownerUserId` post cut-over.
+- Deprecar `owner` (string legacy de Pipedrive) en favor de `ownerUserId` — drop de columna en Fase B del cut-over.
 - Logger estructurado en lugar de `console.log` directos en crons / endpoints críticos.
 
 ---

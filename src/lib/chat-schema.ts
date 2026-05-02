@@ -89,13 +89,11 @@ CREATE TABLE "PersonaCargo" (
   UNIQUE("empresaId", "nombreNorm")
 );
 
--- Estado CRM (War Room es la fuente de verdad; pipedriveOrgId sólo es histórico read-only)
+-- Estado CRM (War Room es la fuente de verdad tras el cut-over de Pipedrive)
 CREATE TABLE "CrmEstado" (
   id SERIAL PRIMARY KEY,
   "empresaId" INT UNIQUE REFERENCES "Empresa"(id),
-  "pipedriveOrgId" TEXT,              -- legacy, read-only tras cut-over
-  "dealStage" TEXT,                   -- "identificado"|"contactado"|"primera_reunion"|"analisis"|"LOI enviada"|"execution"|"portfolio"|"on_hold"|"muerto" (9 stages)
-  owner TEXT,                         -- legacy string ("alberto"|"gabriel")
+  "dealStage" TEXT,                   -- "identificado"|"contactado"|"primera_reunion"|"analisis"|"LOI enviada"|"execution"|"portfolio"|"on_hold"|"muerto" (9 stages). NULL = "Sin CRM" (no aparece en Pipeline).
   "ownerUserId" TEXT REFERENCES "User"(id),
   "fechaEntradaStage" TIMESTAMP,      -- cuándo entró al stage actual (para "X días en stage")
   "updatedAt" TIMESTAMP
@@ -115,7 +113,7 @@ CREATE TABLE "CrmLog" (
 );
 
 -- (La tabla "Actividad" se eliminó al fusionarla con "Tarea". Lo que antes
---  eran llamadas/emails/reuniones legacy Pipedrive ahora son filas de "Tarea"
+--  eran llamadas/emails/reuniones legacy ahora son filas de "Tarea"
 --  con completada=true y "resultado" rellenado con el texto original.)
 
 -- Usuarios admin del War Room (MVP 1). Finders tienen tabla aparte (ver más abajo).
@@ -205,8 +203,8 @@ CREATE TABLE "TargetProposal" (
 - sector "mixto" = empresa que opera tanto en PCI como en seguridad electrónica
 
 ### CRM (MVP 1 desde abril 2026)
-- El War Room es la fuente de verdad del CRM; Pipedrive se está deprecando. Campo "pipedriveOrgId" es legacy read-only.
-- Stages del funnel (9 valores en "CrmEstado.dealStage"): "identificado", "contactado", "primera_reunion", "analisis", "LOI enviada", "execution", "portfolio", "on_hold", "muerto".
+- El War Room es la fuente de verdad del CRM (Pipedrive deprecado tras cut-over de 2026-05-02).
+- Stages del funnel (9 valores en "CrmEstado.dealStage"): "identificado", "contactado", "primera_reunion", "analisis", "LOI enviada", "execution", "portfolio", "on_hold", "muerto". dealStage = NULL significa "Sin CRM" — esa empresa NO aparece en /pipeline; sí en mapa/tabla con su pill propia.
 - "fechaEntradaStage" indica cuándo la empresa entró al stage ACTUAL (para calcular "días en stage").
 - Autoría: cada Nota, Tarea y CrmLog tiene "autorId" apuntando a User.
 - Tarea es el modelo unificado de acciones CRM. "completada=false" = pendiente. "completada=true" = registro histórico de algo ya hecho (con "resultado" relleno). "fechaLimite < now() AND completada=false" = vencida.

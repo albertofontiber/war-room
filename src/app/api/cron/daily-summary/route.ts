@@ -1,7 +1,7 @@
 /**
  * /api/cron/daily-summary
- * Vercel cron job — runs every weekday at 12:00 UTC (after BORME at 11:00 and Pipedrive at 10:00).
- * Sends a daily digest email with BORME signals, Pipedrive changes, and perimeter updates.
+ * Vercel cron job — runs every weekday at 06:00 UTC (after BORME at 20:00 the previous evening).
+ * Sends a daily digest email with BORME signals and perimeter updates.
  */
 
 import { NextRequest, NextResponse } from "next/server";

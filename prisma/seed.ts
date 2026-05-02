@@ -613,18 +613,18 @@ async function main() {
   // Stages reales del War Room (8): identificado | contactado | primera_reunion |
   // analisis | "LOI enviada" | execution | portfolio | muerto
   const crmData = [
-    { empresaId: e1.id, dealStage: "identificado",     owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: "ORG-1001" },
-    { empresaId: e2.id, dealStage: "identificado",     owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: "ORG-1002" },
-    { empresaId: e3.id, dealStage: "LOI enviada",      owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: "ORG-1003" },
-    { empresaId: e4.id, dealStage: "contactado",       owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: "ORG-1004" },
-    { empresaId: e5.id, dealStage: "contactado",       owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: "ORG-1005" },
-    { empresaId: e6.id, dealStage: "primera_reunion",  owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: "ORG-1006" },
-    { empresaId: e7.id, dealStage: "execution",        owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: "ORG-1007" },
-    { empresaId: e8.id, dealStage: "analisis",         owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: "ORG-1008" },
-    { empresaId: e9.id, dealStage: "portfolio",        owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: "ORG-1009" },
-    { empresaId: e10.id, dealStage: "identificado",    owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: "ORG-1010" },
-    { empresaId: e11.id, dealStage: "muerto",          owner: "alberto", ownerUserId: userAlberto.id, pipedriveOrgId: null },
-    { empresaId: e12.id, dealStage: "muerto",          owner: "gabriel", ownerUserId: userGabriel.id, pipedriveOrgId: null },
+    { empresaId: e1.id, dealStage: "identificado",     ownerUserId: userAlberto.id },
+    { empresaId: e2.id, dealStage: "identificado",     ownerUserId: userGabriel.id },
+    { empresaId: e3.id, dealStage: "LOI enviada",      ownerUserId: userAlberto.id },
+    { empresaId: e4.id, dealStage: "contactado",       ownerUserId: userGabriel.id },
+    { empresaId: e5.id, dealStage: "contactado",       ownerUserId: userAlberto.id },
+    { empresaId: e6.id, dealStage: "primera_reunion",  ownerUserId: userGabriel.id },
+    { empresaId: e7.id, dealStage: "execution",        ownerUserId: userAlberto.id },
+    { empresaId: e8.id, dealStage: "analisis",         ownerUserId: userGabriel.id },
+    { empresaId: e9.id, dealStage: "portfolio",        ownerUserId: userAlberto.id },
+    { empresaId: e10.id, dealStage: "identificado",    ownerUserId: userGabriel.id },
+    { empresaId: e11.id, dealStage: "muerto",          ownerUserId: userAlberto.id },
+    { empresaId: e12.id, dealStage: "muerto",          ownerUserId: userGabriel.id },
     // e13, e14, e15 → sin CrmEstado (backlog "sin tocar")
   ];
 

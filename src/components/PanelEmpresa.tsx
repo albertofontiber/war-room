@@ -333,7 +333,6 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
               owner: prev?.owner ?? null,
               ownerUserId: prev?.ownerUserId ?? null,
               ownerUser: prev?.ownerUser ?? null,
-              pipedriveOrgId: prev?.pipedriveOrgId ?? null,
               fechaEntradaStage:
                 prev?.dealStage !== nuevo
                   ? new Date().toISOString()
@@ -935,17 +934,6 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
                     value={fmtDate(empresa.crmEstado.updatedAt)}
                   />
                 </div>
-                {empresa.crmEstado.pipedriveOrgId && (
-                  <a
-                    href={`https://fontiber.pipedrive.com/organization/${empresa.crmEstado.pipedriveOrgId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 mt-2 text-xs text-wr-hint hover:text-wr-muted hover:underline"
-                    title="Histórico Pipedrive (legacy, read-only tras cut-over)"
-                  >
-                    Ver en Pipedrive (legacy) →
-                  </a>
-                )}
               </div>
             </>
           )}

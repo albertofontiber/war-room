@@ -33,7 +33,6 @@ export async function GET(
           owner: true,
           ownerUserId: true,
           ownerUser: { select: { id: true, name: true } },
-          pipedriveOrgId: true,
           fechaEntradaStage: true,
           updatedAt: true,
         },

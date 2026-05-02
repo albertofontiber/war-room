@@ -85,7 +85,6 @@ export interface EmpresaDetalle {
     owner: string | null;
     ownerUserId: string | null;
     ownerUser: { id: string; name: string } | null;
-    pipedriveOrgId: string | null;
     fechaEntradaStage: string | null;
     updatedAt: string;
   } | null;
@@ -130,7 +129,7 @@ export interface EmpresaResumen {
   ebitda: number | null;
   ebitdaPct: number | null;
   tendenciaIngresos: TendenciaIngresos | null;
-  crmEstado: { dealStage: DealStage | null; pipedriveOrgId: string | null } | null;
+  crmEstado: { dealStage: DealStage | null } | null;
   bormeAlertasCount: number;
 }
 
