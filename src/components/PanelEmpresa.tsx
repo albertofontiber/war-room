@@ -310,6 +310,7 @@ function DocumentacionSection({
   const [nombreComercial, setNombreComercial] = useState(initial.nombreComercial ?? "");
   const [saving, setSaving] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Reset si cambia la empresa cargada (initial cambia)
@@ -370,6 +371,31 @@ function DocumentacionSection({
       setError(e instanceof Error ? e.message : "Error en búsqueda automática");
     } finally {
       setSyncing(false);
+    }
+  }
+
+  async function createDocs() {
+    setCreating(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/empresas/${empresaId}/links/create`, {
+        method: "POST",
+      });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(j.error ?? `Error ${res.status}`);
+      }
+      // Endpoint devuelve { ok, folder, page, empresa: { oneDriveUrl, notionUrl } }
+      onSaved({
+        oneDriveUrl: j.empresa.oneDriveUrl,
+        notionUrl: j.empresa.notionUrl,
+        nombreComercial: initial.nombreComercial,
+      });
+      setEditing(false);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Error creando docs");
+    } finally {
+      setCreating(false);
     }
   }
 
@@ -468,10 +494,10 @@ function DocumentacionSection({
               {error}
             </div>
           )}
-          <div className="flex items-center gap-2 pt-1">
+          <div className="flex items-center gap-2 pt-1 flex-wrap">
             <button
               onClick={save}
-              disabled={saving}
+              disabled={saving || creating}
               className="text-[11px] bg-wr-green/15 text-wr-green border border-wr-green/30 rounded px-2.5 py-1 hover:bg-wr-green/25 disabled:opacity-40 transition-colors"
             >
               {saving ? "Guardando…" : "Guardar"}
@@ -484,15 +510,25 @@ function DocumentacionSection({
                 setEditing(false);
                 setError(null);
               }}
-              disabled={saving}
+              disabled={saving || creating}
               className="text-[11px] text-wr-hint hover:text-wr-text"
             >
               Cancelar
             </button>
             <div className="flex-1" />
+            {!initial.oneDriveUrl && !initial.notionUrl && (
+              <button
+                onClick={createDocs}
+                disabled={creating || saving || syncing}
+                title="Crear carpeta OneDrive (con subcarpetas Analyses, NDA, IRL) y página Notion automáticamente"
+                className="text-[11px] bg-wr-amber/15 text-wr-amber border border-wr-amber/30 rounded px-2.5 py-1 hover:bg-wr-amber/25 disabled:opacity-40 transition-colors"
+              >
+                {creating ? "Creando…" : "✨ Crear carpeta y página"}
+              </button>
+            )}
             <button
               onClick={autoSync}
-              disabled={syncing}
+              disabled={syncing || creating}
               title="Buscar carpeta y página automáticamente vía Microsoft Graph + Notion"
               className="text-[11px] bg-wr-blue/15 text-wr-blue border border-wr-blue/30 rounded px-2.5 py-1 hover:bg-wr-blue/25 disabled:opacity-40 transition-colors"
             >
