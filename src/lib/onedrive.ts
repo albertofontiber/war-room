@@ -73,11 +73,19 @@ async function getAccessToken(): Promise<string> {
   return tokenCache.token;
 }
 
-async function graphFetch<T>(path: string): Promise<T> {
+async function graphFetch<T>(
+  path: string,
+  init?: { method?: "GET" | "POST"; body?: unknown }
+): Promise<T> {
   const token = await getAccessToken();
   const url = path.startsWith("http") ? path : `${GRAPH_BASE}${path}`;
   const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${token}` },
+    method: init?.method ?? "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...(init?.body ? { "Content-Type": "application/json" } : {}),
+    },
+    body: init?.body ? JSON.stringify(init.body) : undefined,
   });
   if (!res.ok) {
     const errText = await res.text().catch(() => "");
@@ -138,6 +146,104 @@ export async function listTargetFolders(opts?: { fresh?: boolean }): Promise<One
   foldersCache = { folders: all, expiresAt: Date.now() + FOLDERS_TTL_MS };
   log.info("onedrive", `listTargetFolders: ${all.length} folders`, { path });
   return all;
+}
+
+/**
+ * Devuelve el siguiente número que debe usar una nueva carpeta `[N]. Nombre`
+ * según la convención manual de Targets/. Lee las carpetas existentes,
+ * extrae los prefijos numéricos (e.g. "33. Aize Bua" → 33, ignorando los
+ * ficticios como "99. Otros") y devuelve max+1.
+ *
+ * Si no hay ninguna carpeta numerada, empieza por 1.
+ *
+ * NOTA: la carpeta `99. Otros` (cajón de sastre) se ignora deliberadamente
+ * para que el siguiente target no se llame "100. ...".
+ */
+export async function getNextTargetNumber(): Promise<number> {
+  const folders = await listTargetFolders({ fresh: true });
+  let max = 0;
+  for (const f of folders) {
+    const m = f.name.match(/^\s*(\d+)\s*\./);
+    if (!m) continue;
+    const n = parseInt(m[1], 10);
+    if (Number.isNaN(n)) continue;
+    if (n >= 99) continue; // ignorar el cajón "99. Otros"
+    if (n > max) max = n;
+  }
+  return max + 1;
+}
+
+/**
+ * Crea una carpeta `[N]. {name}` dentro del path `ONEDRIVE_TARGETS_PATH`
+ * y, dentro de ella, las 3 subcarpetas estándar (`Analyses`, `NDA`, `IRL`).
+ *
+ * Devuelve `webUrl` de la carpeta padre creada para guardar en
+ * `Empresa.oneDriveUrl`. Invalida el cache de carpetas tras crear.
+ *
+ * Idempotente a nivel de Graph: si la carpeta ya existe (mismo nombre exacto),
+ * Microsoft Graph devolvería 409. La protección contra duplicados se hace
+ * en el caller (matcher pre-check + chequeo de oneDriveUrl null).
+ */
+export type CreatedFolder = {
+  webUrl: string;
+  name: string;
+  number: number;
+};
+
+const STANDARD_SUBFOLDERS = ["Analyses", "NDA", "IRL"] as const;
+
+export async function createTargetFolder(rawName: string): Promise<CreatedFolder> {
+  const upn = envOrThrow("ONEDRIVE_OWNER_UPN");
+  const path = envOrThrow("ONEDRIVE_TARGETS_PATH");
+  const number = await getNextTargetNumber();
+  const folderName = `${number}. ${rawName}`.trim();
+
+  const encodedPath = path
+    .split("/")
+    .filter(Boolean)
+    .map((seg) => encodeURIComponent(seg))
+    .join("/");
+
+  // 1) Crear carpeta padre `[N]. Nombre`
+  type GraphItem = { id: string; name: string; webUrl: string };
+  const parent: GraphItem = await graphFetch<GraphItem>(
+    `/users/${encodeURIComponent(upn)}/drive/root:/${encodedPath}:/children`,
+    {
+      method: "POST",
+      body: {
+        name: folderName,
+        folder: {},
+        // Si por algún motivo ya existe, Graph devolverá 409. No usamos rename
+        // automático para que el caller decida.
+        "@microsoft.graph.conflictBehavior": "fail",
+      },
+    }
+  );
+
+  // 2) Crear las 3 subcarpetas estándar dentro de la recién creada
+  for (const sub of STANDARD_SUBFOLDERS) {
+    await graphFetch(
+      `/users/${encodeURIComponent(upn)}/drive/items/${parent.id}/children`,
+      {
+        method: "POST",
+        body: {
+          name: sub,
+          folder: {},
+          "@microsoft.graph.conflictBehavior": "replace",
+        },
+      }
+    );
+  }
+
+  // Invalidar cache para que el próximo listTargetFolders pille la carpeta
+  foldersCache = null;
+
+  log.info("onedrive", `createTargetFolder OK: "${folderName}"`, {
+    parentId: parent.id,
+    subfolders: STANDARD_SUBFOLDERS,
+  });
+
+  return { webUrl: parent.webUrl, name: folderName, number };
 }
 
 /** Limpia el cache de carpetas y de token (útil en tests). */

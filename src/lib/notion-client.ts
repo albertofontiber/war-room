@@ -114,6 +114,44 @@ export async function listTargetPages(opts?: { fresh?: boolean }): Promise<Notio
   return all;
 }
 
+/**
+ * Crea una sub-página vacía bajo la página padre `NOTION_TARGETS_PAGE_ID`
+ * con `title` como título. Devuelve la página creada (id + url).
+ *
+ * La integration "War Room" debe estar conectada a la página padre para
+ * que pueda crear hijas (eso ya está hecho).
+ *
+ * Invalida el cache de páginas tras crear para que un siguiente
+ * listTargetPages la incluya.
+ */
+export type CreatedPage = {
+  id: string;
+  url: string;
+  title: string;
+};
+
+export async function createTargetPage(title: string): Promise<CreatedPage> {
+  const parentId = envOrThrow("NOTION_TARGETS_PAGE_ID");
+
+  type CreatePageResponse = {
+    id: string;
+    url: string;
+  };
+  const json = await notionFetch<CreatePageResponse>("/pages", {
+    method: "POST",
+    body: JSON.stringify({
+      parent: { type: "page_id", page_id: parentId },
+      properties: {
+        title: [{ type: "text", text: { content: title } }],
+      },
+    }),
+  });
+
+  pagesCache = null;
+  log.info("notion", `createTargetPage OK: "${title}"`, { id: json.id });
+  return { id: json.id, url: json.url, title };
+}
+
 /** Limpia el cache (útil en tests / scripts one-off). */
 export function _resetNotionCache() {
   pagesCache = null;
