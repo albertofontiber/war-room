@@ -17,8 +17,9 @@ export const dynamic = "force-dynamic";
  *   - nº tareas pendientes
  *   - días en stage actual
  *
- * Solo empresas con enPerimetro=true aparecen. La columna "identificado"
- * incluye además empresas en perímetro SIN CrmEstado (backlog).
+ * Solo empresas con enPerimetro=true Y con `crmEstado.dealStage` no null
+ * aparecen. Las empresas "Sin CRM" se gestionan desde mapa/tabla con su pill
+ * propia (sentinel `sin_crm` en filtros, ver `lib/crm.ts`).
  *
  * Query params opcionales (filtros):
  *   ?ccaa=...   (comma-separated)
@@ -50,14 +51,19 @@ export async function GET(req: NextRequest) {
       ? Number(diasSinActividadMinParam)
       : null;
 
-    // Filtros base: solo perímetro
+    // Filtros base: solo perímetro Y con dealStage real (no null).
+    // Las empresas "Sin CRM" (sin crmEstado o con dealStage null) se excluyen
+    // — no son parte del Pipeline; se gestionan desde mapa/tabla.
     const whereBase: Parameters<typeof prisma.empresa.findMany>[0] = {
       where: {
         enPerimetro: true,
         ...(ccaa.length ? { ccaa: { in: ccaa } } : {}),
         ...(provincia.length ? { provincia: { in: provincia } } : {}),
         ...(sector.length ? { sector: { in: sector } } : {}),
-        ...(owner ? { crmEstado: { ownerUserId: owner } } : {}),
+        crmEstado: {
+          dealStage: { not: null },
+          ...(owner ? { ownerUserId: owner } : {}),
+        },
         ...(finder === "__none__"
           ? { finderSourceId: null }
           : finder
@@ -179,7 +185,9 @@ export async function GET(req: NextRequest) {
           })
         : tarjetas;
 
-    // Agrupar por stage. Las empresas sin CrmEstado → "identificado" (backlog).
+    // Agrupar por stage. Tras el `where` de arriba todas las cards tienen
+    // `dealStage` no null; el guard es defensa por si la BD se queda en estado
+    // inconsistente.
     const grouped: Record<DealStage, Card[]> = {
       identificado: [],
       contactado: [],
@@ -193,8 +201,8 @@ export async function GET(req: NextRequest) {
     };
 
     for (const card of filtered) {
-      const stage: DealStage = card.dealStage ?? "identificado";
-      grouped[stage].push(card);
+      if (!card.dealStage) continue;
+      grouped[card.dealStage].push(card);
     }
 
     const counts = Object.fromEntries(
