@@ -87,7 +87,7 @@ export async function GET(
         id: `log-${l.id}`,
         kind: "stage",
         fecha: l.createdAt.toISOString(),
-        autor: l.autorFinder?.name ?? l.autor?.name ?? l.owner ?? null,
+        autor: l.autorFinder?.name ?? l.autor?.name ?? null,
         autorKind: l.autorFinder ? "finder" : l.autor ? "admin" : null,
         texto: l.note ? `${texto} — ${l.note}` : texto,
         meta: { event: l.event, fromStage: l.fromStage, toStage: l.toStage },

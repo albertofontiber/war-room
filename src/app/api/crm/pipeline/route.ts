@@ -162,7 +162,7 @@ export async function GET(req: NextRequest) {
         margenBrutoPct,
         ebitda,
         ownerUserId: e.crmEstado?.ownerUserId ?? null,
-        ownerName: e.crmEstado?.ownerUser?.name ?? e.crmEstado?.owner ?? null,
+        ownerName: e.crmEstado?.ownerUser?.name ?? null,
         finderName: e.finderSource?.name ?? null,
         finderId: e.finderSource?.id ?? null,
         ultimaActividad: ultima && ultimaFecha

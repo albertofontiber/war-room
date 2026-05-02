@@ -331,19 +331,25 @@ Vista accesible desde el botón **"Operaciones"** en la Navbar.
 
 El War Room es la fuente de verdad del CRM desde abril 2026. Pipedrive
 quedó en pausa el 2026-05-01 (PR #47, cron desactivado en `vercel.json`)
-y se hizo el cut-over completo el 2026-05-02:
+y se hizo el cut-over completo el 2026-05-02 en dos fases:
 
+**Fase A** (PR #59):
 - Endpoint `/api/cron/pipedrive` y scripts `pipedrive-sync.ts`,
   `run-pipedrive.ts`, `inspect-pipedrive-samples.ts`,
   `check-pipedrive-unmatched.ts`, `detect-cron-reversions.ts` y
   `restore-cron-reverted-empresas.ts` eliminados.
 - Link "Ver en Pipedrive (legacy)" del PanelEmpresa retirado.
 - Variables `PIPEDRIVE_API_KEY` y `pipedriveOrgId` ya no se usan en
-  código. La columna `CrmEstado.pipedriveOrgId` y el legacy
-  `CrmEstado.owner` (string "alberto"/"gabriel") se dropean en una
-  migración Prisma posterior (Fase B).
-- Histórico Pipedrive exportado a OneDrive y suscripción cancelada
-  (acción manual fuera del repo).
+  código.
+
+**Fase B** (PR #60):
+- Backfill 173 filas `CrmEstado.ownerUserId` (90 a Alberto, 83 a Gabriel)
+  desde el string legacy `owner` (`scripts/archive/migrate-crm-owner-to-userid.ts`).
+- DROP COLUMN `CrmEstado.pipedriveOrgId`, `CrmEstado.owner` y
+  `CrmLog.owner` en Supabase prod vía `prisma db push`.
+- 202/202 CrmEstado tienen ahora `ownerUserId`.
+- Pendiente manual fuera del repo: export histórico de Pipedrive a
+  OneDrive y baja de la suscripción.
 
 Los scripts archivados en `scripts/archive/` (`migrate-pipedrive-activities.ts`,
 `backfill-fecha-entrada-stage.ts`, `fix-fecha-entrada-stage.ts`) se
@@ -552,8 +558,6 @@ model CrmEstado {
   ownerUserId    String?
   fechaEntradaStage DateTime?
   updatedAt      DateTime @updatedAt
-  // Columnas legacy `pipedriveOrgId` y `owner` (string) se dropean en Fase B
-  // del cut-over Pipedrive (ver sección 7).
 }
 
 model CrmLog {
@@ -634,7 +638,7 @@ model CrmLog {
 | BB | Separar "Sin CRM" de "Identificado" en sidebar/mapa/leyenda/selector | Media | ✅ | PR #30 |
 | BC | Fix cluster markers stale al cambiar filtros del mapa | Alta | ✅ | PR #31 |
 | BD | Unificar buscador (Navbar funciona en /pipeline + cualquier página) | Media | ✅ | PR #32 |
-| — | Cut-over Pipedrive | Alta | ✅ | Cron desactivado #47, código limpio Fase A 2026-05-02, drop columns Fase B pendiente |
+| — | Cut-over Pipedrive | Alta | ✅ | Cron desactivado #47, código limpio #59, drop columns #60 (2026-05-02) |
 | — | Scoring dinámico modular | Media | ⏳ | Sub-scores tamaño/rentabilidad/crecimiento/etc. |
 | — | Mapa de conexiones / grafo | Media | ⏳ | Personas compartidas entre empresas (PersonaCargo) |
 | — | Fase 2 búsqueda webs | Baja | ⏳ | 882 empresas en perímetro sin web |

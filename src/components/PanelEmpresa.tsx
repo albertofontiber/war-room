@@ -330,7 +330,6 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
         crmEstado: nuevo
           ? {
               dealStage: nuevo,
-              owner: prev?.owner ?? null,
               ownerUserId: prev?.ownerUserId ?? null,
               ownerUser: prev?.ownerUser ?? null,
               fechaEntradaStage:
@@ -926,8 +925,8 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
               <div>
                 <SectionLabel>CRM</SectionLabel>
                 <div className="space-y-0.5">
-                  {empresa.crmEstado.owner && (
-                    <KpiRow label="Owner" value={empresa.crmEstado.owner} />
+                  {empresa.crmEstado.ownerUser?.name && (
+                    <KpiRow label="Owner" value={empresa.crmEstado.ownerUser.name} />
                   )}
                   <KpiRow
                     label="Actualizado"

@@ -84,7 +84,6 @@ export async function PATCH(
         empresaId,
         dealStage,
         ownerUserId: user?.id ?? null,
-        owner: user?.name?.toLowerCase() ?? null,
         fechaEntradaStage: now,
       },
       update: {

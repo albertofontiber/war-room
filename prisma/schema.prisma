@@ -154,9 +154,7 @@ model CrmEstado {
   id                 Int       @id @default(autoincrement())
   empresaId          Int       @unique
   empresa            Empresa   @relation(fields: [empresaId], references: [id])
-  pipedriveOrgId     String?   // legacy Pipedrive, read-only tras cut-over
-  dealStage          String?   // "identificado"|"contactado"|"primera_reunion"|"analisis"|"LOI enviada"|"execution"|"portfolio"|"muerto"
-  owner              String?   // legacy string ("alberto"|"gabriel") — mantenido para compat
+  dealStage          String?   // "identificado"|"contactado"|"primera_reunion"|"analisis"|"LOI enviada"|"execution"|"portfolio"|"on_hold"|"muerto" — null = Sin CRM
   ownerUserId        String?
   ownerUser          User?     @relation("CrmOwner", fields: [ownerUserId], references: [id])
   fechaEntradaStage  DateTime? // cuándo entró al stage actual (para "X días en stage")
@@ -173,7 +171,6 @@ model CrmLog {
   event          String   // "new_deal" | "stage_changed" | "removed_from_funnel"
   fromStage      String?
   toStage        String?
-  owner          String?  // legacy string
   autorId        String?
   autor          User?    @relation(fields: [autorId], references: [id])
   autorFinderId  String?

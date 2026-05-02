@@ -209,7 +209,7 @@ flowchart TB
 
 > **Por qué un Excel y no scraping puro:** la curaduría inicial requiere juicio humano (qué es PCI puro vs mixto, qué empresas se incluyen en perímetro). El Excel captura ese juicio. Las actualizaciones puntuales (registros nuevos de CCAA, financieros nuevos) se hacen sobre el mismo Excel y se importan con un script.
 
-**(2) Pipedrive — DEPRECADA (cut-over 2026-05-02)** — Fontiber gestionaba el funnel en Pipedrive antes del War Room. Hubo un cron diario de sincronización que se pausó en PR #47 (2026-05-01) y se eliminó el 2026-05-02 junto con todos los scripts y referencias en código. El CRM nativo (CrmEstado + CrmLog + Tarea + Nota) es ahora la fuente única de verdad. La columna legacy `pipedriveOrgId` y el string `owner` se dropean en una migración Prisma posterior.
+**(2) Pipedrive — DEPRECADA (cut-over 2026-05-02)** — Fontiber gestionaba el funnel en Pipedrive antes del War Room. Hubo un cron diario de sincronización que se pausó en PR #47 (2026-05-01) y se eliminó el 2026-05-02 junto con todos los scripts y referencias en código (PR #59). En la Fase B (PR #60) se hizo backfill de `ownerUserId` desde el string legacy y se dropearon las columnas `CrmEstado.pipedriveOrgId`, `CrmEstado.owner` y `CrmLog.owner`. El CRM nativo (CrmEstado + CrmLog + Tarea + Nota) es ahora la fuente única de verdad.
 
 **(3) BORME diario** — el Boletín Oficial del Registro Mercantil publica todos los días (L-V) los actos jurídicos del registro: constituciones, fusiones, adquisiciones, nombramientos, ceses, disoluciones. El cron a las 22:00 CEST descarga los PDFs del día (los del propio día — a esa hora ya están publicados completos), los parsea y clasifica.
 
@@ -638,7 +638,7 @@ Detecta zona portal por **tres vías** (cualquiera basta):
 
 ### A corto plazo (próximas 1-2 sesiones)
 
-- **Cut-over Pipedrive**: ✅ código limpio el 2026-05-02 (cron, scripts, link UI). Falta drop de columnas legacy `pipedriveOrgId` y `owner` (Fase B), export histórico a OneDrive y baja de suscripción (acciones manuales).
+- **Cut-over Pipedrive**: ✅ código limpio (PR #59) y columnas legacy dropeadas (PR #60) el 2026-05-02. Falta acción manual: export histórico a OneDrive y baja de suscripción.
 - **Bug set-password en prod (PR #18 endurecido)**: si reaparece, hay logs nuevos para diagnosticar.
 
 ### A medio plazo (siguiente trimestre)
@@ -656,7 +656,7 @@ Detecta zona portal por **tres vías** (cualquiera basta):
 ### Deuda técnica
 
 - `MapaEspana.tsx` (1130 líneas) → dividir en `useMapFiltering` hook + `<GeoJSONLayer/>` + `<MapHUD/>`. Refactor grande.
-- Deprecar `owner` (string legacy de Pipedrive) en favor de `ownerUserId` — drop de columna en Fase B del cut-over.
+- ~~Deprecar `owner` (string legacy de Pipedrive) en favor de `ownerUserId`~~ ✅ hecho en PR #60 (Fase B del cut-over).
 - Logger estructurado en lugar de `console.log` directos en crons / endpoints críticos.
 
 ---

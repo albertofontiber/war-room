@@ -106,7 +106,6 @@ CREATE TABLE "CrmLog" (
   event TEXT,                         -- "new_deal"|"stage_changed"|"removed_from_funnel"
   "fromStage" TEXT,
   "toStage" TEXT,
-  owner TEXT,                         -- legacy string
   "autorId" TEXT REFERENCES "User"(id),
   note TEXT,                          -- comentario opcional al cambiar stage
   "createdAt" TIMESTAMP DEFAULT NOW()
