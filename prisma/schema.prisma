@@ -56,6 +56,15 @@ model Empresa {
   // relaciones (tareas, notas, actividades, CrmLog, finder) a la Empresa real y
   // borrar el lead. Estos no aparecen en mapa, tabla, BORME ni stats del universo.
   esAnonima        Boolean       @default(false)
+  // Documentación externa (OneDrive + Notion). Se usan a partir de "primera_reunion".
+  // - oneDriveUrl / notionUrl: URLs absolutas a la carpeta/página del target.
+  //   Pueden poblarse manualmente desde el panel o automáticamente vía Microsoft Graph
+  //   y Notion API (matching por nombre normalizado o nombreComercial).
+  // - nombreComercial: alias usado en OneDrive/Notion cuando difiere del nombre legal
+  //   (e.g. "Extintores Pamplona SL" → "FireProtect"). Lo usa el matcher.
+  oneDriveUrl      String?
+  notionUrl        String?
+  nombreComercial  String?
   // Control
   fuente           String        @default("excel_seed")
   updatedAt        DateTime      @updatedAt
