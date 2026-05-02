@@ -75,9 +75,10 @@ export async function createEmpresaLinks(legalName: string): Promise<EmpresaLink
   // huérfanas si OneDrive falla.
   const folder = await createTargetFolder(cleanName);
 
-  // Notion usa el MISMO nombre con prefijo numérico para que el listado
-  // visual sea coherente con OneDrive.
-  const page = await createTargetPage(folder.name);
+  // Notion usa SOLO el nombre limpio (sin prefijo numérico). El prefijo
+  // `[N+1].` solo tiene sentido en OneDrive como orden manual; en Notion
+  // el orden lo decide el usuario con drag & drop.
+  const page = await createTargetPage(cleanName);
 
   return {
     oneDriveUrl: folder.webUrl,
