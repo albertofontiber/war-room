@@ -77,6 +77,23 @@ export const PerimetroPatchSchema = z.object({
   enPerimetro: z.boolean(),
 });
 
+// Documentación externa por target (OneDrive + Notion).
+// Campo "" se interpreta como "limpiar" (null en BD).
+const optionalUrlOrEmpty = z
+  .union([z.string().url(), z.string().length(0), z.null()])
+  .optional();
+const optionalTrimmedOrEmpty = z
+  .union([trimmedString.max(120), z.string().length(0), z.null()])
+  .optional();
+
+export const EmpresaLinksPatchSchema = z
+  .object({
+    oneDriveUrl: optionalUrlOrEmpty,
+    notionUrl: optionalUrlOrEmpty,
+    nombreComercial: optionalTrimmedOrEmpty,
+  })
+  .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
+
 // ─── Leads anónimos ───────────────────────────────────────────────────────────
 // Empresa sin identificar (confidencial). Nombre = alias acordado, CIF se
 // auto-genera. Sector/provincia/CCAA/financieros son opcionales pero útiles.

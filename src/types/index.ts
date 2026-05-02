@@ -73,6 +73,10 @@ export interface EmpresaDetalle {
   enPerimetro: boolean;
   enPerimetroAt: string | null;
   esAnonima: boolean;
+  // Documentación externa (OneDrive + Notion)
+  oneDriveUrl: string | null;
+  notionUrl: string | null;
+  nombreComercial: string | null;
   scoreInicial: number | null;
   score: number | null;
   updatedAt: string;
