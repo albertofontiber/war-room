@@ -44,7 +44,7 @@ src/
       empresas/[id]/grupo/                # PATCH — asigna/crea grupo
       empresas/[id]/notas/route.ts        # GET/POST — notas (incluye autorFinder)
       empresas/[id]/tareas/route.ts       # GET/POST — tareas (incluye autorFinder/asignadoFinder)
-      empresas/[id]/historial/route.ts    # GET — timeline (incluye autorKind admin/finder/pipedrive)
+      empresas/[id]/historial/route.ts    # GET — timeline (incluye autorKind admin/finder)
       empresas/search/route.ts            # GET — autocomplete admin (para vincular leads)
       empresas/[id]/stage/route.ts        # PATCH — cambiar dealStage
       empresas/[id]/finder/route.ts       # PATCH — asignar finder
@@ -73,7 +73,6 @@ src/
         recientes/route.ts                # GET — todos los actos BORME últimos 90 días
       cron/
         borme/route.ts                    # GET — cron BORME (L-V 20:00 UTC = 22:00 CEST)
-        pipedrive/route.ts                # GET — cron Pipedrive (L-V 20:00 UTC = 22:00 CEST)
         daily-summary/route.ts            # GET — cron email resumen (Ma-Sa 06:00 UTC)
         task-digest/route.ts              # GET — cron tareas por usuario (L-V 07:00 UTC)
   components/
@@ -123,8 +122,6 @@ prisma/schema.prisma                      # Modelos BD (schema único para war r
 scripts/
   # ─── Recurrentes (diarios / periódicos) ──────────────────────────────
   run-borme-today.ts                      # Ejecutar BORME manualmente: npx dotenv-cli -e .env.local -- npx tsx scripts/run-borme-today.ts YYYYMMDD
-  run-pipedrive.ts                        # Ejecutar Pipedrive sync manualmente
-  pipedrive-sync.ts                       # Sync Pipedrive → CrmEstado (idempotente)
   borme-test.ts                           # Test BORME read-only
   borme-backfill.ts                       # Template backfill (no ejecutar sin motivo)
   scrape-empresia.ts                      # Scraping empresia.es → PersonaCargo (trimestral, julio 2026)
@@ -138,12 +135,11 @@ scripts/
   check-cp-mismatches.ts                  # Detecta inconsistencias CP vs provincia
   check-fire-personas.ts                  # Check personas Grupo Fire
   check-fuente.ts / check-grupos.ts       # Checks de integridad
-  check-pipedrive-unmatched.ts            # Deals Dealflow sin match
-  inspect-excel.ts / inspect-borme-descriptions.ts / inspect-pipedrive-samples.ts / borme-inspect.ts / borme-test-api.ts
+  inspect-excel.ts / inspect-borme-descriptions.ts / borme-inspect.ts / borme-test-api.ts
   archive/                                # One-off ya ejecutados + outputs intermedios ⭐ (PR #17)
                                           # 33 scripts + README.md + 11 JSON de webs
 
-vercel.json                               # Crons: Pipedrive + BORME 20:00 L-V · Resumen 06:00 Ma-Sa · Task digest 07:00 L-V (UTC)
+vercel.json                               # Crons: BORME 20:00 L-V · Resumen 06:00 Ma-Sa · Task digest 07:00 L-V (UTC)
 .env.example                              # Plantilla env vars ⭐ (PR #17)
 ```
 
@@ -163,7 +159,7 @@ vercel.json                               # Crons: Pipedrive + BORME 20:00 L-V �
 - **BORME**: backfill 2 años completado (02/04/2026) ✅
 - **BORME**: cross-referencing M&A completado (ver sección 4)
 - **Dashboard Operaciones M&A** completado con 3 sub-tabs (ver sección 5)
-- **Pipedrive sync**: 155 empresas sincronizadas con dealStage y owner ✅
+- **Pipedrive sync** ✅ (DEPRECADO 2026-05-02 — cut-over completo, ver §7)
 - **CRM ampliado a 8 etapas**: identificado / contactado / 1ª reunión / análisis / LOI enviada / ejecución / portfolio / muerto ✅
 - **Deploy en producción**: https://warroom.fontiber.com ✅
 - **Grupos actualizados**: Grupo Fire (23), Plana Fabrega (12), Eurofesa (5), Scutum, Attlon ✅
@@ -331,36 +327,28 @@ Vista accesible desde el botón **"Operaciones"** en la Navbar.
 
 ---
 
-## 7. Integración Pipedrive ✅ COMPLETADA
+## 7. Integración Pipedrive — DEPRECADA (cut-over 2026-05-02)
 
-### Estado (02/04/2026)
+El War Room es la fuente de verdad del CRM desde abril 2026. Pipedrive
+quedó en pausa el 2026-05-01 (PR #47, cron desactivado en `vercel.json`)
+y se hizo el cut-over completo el 2026-05-02:
 
-**169 empresas** sincronizadas. Cron diario: L-V 20:00 UTC (22:00 CEST) → `/api/cron/pipedrive`.
+- Endpoint `/api/cron/pipedrive` y scripts `pipedrive-sync.ts`,
+  `run-pipedrive.ts`, `inspect-pipedrive-samples.ts`,
+  `check-pipedrive-unmatched.ts`, `detect-cron-reversions.ts` y
+  `restore-cron-reverted-empresas.ts` eliminados.
+- Link "Ver en Pipedrive (legacy)" del PanelEmpresa retirado.
+- Variables `PIPEDRIVE_API_KEY` y `pipedriveOrgId` ya no se usan en
+  código. La columna `CrmEstado.pipedriveOrgId` y el legacy
+  `CrmEstado.owner` (string "alberto"/"gabriel") se dropean en una
+  migración Prisma posterior (Fase B).
+- Histórico Pipedrive exportado a OneDrive y suscripción cancelada
+  (acción manual fuera del repo).
 
-| Stage Pipedrive | stage_id | War Room `dealStage` |
-|---|---|---|
-| Identificado | 6 | `identificado` |
-| Contactado | 7 | `contactado` |
-| 1ª reunión realizada | 8 | `primera_reunion` |
-| Análisis | 9 | `analisis` |
-| LOI enviada | 10 | `LOI enviada` |
-| Execution | 11 | `execution` |
-| Portfolio | 12 | `portfolio` |
-| status=lost | — | `muerto` |
-
-Pipeline sincronizado: **Dealflow (id=1, stages 6-12)**. El pipeline "Fundraising" (id=2, stages 13-16) es para captación de capital propio → **ignorado por completo**.
-
-Matching (por prioridad):
-1. **CIF** — campo personalizado en el deal (`CIF_FIELD_KEY = "f7524d9f2b0ba3ec93adfd71bf8c6135d9c42d00"`)
-2. **pipedriveOrgId** — vinculado previamente en CrmEstado
-3. **Nombre normalizado exacto**
-4. **Core nombre** — sin forma jurídica (SA, SL, etc.)
-
-**Fix parentéticos** (sesión 5): antes de normalizar el nombre de Pipedrive se eliminan los alias entre paréntesis.
-
-**CIF en deals Dealflow**: campo personalizado "CIF" existente en el pipeline Dealflow. NO crear campos nuevos ni a nivel de organización. Añadir CIF directamente al deal para garantizar matching fiable.
-
-**Nota sobre CrmLog**: a partir del 02/04/2026 el cron genera logs de cambios de stage. Los primeros 12 registros se crearon ese día.
+Los scripts archivados en `scripts/archive/` (`migrate-pipedrive-activities.ts`,
+`backfill-fecha-entrada-stage.ts`, `fix-fecha-entrada-stage.ts`) se
+conservan como rastro histórico de la migración inicial — no se
+ejecutan ya.
 
 ---
 
@@ -448,7 +436,7 @@ const CRM_COLOR = [
 ### Flujo completo
 
 ```
-22:00 CEST (L-V)  →  BORME del día + Pipedrive sync  →  Supabase
+22:00 CEST (L-V)  →  BORME del día  →  Supabase
 08:00 CEST (Ma-Sa) →  Email con 3 cifras + link  →  /daily/YYYY-MM-DD (página pública)
 ```
 
@@ -560,10 +548,12 @@ model BormePersona {
 model CrmEstado {
   id             Int      @id @default(autoincrement())
   empresaId      Int      @unique
-  pipedriveOrgId String?
-  dealStage      String?
-  owner          String?
+  dealStage      String?  // null = "Sin CRM" (fuera del Pipeline)
+  ownerUserId    String?
+  fechaEntradaStage DateTime?
   updatedAt      DateTime @updatedAt
+  // Columnas legacy `pipedriveOrgId` y `owner` (string) se dropean en Fase B
+  // del cut-over Pipedrive (ver sección 7).
 }
 
 model CrmLog {
@@ -644,7 +634,7 @@ model CrmLog {
 | BB | Separar "Sin CRM" de "Identificado" en sidebar/mapa/leyenda/selector | Media | ✅ | PR #30 |
 | BC | Fix cluster markers stale al cambiar filtros del mapa | Alta | ✅ | PR #31 |
 | BD | Unificar buscador (Navbar funciona en /pipeline + cualquier página) | Media | ✅ | PR #32 |
-| — | **Cut-over Pipedrive** | Alta | ⏳ | Desactivar cron + export + baja suscripción (destructivo) |
+| — | Cut-over Pipedrive | Alta | ✅ | Cron desactivado #47, código limpio Fase A 2026-05-02, drop columns Fase B pendiente |
 | — | Scoring dinámico modular | Media | ⏳ | Sub-scores tamaño/rentabilidad/crecimiento/etc. |
 | — | Mapa de conexiones / grafo | Media | ⏳ | Personas compartidas entre empresas (PersonaCargo) |
 | — | Fase 2 búsqueda webs | Baja | ⏳ | 882 empresas en perímetro sin web |
@@ -727,8 +717,7 @@ npx dotenv-cli -e .env.local -- npx tsx scripts/run-borme-today.ts 20260402   # 
 npx dotenv-cli -e .env.local -- npx tsx scripts/borme-test.ts                 # Test read-only
 npx dotenv-cli -e .env.local -- npx tsx scripts/check-borme-today.ts          # Ver alertas creadas hoy
 
-# Pipedrive
-npx dotenv-cli -e .env.local -- npx tsx scripts/run-pipedrive.ts              # Sync manual
+# CRM
 npx dotenv-cli -e .env.local -- npx tsx scripts/check-crm-changes.ts          # Ver cambios CRM del día
 
 # Email
@@ -788,9 +777,9 @@ bormePersonaToCargoKey("GUITARD MALDONADO ALVARO") → "ALVARO GUITARD MALDONADO
 ## 16. Notas técnicas críticas
 
 - **force-dynamic**: todas las rutas API de datos deben tener `export const dynamic = "force-dynamic"`. Sin esto, Vercel puede cachear las respuestas.
-- **Cron schedule (vercel.json)**: Pipedrive + BORME a las 20:00 UTC (22:00 CEST) L-V. Email a las 06:00 UTC (08:00 CEST) Ma-Sa.
+- **Cron schedule (vercel.json)**: BORME a las 20:00 UTC (22:00 CEST) L-V. Email a las 06:00 UTC (08:00 CEST) Ma-Sa. Task digest a las 07:00 UTC L-V.
 - **BORME cron procesa HOY**: desde el 01/04/2026 el cron usa la fecha del día en curso. A las 22:00 CEST el BORME del día ya está publicado y completo.
-- **500 en endpoints cron — RESUELTO**: los endpoints `/api/cron/borme` y `/api/cron/pipedrive` devuelven **401** correctamente cuando se llaman sin `Authorization: Bearer {CRON_SECRET}`. El CRON_SECRET solo está en Vercel (no en `.env.local`). Para sync manual usar los scripts locales.
+- **500 en endpoints cron — RESUELTO**: el endpoint `/api/cron/borme` devuelve **401** correctamente cuando se llama sin `Authorization: Bearer {CRON_SECRET}`. El CRON_SECRET solo está en Vercel (no en `.env.local`). Para sync manual usar los scripts locales.
 - **Middleware**: excluye `login`, `daily`, `api/auth`, `api/cron`.
 - **Resend init**: `new Resend(apiKey)` debe estar DENTRO de la función, no a nivel módulo.
 - **reuseMaps + iconsReady**: con `reuseMaps` activo, `onLoad` no se dispara al remontar. Los iconos SDF se re-añaden en `handleIdle` con guard `map.hasImage()`.
@@ -803,7 +792,6 @@ bormePersonaToCargoKey("GUITARD MALDONADO ALVARO") → "ALVARO GUITARD MALDONADO
 - **personas-compartidas — latest event wins**: para cada par (persona, empresa) se procesa la alerta más reciente (alertas en orden ASC). Si el último evento es revocación → `isActive=false`, si es nombramiento → `isActive=true`. Solo aparecen en el resultado pairs con `isActive=true`. Las alertas `otros` se incluyen en la query porque contienen las revocaciones.
 - **Z-order Mapbox GL en JSX**: el source `empresas-bg` debe declararse ANTES que el source `empresas` para que los puntos grises queden por debajo de los pins activos cuando hay filtros aplicados.
 - **borme-ring (pulse ámbar)**: solo se muestra si `hasBormeReciente=true` AND `enFiltro=true`. `hasBormeReciente` se activa solo para alertas de tipo fusion/adquisicion/posible_adquisicion en los últimos 7 días.
-- **Pipedrive — solo Dealflow**: el funnel de Fundraising (pipeline_id=2, stages 13-16) se ignora completamente. Solo existe el Dealflow (pipeline_id=1, stages 6-12). Los ~80 deals de FOs/inversores en stages 13-16 del mismo pipeline Dealflow tampoco se sincronizan (no matchean con empresas de la BD — correcto).
 - **Regla BD**: la BD es single source of truth. Salvo casos extremos, nunca añadir empresas nuevas a la BD manualmente — solo desde fuentes oficiales (Excel, BORME). Las 5 empresas de seg. electrónica añadidas en sesión 7 son la excepción confirmada por el usuario.
 - **Seg. electrónica — enPerimetro**: todas las empresas de sector `seguridad_electronica` (sin mixto) entran con `enPerimetro=true`. Las de sector `PCI` o `mixto` se gestionan desde el Excel de perímetro.
 - **Chat IA — Vercel AI SDK v6**: usa `convertToModelMessages()` (async) para convertir UIMessage[] a ModelMessage[]. Requiere strip del campo `id`. BigInt de Prisma se serializa con replacer custom en JSON.stringify.

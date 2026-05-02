@@ -45,7 +45,7 @@ export async function GET() {
           select: { anio: true, ingresos: true, margenBruto: true, ebitda: true },
         },
         crmEstado: {
-          select: { dealStage: true, pipedriveOrgId: true },
+          select: { dealStage: true },
         },
         // Solo necesitamos saber si HAY alguna alerta reciente de M&A — no la
         // lista entera. Hacemos un take:1 con where filtrado.
