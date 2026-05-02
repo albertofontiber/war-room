@@ -30,7 +30,6 @@ export async function GET(
       crmEstado: {
         select: {
           dealStage: true,
-          owner: true,
           ownerUserId: true,
           ownerUser: { select: { id: true, name: true } },
           fechaEntradaStage: true,

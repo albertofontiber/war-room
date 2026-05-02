@@ -82,7 +82,6 @@ export interface EmpresaDetalle {
   tendenciaMargenBruto: TendenciaIngresos | null;
   crmEstado: {
     dealStage: DealStage | null;
-    owner: string | null;
     ownerUserId: string | null;
     ownerUser: { id: string; name: string } | null;
     fechaEntradaStage: string | null;
