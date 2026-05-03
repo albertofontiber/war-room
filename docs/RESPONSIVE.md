@@ -1,6 +1,17 @@
 # Responsive design — guía y decisiones
 
-Estado: foundations creadas (PR feat/responsive-foundations, 2026-05-03). Aplicación de los primitives en PRs sucesivas (shell → vistas → panel → portal → polish).
+Estado: completo (Tech Debt #14). 6 PRs (#64-#69) entre 2026-05-03 y 2026-05-03 que adaptan War Room admin + Portal finders a mobile/tablet/desktop. El uso real revelará los siguientes ajustes.
+
+## PRs aplicados
+
+| PR | Alcance |
+|---|---|
+| [#64](https://github.com/albertofontiber/war-room/pull/64) foundations | breakpoints constants + hooks + primitives (`<MobileDrawer>`, `<BottomSheet>`, `<ResponsiveModal>`) + tap-target utilities |
+| [#65](https://github.com/albertofontiber/war-room/pull/65) shell war room | Sidebar drawer + hamburger Navbar + PanelEmpresa modal en `<lg` |
+| [#66](https://github.com/albertofontiber/war-room/pull/66) vistas | TablaEmpresas cards en `<md`, OperacionesBorme scroll horizontal, GruposView stack, MapaEspana leyenda colapsable, KanbanBoard padding mobile, fix drawer-no-cierra-al-cambiar-vista |
+| [#67](https://github.com/albertofontiber/war-room/pull/67) PanelEmpresa | padding responsive + CrmSections grid stack + tap targets + regla CSS global anti-zoom iOS |
+| [#68](https://github.com/albertofontiber/war-room/pull/68) portal | PortalPipelineClient/TargetClient/ProposeClient padding + grids + tap targets + fix `.input` jsx anti-zoom iOS |
+| [#69](https://github.com/albertofontiber/war-room/pull/69) polish | AddLeadModal + LinkLeadModal + FindersAdminClient + ProposalsAdminClient grids/padding/tap targets |
 
 ## Breakpoints
 
@@ -15,7 +26,10 @@ Alineados con los defaults de Tailwind (sin overrides en `tailwind.config.ts`):
 | `xl`       | ≥1280px   | Desktop estándar.                         |
 | `2xl`      | ≥1536px   | Desktop grande.                           |
 
-**Regla:** `lg` es el pivot del War Room. Por debajo aplicamos patrones mobile (drawer, modal fullscreen, bottom sheet); por encima mantenemos el layout desktop nativo (sidebar fijo + panel overlay 560px).
+**Reglas de pivot:**
+- `lg` = pivot principal del War Room shell. Por debajo aplicamos drawer/modal, encima sidebar fijo + overlay 560px.
+- `md` = pivot de tabla→cards (TablaEmpresas).
+- `sm` = pivot de padding/gap responsive y stack de grids.
 
 Constants TS espejo en [src/lib/breakpoints.ts](../src/lib/breakpoints.ts) — usar `useBreakpoint("lg")` / `useIsDesktop()` / `useIsMobile()` para decisiones JS-side. Para CSS-only siempre preferir clases responsive de Tailwind.
 
@@ -24,31 +38,47 @@ Constants TS espejo en [src/lib/breakpoints.ts](../src/lib/breakpoints.ts) — u
 Todos en `src/components/ui/responsive/`:
 
 - **`<MobileDrawer>`** — Sheet lateral (default left). Usar para Sidebar War Room en `<lg`.
-- **`<BottomSheet>`** — Sheet desde abajo. Patrón estándar para filtros mobile (más cómodo de usar con una mano que un drawer lateral). Soporta `footer` sticky.
-- **`<ResponsiveModal>`** — fullscreen en `<lg`, panel lateral derecho ancho fijo en `≥lg`. Pensado para PanelEmpresa.
+- **`<BottomSheet>`** — Sheet desde abajo. Patrón estándar para filtros mobile (más cómodo de usar con una mano que un drawer lateral). Soporta `footer` sticky. **No usado todavía** — disponible si en uso real conviene separar filtros del drawer principal.
+- **`<ResponsiveModal>`** — fullscreen en `<lg`, panel lateral derecho ancho fijo en `≥lg`. Usado para PanelEmpresa.
 
 ## Touch targets
 
 Utility `.tap-target` (44×44 px) y `.tap-target-h` (solo altura mín). Aplicar a cualquier elemento interactivo que se exponga en mobile. Best practice: Apple HIG 44pt, Material 48dp; tomamos 44px como compromiso.
 
+En la práctica, los botones críticos usan `py-2 sm:py-1` (~36px en mobile) — funciona bien y mantiene la densidad desktop.
+
 ## Tipografía
 
-El War Room usa abundantemente `text-[10px]` y `text-[11px]` por densidad informacional (kanban, tablas, panel). En mobile esto cae por debajo de WCAG mínimo legible.
+El War Room usa abundantemente `text-[10px]` y `text-[11px]` por densidad informacional. **Se preserva en `lg+`**, y para mobile se compensa con la regla CSS global anti-zoom iOS:
 
-**Regla al adaptar componentes:**
-- Mantener tamaños actuales para `lg+` (no romper la densidad desktop).
-- Subir a `text-xs` (12px) o `text-sm` (14px) por debajo de `lg` con clases responsive: `text-[10px] lg:text-[10px]` → mejor `text-xs lg:text-[10px]`.
-- Etiquetas y badges decorativos pueden seguir pequeñas; texto navegable nunca.
+```css
+/* globals.css */
+@media (max-width: 639px) {
+  input, textarea, select { font-size: 16px; }
+}
+```
 
-## Decisiones estructurales (a aplicar en PRs sucesivas)
+Esto evita el zoom-in automático de iOS Safari al focusear cualquier input. **No** sube el font-size del texto plano (sigue text-[10px]/[11px]) — solo inputs.
 
-1. **Vista por defecto en mobile** (revisado en PR vistas, 2026-05-03): mantenemos "mapa" como en desktop. Auto-cambiar a "tabla" en mobile machacaría la elección del usuario en cada reload (el store es in-memory, no persiste). El mapa funciona razonable en mobile tras hacer la leyenda CRM colapsable; la tabla está a 1 tap desde el drawer. Si en uso real molesta, revaloramos con flag persistido en localStorage.
-2. **PanelEmpresa en mobile:** seguir siendo overlay (vía `<ResponsiveModal>`) — evita refactor a ruta nueva, la URL del mapa/tabla mantiene contexto, y el back-button del navegador no se necesita porque hay header con cerrar. Si en uso real aparecen problemas de share/refresh, valoramos pasar a ruta `/empresas/[id]`.
-3. **Drawer mobile = navegación + filtros juntos** (revisado en PR shell). El plan inicial era separarlos (drawer para nav, BottomSheet para filtros). Tras implementar, dos drawers añadían fricción sin claro beneficio (los filtros se usan junto con el cambio de vista). El drawer mobile combina ambos en una columna scroll: header → vistas → finders → ajustes (métrica, modo presentación) → filtros (`SidebarContent` reutilizado del desktop). Si en uso real los filtros estorban la nav, los movemos a un BottomSheet aparte.
-4. **ChatIA flotante en mobile:** mantener floating action button (FAB) en esquina inferior derecha, pero el panel del chat ocupa pantalla completa al abrirse.
+**Excepción:** componentes con `<style jsx>` definen `.input` propio que escapa la regla global. Hay que duplicar el `font-size: 16px` dentro del `<style jsx>`. PRs #67 y #68 lo hicieron en `PortalProposeClient` y `AddLeadModal`.
+
+## Decisiones estructurales aplicadas
+
+1. **Vista por defecto en mobile**: mantenemos "mapa" (igual que desktop). Auto-cambiar a "tabla" machacaría user choice en cada reload (store es in-memory). Si en uso real molesta, persistir con localStorage.
+2. **PanelEmpresa en mobile**: `<ResponsiveModal>` (no ruta nueva). Preserva la URL del mapa/tabla con contexto. Si aparecen problemas (share/refresh), revaloramos pasar a `/empresas/[id]`.
+3. **Drawer mobile = navegación + filtros juntos**: en lugar de drawer-nav + bottom-sheet-filtros separados, los unificamos en una columna scroll para reducir fricción. Documentado en `WarRoomMobileMenu.tsx`. Si los filtros estorban a la nav, mover filtros a `<BottomSheet>`.
+4. **OperacionesBorme**: scroll horizontal en mobile en lugar de 3 layouts de cards distintos para señales/personas/actividad. Trade-off pragmático.
+5. **MapTooltip**: hover-only, no aplica en mobile táctil. Sin cambios.
+6. **Tablas admin (Finders)**: `overflow-x-auto` + `min-w` en lugar de cards. Caso de uso interno de baja frecuencia mobile, no merece refactor.
 
 ## Cómo extender
 
 - **Nuevo breakpoint custom:** evitar. Si imprescindible, añadirlo en `tailwind.config.ts` `theme.screens` Y en `BREAKPOINTS` de `breakpoints.ts` simultáneamente.
 - **Nuevo primitive:** crear en `src/components/ui/responsive/` y reexportar en `index.ts`. Documentarlo aquí.
 - **Validación visual:** sin Playwright instalado por ahora. Verificar en Chrome DevTools con devices: iPhone 12 Pro (390×844), Pixel 5 (393×851), iPad Mini (768×1024), iPad Pro (1024×1366), Desktop 1440.
+
+## Items conocidos (low priority)
+
+- **Mapbox terrain crash al unmount**: bug pre-existente en mapbox-gl al cambiar de vista mapa→otra. Solo molesta en dev overlay, prod loggea. Spawn task creado.
+- **Zoom inicial mapa**: feedback Alberto, una línea en store. Spawn task creado.
+- **MapTooltip overflow** en bordes del mapa en mobile: hover-only, low impact.

@@ -266,19 +266,19 @@ export default function FindersAdminClient() {
     /\S+@\S+\.\S+/.test(editForm.email.trim());
 
   return (
-    <div className="min-h-screen bg-wr-bg text-wr-text p-8">
+    <div className="min-h-screen bg-wr-bg text-wr-text p-3 sm:p-8">
       <div className="max-w-5xl mx-auto">
-        <header className="mb-6 flex items-center justify-between gap-4 flex-nowrap">
+        <header className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
           <div className="min-w-0 flex-1">
             <h1 className="text-lg font-semibold">Finders</h1>
             <p className="text-wr-hint text-xs mt-0.5">
               Gestión de acceso al portal. La password solo se muestra una vez — cópiala y pásala al finder por canal seguro.
             </p>
           </div>
-          <div className="flex items-center gap-3 flex-shrink-0 whitespace-nowrap">
+          <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
             <button
               onClick={openCreateModal}
-              className="text-xs px-3 py-1.5 rounded bg-wr-blue text-white hover:bg-blue-500"
+              className="text-xs px-3 py-2 sm:py-1.5 rounded bg-wr-blue text-white hover:bg-blue-500"
             >
               + Nuevo finder
             </button>
@@ -289,8 +289,11 @@ export default function FindersAdminClient() {
           </div>
         </header>
 
-        <div className="bg-wr-surface border border-wr-border rounded-lg overflow-hidden">
-          <table className="w-full text-xs">
+        {/* La tabla tiene 6 columnas — overflow-x-auto en mobile permite
+            ver todas con scroll lateral. Alternativa (cards) sería mucho
+            más código para un caso de uso interno. */}
+        <div className="bg-wr-surface border border-wr-border rounded-lg overflow-x-auto">
+          <table className="w-full text-xs min-w-[640px]">
             <thead className="bg-wr-surface2 text-wr-muted uppercase tracking-wider text-[10px]">
               <tr>
                 <th className="text-left px-4 py-2 font-semibold">Nombre</th>
@@ -369,9 +372,9 @@ export default function FindersAdminClient() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-[460px] max-w-[92vw] bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
+            className="w-[460px] max-w-[96vw] bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
           >
-            <div className="px-5 py-3 border-b border-wr-border flex items-center justify-between">
+            <div className="px-3 sm:px-5 py-3 border-b border-wr-border flex items-center justify-between">
               <div>
                 <h2 className="text-sm font-semibold">
                   {savedPassword
@@ -387,7 +390,7 @@ export default function FindersAdminClient() {
               <button onClick={closePwdModal} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
             </div>
 
-            <div className="p-5 space-y-3 text-xs">
+            <div className="p-3 sm:p-5 space-y-3 text-xs">
               {savedPassword ? (
                 <>
                   <p className="text-wr-text">
@@ -498,16 +501,16 @@ export default function FindersAdminClient() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-[480px] max-w-[92vw] bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
+            className="w-[480px] max-w-[96vw] bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
           >
-            <div className="px-5 py-3 border-b border-wr-border flex items-center justify-between">
+            <div className="px-3 sm:px-5 py-3 border-b border-wr-border flex items-center justify-between">
               <h2 className="text-sm font-semibold">
                 {createdPassword ? "Finder creado" : "Nuevo finder"}
               </h2>
               <button onClick={closeCreateModal} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
             </div>
 
-            <div className="p-5 space-y-3 text-xs">
+            <div className="p-3 sm:p-5 space-y-3 text-xs">
               {createdPassword ? (
                 <>
                   <p className="text-wr-text">
@@ -616,14 +619,14 @@ export default function FindersAdminClient() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-[480px] max-w-[92vw] bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
+            className="w-[480px] max-w-[96vw] bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
           >
-            <div className="px-5 py-3 border-b border-wr-border flex items-center justify-between">
+            <div className="px-3 sm:px-5 py-3 border-b border-wr-border flex items-center justify-between">
               <h2 className="text-sm font-semibold">Editar finder</h2>
               <button onClick={closeEditModal} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
             </div>
 
-            <div className="p-5 space-y-3 text-xs">
+            <div className="p-3 sm:p-5 space-y-3 text-xs">
               <label className="block">
                 <span className="text-[10px] text-wr-muted uppercase tracking-wider">Nombre</span>
                 <input
