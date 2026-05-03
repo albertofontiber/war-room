@@ -90,7 +90,7 @@ export default function PortalTargetClient({
 
   return (
     <div className="min-h-screen flex flex-col bg-wr-bg">
-      <header className="h-12 flex-shrink-0 flex items-center px-5 gap-3 border-b border-wr-border bg-wr-surface">
+      <header className="h-12 flex-shrink-0 flex items-center px-3 sm:px-5 gap-3 border-b border-wr-border bg-wr-surface">
         <button
           onClick={() => router.push("/portal")}
           className="text-[11px] text-wr-muted hover:text-wr-text flex items-center gap-1"
@@ -111,9 +111,9 @@ export default function PortalTargetClient({
         {loading && <p className="p-8 text-center text-wr-hint text-sm">Cargando…</p>}
         {error && <p className="p-8 text-center text-wr-red text-sm">{error}</p>}
         {target && (
-          <div className="max-w-3xl mx-auto p-6 space-y-6">
+          <div className="max-w-3xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
             {/* Header target */}
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-3 sm:gap-4">
               {target.logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={target.logoUrl} alt="" className="w-14 h-14 object-contain rounded-lg border border-wr-border bg-wr-surface2" />
@@ -303,7 +303,7 @@ function TareasSection({ empresaId, tareas, onChanged }: { empresaId: number; ta
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <select
               value={tipo}
               onChange={(e) => setTipo(e.target.value as TareaTipo)}
@@ -351,11 +351,11 @@ function TareasSection({ empresaId, tareas, onChanged }: { empresaId: number; ta
 
           {error && <p className="text-wr-red text-[11px]">{error}</p>}
           <div className="flex justify-end gap-2 pt-1">
-            <button type="button" onClick={reset} className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text">
+            <button type="button" onClick={reset} className="text-[10px] px-3 py-2 sm:py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text">
               Cancelar
             </button>
             <button type="submit" disabled={submitting}
-              className="text-[10px] px-2 py-1 rounded bg-wr-blue text-white hover:bg-blue-500 disabled:opacity-40">
+              className="text-[10px] px-3 py-2 sm:py-1 rounded bg-wr-blue text-white hover:bg-blue-500 disabled:opacity-40">
               {submitting ? "Guardando…" : "Guardar"}
             </button>
           </div>
@@ -601,11 +601,11 @@ function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; nota
           {error && <p className="text-wr-red text-[11px]">{error}</p>}
           <div className="flex justify-end gap-2">
             <button type="button" onClick={() => { setAdding(false); setContenido(""); setError(null); }}
-              className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text">
+              className="text-[10px] px-3 py-2 sm:py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text">
               Cancelar
             </button>
             <button type="submit" disabled={submitting || !contenido.trim()}
-              className="text-[10px] px-2 py-1 rounded bg-wr-blue text-white hover:bg-blue-500 disabled:opacity-40">
+              className="text-[10px] px-3 py-2 sm:py-1 rounded bg-wr-blue text-white hover:bg-blue-500 disabled:opacity-40">
               {submitting ? "Guardando…" : "Guardar"}
             </button>
           </div>

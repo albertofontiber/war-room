@@ -56,7 +56,7 @@ export default function PortalPipelineClient({ finderName }: { finderName: strin
   return (
     <div className="min-h-screen flex flex-col bg-wr-bg">
       {/* Header */}
-      <header className="h-12 flex-shrink-0 flex items-center px-5 gap-3 border-b border-wr-border bg-wr-surface">
+      <header className="h-12 flex-shrink-0 flex items-center px-3 sm:px-5 gap-2 sm:gap-3 border-b border-wr-border bg-wr-surface">
         <div className="flex items-center gap-2">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-wr-blue">
             <path
@@ -90,7 +90,7 @@ export default function PortalPipelineClient({ finderName }: { finderName: strin
 
       {/* Contenido */}
       <main className="flex-1 min-h-0 overflow-hidden flex flex-col">
-        <div className="px-5 py-3 flex items-center justify-between border-b border-wr-border">
+        <div className="px-3 sm:px-5 py-3 flex items-center justify-between border-b border-wr-border gap-2">
           <div>
             <h1 className="text-sm font-semibold text-wr-text">Mis targets</h1>
             <p className="text-[10px] text-wr-hint">
@@ -99,7 +99,7 @@ export default function PortalPipelineClient({ finderName }: { finderName: strin
           </div>
           <button
             onClick={() => router.push("/portal/proponer")}
-            className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500"
+            className="text-xs px-3 py-2 sm:py-1.5 bg-wr-blue text-white rounded hover:bg-blue-500 flex-shrink-0"
           >
             + Proponer target
           </button>
@@ -114,7 +114,7 @@ export default function PortalPipelineClient({ finderName }: { finderName: strin
           </div>
         )}
         {!loading && !error && data && (
-          <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden flex gap-3 p-4">
+          <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden flex gap-2 sm:gap-3 p-2 sm:p-4">
             {FINDER_STATUSES.map((status) => {
               const cards = data.grouped[status];
               return (
