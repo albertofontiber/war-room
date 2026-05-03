@@ -3,8 +3,11 @@
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { useIsDesktop } from "@/lib/breakpoints";
+import { ResponsiveModal } from "@/components/ui/responsive";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
+import WarRoomMobileMenu from "@/components/WarRoomMobileMenu";
 
 // Lazy-load de componentes pesados (audit perf 2026-05-01). Antes todos
 // estaban en el First Load JS aunque la vista activa solo monte uno:
@@ -51,7 +54,8 @@ const PanelEmpresa = dynamic(() => import("@/components/PanelEmpresa"), {
 const ChatIA = dynamic(() => import("@/components/ChatIA"), { ssr: false });
 
 export default function WarRoomLayout() {
-  const { vistaActual, panelAbierto, seleccionarEmpresa } = useWarRoomStore();
+  const { vistaActual, panelAbierto, seleccionarEmpresa, cerrarPanel } = useWarRoomStore();
+  const isDesktop = useIsDesktop();
 
   // Listen for empresa selection events from GruposView
   useEffect(() => {
@@ -66,8 +70,13 @@ export default function WarRoomLayout() {
   return (
     // Pantalla completa sin scroll externo
     <div className="h-screen w-screen flex overflow-hidden bg-wr-bg">
-      {/* ── Sidebar izquierdo 260px ── */}
-      <Sidebar />
+      {/* ── Sidebar izquierdo 260px (solo desktop ≥lg) ── */}
+      <div className="hidden lg:flex">
+        <Sidebar />
+      </div>
+
+      {/* ── Drawer mobile (<lg): controlado por sidebarMobileOpen del store ── */}
+      <WarRoomMobileMenu />
 
       {/* ── Área central (flex-1) ── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -85,12 +94,24 @@ export default function WarRoomLayout() {
             {vistaActual === "grupos" && <GruposView />}
           </main>
 
-          {/* Panel lateral derecho 560px — overlay sobre el contenido,
-              solo en mapa/tabla/grupos. */}
+          {/* PanelEmpresa:
+              - Desktop (≥lg): overlay 560px sobre el contenido (preserva
+                el comportamiento original — sin backdrop, navega libre).
+              - Mobile/tablet (<lg): ResponsiveModal fullscreen vía Sheet
+                (con backdrop sutil, cerrar tapping fuera o swipe). */}
           {panelAbierto && vistaActual !== "operaciones" && (
-            <div className="absolute top-0 right-0 bottom-0 w-[560px] z-20 shadow-2xl shadow-black/40 flex">
-              <PanelEmpresa />
-            </div>
+            isDesktop ? (
+              <div className="absolute top-0 right-0 bottom-0 w-[560px] z-20 shadow-2xl shadow-black/40 flex">
+                <PanelEmpresa />
+              </div>
+            ) : (
+              <ResponsiveModal
+                open={panelAbierto}
+                onOpenChange={(o) => !o && cerrarPanel()}
+              >
+                <PanelEmpresa />
+              </ResponsiveModal>
+            )
           )}
         </div>
       </div>

@@ -218,7 +218,25 @@ function FilterChecklist({
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────
 
+/**
+ * Wrapper para uso en desktop: aside de 260px con borde derecho.
+ * El cuerpo (header + filtros + stats) está en `<SidebarContent />` para
+ * poder reutilizarlo dentro del drawer mobile sin duplicar lógica.
+ */
 export default function Sidebar() {
+  return (
+    <aside className="w-[260px] flex-shrink-0 bg-wr-surface text-wr-text border-r border-wr-border flex flex-col overflow-hidden">
+      <SidebarContent />
+    </aside>
+  );
+}
+
+/**
+ * Cuerpo del sidebar (header con counter + chips activos + secciones de
+ * filtros + stat cards). Sin wrapper visual; el consumer decide cómo
+ * envolverlo (aside fijo en desktop, drawer en mobile).
+ */
+export function SidebarContent() {
   const {
     filtros,
     setFiltro,
@@ -352,7 +370,7 @@ export default function Sidebar() {
   // ─────────────────────────────────────────────────────────────────────
 
   return (
-    <aside className="w-[260px] flex-shrink-0 bg-wr-surface text-wr-text border-r border-wr-border flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col min-h-0 bg-wr-surface text-wr-text">
 
       {/* ── Header ── */}
       <div className="px-4 py-3 border-b border-wr-border bg-wr-surface">
@@ -600,6 +618,6 @@ export default function Sidebar() {
 
         </div>
       </div>
-    </aside>
+    </div>
   );
 }

@@ -56,6 +56,10 @@ interface WarRoomState {
   vistaActual: Vista;
   modoPresentacion: boolean;
 
+  // Drawer mobile (Navbar abre, Sidebar/Nav lo cierran al elegir).
+  // Solo aplica en viewport < lg; en desktop el Sidebar siempre está fijo.
+  sidebarMobileOpen: boolean;
+
   // ── Empresa seleccionada / panel ─────────────────────────────────────────
   empresaSeleccionadaId: number | null;
   panelAbierto: boolean;
@@ -83,6 +87,9 @@ interface WarRoomState {
   // ── Actions ──────────────────────────────────────────────────────────────
   setVista: (vista: Vista) => void;
   toggleModoPresentacion: () => void;
+
+  setSidebarMobileOpen: (open: boolean) => void;
+  toggleSidebarMobile: () => void;
 
   seleccionarEmpresa: (id: number) => void;
   cerrarPanel: () => void;
@@ -130,6 +137,7 @@ export const useWarRoomStore = create<WarRoomState>()(
     (set, get) => ({
       vistaActual: "mapa",
       modoPresentacion: false,
+      sidebarMobileOpen: false,
       empresaSeleccionadaId: null,
       panelAbierto: false,
       sizeMetric: "ingresos",
@@ -146,6 +154,10 @@ export const useWarRoomStore = create<WarRoomState>()(
 
       toggleModoPresentacion: () =>
         set((s) => ({ modoPresentacion: !s.modoPresentacion })),
+
+      setSidebarMobileOpen: (open) => set({ sidebarMobileOpen: open }),
+      toggleSidebarMobile: () =>
+        set((s) => ({ sidebarMobileOpen: !s.sidebarMobileOpen })),
 
       // ── Panel empresa ────────────────────────────────────────────────────
       seleccionarEmpresa: (id) =>
