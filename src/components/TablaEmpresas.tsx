@@ -211,18 +211,19 @@ export default function TablaEmpresas() {
   return (
     <div className="flex flex-col h-full bg-wr-bg">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-wr-border bg-wr-surface flex-shrink-0 gap-3">
+      <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 border-b border-wr-border bg-wr-surface flex-shrink-0 gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <p className="text-xs text-wr-muted flex-shrink-0">
             <span className="text-wr-text font-medium">{rows.length}</span>{" "}
             empresa{rows.length !== 1 ? "s" : ""}
           </p>
-          {/* Indicador de filtro por vista del mapa */}
+          {/* Indicador de filtro por vista del mapa — oculto en <sm
+              porque mapBounds no se setea sin pasar por el mapa antes. */}
           {mapBounds && (
             <button
               onClick={() => setUsarVistaMapas((v) => !v)}
               title={usarVistaMapas ? "Mostrando solo empresas en la vista actual del mapa. Clic para ver todas." : "Clic para filtrar por vista del mapa."}
-              className={`flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-medium border transition-colors flex-shrink-0 ${
+              className={`hidden sm:flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-medium border transition-colors flex-shrink-0 ${
                 usarVistaMapas
                   ? "bg-wr-blue/15 text-wr-blue border-wr-blue/30 hover:bg-wr-blue/25"
                   : "bg-wr-surface2 text-wr-muted border-wr-border hover:border-wr-muted"
@@ -237,19 +238,99 @@ export default function TablaEmpresas() {
         </div>
         <button
           onClick={handleExport}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors flex-shrink-0"
+          className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-md bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors flex-shrink-0"
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="7 10 12 15 17 10" />
             <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
-          Exportar Excel
+          <span className="hidden sm:inline">Exportar Excel</span>
+          <span className="sm:hidden">Excel</span>
         </button>
       </div>
 
-      {/* Table */}
-      <div className="flex-1 overflow-auto">
+      {/* Cards layout — solo en <md (tablet vertical y mobile).
+          Más legible que una tabla con scroll horizontal infinito. */}
+      <div className="md:hidden flex-1 overflow-auto p-2 space-y-2">
+        {rows.length === 0 && (
+          <p className="text-center py-16 text-wr-hint text-sm">
+            Sin resultados con los filtros actuales
+          </p>
+        )}
+        {rows.map((r) => {
+          const id = r.id as number;
+          const isSelected = id === empresaSeleccionadaId;
+          const tendencia = r.tendencia as string;
+          return (
+            <button
+              key={id}
+              onClick={() => seleccionarEmpresa(id)}
+              className={`w-full text-left bg-wr-surface border rounded-lg p-3 transition-colors tap-target-h ${
+                isSelected ? "border-wr-blue/50 bg-wr-blue/5" : "border-wr-border hover:border-wr-muted"
+              }`}
+            >
+              <div className="flex items-start gap-2.5">
+                <LogoCell
+                  logoUrl={r.logoUrl as string | null}
+                  nombre={r.nombre as string}
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="font-medium text-sm text-wr-text leading-snug">
+                      {r.nombre as string}
+                    </p>
+                    {(r.tareasPendientesCount as number | undefined) ? (
+                      <span
+                        className="text-[10px] font-bold bg-wr-amber/20 text-wr-amber border border-wr-amber/30 rounded px-1.5 py-0.5 whitespace-nowrap flex-shrink-0"
+                        title={`${r.tareasPendientesCount} tareas pendientes`}
+                      >
+                        {r.tareasPendientesCount as number}T
+                      </span>
+                    ) : null}
+                  </div>
+                  {r.grupoNombre ? (
+                    <p className="text-wr-hint text-[11px] mt-0.5">{r.grupoNombre as string}</p>
+                  ) : null}
+                  <p className="text-wr-muted text-[11px] mt-1">
+                    {[r.localidad as string | null, r.provincia as string].filter(Boolean).join(", ")}
+                    {r.sector ? ` · ${SECTOR_LABEL[r.sector as string] ?? r.sector}` : ""}
+                  </p>
+                  <div className="flex items-center flex-wrap gap-x-3 gap-y-1 mt-2">
+                    {r.dealStage ? (
+                      <span
+                        className={`text-[11px] font-medium ${DEAL_STAGE_TEXT_CLASS[r.dealStage as DealStage] ?? "text-wr-muted"}`}
+                      >
+                        {DEAL_STAGE_LABEL[r.dealStage as DealStage] ?? (r.dealStage as string)}
+                      </span>
+                    ) : (
+                      <span className="text-[11px] text-wr-hint">Sin CRM</span>
+                    )}
+                    {!modoPresentacion && r.ingresos != null && (
+                      <span className="text-[11px] text-wr-text flex items-center gap-1">
+                        {fmtM(r.ingresos as number | null)}
+                        {tendencia === "up" && <span className="text-wr-green">↑</span>}
+                        {tendencia === "down" && <span className="text-wr-red">↓</span>}
+                      </span>
+                    )}
+                    {!modoPresentacion && r.ebitdaPct != null && (
+                      <span className="text-[11px] text-wr-muted">
+                        EBITDA {fmtPct(r.ebitdaPct as number | null)}
+                      </span>
+                    )}
+                    {r.empleados != null && (
+                      <span className="text-[11px] text-wr-hint">{fmt(r.empleados as number | null)} empl.</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Table — md+ */}
+      <div className="hidden md:block flex-1 overflow-auto">
         <table className="w-full border-collapse text-xs">
           <thead className="sticky top-0 bg-wr-surface border-b border-wr-border z-10">
             <tr>

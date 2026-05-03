@@ -42,7 +42,7 @@ El War Room usa abundantemente `text-[10px]` y `text-[11px]` por densidad inform
 
 ## Decisiones estructurales (a aplicar en PRs sucesivas)
 
-1. **Vista por defecto en mobile:** tabla/lista, no mapa. Un mapa con ~5000 pines en 360px no es útil. El switcher de vistas mantiene el mapa accesible bajo demanda.
+1. **Vista por defecto en mobile** (revisado en PR vistas, 2026-05-03): mantenemos "mapa" como en desktop. Auto-cambiar a "tabla" en mobile machacaría la elección del usuario en cada reload (el store es in-memory, no persiste). El mapa funciona razonable en mobile tras hacer la leyenda CRM colapsable; la tabla está a 1 tap desde el drawer. Si en uso real molesta, revaloramos con flag persistido en localStorage.
 2. **PanelEmpresa en mobile:** seguir siendo overlay (vía `<ResponsiveModal>`) — evita refactor a ruta nueva, la URL del mapa/tabla mantiene contexto, y el back-button del navegador no se necesita porque hay header con cerrar. Si en uso real aparecen problemas de share/refresh, valoramos pasar a ruta `/empresas/[id]`.
 3. **Drawer mobile = navegación + filtros juntos** (revisado en PR shell). El plan inicial era separarlos (drawer para nav, BottomSheet para filtros). Tras implementar, dos drawers añadían fricción sin claro beneficio (los filtros se usan junto con el cambio de vista). El drawer mobile combina ambos en una columna scroll: header → vistas → finders → ajustes (métrica, modo presentación) → filtros (`SidebarContent` reutilizado del desktop). Si en uso real los filtros estorban la nav, los movemos a un BottomSheet aparte.
 4. **ChatIA flotante en mobile:** mantener floating action button (FAB) en esquina inferior derecha, pero el panel del chat ocupa pantalla completa al abrirse.

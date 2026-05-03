@@ -686,7 +686,7 @@ export default function OperacionesBorme() {
     <div className="h-full flex flex-col overflow-hidden bg-wr-bg">
 
       {/* ── Top bar ── */}
-      <div className="flex-shrink-0 px-4 py-2.5 border-b border-wr-border bg-wr-surface flex items-center gap-3 flex-wrap">
+      <div className="flex-shrink-0 px-3 sm:px-4 py-2.5 border-b border-wr-border bg-wr-surface flex items-center gap-2 sm:gap-3 flex-wrap">
         {/* Sub-tab toggle */}
         <div className="flex items-center gap-1 bg-wr-surface2 border border-wr-border rounded-md p-0.5">
           <button
@@ -781,8 +781,8 @@ export default function OperacionesBorme() {
         </div>
       </div>
 
-      {/* ── Description banner ── */}
-      <div className="flex-shrink-0 px-4 py-2 border-b border-wr-border/50 bg-wr-surface/40">
+      {/* ── Description banner — oculto en <sm para ahorrar altura. ── */}
+      <div className="hidden sm:block flex-shrink-0 px-4 py-2 border-b border-wr-border/50 bg-wr-surface/40">
         {subVista === "senales" ? (
           <p className="text-[10px] text-wr-hint">
             <span className="font-medium text-wr-muted">Señales M&A</span>
@@ -805,7 +805,7 @@ export default function OperacionesBorme() {
       </div>
 
       {/* ── Stats bar ── */}
-      <div className="flex-shrink-0 flex items-center gap-4 px-4 py-1.5 border-b border-wr-border bg-wr-surface/50 text-[10px] text-wr-muted flex-wrap">
+      <div className="flex-shrink-0 flex items-center gap-2 sm:gap-4 px-3 sm:px-4 py-1.5 border-b border-wr-border bg-wr-surface/50 text-[10px] text-wr-muted flex-wrap">
         {subVista === "senales" && !loading && !error && (
           <>
             <span className="font-semibold text-wr-text">{filteredItems.length} señales</span>
@@ -840,8 +840,10 @@ export default function OperacionesBorme() {
         )}
       </div>
 
-      {/* ── Content ── */}
-      <div className="flex-1 min-h-0 overflow-y-auto">
+      {/* ── Content — scroll vertical + horizontal en mobile (las tablas
+          son densas; en <md preferimos scroll antes que tres layouts de
+          cards distintos para señales/personas/actividad). ── */}
+      <div className="flex-1 min-h-0 overflow-auto">
 
         {/* Señales M&A */}
         {subVista === "senales" && (
