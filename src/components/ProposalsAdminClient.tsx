@@ -70,9 +70,9 @@ export default function ProposalsAdminClient() {
   };
 
   return (
-    <div className="min-h-screen bg-wr-bg text-wr-text p-8">
+    <div className="min-h-screen bg-wr-bg text-wr-text p-3 sm:p-8">
       <div className="max-w-5xl mx-auto">
-        <header className="mb-6 flex items-center justify-between">
+        <header className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-lg font-semibold">Propuestas de finders</h1>
             <p className="text-wr-hint text-xs mt-0.5">
@@ -86,7 +86,7 @@ export default function ProposalsAdminClient() {
           </div>
         </header>
 
-        <div className="flex gap-2 mb-3">
+        <div className="flex gap-2 mb-3 flex-wrap">
           {(["PENDING", "ACCEPTED", "DUPLICATE", "OUT_OF_SCOPE", "REJECTED", "ALL"] as Status[]).map((s) => (
             <button
               key={s}
@@ -112,8 +112,8 @@ export default function ProposalsAdminClient() {
           ) : (
             <ul className="divide-y divide-wr-border">
               {proposals.map((p) => (
-                <li key={p.id} className="p-4">
-                  <div className="flex items-start justify-between gap-4">
+                <li key={p.id} className="p-3 sm:p-4">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <p className="text-sm font-medium text-wr-text">{p.companyName}</p>
@@ -137,7 +137,7 @@ export default function ProposalsAdminClient() {
                         Finder: {p.finder.name} · {fmtDate(p.createdAt)}
                         {p.reviewedAt && <> · Revisada {fmtDate(p.reviewedAt)}</>}
                       </p>
-                      <div className="mt-2 grid grid-cols-2 gap-2 text-[11px]">
+                      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
                         {p.cif && <div><span className="text-wr-hint">CIF:</span> {p.cif}</div>}
                         {p.website && (
                           <div>
@@ -171,7 +171,7 @@ export default function ProposalsAdminClient() {
                     </div>
 
                     {p.status === "PENDING" && (
-                      <div className="flex flex-col gap-1 flex-shrink-0">
+                      <div className="flex flex-row sm:flex-col gap-1 sm:flex-shrink-0 flex-wrap">
                         <button
                           disabled={acting === p.id}
                           onClick={() => review(p.id, "ACCEPTED")}

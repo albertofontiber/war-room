@@ -112,9 +112,9 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-[560px] max-w-[92vw] max-h-[90vh] overflow-auto bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
+        className="w-[560px] max-w-[96vw] max-h-[92vh] overflow-auto bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
       >
-        <div className="flex items-center justify-between px-5 py-3 border-b border-wr-border">
+        <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-wr-border">
           <div>
             <h2 className="text-sm font-semibold text-wr-text">Añadir lead sin identificar</h2>
             <p className="text-[10px] text-wr-hint mt-0.5">Para targets confidenciales cuya identidad aún no se ha desvelado.</p>
@@ -122,7 +122,7 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
           <button onClick={onClose} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-5 space-y-3 text-xs">
+        <form onSubmit={handleSubmit} className="p-3 sm:p-5 space-y-3 text-xs">
           <Field label="Alias (obligatorio)">
             <input
               value={nombre} onChange={(e) => setNombre(e.target.value)} autoFocus
@@ -131,7 +131,7 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
             />
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Field label="Sector">
               <select value={sector} onChange={(e) => setSector(e.target.value)} className="input">
                 <option value="">—</option>
@@ -151,7 +151,7 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
             </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Field label="Provincia">
               <select value={provincia} onChange={(e) => setProvincia(e.target.value)} className="input">
                 <option value="">—</option>
@@ -166,7 +166,7 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
             </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Field label="Owner">
               <select value={ownerUserId} onChange={(e) => setOwnerUserId(e.target.value)} className="input">
                 <option value="">Yo</option>
@@ -183,7 +183,7 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
 
           <div className="border-t border-wr-border pt-3 space-y-3">
             <p className="text-[10px] font-semibold text-wr-muted uppercase tracking-wider">Financieros (opcional)</p>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <Field label="Año">
                 <input type="number" value={anioFin} onChange={(e) => setAnioFin(e.target.value)} className="input" />
               </Field>
@@ -191,7 +191,7 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
                 <input type="number" value={empleados} onChange={(e) => setEmpleados(e.target.value)} className="input" />
               </Field>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Field label="Ingresos (€)">
                 <input value={ingresos} onChange={(e) => setIngresos(e.target.value)} className="input" placeholder="1500000" />
               </Field>
@@ -218,13 +218,13 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
           <div className="flex justify-end gap-2 pt-2 border-t border-wr-border">
             <button
               type="button" onClick={onClose} disabled={submitting}
-              className="text-xs px-3 py-1.5 bg-wr-surface2 border border-wr-border rounded text-wr-muted hover:text-wr-text"
+              className="text-xs px-3 py-2 sm:py-1.5 bg-wr-surface2 border border-wr-border rounded text-wr-muted hover:text-wr-text"
             >
               Cancelar
             </button>
             <button
               type="submit" disabled={submitting || !nombre.trim()}
-              className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-wr-blue-light disabled:opacity-40"
+              className="text-xs px-3 py-2 sm:py-1.5 bg-wr-blue text-white rounded hover:bg-wr-blue-light disabled:opacity-40"
             >
               {submitting ? "Creando…" : "Crear lead"}
             </button>
@@ -237,9 +237,13 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
             background: var(--wr-surface2, rgb(30 41 59));
             border: 1px solid var(--wr-border, rgb(51 65 85));
             border-radius: 4px;
-            padding: 6px 8px;
+            padding: 8px 10px;
             color: var(--wr-text, rgb(226 232 240));
-            font-size: 11px;
+            /* 16px en <sm anti-zoom iOS; 11px en sm+ preserva densidad. */
+            font-size: 16px;
+          }
+          @media (min-width: 640px) {
+            .input { font-size: 11px; padding: 6px 8px; }
           }
           .input:focus {
             outline: none;

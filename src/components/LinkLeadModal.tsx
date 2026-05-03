@@ -93,9 +93,9 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-[520px] max-w-[92vw] max-h-[90vh] overflow-auto bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
+        className="w-[520px] max-w-[96vw] max-h-[92vh] overflow-auto bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
       >
-        <div className="flex items-center justify-between px-5 py-3 border-b border-wr-border">
+        <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-wr-border">
           <div>
             <h2 className="text-sm font-semibold text-wr-text">Vincular lead a empresa real</h2>
             <p className="text-[10px] text-wr-hint mt-0.5">
@@ -105,7 +105,7 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
           <button onClick={onClose} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
         </div>
 
-        <div className="p-5 space-y-3 text-xs">
+        <div className="p-3 sm:p-5 space-y-3 text-xs">
           {!selected ? (
             <>
               <label className="flex flex-col">
@@ -190,7 +190,7 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
               type="button"
               onClick={onClose}
               disabled={submitting}
-              className="text-xs px-3 py-1.5 bg-wr-surface2 border border-wr-border rounded text-wr-muted hover:text-wr-text"
+              className="text-xs px-3 py-2 sm:py-1.5 bg-wr-surface2 border border-wr-border rounded text-wr-muted hover:text-wr-text"
             >
               Cancelar
             </button>
@@ -199,7 +199,7 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
                 type="button"
                 onClick={handleLink}
                 disabled={submitting}
-                className="text-xs px-3 py-1.5 bg-wr-blue text-white rounded hover:bg-wr-blue-light disabled:opacity-40"
+                className="text-xs px-3 py-2 sm:py-1.5 bg-wr-blue text-white rounded hover:bg-wr-blue-light disabled:opacity-40"
               >
                 {submitting ? "Vinculando…" : "Vincular y eliminar lead"}
               </button>
