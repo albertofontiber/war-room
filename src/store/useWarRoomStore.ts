@@ -142,7 +142,7 @@ export const useWarRoomStore = create<WarRoomState>()(
       panelAbierto: false,
       sizeMetric: "ingresos",
       flyToEmpresaId: null,
-      mapViewState: { longitude: -3.7, latitude: 40.4, zoom: 5.5 },
+      mapViewState: { longitude: -3.7, latitude: 40.4, zoom: 5.0 },
       mapBounds: null,
       empresasGeoJSON: null,
       empresasLoading: false,
