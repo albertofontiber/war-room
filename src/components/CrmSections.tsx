@@ -186,7 +186,7 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
         <button
           onClick={crear}
           disabled={saving || !nueva.trim()}
-          className="w-full px-2 py-1 text-xs rounded bg-wr-blue/15 text-wr-blue border border-wr-blue/30 hover:bg-wr-blue/25 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full px-2 py-2 sm:py-1 text-xs rounded bg-wr-blue/15 text-wr-blue border border-wr-blue/30 hover:bg-wr-blue/25 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {saving ? "Guardando…" : "Añadir nota"}
         </button>
@@ -474,7 +474,9 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
       {open && (
       <>
       <div className="space-y-1.5">
-        <div className="grid grid-cols-3 gap-1.5">
+        {/* En mobile los 3 selects (tipo/fecha/asignado) van apilados — 3 cols
+            con select de fecha + nombre asignado no caben legibles en <sm. */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
           <select
             value={tipo}
             onChange={(e) => setTipo(e.target.value as TareaTipo)}
@@ -522,7 +524,7 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
         <button
           onClick={crear}
           disabled={saving || !titulo.trim()}
-          className="w-full px-2 py-1 text-xs rounded bg-wr-blue/15 text-wr-blue border border-wr-blue/30 hover:bg-wr-blue/25 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full px-2 py-2 sm:py-1 text-xs rounded bg-wr-blue/15 text-wr-blue border border-wr-blue/30 hover:bg-wr-blue/25 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {saving ? "Guardando…" : "Añadir tarea"}
         </button>

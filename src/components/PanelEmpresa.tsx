@@ -755,7 +755,7 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
   if (loading || !empresa) {
     return (
       <aside className="w-full bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
-        <div className="flex items-center justify-between p-4 border-b border-wr-border">
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-wr-border">
           <div className="h-3 w-24 bg-wr-surface2 rounded animate-pulse" />
           <button
             onClick={cerrarPanel}
@@ -792,7 +792,7 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
   return (
     <aside className="w-full bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
       {/* ── Header ──────────────────────────────────────────────────────── */}
-      <div className="flex items-start gap-3 p-4 border-b border-wr-border">
+      <div className="flex items-start gap-3 p-3 sm:p-4 border-b border-wr-border">
         {empresa.logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -849,7 +849,7 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
 
       {/* ── Scrollable content ──────────────────────────────────────────── */}
       <div className="flex-1 min-h-0 overflow-y-auto">
-        <div className="p-4 space-y-4">
+        <div className="p-3 sm:p-4 space-y-4">
           {/* Badges */}
           <div className="flex flex-wrap gap-1.5">
             <Badge
