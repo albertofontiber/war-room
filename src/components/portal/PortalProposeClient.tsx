@@ -152,7 +152,7 @@ export default function PortalProposeClient({ finderName }: { finderName: string
 
   return (
     <div className="min-h-screen flex flex-col bg-wr-bg">
-      <header className="h-12 flex-shrink-0 flex items-center px-5 gap-3 border-b border-wr-border bg-wr-surface">
+      <header className="h-12 flex-shrink-0 flex items-center px-3 sm:px-5 gap-3 border-b border-wr-border bg-wr-surface">
         <button
           onClick={() => router.push("/portal")}
           className="text-[11px] text-wr-muted hover:text-wr-text flex items-center gap-1"
@@ -170,7 +170,7 @@ export default function PortalProposeClient({ finderName }: { finderName: string
       </header>
 
       <main className="flex-1 overflow-auto">
-        <div className="max-w-2xl mx-auto p-6 space-y-6">
+        <div className="max-w-2xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
           <div>
             <h1 className="text-lg font-semibold text-wr-text">Proponer target</h1>
             <p className="text-xs text-wr-muted mt-1">
@@ -216,7 +216,7 @@ export default function PortalProposeClient({ finderName }: { finderName: string
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="CIF (si lo conoces)">
                 <input
                   value={cif}
@@ -236,7 +236,7 @@ export default function PortalProposeClient({ finderName }: { finderName: string
             </div>
 
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Field label="Contacto (nombre)">
                 <input
                   value={contactName} onChange={(e) => setContactName(e.target.value)}
@@ -278,7 +278,7 @@ export default function PortalProposeClient({ finderName }: { finderName: string
               <button
                 type="submit"
                 disabled={submitting || !companyName.trim()}
-                className="text-xs px-4 py-2 bg-wr-blue text-white rounded hover:bg-blue-500 disabled:opacity-40"
+                className="text-xs px-4 py-2.5 sm:py-2 bg-wr-blue text-white rounded hover:bg-blue-500 disabled:opacity-40 w-full sm:w-auto"
               >
                 {submitting ? "Enviando…" : "Enviar propuesta"}
               </button>
@@ -322,9 +322,14 @@ export default function PortalProposeClient({ finderName }: { finderName: string
           background: rgb(30 41 59);
           border: 1px solid rgb(51 65 85);
           border-radius: 4px;
-          padding: 6px 8px;
+          padding: 8px 10px;
           color: rgb(226 232 240);
-          font-size: 11px;
+          /* 16px en mobile evita zoom-in iOS Safari; 11px en sm+ preserva
+             la densidad informacional del portal. */
+          font-size: 16px;
+        }
+        @media (min-width: 640px) {
+          .input { font-size: 11px; padding: 6px 8px; }
         }
         .input:focus {
           outline: none;
