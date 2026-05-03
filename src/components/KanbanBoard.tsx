@@ -357,7 +357,7 @@ export default function KanbanBoard({ grouped, onStageChange, onCardClick, sort 
 
   return (
     <DndContext sensors={sensors} onDragStart={handleStart} onDragEnd={handleEnd}>
-      <div className="flex gap-3 overflow-x-auto h-full p-4">
+      <div className="flex gap-2 sm:gap-3 overflow-x-auto h-full p-2 sm:p-4">
         {FUNNEL_STAGES.map((s) => (
           <Column key={s} stage={s} cards={sortedGrouped[s] ?? []} onCardClick={onCardClick} blur={modoPresentacion} />
         ))}

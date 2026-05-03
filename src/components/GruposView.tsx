@@ -100,21 +100,24 @@ function GrupoCard({ grupo, onEmpresaClick }: {
 
   return (
     <div className="bg-wr-surface border border-wr-border rounded-lg overflow-hidden">
-      {/* Header */}
+      {/* Header — en mobile el badge tipo y el contador empresas hacen wrap
+          bajo el nombre; en sm+ todo en una fila. Stats agregados solo en sm+. */}
       <div
-        className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-wr-surface2 transition-colors"
+        className="flex items-start sm:items-center justify-between gap-2 px-3 sm:px-4 py-3 cursor-pointer hover:bg-wr-surface2 transition-colors"
         onClick={() => setExpanded(!expanded)}
       >
-        <div className="flex items-center gap-3 min-w-0">
-          <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border flex-shrink-0 ${tipoCfg.pill}`}>
-            {tipoCfg.label}
-          </span>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 min-w-0 flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border flex-shrink-0 ${tipoCfg.pill}`}>
+              {tipoCfg.label}
+            </span>
+            <span className="text-wr-hint text-xs flex-shrink-0">{grupo.empresasCount} empresas</span>
+          </div>
           <h3 className="text-sm font-bold text-wr-text truncate">{grupo.nombre}</h3>
-          <span className="text-wr-hint text-xs flex-shrink-0">{grupo.empresasCount} empresas</span>
         </div>
 
         {/* Aggregated stats */}
-        <div className="flex items-center gap-6 flex-shrink-0 ml-4">
+        <div className="flex items-center gap-3 sm:gap-6 flex-shrink-0 ml-2 sm:ml-4">
           <div className="hidden sm:flex gap-6">
             <StatChip label="Ingresos" value={fmtM(grupo.totalIngresos)} />
             <StatChip label="EBITDA" value={fmtM(grupo.totalEbitda)} />
@@ -250,11 +253,11 @@ export default function GruposView() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-wr-bg">
-      {/* Header bar */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-wr-border flex-shrink-0">
-        <div className="flex items-center gap-6">
+      {/* Header bar — stack vertical en mobile, horizontal en sm+. */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-3 sm:px-6 py-3 sm:py-4 border-b border-wr-border flex-shrink-0">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
           <h2 className="text-base font-bold text-wr-text">Grupos</h2>
-          <div className="flex gap-4 text-xs text-wr-muted">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-wr-muted">
             <span><span className="text-wr-text font-semibold">{grupos.length}</span> grupos</span>
             <span><span className="text-wr-text font-semibold">{totalEmpresas}</span> empresas</span>
             <span><span className="text-wr-text font-semibold">{fmtM(totalIngresos)}</span> ingresos totales</span>
@@ -265,12 +268,12 @@ export default function GruposView() {
           placeholder="Buscar grupo…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="bg-wr-surface border border-wr-border rounded px-3 py-1.5 text-xs text-wr-text placeholder-wr-hint focus:outline-none focus:border-wr-blue w-48"
+          className="bg-wr-surface border border-wr-border rounded px-3 py-1.5 text-xs text-wr-text placeholder-wr-hint focus:outline-none focus:border-wr-blue w-full sm:w-48"
         />
       </div>
 
       {/* Groups list */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+      <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-3 sm:py-4 space-y-3">
         {filtered.length === 0 && (
           <p className="text-wr-muted text-sm text-center mt-8">No hay grupos que coincidan.</p>
         )}

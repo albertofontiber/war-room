@@ -1166,9 +1166,54 @@ export default function MapaEspana() {
         />
       )}
 
-      {/* ── Leyenda de formas ── */}
-      <div className="absolute bottom-6 right-4 bg-wr-surface/90 border border-wr-border rounded-lg px-3 py-2.5 text-[11px] space-y-1.5 backdrop-blur-sm">
-        <p className="text-wr-hint uppercase tracking-wider mb-1">Sector</p>
+      {/* ── Leyenda de formas — colapsable en <lg, abierta por defecto en lg+ ── */}
+      <Leyenda />
+    </div>
+  );
+}
+
+function Leyenda() {
+  // Por defecto cerrada (en mobile la leyenda ocupa demasiado overlay sobre
+  // el mapa). El usuario la despliega cuando la necesita. En lg+ la mostramos
+  // siempre abierta vía `lg:!block` aunque el state esté en false.
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="absolute bottom-6 right-4 z-10">
+      {/* Botón toggle: visible solo en <lg cuando está cerrada. */}
+      {!open && (
+        <button
+          onClick={() => setOpen(true)}
+          className="lg:hidden bg-wr-surface/90 border border-wr-border rounded-lg px-2.5 py-1.5 text-[11px] text-wr-muted backdrop-blur-sm flex items-center gap-1.5 hover:text-wr-text"
+          aria-label="Mostrar leyenda"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 16v-4M12 8h.01" />
+          </svg>
+          Leyenda
+        </button>
+      )}
+
+      {/* Panel de leyenda. lg+: siempre visible. <lg: condicionado por `open`. */}
+      <div
+        className={`${open ? "block" : "hidden"} lg:block bg-wr-surface/90 border border-wr-border rounded-lg px-3 py-2.5 text-[11px] space-y-1.5 backdrop-blur-sm max-h-[60vh] overflow-y-auto`}
+      >
+        <div className="flex items-center justify-between mb-1 lg:hidden">
+          <p className="text-wr-hint uppercase tracking-wider">Leyenda</p>
+          <button
+            onClick={() => setOpen(false)}
+            className="text-wr-hint hover:text-wr-text"
+            aria-label="Cerrar leyenda"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <p className="text-wr-hint uppercase tracking-wider mb-1 hidden lg:block">Sector</p>
+        <p className="text-wr-hint uppercase tracking-wider mb-1 lg:hidden text-[9px]">Sector</p>
         <div className="flex items-center gap-2 text-wr-muted">
           <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#64748b" /></svg>
           PCI

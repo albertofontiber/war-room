@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { MobileDrawer } from "@/components/ui/responsive";
@@ -37,6 +37,21 @@ export default function WarRoomMobileMenu() {
 
   const close = useCallback(() => setSidebarMobileOpen(false), [setSidebarMobileOpen]);
 
+  // Cerrar el drawer cuando cambia la vista o la ruta. El base-ui Sheet no
+  // siempre cierra de forma fiable si se llama setSidebarMobileOpen(false)
+  // dentro del mismo handler que hace setVista() — el re-render del cambio
+  // de vista absorbe la actualización del open. Reaccionar al cambio de
+  // vista/pathname con effect es robusto y desacopla el cierre.
+  const prevVista = useRef(vistaActual);
+  const prevPath = useRef(pathname);
+  useEffect(() => {
+    if (prevVista.current !== vistaActual || prevPath.current !== pathname) {
+      prevVista.current = vistaActual;
+      prevPath.current = pathname;
+      setSidebarMobileOpen(false);
+    }
+  }, [vistaActual, pathname, setSidebarMobileOpen]);
+
   const goToVista = useCallback(
     (v: Vista) => {
       if (onPipelinePage) {
@@ -45,20 +60,17 @@ export default function WarRoomMobileMenu() {
       } else {
         setVista(v);
       }
-      close();
     },
-    [onPipelinePage, router, setVista, close],
+    [onPipelinePage, router, setVista],
   );
 
   const goToPipeline = useCallback(() => {
     router.push("/pipeline");
-    close();
-  }, [router, close]);
+  }, [router]);
 
   const goToFinders = useCallback(() => {
     router.push("/finders");
-    close();
-  }, [router, close]);
+  }, [router]);
 
   return (
     <MobileDrawer open={sidebarMobileOpen} onOpenChange={setSidebarMobileOpen} side="left">

@@ -11,6 +11,9 @@ import PipelineFiltros, {
   EMPTY_FILTERS,
   type PipelineFilters,
 } from "@/components/PipelineFiltros";
+import WarRoomMobileMenu from "@/components/WarRoomMobileMenu";
+import { ResponsiveModal } from "@/components/ui/responsive";
+import { useIsDesktop } from "@/lib/breakpoints";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import type { DealStage } from "@/types";
 import { DEAL_STAGES, DEAL_STAGE_LABEL } from "@/lib/crm";
@@ -81,6 +84,8 @@ export default function PipelinePageClient() {
   const seleccionarEmpresa = useWarRoomStore((s) => s.seleccionarEmpresa);
   const empresaSeleccionadaId = useWarRoomStore((s) => s.empresaSeleccionadaId);
   const panelAbierto = useWarRoomStore((s) => s.panelAbierto);
+  const cerrarPanel = useWarRoomStore((s) => s.cerrarPanel);
+  const isDesktop = useIsDesktop();
 
   const loadMeta = useCallback(async () => {
     try {
@@ -198,7 +203,11 @@ export default function PipelinePageClient() {
   return (
     <div className="h-screen flex flex-col bg-wr-bg text-wr-text">
       <Navbar />
-      <div className="flex-shrink-0 px-4 py-2.5 border-b border-wr-border bg-wr-surface flex items-center gap-3 flex-wrap">
+      {/* Drawer mobile (controlado por sidebarMobileOpen del store, abierto
+          por el hamburger del Navbar). Sin esto, en /pipeline el hamburger
+          del Navbar no haría nada visible. */}
+      <WarRoomMobileMenu />
+      <div className="flex-shrink-0 px-3 sm:px-4 py-2.5 border-b border-wr-border bg-wr-surface flex items-center gap-2 sm:gap-3 flex-wrap">
         <h1 className="text-sm font-semibold uppercase tracking-wider text-wr-muted">
           Pipeline
         </h1>
@@ -252,9 +261,19 @@ export default function PipelinePageClient() {
           />
         </div>
         {panelAbierto && empresaSeleccionadaId != null && (
-          <div className="absolute top-0 right-0 bottom-0 w-[50%] min-w-[520px] max-w-[720px] shadow-2xl shadow-black/50 z-20 flex">
-            <PanelEmpresa onEmpresaChanged={() => loadPipeline(filters)} />
-          </div>
+          isDesktop ? (
+            <div className="absolute top-0 right-0 bottom-0 w-[50%] min-w-[520px] max-w-[720px] shadow-2xl shadow-black/50 z-20 flex">
+              <PanelEmpresa onEmpresaChanged={() => loadPipeline(filters)} />
+            </div>
+          ) : (
+            <ResponsiveModal
+              open={panelAbierto}
+              onOpenChange={(o) => !o && cerrarPanel()}
+              desktopWidth={720}
+            >
+              <PanelEmpresa onEmpresaChanged={() => loadPipeline(filters)} />
+            </ResponsiveModal>
+          )
         )}
       </div>
 
