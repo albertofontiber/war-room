@@ -88,6 +88,16 @@ const config: Config = {
         ".outline-ring\\/50": {
           "outline-color": "rgb(59 130 246 / 0.5)",
         },
+        // Touch target mínimo recomendado por Apple HIG (44x44px). Aplicar a
+        // botones e inputs interactivos para garantizar usabilidad táctil.
+        ".tap-target": {
+          "min-height": "44px",
+          "min-width": "44px",
+        },
+        // Variante para botones rectangulares (solo altura, ancho libre).
+        ".tap-target-h": {
+          "min-height": "44px",
+        },
       });
     },
   ],
