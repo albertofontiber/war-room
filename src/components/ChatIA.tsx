@@ -53,7 +53,7 @@ export default function ChatIA() {
   }
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 w-[420px] h-[540px] flex flex-col rounded-lg border border-wr-border bg-wr-surface shadow-2xl">
+    <div className="fixed inset-x-3 bottom-3 top-16 sm:inset-auto sm:bottom-5 sm:right-5 sm:top-auto sm:w-[420px] sm:h-[540px] z-50 flex flex-col rounded-lg border border-wr-border bg-wr-surface shadow-2xl">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-wr-border shrink-0">
         <span className="text-sm font-semibold text-wr-text">Chat IA</span>

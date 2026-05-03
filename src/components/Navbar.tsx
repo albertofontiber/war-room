@@ -12,6 +12,7 @@ export default function Navbar() {
     vistaActual, setVista, modoPresentacion, toggleModoPresentacion,
     sizeMetric, setSizeMetric, setSearchQuery,
     empresasGeoJSON, hydrateEmpresas, seleccionarEmpresa, setFlyToEmpresaId,
+    toggleSidebarMobile,
   } = useWarRoomStore();
   const { data: session } = useSession();
   const pathname = usePathname();
@@ -114,11 +115,27 @@ export default function Navbar() {
     : "??";
 
   return (
-    <header className="h-11 flex-shrink-0 flex items-center px-4 gap-3 border-b border-wr-border bg-wr-surface">
-      {/* Wordmark */}
+    <header className="h-11 flex-shrink-0 flex items-center px-3 lg:px-4 gap-2 lg:gap-3 border-b border-wr-border bg-wr-surface">
+      {/* Hamburger (solo <lg): abre el drawer con navegación + filtros. */}
+      <button
+        onClick={toggleSidebarMobile}
+        aria-label="Abrir menú"
+        className="lg:hidden tap-target flex items-center justify-center -ml-2 text-wr-muted hover:text-wr-text"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+        </svg>
+      </button>
+
+      {/* Wordmark — versión completa en lg+, abreviada en <lg. */}
       <div className="flex items-center gap-2 mr-2">
-        <span className="text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2.5 py-1 rounded-md">
+        <span className="hidden lg:inline text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2.5 py-1 rounded-md">
           Fontiber War Room
+        </span>
+        <span className="lg:hidden text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2 py-1 rounded-md">
+          War Room
         </span>
       </div>
 
@@ -182,9 +199,10 @@ export default function Navbar() {
       )}
 
       {/* Toggle Mapa / Tabla / Operaciones / Grupos / Pipeline.
+          Solo visible en lg+: en mobile la navegación vive en el drawer.
           ml-auto empuja todo el cluster derecho hacia la derecha cuando no
           hay banner de Modo Presentación (que ya tiene su propio ml-auto). */}
-      <div className={`${modoPresentacion ? "" : "ml-auto"} flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5`}>
+      <div className={`${modoPresentacion ? "" : "ml-auto"} hidden lg:flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5`}>
         <button
           onClick={() => goToVista("mapa")}
           className={`px-3 py-1 text-xs rounded transition-colors ${
@@ -237,8 +255,8 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Toggle métrica tamaño */}
-      <div className="flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5">
+      {/* Toggle métrica tamaño — solo lg+ (en mobile vive en el drawer). */}
+      <div className="hidden lg:flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5">
         <button
           onClick={() => setSizeMetric("ingresos")}
           className={`px-2.5 py-1 text-xs rounded transition-colors ${
@@ -261,11 +279,11 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Toggle modo presentación */}
+      {/* Toggle modo presentación — solo lg+ (en mobile vive en el drawer). */}
       <button
         onClick={toggleModoPresentacion}
         title={modoPresentacion ? "Desactivar modo presentación" : "Modo presentación"}
-        className={`p-1.5 rounded-md transition-colors border ${
+        className={`hidden lg:block p-1.5 rounded-md transition-colors border ${
           modoPresentacion
             ? "border-wr-amber/40 text-wr-amber bg-wr-amber/10"
             : "border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted"
@@ -280,11 +298,11 @@ export default function Navbar() {
       {/* Notificaciones */}
       <NotificationsBell />
 
-      {/* Admin: gestión de finders */}
+      {/* Admin: gestión de finders — solo lg+ (en mobile vive en el drawer). */}
       <button
         onClick={() => router.push("/finders")}
         title="Gestión de finders"
-        className="p-1.5 rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors"
+        className="hidden lg:block p-1.5 rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
