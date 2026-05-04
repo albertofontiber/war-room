@@ -68,9 +68,11 @@
 /* Mobile: inputs y textareas a 16px para evitar el zoom-in de iOS Safari
    al focusear un input con font-size < 16px. La densidad informacional
    en desktop (text-[10px]/[11px]/[12px]) se preserva — esta regla solo
-   aplica < 640px. select se incluye porque iOS también hace zoom. */
+   aplica < 640px. select se incluye porque iOS también hace zoom.
+   `!important` necesario: las utilidades Tailwind (.text-xs, .text-sm)
+   son selectores de clase y ganan en especificidad a `input { … }`. */
 @media (max-width: 639px) {
   input, textarea, select {
-    font-size: 16px;
+    font-size: 16px !important;
   }
 }

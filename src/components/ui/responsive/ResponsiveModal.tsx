@@ -10,6 +10,11 @@ interface ResponsiveModalProps {
   /** Ancho del dialog desktop. Default 560px (igual al PanelEmpresa actual). */
   desktopWidth?: number;
   className?: string;
+  /**
+   * Si el contenido ya pinta su propio botón de cerrar (caso PanelEmpresa),
+   * dejarlo en `false` evita duplicar la X. Default `false`.
+   */
+  showCloseButton?: boolean;
   children: React.ReactNode;
 }
 
@@ -30,17 +35,23 @@ export function ResponsiveModal({
   onOpenChange,
   desktopWidth = 560,
   className,
+  showCloseButton = false,
   children,
 }: ResponsiveModalProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
+        showCloseButton={showCloseButton}
         className={cn(
           "bg-wr-surface border-wr-border p-0",
+          // Override del `data-[side=right]:w-3/4` que viene del SheetContent.
+          // tw-merge no deduplica entre variantes (`data-…:w-3/4` vs `w-screen`)
+          // y la variante data- se imprime después en el CSS, por eso ganaba.
+          // Usamos la misma variante para que la deduplicación funcione.
           // Mobile/tablet: fullscreen. lg+: ancho fijo definido por consumer.
-          "w-screen sm:max-w-none",
-          "lg:w-[var(--rm-desktop-w)] lg:sm:max-w-[var(--rm-desktop-w)]",
+          "data-[side=right]:w-screen sm:max-w-none",
+          "lg:data-[side=right]:w-[var(--rm-desktop-w)] lg:sm:max-w-[var(--rm-desktop-w)]",
           className,
         )}
         style={{ ["--rm-desktop-w" as string]: `${desktopWidth}px` }}

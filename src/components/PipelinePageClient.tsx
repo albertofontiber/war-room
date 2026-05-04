@@ -207,6 +207,12 @@ export default function PipelinePageClient() {
           por el hamburger del Navbar). Sin esto, en /pipeline el hamburger
           del Navbar no haría nada visible. */}
       <WarRoomMobileMenu />
+      {/* Toolbar Pipeline.
+          Desktop (lg+): una fila flex-wrap con spacer que empuja acciones a la
+          derecha — comportamiento original.
+          Mobile (<lg): 3 filas separadas por line-breaks `basis-full h-0`
+          (título+count → filtros → acciones). Evita el desorden visual de
+          mezclar filtros y acciones en el mismo flex-wrap. */}
       <div className="flex-shrink-0 px-3 sm:px-4 py-2.5 border-b border-wr-border bg-wr-surface flex items-center gap-2 sm:gap-3 flex-wrap">
         <h1 className="text-sm font-semibold uppercase tracking-wider text-wr-muted">
           Pipeline
@@ -215,6 +221,10 @@ export default function PipelinePageClient() {
           {data.total} {data.total === 1 ? "empresa" : "empresas"}
           {loading && " · cargando…"}
         </span>
+
+        {/* Mobile-only: forzar wrap antes de filtros */}
+        <div className="basis-full h-0 lg:hidden" aria-hidden />
+
         <PipelineFiltros
           filters={filters}
           onChange={setFilters}
@@ -223,7 +233,12 @@ export default function PipelinePageClient() {
           ownerOptions={meta.owners}
           finderOptions={meta.finders}
         />
-        <div className="flex-1" />
+
+        {/* Desktop: spacer empuja acciones a la derecha.
+            Mobile: line-break para que acciones caigan a su propia fila. */}
+        <div className="hidden lg:block flex-1" />
+        <div className="basis-full h-0 lg:hidden" aria-hidden />
+
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value as SortOption)}
@@ -238,17 +253,19 @@ export default function PipelinePageClient() {
         </select>
         <button
           onClick={() => setLeadModalOpen(true)}
-          className="text-[11px] bg-wr-amber/15 text-wr-amber border border-wr-amber/30 rounded px-2.5 py-1 hover:bg-wr-amber/25 transition-colors"
+          className="text-[11px] bg-wr-amber/15 text-wr-amber border border-wr-amber/30 rounded px-2 py-1 lg:px-2.5 hover:bg-wr-amber/25 transition-colors"
           title="Añadir un target confidencial cuya identidad aún no se conoce"
         >
-          + Lead sin identificar
+          <span className="lg:hidden">+ Lead</span>
+          <span className="hidden lg:inline">+ Lead sin identificar</span>
         </button>
         <button
           onClick={handleExport}
           disabled={allCards.length === 0}
-          className="text-[11px] bg-wr-green/15 text-wr-green border border-wr-green/30 rounded px-2.5 py-1 hover:bg-wr-green/25 disabled:opacity-40 transition-colors"
+          className="text-[11px] bg-wr-green/15 text-wr-green border border-wr-green/30 rounded px-2 py-1 lg:px-2.5 hover:bg-wr-green/25 disabled:opacity-40 transition-colors"
         >
-          Export Excel ({allCards.length})
+          <span className="lg:hidden">Excel ({allCards.length})</span>
+          <span className="hidden lg:inline">Export Excel ({allCards.length})</span>
         </button>
       </div>
       <div className="flex-1 relative overflow-hidden">
