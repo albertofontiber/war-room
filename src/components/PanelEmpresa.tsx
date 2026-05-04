@@ -754,7 +754,7 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
   // Loading state
   if (loading || !empresa) {
     return (
-      <aside className="w-full bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
+      <aside className="w-full h-full min-h-0 bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
         <div className="flex items-center justify-between p-3 sm:p-4 border-b border-wr-border">
           <div className="h-3 w-24 bg-wr-surface2 rounded animate-pulse" />
           <button
@@ -790,7 +790,7 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
     : DEAL_STAGE_PILL_CLASS.identificado;
 
   return (
-    <aside className="w-full bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
+    <aside className="w-full h-full min-h-0 bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <div className="flex items-start gap-3 p-3 sm:p-4 border-b border-wr-border">
         {empresa.logoUrl ? (
