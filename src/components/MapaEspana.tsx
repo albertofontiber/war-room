@@ -718,6 +718,27 @@ export default function MapaEspana() {
     };
   }, [mounted]);
 
+  // Desactivar terrain ANTES de que se destruya el árbol JSX al cambiar
+  // de vista. Si esperamos al cleanup de un useEffect en MapaEspana, los
+  // <Source>/<Layer> hijos ya se han desmontado y disparan la cascada
+  // removeSource → _updateTerrain → terrain.update con style.terrain
+  // todavía referenciando el source eliminado (mapbox-gl 3.x bug).
+  //
+  // Suscribiéndonos al store de Zustand interceptamos el cambio de vista
+  // SÍNCRONAMENTE, antes de que React entre al commit phase y desmonte
+  // los <Source>. setTerrain(null) limpia la referencia y el siguiente
+  // _updateTerrain es no-op.
+  useEffect(() => {
+    return useWarRoomStore.subscribe((state, prev) => {
+      if (prev.vistaActual === "mapa" && state.vistaActual !== "mapa") {
+        const map = mapRef.current?.getMap();
+        if (map?.isStyleLoaded?.() && map.getTerrain?.() != null) {
+          map.setTerrain(null);
+        }
+      }
+    });
+  }, []);
+
   // No-op handler: dejado por compatibilidad con la prop onIdle del Map.
   // Antes refrescaba clusterMarkers; ahora los pies se calculan
   // deterministicamente vía useMemo, sin depender de eventos Mapbox.
