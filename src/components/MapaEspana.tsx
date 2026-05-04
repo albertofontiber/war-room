@@ -10,7 +10,6 @@ import {
 import Map, {
   Source,
   Layer,
-  Marker,
   type MapRef,
   type MapMouseEvent,
 } from "react-map-gl/mapbox";
@@ -22,7 +21,9 @@ import MapTooltip from "@/components/MapTooltip";
 import { CRM_COLOR, makeSizeExpr, makeIconSizeExpr } from "@/components/mapa/expresiones";
 import { createShapeIcon } from "@/components/mapa/icons";
 import { pointInPolygon } from "@/components/mapa/geometry";
-import { ClusterPie, type ClusterMarker } from "@/components/mapa/ClusterPie";
+import { type ClusterMarker } from "@/components/mapa/ClusterPie";
+import { clusterPieIconId, clusterPieKey } from "@/components/mapa/clusterPieIcon";
+import { useClusterPieImages } from "@/components/mapa/useClusterPieImages";
 import { SeleccionAreaPanel } from "@/components/mapa/SeleccionAreaPanel";
 import { Leyenda } from "@/components/mapa/Leyenda";
 
@@ -47,7 +48,9 @@ type GeoJSONFC = {
   features: Array<{ type: "Feature"; geometry: { type: "Point"; coordinates: [number, number] }; properties: Props }>;
 };
 
-const INTERACTIVE = ["markers-pci", "markers-segelec", "markers-mixto", "markers-bg"];
+// `cluster-pies` se incluye al final para que un click sobre un cluster gane
+// al click sobre un marker individual (Mapbox respeta el orden de la lista).
+const INTERACTIVE = ["cluster-pies", "markers-pci", "markers-segelec", "markers-mixto", "markers-bg"];
 
 export default function MapaEspana() {
   const mapRef = useRef<MapRef>(null);
@@ -163,7 +166,8 @@ export default function MapaEspana() {
   //
   // Iteración definitiva (esta): Supercluster JS es la **única** fuente de
   // verdad. Particionamos el output de getClusters() en:
-  //   - clusters (>=2) → renderizamos como <Marker> React (pies)
+  //   - clusters (>=2) → layer Mapbox `cluster-pies` con icon-image
+  //                      generado por canvas (ver `useClusterPieImages`)
   //   - individuales  → los pasamos al Source Mapbox SIN clustering;
   //                     los Layers `markers-pci/segelec/mixto` los dibujan.
   // Imposible que diverjan: solo hay un cálculo de clustering en toda la app.
@@ -280,6 +284,28 @@ export default function MapaEspana() {
     }
     return { clusterMarkers: clusters, individualFeatures: individuals };
   }, [clusterIndex, mapBounds, mapViewState.zoom]);
+
+  // GeoJSON de los clusters consumido por el layer Mapbox `cluster-pies`.
+  // Cada feature lleva un `iconImageId` derivado de la firma visual del
+  // donut (count + proporción) — el hook `useClusterPieImages` se encarga
+  // de registrar esa imagen en el mapa antes de que el layer la pinte.
+  const clusterPiesGeoJSON = useMemo<GeoJSON.FeatureCollection<GeoJSON.Point>>(() => ({
+    type: "FeatureCollection",
+    features: clusterMarkers.map((m) => ({
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [m.lng, m.lat] },
+      properties: {
+        cluster_id: m.id,
+        count: m.count,
+        iconImageId: clusterPieIconId(clusterPieKey(m)),
+      },
+    })),
+  }), [clusterMarkers]);
+
+  // Sincroniza los icons (sprites) del map con los clusters visibles —
+  // genera el ImageData de cada donut con `addImage` y limpia con
+  // `removeImage` los que ya no aparecen.
+  useClusterPieImages(mapRef, clusterMarkers);
 
   // ── Asegurar custom icons al montar (independiente de eventos Mapbox) ───
   //
@@ -407,9 +433,10 @@ export default function MapaEspana() {
     setDrawMouse(null);
   }, []);
 
-  // Click sobre un Layer Mapbox individual = seleccionar empresa.
-  // Los clicks sobre pies de cluster los maneja el <ClusterPie onClick> abajo
-  // (los pies son <Marker> React, no Layers Mapbox).
+  // Click sobre un Layer Mapbox interactivo. Si es el layer `cluster-pies`,
+  // hacemos zoom al cluster (mismo behaviour que tenía el `<ClusterPie onClick>`
+  // antes de migrar a capa nativa). Cualquier otro layer interactivo es un
+  // marker individual y selecciona la empresa.
   const handleClick = useCallback(
     (e: MapMouseEvent) => {
       if (drawMode) {
@@ -419,10 +446,26 @@ export default function MapaEspana() {
       }
       const feature = e.features?.[0];
       if (!feature) return;
+      if (feature.layer?.id === "cluster-pies") {
+        const clusterId = feature.properties?.cluster_id as number | undefined;
+        const [lng, lat] = (feature.geometry as GeoJSON.Point).coordinates;
+        const expansionZoom = clusterId != null && clusterIndex
+          ? clusterIndex.getClusterExpansionZoom(clusterId)
+          : null;
+        const targetZoom = expansionZoom != null
+          ? expansionZoom + 0.5
+          : (mapRef.current?.getMap().getZoom() ?? 8) + 2;
+        mapRef.current?.getMap().easeTo({
+          center: [lng, lat],
+          zoom: targetZoom,
+          duration: 400,
+        });
+        return;
+      }
       const id = feature.properties?.id as number;
       if (id) seleccionarEmpresa(id);
     },
-    [drawMode, seleccionarEmpresa]
+    [drawMode, seleccionarEmpresa, clusterIndex]
   );
 
   // Double-click — close polygon and compute results
@@ -553,8 +596,8 @@ export default function MapaEspana() {
                 llegan son SOLO las que Supercluster JS considera individuales
                 (cluster=false). Los Layers `markers-*` ya no necesitan filtro
                 ["!", ["has", "point_count"]] — ninguna feature tendrá esa
-                propiedad. Los clusters se renderizan como <Marker> arriba en
-                el JSX. Una sola fuente de verdad: clusterIndex (Supercluster). */}
+                propiedad. Los clusters se renderizan en el layer `cluster-pies`
+                de más abajo. Una sola fuente de verdad: clusterIndex (Supercluster). */}
 
             {/* ── BORME pulsing ring (amber) ── */}
             <Layer
@@ -629,34 +672,29 @@ export default function MapaEspana() {
             )}
           </Source>
 
-        {/* ── Cluster pie chart markers ── */}
-        {clusterMarkers.map((marker) => (
-          <Marker
-            key={marker.id}
-            longitude={marker.lng}
-            latitude={marker.lat}
-            anchor="center"
-          >
-            <ClusterPie
-              marker={marker}
-              onClick={() => {
-                // Zoom exacto necesario para expandir este cluster, calculado
-                // por Supercluster JS. Mejor UX que un zoom genérico +2.
-                const expansionZoom = clusterIndex
-                  ? clusterIndex.getClusterExpansionZoom(marker.id)
-                  : null;
-                const targetZoom = expansionZoom != null
-                  ? expansionZoom + 0.5
-                  : (mapRef.current?.getMap().getZoom() ?? 8) + 2;
-                mapRef.current?.getMap().easeTo({
-                  center: [marker.lng, marker.lat],
-                  zoom: targetZoom,
-                  duration: 400,
-                });
-              }}
-            />
-          </Marker>
-        ))}
+        {/* ── Cluster pie chart markers (capa Mapbox nativa) ──
+            Antes usábamos <Marker><ClusterPie> (SVG en HTML). Migrado a
+            symbol layer + iconos generados por canvas (ver
+            `useClusterPieImages` y `clusterPieIcon.ts`): Mapbox renderiza
+            N clusters al mismo coste constante en lugar de N nodos React.
+            El click es manejado por `handleClick` general del Map (layer
+            ID dado de alta en `INTERACTIVE`). */}
+        <Source
+          id="cluster-pies-src"
+          type="geojson"
+          data={clusterPiesGeoJSON as unknown as GeoJSON.FeatureCollection}
+        >
+          <Layer
+            id="cluster-pies"
+            type="symbol"
+            layout={{
+              "icon-image": ["get", "iconImageId"] as unknown as string,
+              "icon-allow-overlap": true,
+              "icon-ignore-placement": true,
+              "icon-anchor": "center",
+            }}
+          />
+        </Source>
 
         {/* ── Draw polygon layers ── */}
         {drawFillData && (
