@@ -115,11 +115,11 @@ export default function PortalPipelineClient({ finderName }: { finderName: strin
             Error: {error}
           </div>
         )}
+        {/* Kanban con scroll horizontal. En mobile cada columna se ancla
+            al swipe (snap-x snap-mandatory) para que aterricen completas
+            y no a medio camino. En sm+ desactivamos el snap porque el
+            scroll natural con varias columnas visibles funciona mejor. */}
         {!loading && !error && data && (
-          {/* Kanban con scroll horizontal. En mobile cada columna se ancla
-              al swipe (snap-x snap-mandatory) para que aterricen completas
-              y no a medio camino. En sm+ desactivamos el snap porque el
-              scroll natural con varias columnas visibles funciona mejor. */}
           <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden flex gap-2 sm:gap-3 p-2 sm:p-4 snap-x snap-mandatory sm:snap-none">
             {FINDER_STATUSES.map((status) => {
               const cards = data.grouped[status];
