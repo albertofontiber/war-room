@@ -54,7 +54,9 @@ export function useClusterPieImages(
 
     // Eliminar los icons que ya no aparecen entre los clusters visibles.
     // Limita el crecimiento sin cota cuando el usuario hace pan/zoom.
-    for (const id of registeredIdsRef.current) {
+    // `Array.from` evita iterar el Set directamente (TS la exige con
+    // target ≥ es2015).
+    for (const id of Array.from(registeredIdsRef.current)) {
       if (seen.has(id)) continue;
       if (map.hasImage(id)) map.removeImage(id);
       registeredIdsRef.current.delete(id);
@@ -66,14 +68,18 @@ export function useClusterPieImages(
   // del componente y de otro modo dejaríamos basura entre cambios de
   // vista.
   useEffect(() => {
+    // Capturamos el Set y mapRef en el cierre del effect para satisfacer
+    // a `react-hooks/exhaustive-deps` (el ref puede cambiar de identidad
+    // entre montajes y queremos los valores capturados en este montaje).
     const ids = registeredIdsRef.current;
+    const ref = mapRef;
     return () => {
-      const map = mapRef.current?.getMap();
+      const map = ref.current?.getMap();
       if (!map) {
         ids.clear();
         return;
       }
-      for (const id of ids) {
+      for (const id of Array.from(ids)) {
         try {
           if (map.hasImage(id)) map.removeImage(id);
         } catch {
