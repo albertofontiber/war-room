@@ -23,6 +23,8 @@ function ResetPasswordForm() {
 
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -149,17 +151,23 @@ function ResetPasswordForm() {
                   >
                     Contraseña
                   </label>
-                  <input
-                    id="password"
-                    type="password"
-                    autoComplete="new-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-wr-surface2 border border-wr-border rounded-lg px-3.5 py-2.5 text-wr-text text-sm placeholder:text-wr-hint focus:outline-none focus:border-wr-blue focus:ring-1 focus:ring-wr-blue transition-colors"
-                    placeholder="••••••••••"
-                    required
-                    minLength={10}
-                  />
+                  <div className="relative">
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full bg-wr-surface2 border border-wr-border rounded-lg px-3.5 py-2.5 pr-10 text-wr-text text-sm placeholder:text-wr-hint focus:outline-none focus:border-wr-blue focus:ring-1 focus:ring-wr-blue transition-colors"
+                      placeholder="••••••••••"
+                      required
+                      minLength={10}
+                    />
+                    <PasswordToggle
+                      visible={showPassword}
+                      onToggle={() => setShowPassword((v) => !v)}
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -169,17 +177,23 @@ function ResetPasswordForm() {
                   >
                     Confirmar contraseña
                   </label>
-                  <input
-                    id="confirm"
-                    type="password"
-                    autoComplete="new-password"
-                    value={confirm}
-                    onChange={(e) => setConfirm(e.target.value)}
-                    className="w-full bg-wr-surface2 border border-wr-border rounded-lg px-3.5 py-2.5 text-wr-text text-sm placeholder:text-wr-hint focus:outline-none focus:border-wr-blue focus:ring-1 focus:ring-wr-blue transition-colors"
-                    placeholder="••••••••••"
-                    required
-                    minLength={10}
-                  />
+                  <div className="relative">
+                    <input
+                      id="confirm"
+                      type={showConfirm ? "text" : "password"}
+                      autoComplete="new-password"
+                      value={confirm}
+                      onChange={(e) => setConfirm(e.target.value)}
+                      className="w-full bg-wr-surface2 border border-wr-border rounded-lg px-3.5 py-2.5 pr-10 text-wr-text text-sm placeholder:text-wr-hint focus:outline-none focus:border-wr-blue focus:ring-1 focus:ring-wr-blue transition-colors"
+                      placeholder="••••••••••"
+                      required
+                      minLength={10}
+                    />
+                    <PasswordToggle
+                      visible={showConfirm}
+                      onToggle={() => setShowConfirm((v) => !v)}
+                    />
+                  </div>
                 </div>
 
                 {error && (
@@ -208,5 +222,41 @@ function ResetPasswordForm() {
         </p>
       </div>
     </div>
+  );
+}
+
+/** Botón ojo dentro del input para alternar visibilidad de la contraseña.
+ *  Útil al elegir una nueva, donde un typo puede pasar desapercibido y
+ *  obligaría a volver al email de reset. */
+function PasswordToggle({
+  visible,
+  onToggle,
+}: {
+  visible: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      tabIndex={-1}
+      aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
+      title={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
+      className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-wr-hint hover:text-wr-text transition-colors"
+    >
+      {visible ? (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+          <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+          <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+          <line x1="2" y1="2" x2="22" y2="22" />
+        </svg>
+      ) : (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      )}
+    </button>
   );
 }
