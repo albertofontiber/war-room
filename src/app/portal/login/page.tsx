@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function PortalLoginPage() {
   const router = useRouter();
@@ -128,6 +129,13 @@ export default function PortalLoginPage() {
               {loading ? "Verificando…" : "Entrar"}
             </button>
           </form>
+
+          <Link
+            href="/portal/forgot-password"
+            className="block text-center text-wr-blue hover:underline text-xs mt-5"
+          >
+            ¿Olvidaste tu contraseña?
+          </Link>
         </div>
 
         <p className="text-center text-wr-hint text-xs mt-6">

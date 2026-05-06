@@ -42,10 +42,18 @@ export default withAuth(
 
     if (portal) {
       // Dentro del portal: si no hay sesión o no es finder → /portal/login.
-      // Si ya estamos en /portal/login → dejar pasar.
-      const alreadyAtLogin = path === "/portal/login" || path.startsWith("/portal/login/");
+      // Rutas públicas del portal (no requieren sesión): login y el flow de
+      // self-service de password (forgot-password, reset-password + sus
+      // endpoints API).
+      const isPortalPublic =
+        path === "/portal/login" ||
+        path.startsWith("/portal/login/") ||
+        path === "/portal/forgot-password" ||
+        path === "/portal/reset-password" ||
+        path === "/api/portal/forgot-password" ||
+        path === "/api/portal/reset-password";
       const isApiAuth = path.startsWith("/api/auth");
-      if (!isApiAuth && (!token || token.kind !== "finder") && !alreadyAtLogin) {
+      if (!isApiAuth && (!token || token.kind !== "finder") && !isPortalPublic) {
         const url = req.nextUrl.clone();
         url.pathname = "/portal/login";
         url.search = "";

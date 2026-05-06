@@ -313,6 +313,26 @@ model Finder {
   tareasAutor       Tarea[]           @relation("TareaAutorFinder")
   tareasAsignadas   Tarea[]           @relation("TareaAsignadoFinder")
   crmLogsAutor      CrmLog[]          @relation("CrmLogAutorFinder")
+  passwordResets    PasswordResetToken[]
+}
+
+// Self-service reset de password para finders. El finder pide reset desde
+// /portal/forgot-password → se crea un token (raw 64 hex chars) cuyo sha256
+// se persiste en `tokenHash`. El raw viaja por email en el link. Pasada la
+// `expiresAt` (24h) o usado (`usedAt` poblado) deja de servir. Pedir un nuevo
+// token invalida los previos del mismo finder (marca usedAt = now).
+model PasswordResetToken {
+  id         String    @id @default(cuid())
+  finderId   String
+  finder     Finder    @relation(fields: [finderId], references: [id], onDelete: Cascade)
+  // sha256 hex del token raw. Único para evitar colisiones improbables.
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([finderId, usedAt])
+  @@index([expiresAt])
 }
 
 model FinderNote {
