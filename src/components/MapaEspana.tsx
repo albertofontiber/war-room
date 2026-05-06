@@ -416,7 +416,16 @@ export default function MapaEspana() {
       return;
     }
     const feature = e.features?.[0];
-    if (!feature || feature.properties?.cluster) {
+    // Excluimos clusters: Mapbox puede entregarlos con `properties.cluster=true`
+    // (Source con cluster:true) o desde el layer `cluster-pies` del PR #74,
+    // que viene de Supercluster pre-procesado y no tiene esa propiedad.
+    // Sin este segundo filtro el tooltip recibe props de cluster sin
+    // `nombre` y `MapTooltip.Initials` crashea con "split of undefined".
+    if (
+      !feature ||
+      feature.properties?.cluster ||
+      feature.layer?.id === "cluster-pies"
+    ) {
       setTooltip(null);
       return;
     }
