@@ -9,7 +9,11 @@
 
 import { Resend } from "resend";
 
-const FROM = process.env.SUMMARY_EMAIL_FROM ?? "warroom@fontiber.com";
+// FROM dedicado del portal: separamos el remitente de los emails dirigidos a
+// finders (`portal@fontiber.com`) del que reciben los admins en notifyAdmins
+// (`warroom@fontiber.com`). Mismo dominio verificado en Resend, aliases
+// distintos para que el destinatario lo identifique a primera vista.
+const FROM = process.env.PORTAL_EMAIL_FROM ?? "portal@fontiber.com";
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ?? "https://warroom.fontiber.com";
 
@@ -43,7 +47,7 @@ export async function sendPasswordResetEmail(
   try {
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
-      from: `War Room <${FROM}>`,
+      from: `Fontiber Portal <${FROM}>`,
       to: input.to,
       subject: "Restablece tu contraseña — Portal Fontiber",
       html,
