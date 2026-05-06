@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import {
   type FiltrosActivos,
-  type Vista,
   type SizeMetric,
   type Sector,
   type DealStage,
@@ -53,16 +52,13 @@ export interface RawFeature {
 
 interface WarRoomState {
   // ── Navegación ──────────────────────────────────────────────────────────
-  vistaActual: Vista;
+  // `vista` y `empresa` viven en URL search params (ver `useNavegacion`):
+  // best practice Next 14 para state navegable. Aquí solo lo ephemeral.
   modoPresentacion: boolean;
 
   // Drawer mobile (Navbar abre, Sidebar/Nav lo cierran al elegir).
   // Solo aplica en viewport < lg; en desktop el Sidebar siempre está fijo.
   sidebarMobileOpen: boolean;
-
-  // ── Empresa seleccionada / panel ─────────────────────────────────────────
-  empresaSeleccionadaId: number | null;
-  panelAbierto: boolean;
 
   // ── Mapa ─────────────────────────────────────────────────────────────────
   sizeMetric: SizeMetric;
@@ -85,14 +81,10 @@ interface WarRoomState {
   filtros: FiltrosActivos;
 
   // ── Actions ──────────────────────────────────────────────────────────────
-  setVista: (vista: Vista) => void;
   toggleModoPresentacion: () => void;
 
   setSidebarMobileOpen: (open: boolean) => void;
   toggleSidebarMobile: () => void;
-
-  seleccionarEmpresa: (id: number) => void;
-  cerrarPanel: () => void;
 
   setSizeMetric: (metric: SizeMetric) => void;
   setFlyToEmpresaId: (id: number | null) => void;
@@ -135,11 +127,8 @@ interface WarRoomState {
 export const useWarRoomStore = create<WarRoomState>()(
   devtools(
     (set, get) => ({
-      vistaActual: "mapa",
       modoPresentacion: false,
       sidebarMobileOpen: false,
-      empresaSeleccionadaId: null,
-      panelAbierto: false,
       sizeMetric: "ingresos",
       flyToEmpresaId: null,
       mapViewState: { longitude: -3.7, latitude: 40.4, zoom: 5.0 },
@@ -150,21 +139,12 @@ export const useWarRoomStore = create<WarRoomState>()(
       filtros: { ...FILTROS_DEFAULT },
 
       // ── Navegación ──────────────────────────────────────────────────────
-      setVista: (vista) => set({ vistaActual: vista }),
-
       toggleModoPresentacion: () =>
         set((s) => ({ modoPresentacion: !s.modoPresentacion })),
 
       setSidebarMobileOpen: (open) => set({ sidebarMobileOpen: open }),
       toggleSidebarMobile: () =>
         set((s) => ({ sidebarMobileOpen: !s.sidebarMobileOpen })),
-
-      // ── Panel empresa ────────────────────────────────────────────────────
-      seleccionarEmpresa: (id) =>
-        set({ empresaSeleccionadaId: id, panelAbierto: true }),
-
-      cerrarPanel: () =>
-        set({ panelAbierto: false, empresaSeleccionadaId: null }),
 
       // ── Mapa / métrica ───────────────────────────────────────────────────
       setSizeMetric: (metric) => set({ sizeMetric: metric }),

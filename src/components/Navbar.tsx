@@ -1,19 +1,22 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import Link from "next/link";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import { useNavegacion } from "@/lib/navegacion";
 import type { Vista } from "@/types";
 import NotificationsBell from "@/components/NotificationsBell";
 
 export default function Navbar() {
   const {
-    vistaActual, setVista, modoPresentacion, toggleModoPresentacion,
+    modoPresentacion, toggleModoPresentacion,
     sizeMetric, setSizeMetric, setSearchQuery,
-    empresasGeoJSON, hydrateEmpresas, seleccionarEmpresa, setFlyToEmpresaId,
+    empresasGeoJSON, hydrateEmpresas, setFlyToEmpresaId,
     toggleSidebarMobile,
   } = useWarRoomStore();
+  const { vista, setVista, seleccionarEmpresa } = useNavegacion();
   const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
@@ -129,15 +132,20 @@ export default function Navbar() {
         </svg>
       </button>
 
-      {/* Wordmark — versión completa en lg+, abreviada en <lg. */}
-      <div className="flex items-center gap-2 mr-2">
-        <span className="hidden lg:inline text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2.5 py-1 rounded-md">
+      {/* Wordmark — link al inicio (clear search params, vuelve al mapa).
+          Versión completa en lg+, abreviada en <lg. */}
+      <Link
+        href="/"
+        title="Volver al inicio"
+        className="flex items-center gap-2 mr-2 group"
+      >
+        <span className="hidden lg:inline text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2.5 py-1 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
           Fontiber War Room
         </span>
-        <span className="lg:hidden text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2 py-1 rounded-md">
+        <span className="lg:hidden text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2 py-1 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
           War Room
         </span>
-      </div>
+      </Link>
 
       {/* Search: ocupa todo el espacio disponible hasta max-w-3xl. Sin separador
          flex-1 detrás (rompía el max-width al competir por el espacio); en su
@@ -206,7 +214,7 @@ export default function Navbar() {
         <button
           onClick={() => goToVista("mapa")}
           className={`px-3 py-1 text-xs rounded transition-colors ${
-            !onPipelinePage && vistaActual === "mapa"
+            !onPipelinePage && vista === "mapa"
               ? "bg-wr-blue text-white"
               : "text-wr-muted hover:text-wr-text"
           }`}
@@ -216,7 +224,7 @@ export default function Navbar() {
         <button
           onClick={() => goToVista("tabla")}
           className={`px-3 py-1 text-xs rounded transition-colors ${
-            !onPipelinePage && vistaActual === "tabla"
+            !onPipelinePage && vista === "tabla"
               ? "bg-wr-blue text-white"
               : "text-wr-muted hover:text-wr-text"
           }`}
@@ -226,7 +234,7 @@ export default function Navbar() {
         <button
           onClick={() => goToVista("operaciones")}
           className={`px-3 py-1 text-xs rounded transition-colors ${
-            !onPipelinePage && vistaActual === "operaciones"
+            !onPipelinePage && vista === "operaciones"
               ? "bg-wr-blue text-white"
               : "text-wr-muted hover:text-wr-text"
           }`}
@@ -236,7 +244,7 @@ export default function Navbar() {
         <button
           onClick={() => goToVista("grupos")}
           className={`px-3 py-1 text-xs rounded transition-colors ${
-            !onPipelinePage && vistaActual === "grupos"
+            !onPipelinePage && vista === "grupos"
               ? "bg-wr-blue text-white"
               : "text-wr-muted hover:text-wr-text"
           }`}

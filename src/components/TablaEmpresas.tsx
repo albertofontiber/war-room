@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useCallback } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { useNavegacion } from "@/lib/navegacion";
 import { isInFilter } from "@/lib/filtros";
 import { fmt, fmtM, fmtPct } from "@/lib/format";
 import { DEAL_STAGE_LABEL, DEAL_STAGE_TEXT_CLASS } from "@/lib/crm";
@@ -74,10 +75,9 @@ export default function TablaEmpresas() {
     filtros,
     searchQuery,
     modoPresentacion,
-    seleccionarEmpresa,
-    empresaSeleccionadaId,
     mapBounds,
   } = useWarRoomStore();
+  const { seleccionarEmpresa, empresaSeleccionadaId } = useNavegacion();
 
   const [sortKey, setSortKey] = useState<SortKey>("nombre");
   const [sortDir, setSortDir] = useState<SortDir>("asc");

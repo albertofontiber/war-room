@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
@@ -9,5 +10,11 @@ export default async function PipelinePage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
 
-  return <PipelinePageClient />;
+  // Suspense boundary requerido por `useSearchParams` (Navbar + panel abierto
+  // leen `?empresa=` desde URL).
+  return (
+    <Suspense fallback={null}>
+      <PipelinePageClient />
+    </Suspense>
+  );
 }

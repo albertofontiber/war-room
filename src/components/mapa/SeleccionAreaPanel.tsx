@@ -7,6 +7,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useWarRoomStore, type EmpresaFeatureProperties } from "@/store/useWarRoomStore";
+import { useNavegacion } from "@/lib/navegacion";
 import { fmtM, fmtPct } from "@/lib/format";
 import { SECTOR_LBL, STAGE_LBL, STAGE_CLR } from "./labels";
 
@@ -26,7 +27,8 @@ export function SeleccionAreaPanel({
   height: number;
   onResizeStart: (e: React.PointerEvent) => void;
 }) {
-  const { seleccionarEmpresa, modoPresentacion } = useWarRoomStore();
+  const { modoPresentacion } = useWarRoomStore();
+  const { seleccionarEmpresa } = useNavegacion();
   type NumericSortKey = "ingresos" | "margenBrutoPct" | "ebitdaPct" | "ebitda";
   const [sortKey, setSortKey] = useState<NumericSortKey>("ingresos");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");

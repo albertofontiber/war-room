@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { useNavegacion } from "@/lib/navegacion";
 import type { EmpresaDetalle, DealStage } from "@/types";
 
 /**
@@ -11,7 +12,8 @@ import type { EmpresaDetalle, DealStage } from "@/types";
  * vez con el GeoJSON del store para que mapa y tabla reflejen los cambios.
  */
 export function useEmpresaDetalle(onEmpresaChanged?: () => void) {
-  const { empresaSeleccionadaId, updateEmpresaInGeoJSON } = useWarRoomStore();
+  const { updateEmpresaInGeoJSON } = useWarRoomStore();
+  const { empresaSeleccionadaId } = useNavegacion();
 
   const [empresa, setEmpresa] = useState<EmpresaDetalle | null>(null);
   const [loading, setLoading] = useState(true);

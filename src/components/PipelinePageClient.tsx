@@ -14,7 +14,7 @@ import PipelineFiltros, {
 import WarRoomMobileMenu from "@/components/WarRoomMobileMenu";
 import { ResponsiveModal } from "@/components/ui/responsive";
 import { useIsDesktop } from "@/lib/breakpoints";
-import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { useNavegacion } from "@/lib/navegacion";
 import type { DealStage } from "@/types";
 import { DEAL_STAGES, DEAL_STAGE_LABEL } from "@/lib/crm";
 
@@ -81,10 +81,7 @@ export default function PipelinePageClient() {
   const [filters, setFilters] = useState<PipelineFilters>(EMPTY_FILTERS);
   const [sort, setSort] = useState<SortOption>("nombre");
   const [leadModalOpen, setLeadModalOpen] = useState(false);
-  const seleccionarEmpresa = useWarRoomStore((s) => s.seleccionarEmpresa);
-  const empresaSeleccionadaId = useWarRoomStore((s) => s.empresaSeleccionadaId);
-  const panelAbierto = useWarRoomStore((s) => s.panelAbierto);
-  const cerrarPanel = useWarRoomStore((s) => s.cerrarPanel);
+  const { seleccionarEmpresa, empresaSeleccionadaId, panelAbierto, cerrarPanel } = useNavegacion();
   const isDesktop = useIsDesktop();
 
   const loadMeta = useCallback(async () => {

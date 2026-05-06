@@ -1,6 +1,7 @@
 "use client";
 
 import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { useNavegacion } from "@/lib/navegacion";
 import { Separator } from "@/components/ui/separator";
 import { BadgesRow } from "./panel-empresa/BadgesRow";
 import { BormeSenales } from "./panel-empresa/BormeSenales";
@@ -22,7 +23,8 @@ import type { PanelEmpresaProps } from "./panel-empresa/types";
 // CRM son collapsibles default-cerradas (PR #46) para que la financiera sea
 // lo primero visible al abrir un target.
 export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {}) {
-  const { cerrarPanel, modoPresentacion } = useWarRoomStore();
+  const { modoPresentacion } = useWarRoomStore();
+  const { cerrarPanel } = useNavegacion();
   const { empresa, setEmpresa, loading, toggling, handleStageChange, togglePerimetro } =
     useEmpresaDetalle(onEmpresaChanged);
 

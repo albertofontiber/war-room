@@ -15,7 +15,7 @@
  */
 
 import { useCallback, useState } from "react";
-import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { useNavegacion } from "@/lib/navegacion";
 import { TopBar } from "./operaciones/TopBar";
 import { DescriptionBanner } from "./operaciones/DescriptionBanner";
 import { StatsBar } from "./operaciones/StatsBar";
@@ -27,8 +27,7 @@ import { useBormeFilters } from "./operaciones/useBormeFilters";
 import type { SubVista } from "./operaciones/types";
 
 export default function OperacionesBorme() {
-  const seleccionarEmpresa = useWarRoomStore((s) => s.seleccionarEmpresa);
-  const setVista = useWarRoomStore((s) => s.setVista);
+  const { seleccionarEmpresa, setVista } = useNavegacion();
 
   const [subVista, setSubVista] = useState<SubVista>("senales");
   const [expandedId, setExpandedId] = useState<number | null>(null);
