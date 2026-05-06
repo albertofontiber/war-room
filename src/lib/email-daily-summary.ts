@@ -34,8 +34,8 @@ export async function sendDailySummary(
       empresa:   { enPerimetro: true },
     },
     include: {
-      empresa:       { select: { enPerimetro: true } },
-      grupoInferido: { select: { nombre: true } },
+      empresa:       { select: { enPerimetro: true, grupoId: true } },
+      grupoInferido: { select: { id: true, nombre: true } },
     },
   });
 
@@ -70,14 +70,17 @@ export async function sendDailySummary(
     }
   }
 
-  // ── Counts ─────────────────────────────────────────────────────────────────
-  const DETAIL_TIPOS = new Set(["fusion", "adquisicion", "posible_adquisicion"]);
-  const detailCount = bormeAlertas.filter((a) => {
-    const tipo = a.tipoActo === "nombramiento_grupo" && a.grupoInferido
-      ? "posible_adquisicion"
-      : a.tipoActo;
-    return DETAIL_TIPOS.has(tipo);
-  }).length;
+  // ── Counts: tres categorías diferenciadas ──────────────────────────────────
+  // Coinciden con la lógica de /api/borme/operaciones: "posible_adquisicion"
+  // requiere persona conocida en empresa NO mapeada al grupo.
+  const fusionCount = bormeAlertas.filter((a) => a.tipoActo === "fusion").length;
+  const adquisicionCount = bormeAlertas.filter((a) => a.tipoActo === "adquisicion").length;
+  const posibleAdqCount = bormeAlertas.filter(
+    (a) =>
+      a.tipoActo === "nombramiento_grupo" &&
+      a.grupoInferido != null &&
+      a.empresa.grupoId !== a.grupoInferido.id
+  ).length;
 
   // ── Date strings ───────────────────────────────────────────────────────────
   const today = todayStart;
@@ -113,22 +116,40 @@ export async function sendDailySummary(
             </td>
           </tr>
 
-          <!-- Stats -->
+          <!-- Stats fila 1: totales generales -->
           <tr>
-            <td style="padding:24px 28px">
+            <td style="padding:24px 28px 16px">
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td width="33%" style="text-align:center;padding:0 12px 0 0;border-right:1px solid #e5e7eb">
+                  <td width="50%" style="text-align:center;padding:0 12px 0 0;border-right:1px solid #e5e7eb">
                     <div style="font-size:32px;font-weight:700;color:#111827;line-height:1">${bormeAlertas.length}</div>
                     <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:.8px;margin-top:6px">Señales BORME</div>
                   </td>
-                  <td width="33%" style="text-align:center;padding:0 12px;border-right:1px solid #e5e7eb">
-                    <div style="font-size:32px;font-weight:700;color:${detailCount > 0 ? "#f97316" : "#111827"};line-height:1">${detailCount}</div>
-                    <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:.8px;margin-top:6px">Fus./Adq./Posible</div>
-                  </td>
-                  <td width="33%" style="text-align:center;padding:0 0 0 12px">
+                  <td width="50%" style="text-align:center;padding:0 0 0 12px">
                     <div style="font-size:32px;font-weight:700;color:${personaAlertCount > 0 ? "#0ea5e9" : "#111827"};line-height:1">${personaAlertCount}</div>
                     <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:.8px;margin-top:6px">Alertas personas</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Stats fila 2: desglose M&A -->
+          <tr>
+            <td style="padding:0 28px 24px">
+              <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e5e7eb">
+                <tr>
+                  <td width="33%" style="text-align:center;padding:16px 8px 0 0;border-right:1px solid #e5e7eb">
+                    <div style="font-size:24px;font-weight:700;color:${fusionCount > 0 ? "#a855f7" : "#111827"};line-height:1">${fusionCount}</div>
+                    <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:.8px;margin-top:6px">Fusión</div>
+                  </td>
+                  <td width="33%" style="text-align:center;padding:16px 8px 0;border-right:1px solid #e5e7eb">
+                    <div style="font-size:24px;font-weight:700;color:${adquisicionCount > 0 ? "#3b82f6" : "#111827"};line-height:1">${adquisicionCount}</div>
+                    <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:.8px;margin-top:6px">Adquisición</div>
+                  </td>
+                  <td width="33%" style="text-align:center;padding:16px 0 0 8px">
+                    <div style="font-size:24px;font-weight:700;color:${posibleAdqCount > 0 ? "#f97316" : "#111827"};line-height:1">${posibleAdqCount}</div>
+                    <div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:.8px;margin-top:6px">Posible adq.</div>
                   </td>
                 </tr>
               </table>
