@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { TareaUpdateSchema, zodError } from "@/lib/validation";
 import { auditLog, diffFields } from "@/lib/audit-log";
+import { log } from "@/lib/logger";
 import type { TareaTipo } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -88,7 +89,7 @@ export async function PATCH(
     }
     return NextResponse.json(tarea);
   } catch (err) {
-    console.error("[PATCH tarea]", err);
+    log.error("api/tareas/[id] PATCH", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }
@@ -130,7 +131,7 @@ export async function DELETE(
     }
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("[DELETE tarea]", err);
+    log.error("api/tareas/[id] DELETE", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

@@ -5,6 +5,7 @@ import { logFinderAction } from "@/lib/finder-access-log";
 import { notifyAdmins } from "@/lib/notifications";
 import { auditLog } from "@/lib/audit-log";
 import { PortalNotaCreateSchema, zodError } from "@/lib/validation";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -77,7 +78,7 @@ export async function POST(
     mensaje: preview,
     link: `/?empresa=${empresa.id}`,
     email: false,
-  }).catch((err) => console.error("[portal/notas POST] notifyAdmins error:", err));
+  }).catch((err) => log.error("api/portal/empresas/[id]/notas POST notifyAdmins", err));
 
   return NextResponse.json(nota, { status: 201 });
 }

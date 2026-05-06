@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { FinderAssignSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
 import { getCurrentUser } from "@/lib/user-from-session";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -72,7 +73,7 @@ export async function PATCH(
 
     return NextResponse.json(empresa);
   } catch (err) {
-    console.error("[PATCH empresa finder]", err);
+    log.error("api/empresas/[id]/finder PATCH", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

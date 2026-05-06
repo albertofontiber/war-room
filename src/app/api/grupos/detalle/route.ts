@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -97,7 +98,7 @@ export async function GET() {
 
   return NextResponse.json(result);
   } catch (error) {
-    console.error("GET /api/grupos/detalle", error);
+    log.error("api/grupos/detalle GET", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 }

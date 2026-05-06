@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { FinderSetPasswordSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
 import { getCurrentUser } from "@/lib/user-from-session";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +28,7 @@ export async function POST(
 ) {
   const session = await getServerSession(authOptions);
   if (!session || session.kind !== "admin") {
-    console.warn("[POST /api/finders/:id/password] unauthorized", {
+    log.warn("api/finders/[id]/password POST", "unauthorized", {
       hasSession: !!session,
       kind: session?.kind,
     });
@@ -52,10 +53,7 @@ export async function POST(
       data: { passwordHash: hash, passwordSetAt: now },
     });
   } catch (err) {
-    console.error("[POST /api/finders/:id/password] update failed", {
-      finderId: params.id,
-      error: err instanceof Error ? err.message : String(err),
-    });
+    log.error("api/finders/[id]/password POST", err, { finderId: params.id });
     return NextResponse.json({ error: "Write failed" }, { status: 500 });
   }
 
@@ -67,7 +65,7 @@ export async function POST(
     select: { passwordHash: true, passwordSetAt: true },
   });
   if (!verify?.passwordHash || !verify.passwordSetAt) {
-    console.error("[POST /api/finders/:id/password] write not visible after update", {
+    log.error("api/finders/[id]/password POST", "write not visible after update", {
       finderId: params.id,
       verify,
     });
@@ -77,7 +75,7 @@ export async function POST(
     );
   }
 
-  console.log("[POST /api/finders/:id/password] password set", {
+  log.info("api/finders/[id]/password POST", "password set", {
     finderId: params.id,
     email: finder.email,
     passwordSetAt: verify.passwordSetAt.toISOString(),

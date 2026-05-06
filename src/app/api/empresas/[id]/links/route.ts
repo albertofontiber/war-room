@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { EmpresaLinksPatchSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
 import { getCurrentUser } from "@/lib/user-from-session";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -89,7 +90,7 @@ export async function PATCH(
 
     return NextResponse.json(empresa);
   } catch (error) {
-    console.error("PATCH /api/empresas/[id]/links", error);
+    log.error("api/empresas/[id]/links PATCH", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 }

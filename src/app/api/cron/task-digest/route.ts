@@ -10,6 +10,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { sendTaskDigest } from "@/lib/email-task-digest";
+import { log } from "@/lib/logger";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -26,10 +27,10 @@ export async function GET(req: NextRequest) {
     const to = req.nextUrl.searchParams.get("to") ?? undefined;
     const force = req.nextUrl.searchParams.get("force") === "true";
     const result = await sendTaskDigest({ to, force });
-    console.log("[task-digest]", result);
+    log.info("cron/task-digest", "ejecutado", result);
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
-    console.error("[task-digest] Fatal error:", err);
+    log.error("cron/task-digest", err);
     return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
   }
 }

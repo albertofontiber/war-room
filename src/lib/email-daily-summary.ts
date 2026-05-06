@@ -8,6 +8,7 @@
 
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
+import { log } from "@/lib/logger";
 
 const TO       = process.env.SUMMARY_EMAIL_TO   ?? "alberto@fontiber.com,gabriel@fontiber.com";
 const FROM     = process.env.SUMMARY_EMAIL_FROM ?? "warroom@fontiber.com";
@@ -199,7 +200,7 @@ export async function sendDailySummary(
   });
 
   if (error) {
-    console.error("[daily-summary] Resend error:", error);
+    log.error("lib/email-daily-summary", "Resend error", { error });
     return { sent: false, reason: String(error) };
   }
 

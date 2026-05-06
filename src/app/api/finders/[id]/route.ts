@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { FinderUpdateSchema, zodError } from "@/lib/validation";
 import { auditLog, diffFields } from "@/lib/audit-log";
 import { getCurrentUser } from "@/lib/user-from-session";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -73,7 +74,7 @@ export async function PATCH(
         passwordSetAt: true,
       },
     });
-    console.log("[PATCH /api/finders/:id] updated", {
+    log.info("api/finders/[id] PATCH", "updated", {
       id: params.id,
       changes: Object.keys(data),
     });
@@ -95,7 +96,7 @@ export async function PATCH(
     }
     return NextResponse.json(updated);
   } catch (err) {
-    console.error("[PATCH /api/finders/:id] update failed", err);
+    log.error("api/finders/[id] PATCH", err);
     return NextResponse.json({ error: "Write failed" }, { status: 500 });
   }
 }

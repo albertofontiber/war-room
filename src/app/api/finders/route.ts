@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { FinderCreateSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
 import { getCurrentUser } from "@/lib/user-from-session";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +45,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (err) {
-    console.error("[GET /api/finders]", err);
+    log.error("api/finders GET", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }
@@ -99,7 +100,7 @@ export async function POST(req: NextRequest) {
         passwordSetAt: true,
       },
     });
-    console.log("[POST /api/finders] created", { id: finder.id, email: finder.email });
+    log.info("api/finders POST", "created", { id: finder.id, email: finder.email });
     const user = await getCurrentUser();
     void auditLog({
       actorType: "admin",
@@ -115,7 +116,7 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json(finder, { status: 201 });
   } catch (err) {
-    console.error("[POST /api/finders] create failed", err);
+    log.error("api/finders POST", err);
     return NextResponse.json({ error: "Write failed" }, { status: 500 });
   }
 }

@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { sendDailySummary } from "@/lib/email-daily-summary";
+import { log } from "@/lib/logger";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -22,10 +23,10 @@ export async function GET(req: NextRequest) {
     const to = req.nextUrl.searchParams.get("to") ?? undefined;
     const force = req.nextUrl.searchParams.get("force") === "true";
     const result = await sendDailySummary({ force, to });
-    console.log("[daily-summary]", result);
+    log.info("cron/daily-summary", "ejecutado", result);
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
-    console.error("[daily-summary] Fatal error:", err);
+    log.error("cron/daily-summary", err);
     return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
   }
 }

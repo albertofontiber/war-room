@@ -18,6 +18,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { log } from "@/lib/logger";
 
 export type AuditActorType = "admin" | "finder" | "system";
 export type AuditAction = "create" | "update" | "delete";
@@ -57,7 +58,7 @@ export async function auditLog(input: AuditLogInput): Promise<void> {
       },
     });
   } catch (err) {
-    console.error("[auditLog] failed:", err);
+    log.error("lib/audit-log", err);
   }
 }
 

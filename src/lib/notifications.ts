@@ -14,6 +14,7 @@
 
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
+import { log } from "@/lib/logger";
 
 const FROM = process.env.SUMMARY_EMAIL_FROM ?? "warroom@fontiber.com";
 const BASE_URL =
@@ -53,7 +54,7 @@ export async function notifyAdmins(input: NotifyAdminsInput): Promise<void> {
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.warn("[notifyAdmins] RESEND_API_KEY not set, skipping email");
+    log.warn("lib/notifications", "RESEND_API_KEY not set, skipping email");
     return;
   }
 
@@ -78,9 +79,9 @@ export async function notifyAdmins(input: NotifyAdminsInput): Promise<void> {
       subject: input.titulo,
       html,
     });
-    if (error) console.error("[notifyAdmins] Resend error:", error);
+    if (error) log.error("lib/notifications", "Resend error", { error });
   } catch (err) {
-    console.error("[notifyAdmins] send failed:", err);
+    log.error("lib/notifications", err);
   }
 }
 

@@ -6,6 +6,7 @@ import { auditLog, diffFields } from "@/lib/audit-log";
 import { TAREA_TIPO_LABEL } from "@/lib/crm";
 import type { TareaTipo } from "@/types";
 import { PortalTareaUpdateSchema, zodError } from "@/lib/validation";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -173,7 +174,7 @@ export async function PATCH(
       link: `/?empresa=${tarea.empresa.id}`,
       email: false,
     }).catch((err) =>
-      console.error("[portal/tareas PATCH] notifyAdmins error:", err)
+      log.error("api/portal/tareas/[id] PATCH notifyAdmins", err)
     );
   } else if (isEditingResultadoOnly) {
     // El finder editó/añadió las notas post-evento de una tarea (sin completarla
@@ -190,7 +191,7 @@ export async function PATCH(
       link: `/?empresa=${tarea.empresa.id}`,
       email: false,
     }).catch((err) =>
-      console.error("[portal/tareas PATCH] notifyAdmins error:", err)
+      log.error("api/portal/tareas/[id] PATCH notifyAdmins", err)
     );
   }
 

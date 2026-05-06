@@ -7,6 +7,7 @@ import { auditLog } from "@/lib/audit-log";
 import { TAREA_TIPO_LABEL } from "@/lib/crm";
 import type { TareaTipo } from "@/types";
 import { PortalTareaCreateSchema, zodError } from "@/lib/validation";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -107,7 +108,7 @@ export async function POST(
     mensaje: `${tipoLabel} — ${tarea.titulo}`,
     link: `/?empresa=${empresa.id}`,
     email: false,
-  }).catch((err) => console.error("[portal/tareas POST] notifyAdmins error:", err));
+  }).catch((err) => log.error("api/portal/empresas/[id]/tareas POST notifyAdmins", err));
 
   return NextResponse.json(tarea, { status: 201 });
 }

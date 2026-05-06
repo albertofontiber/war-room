@@ -8,6 +8,7 @@
  */
 
 import { Resend } from "resend";
+import { log } from "@/lib/logger";
 
 // FROM dedicado del portal: separamos el remitente de los emails dirigidos a
 // finders (`portal@fontiber.com`) del que reciben los admins en notifyAdmins
@@ -29,9 +30,7 @@ export async function sendPasswordResetEmail(
 ): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.warn(
-      "[sendPasswordResetEmail] RESEND_API_KEY not set, skipping email"
-    );
+    log.warn("lib/email-password-reset", "RESEND_API_KEY not set, skipping email");
     return;
   }
 
@@ -52,9 +51,9 @@ export async function sendPasswordResetEmail(
       subject: "Restablece tu contraseña — Portal Fontiber",
       html,
     });
-    if (error) console.error("[sendPasswordResetEmail] Resend error:", error);
+    if (error) log.error("lib/email-password-reset", "Resend error", { error });
   } catch (err) {
-    console.error("[sendPasswordResetEmail] send failed:", err);
+    log.error("lib/email-password-reset", err);
   }
 }
 

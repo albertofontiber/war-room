@@ -5,6 +5,7 @@ import { ProposalCreateSchema, zodError } from "@/lib/validation";
 import { normalizePersona } from "@/lib/normalize";
 import { logFinderAction } from "@/lib/finder-access-log";
 import { notifyAdmins } from "@/lib/notifications";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -93,7 +94,7 @@ export async function POST(req: NextRequest) {
     mensaje: `${finder.name} ha propuesto un nuevo target.\n\nEmpresa: ${body.companyName.trim()}${cifLine}\n\nRevísala desde Propuestas de finders.`,
     link: "/finders/proposals?status=PENDING",
   }).catch((err) => {
-    console.error("[POST /api/portal/proposals] notifyAdmins failed", err);
+    log.error("api/portal/proposals POST notifyAdmins", err);
   });
 
   return NextResponse.json({ proposal }, { status: 201 });

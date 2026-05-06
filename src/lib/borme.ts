@@ -17,6 +17,7 @@
 import { prisma } from "./prisma";
 import { detectarGrupo } from "./borme-senales";
 import { bormePersonaToCargoKey } from "./normalize";
+import { log } from "./logger";
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -613,7 +614,10 @@ export async function processBormeDate(
     } catch (err) {
       const msg = `Error en ${item.identificador} (${item.titulo}): ${err}`;
       result.errors.push(msg);
-      console.error(msg);
+      log.error("lib/borme", err, {
+        identificador: item.identificador,
+        titulo: item.titulo,
+      });
     }
   }
 
