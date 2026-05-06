@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
+import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { useNavegacion } from "@/lib/navegacion";
 import { MobileDrawer } from "@/components/ui/responsive";
 import { SidebarContent } from "@/components/Sidebar";
 import type { Vista } from "@/types";
@@ -27,13 +29,12 @@ export default function WarRoomMobileMenu() {
   const {
     sidebarMobileOpen,
     setSidebarMobileOpen,
-    vistaActual,
-    setVista,
     sizeMetric,
     setSizeMetric,
     modoPresentacion,
     toggleModoPresentacion,
   } = useWarRoomStore();
+  const { vista, setVista } = useNavegacion();
 
   const close = useCallback(() => setSidebarMobileOpen(false), [setSidebarMobileOpen]);
 
@@ -42,15 +43,15 @@ export default function WarRoomMobileMenu() {
   // dentro del mismo handler que hace setVista() — el re-render del cambio
   // de vista absorbe la actualización del open. Reaccionar al cambio de
   // vista/pathname con effect es robusto y desacopla el cierre.
-  const prevVista = useRef(vistaActual);
+  const prevVista = useRef(vista);
   const prevPath = useRef(pathname);
   useEffect(() => {
-    if (prevVista.current !== vistaActual || prevPath.current !== pathname) {
-      prevVista.current = vistaActual;
+    if (prevVista.current !== vista || prevPath.current !== pathname) {
+      prevVista.current = vista;
       prevPath.current = pathname;
       setSidebarMobileOpen(false);
     }
-  }, [vistaActual, pathname, setSidebarMobileOpen]);
+  }, [vista, pathname, setSidebarMobileOpen]);
 
   const goToVista = useCallback(
     (v: Vista) => {
@@ -75,29 +76,33 @@ export default function WarRoomMobileMenu() {
   return (
     <MobileDrawer open={sidebarMobileOpen} onOpenChange={setSidebarMobileOpen} side="left">
       <div className="flex flex-col h-full">
-        {/* Header del drawer */}
-        <div className="px-4 py-3 border-b border-wr-border flex-shrink-0">
+        {/* Header del drawer — clic vuelve al inicio. */}
+        <Link
+          href="/"
+          onClick={close}
+          className="px-4 py-3 border-b border-wr-border flex-shrink-0 block"
+        >
           <span className="text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase">
             Fontiber War Room
           </span>
-        </div>
+        </Link>
 
         {/* Sección navegación */}
         <nav className="px-3 py-3 border-b border-wr-border space-y-1 flex-shrink-0">
           <NavSectionLabel>Vistas</NavSectionLabel>
-          <NavButton active={!onPipelinePage && vistaActual === "mapa"} onClick={() => goToVista("mapa")}>
+          <NavButton active={!onPipelinePage && vista === "mapa"} onClick={() => goToVista("mapa")}>
             Mapa
           </NavButton>
-          <NavButton active={!onPipelinePage && vistaActual === "tabla"} onClick={() => goToVista("tabla")}>
+          <NavButton active={!onPipelinePage && vista === "tabla"} onClick={() => goToVista("tabla")}>
             Tabla
           </NavButton>
           <NavButton
-            active={!onPipelinePage && vistaActual === "operaciones"}
+            active={!onPipelinePage && vista === "operaciones"}
             onClick={() => goToVista("operaciones")}
           >
             Operaciones
           </NavButton>
-          <NavButton active={!onPipelinePage && vistaActual === "grupos"} onClick={() => goToVista("grupos")}>
+          <NavButton active={!onPipelinePage && vista === "grupos"} onClick={() => goToVista("grupos")}>
             Grupos
           </NavButton>
           <NavButton active={onPipelinePage} onClick={goToPipeline}>

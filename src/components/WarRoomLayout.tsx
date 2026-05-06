@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
-import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { useNavegacion } from "@/lib/navegacion";
 import { useIsDesktop } from "@/lib/breakpoints";
 import { ResponsiveModal } from "@/components/ui/responsive";
 import Navbar from "@/components/Navbar";
@@ -54,7 +54,7 @@ const PanelEmpresa = dynamic(() => import("@/components/PanelEmpresa"), {
 const ChatIA = dynamic(() => import("@/components/ChatIA"), { ssr: false });
 
 export default function WarRoomLayout() {
-  const { vistaActual, panelAbierto, seleccionarEmpresa, cerrarPanel } = useWarRoomStore();
+  const { vista, panelAbierto, seleccionarEmpresa, cerrarPanel } = useNavegacion();
   const isDesktop = useIsDesktop();
 
   // Listen for empresa selection events from GruposView
@@ -88,10 +88,10 @@ export default function WarRoomLayout() {
             (porque está dentro del flex-col después de él). */}
         <div className="flex-1 relative overflow-hidden">
           <main className="absolute inset-0">
-            {vistaActual === "mapa" && <MapaEspana />}
-            {vistaActual === "tabla" && <TablaEmpresas />}
-            {vistaActual === "operaciones" && <OperacionesBorme />}
-            {vistaActual === "grupos" && <GruposView />}
+            {vista === "mapa" && <MapaEspana />}
+            {vista === "tabla" && <TablaEmpresas />}
+            {vista === "operaciones" && <OperacionesBorme />}
+            {vista === "grupos" && <GruposView />}
           </main>
 
           {/* PanelEmpresa:
@@ -99,7 +99,7 @@ export default function WarRoomLayout() {
                 el comportamiento original — sin backdrop, navega libre).
               - Mobile/tablet (<lg): ResponsiveModal fullscreen vía Sheet
                 (con backdrop sutil, cerrar tapping fuera o swipe). */}
-          {panelAbierto && vistaActual !== "operaciones" && (
+          {panelAbierto && vista !== "operaciones" && (
             isDesktop ? (
               <div className="absolute top-0 right-0 bottom-0 w-[560px] z-20 shadow-2xl shadow-black/40 flex">
                 <PanelEmpresa />

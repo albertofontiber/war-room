@@ -16,6 +16,7 @@ import Map, {
 import "mapbox-gl/dist/mapbox-gl.css";
 import Supercluster from "supercluster";
 import { useWarRoomStore, type EmpresaFeatureProperties } from "@/store/useWarRoomStore";
+import { useNavegacion } from "@/lib/navegacion";
 import { isInFilter } from "@/lib/filtros";
 import MapTooltip from "@/components/MapTooltip";
 import { CRM_COLOR, makeSizeExpr, makeIconSizeExpr } from "@/components/mapa/expresiones";
@@ -57,7 +58,6 @@ export default function MapaEspana() {
   const {
     filtros,
     sizeMetric,
-    seleccionarEmpresa,
     searchQuery,
     empresasGeoJSON,
     flyToEmpresaId,
@@ -66,8 +66,8 @@ export default function MapaEspana() {
     setMapViewState,
     mapBounds,
     setMapBounds,
-    panelAbierto,
   } = useWarRoomStore();
+  const { seleccionarEmpresa, panelAbierto } = useNavegacion();
 
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
   const [iconsReady, setIconsReady] = useState(false);
@@ -354,19 +354,23 @@ export default function MapaEspana() {
   // removeSource → _updateTerrain → terrain.update con style.terrain
   // todavía referenciando el source eliminado (mapbox-gl 3.x bug).
   //
-  // Suscribiéndonos al store de Zustand interceptamos el cambio de vista
-  // SÍNCRONAMENTE, antes de que React entre al commit phase y desmonte
-  // los <Source>. setTerrain(null) limpia la referencia y el siguiente
-  // _updateTerrain es no-op.
+  // El estado de vista vive en URL (PR de URL state), así que no podemos
+  // suscribirnos al store. En su lugar `useNavegacion.setVista` dispara
+  // `wr:beforeVistaChange` SÍNCRONAMENTE antes del `router.push`, lo que
+  // nos da la misma ventana para llamar `setTerrain(null)` antes del
+  // commit phase de React.
   useEffect(() => {
-    return useWarRoomStore.subscribe((state, prev) => {
-      if (prev.vistaActual === "mapa" && state.vistaActual !== "mapa") {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ from: string; to: string }>).detail;
+      if (detail?.from === "mapa" && detail?.to !== "mapa") {
         const map = mapRef.current?.getMap();
         if (map?.isStyleLoaded?.() && map.getTerrain?.() != null) {
           map.setTerrain(null);
         }
       }
-    });
+    };
+    window.addEventListener("wr:beforeVistaChange", handler);
+    return () => window.removeEventListener("wr:beforeVistaChange", handler);
   }, []);
 
   // No-op handler: dejado por compatibilidad con la prop onIdle del Map.

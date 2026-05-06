@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import LinkLeadModal from "@/components/LinkLeadModal";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
+import { useNavegacion } from "@/lib/navegacion";
 import type { EmpresaDetalle } from "@/types";
 
 /**
@@ -23,7 +24,8 @@ export function GestionBlock({
   togglePerimetro: () => void | Promise<void>;
   onEmpresaChanged?: () => void;
 }) {
-  const { updateEmpresaInGeoJSON, seleccionarEmpresa } = useWarRoomStore();
+  const { updateEmpresaInGeoJSON } = useWarRoomStore();
+  const { seleccionarEmpresa } = useNavegacion();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
   const [editingGrupo, setEditingGrupo] = useState(false);
   const [grupoInput, setGrupoInput] = useState("");
