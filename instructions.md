@@ -185,7 +185,7 @@ vercel.json                               # Crons: BORME 20:00 L-V · Resumen 06
 - **Filtro de Grupo en Sidebar**: pills para cada grupo, chips activos en la barra de filtros ✅
 - **Vista Grupos**: nueva pestaña en Navbar con tabla de grupos y sus empresas ✅
 - **Exportar tabla a Excel**: botón en toolbar de la vista Tabla ✅
-- **Email resumen diario**: cron Ma-Sa 06:00 UTC → email con 3 cifras + link a /daily/[fecha] ✅
+- **Email resumen diario**: cron Ma-Sa 06:00 UTC → email con 5 cifras (totales + desglose M&A diferenciado) + link a /daily/[fecha] ✅
 - **Email task-digest por usuario**: cron L-V 07:00 UTC → tareas vencidas, hoy y próximos 7 días (1 email por usuario activo con tareas asignadas) ✅
 - **Badge de tareas pendientes**: visible en Kanban (ya existía), tooltip del mapa y filas de la tabla (`XT` en ámbar) ✅
 - **Página /daily/[fecha]**: pública (sin login), resumen completo con diseño War Room ✅
@@ -451,8 +451,9 @@ const CRM_COLOR = [
 - **Cron**: Ma-Sa 06:00 UTC (08:00 CEST) → `GET /api/cron/daily-summary`
 - **Librería**: Resend — init **dentro** de la función (no a nivel módulo)
 - **Destinatario**: `SUMMARY_EMAIL_TO` (default: alberto@fontiber.com)
-- **Contenido**: 3 cifras (señales BORME, fus/adq/posible, alertas personas) + botón "Ver resumen completo →"
-- **Enlace**: `warroom.fontiber.com/daily/YYYY-MM-DD` (fecha = día anterior = día de los datos)
+- **Contenido**: 5 cifras en dos filas — fila 1: señales BORME + alertas personas. Fila 2 (desglose M&A): Fusión / Adquisición / Posible adq. (cada categoría coloreada y diferenciada, ya no agregada). Botón "Ver resumen completo →"
+- **Enlace**: `warroom.fontiber.com/daily/YYYY-MM-DD` (fecha = día anterior = día de los datos). Botón "← Ir al War Room" en la página → `/operaciones`
+- **Lógica `posible_adquisicion`**: misma regla que `/api/borme/operaciones` — `tipoActo=nombramiento_grupo` + `grupoInferido != null` + empresa NO mapeada al grupo (`empresa.grupoId !== grupoInferido.id`). Si la empresa ya está en el grupo se cuenta como Nombramiento.
 
 ```typescript
 // Test manual con datos de 7 días

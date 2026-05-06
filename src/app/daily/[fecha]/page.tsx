@@ -53,7 +53,7 @@ export default async function DailyPage({
       empresa: {
         select: {
           id: true, nombre: true, web: true, enPerimetro: true, ccaa: true,
-          lat: true, lng: true,
+          lat: true, lng: true, grupoId: true,
           financieros: {
             orderBy: { anio: "desc" },
             take: 1,
@@ -61,22 +61,32 @@ export default async function DailyPage({
           },
         },
       },
-      grupoInferido: { select: { nombre: true } },
+      grupoInferido: { select: { id: true, nombre: true } },
     },
     orderBy: { fecha: "desc" },
   });
 
   // ── Compute display tipo + counts ───────────────────────────────────────────
+  // Coincide con la lógica de /api/borme/operaciones: solo "posible_adquisicion"
+  // si la empresa NO está ya mapeada al grupo del que viene la persona.
   const rows = bormeAlertas.map((a) => ({
     ...a,
     displayTipo:
-      a.tipoActo === "nombramiento_grupo" && a.grupoInferido
+      a.tipoActo === "nombramiento_grupo" &&
+      a.grupoInferido &&
+      a.empresa.grupoId !== a.grupoInferido.id
         ? "posible_adquisicion"
+        : a.tipoActo === "nombramiento_grupo"
+        ? "nombramiento"
         : a.tipoActo,
   }));
 
   const counts: Record<string, number> = {};
   for (const r of rows) counts[r.displayTipo] = (counts[r.displayTipo] ?? 0) + 1;
+
+  const fusionCount = counts["fusion"] ?? 0;
+  const adquisicionCount = counts["adquisicion"] ?? 0;
+  const posibleAdqCount = counts["posible_adquisicion"] ?? 0;
 
   const detailRows = rows.filter((r) => DETAIL_TIPOS.has(r.displayTipo));
 
@@ -164,7 +174,7 @@ export default async function DailyPage({
             <p className="text-xs text-wr-hint mt-0.5">Resumen diario · M&A Intelligence</p>
           </div>
           <a
-            href="/"
+            href="/operaciones"
             className="text-xs text-wr-blue hover:underline"
           >
             ← Ir al War Room
@@ -180,23 +190,39 @@ export default async function DailyPage({
           <p className="text-sm text-wr-hint mt-1">Resumen de señales BORME y alertas de personas</p>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-4">
+        {/* Stats — fila 1: totales generales */}
+        <div className="grid grid-cols-2 gap-4">
           <div className="bg-wr-surface border border-wr-border rounded-lg px-5 py-4 text-center">
             <div className="text-3xl font-bold text-wr-text">{bormeAlertas.length}</div>
             <div className="text-[10px] uppercase tracking-widest text-wr-hint mt-1">Señales BORME</div>
-          </div>
-          <div className="bg-wr-surface border border-wr-border rounded-lg px-5 py-4 text-center">
-            <div className={`text-3xl font-bold ${detailRows.length > 0 ? "text-orange-400" : "text-wr-text"}`}>
-              {detailRows.length}
-            </div>
-            <div className="text-[10px] uppercase tracking-widest text-wr-hint mt-1">Fus./Adq./Posible</div>
           </div>
           <div className="bg-wr-surface border border-wr-border rounded-lg px-5 py-4 text-center">
             <div className={`text-3xl font-bold ${alertaPersonas.length > 0 ? "text-sky-400" : "text-wr-text"}`}>
               {alertaPersonas.length}
             </div>
             <div className="text-[10px] uppercase tracking-widest text-wr-hint mt-1">Alertas personas</div>
+          </div>
+        </div>
+
+        {/* Stats — fila 2: desglose M&A */}
+        <div className="grid grid-cols-3 gap-4">
+          <div className="bg-wr-surface border border-wr-border rounded-lg px-5 py-3 text-center">
+            <div className={`text-2xl font-bold ${fusionCount > 0 ? "text-purple-400" : "text-wr-text"}`}>
+              {fusionCount}
+            </div>
+            <div className="text-[10px] uppercase tracking-widest text-wr-hint mt-1">Fusión</div>
+          </div>
+          <div className="bg-wr-surface border border-wr-border rounded-lg px-5 py-3 text-center">
+            <div className={`text-2xl font-bold ${adquisicionCount > 0 ? "text-wr-blue" : "text-wr-text"}`}>
+              {adquisicionCount}
+            </div>
+            <div className="text-[10px] uppercase tracking-widest text-wr-hint mt-1">Adquisición</div>
+          </div>
+          <div className="bg-wr-surface border border-wr-border rounded-lg px-5 py-3 text-center">
+            <div className={`text-2xl font-bold ${posibleAdqCount > 0 ? "text-orange-400" : "text-wr-text"}`}>
+              {posibleAdqCount}
+            </div>
+            <div className="text-[10px] uppercase tracking-widest text-wr-hint mt-1">Posible adq.</div>
           </div>
         </div>
 
