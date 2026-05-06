@@ -108,6 +108,17 @@ export const FinderSetPasswordSchema = z.object({
   password: z.string().min(10, "La contraseña debe tener al menos 10 caracteres"),
 });
 
+// Self-service reset (portal). El admin sigue pudiendo setear pwd manual via
+// FinderSetPasswordSchema; este flow paralelo deja al finder gestionarlo solo.
+export const PortalForgotPasswordSchema = z.object({
+  email: z.string().trim().toLowerCase().email("Email inválido"),
+});
+
+export const PortalResetPasswordSchema = z.object({
+  token: nonEmptyString,
+  password: z.string().min(10, "La contraseña debe tener al menos 10 caracteres"),
+});
+
 export const FinderCreateSchema = z.object({
   email: z.string().trim().toLowerCase().email("Email inválido"),
   name: nonEmptyString.max(100),
