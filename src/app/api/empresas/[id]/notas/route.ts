@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { NotaCreateSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,7 @@ export async function GET(
     });
     return NextResponse.json(notas);
   } catch (err) {
-    console.error("[GET notas]", err);
+    log.error("api/empresas/[id]/notas GET", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }
@@ -79,7 +80,7 @@ export async function POST(
     });
     return NextResponse.json(nota, { status: 201 });
   } catch (err) {
-    console.error("[POST notas]", err);
+    log.error("api/empresas/[id]/notas POST", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

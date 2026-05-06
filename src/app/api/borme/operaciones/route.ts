@@ -15,6 +15,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -201,7 +202,7 @@ export async function GET() {
 
     return NextResponse.json({ items, total: items.length });
   } catch (err) {
-    console.error("[borme/operaciones] Error:", err);
+    log.error("api/borme/operaciones GET", err);
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }

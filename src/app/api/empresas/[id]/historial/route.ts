@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { DEAL_STAGE_LABEL, TAREA_TIPO_LABEL, TAREA_TIPO_ICON, isValidDealStage, isValidTareaTipo } from "@/lib/crm";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -120,7 +121,7 @@ export async function GET(
 
     return NextResponse.json(items);
   } catch (err) {
-    console.error("[GET historial]", err);
+    log.error("api/empresas/[id]/historial GET", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

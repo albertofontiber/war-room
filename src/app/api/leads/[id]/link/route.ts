@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCurrentUser } from "@/lib/user-from-session";
 import { LeadLinkSchema, zodError } from "@/lib/validation";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -125,7 +126,7 @@ export async function POST(
     if (err instanceof HttpError) {
       return NextResponse.json({ error: err.message }, { status: err.status });
     }
-    console.error("[POST /api/leads/:id/link]", err);
+    log.error("api/leads/[id]/link POST", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

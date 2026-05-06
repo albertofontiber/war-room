@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { TareaCreateSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
+import { log } from "@/lib/logger";
 import type { TareaTipo } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -47,7 +48,7 @@ export async function GET(
     });
     return NextResponse.json(tareas);
   } catch (err) {
-    console.error("[GET tareas]", err);
+    log.error("api/empresas/[id]/tareas GET", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }
@@ -113,7 +114,7 @@ export async function POST(
     });
     return NextResponse.json(tarea, { status: 201 });
   } catch (err) {
-    console.error("[POST tareas]", err);
+    log.error("api/empresas/[id]/tareas POST", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

@@ -1,9 +1,10 @@
 import { prisma } from "@/lib/prisma";
+import { log } from "@/lib/logger";
 
 /**
  * Registra una acción del finder en FinderAccessLog. Fire-and-forget: si falla
  * el insert (p.ej. BD saturada) no debería tumbar la request principal —
- * capturamos el error y lo logueamos a consola.
+ * capturamos el error y lo logueamos.
  *
  * Uso típico:
  *   await logFinderAction({ finderId, action: "view_deal", resourceId: String(empresaId) });
@@ -22,6 +23,6 @@ export async function logFinderAction(params: {
       },
     });
   } catch (err) {
-    console.error("[logFinderAction]", params.action, err);
+    log.error("lib/finder-access-log", err, { action: params.action });
   }
 }

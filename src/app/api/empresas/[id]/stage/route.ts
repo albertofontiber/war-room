@@ -121,7 +121,7 @@ export async function PATCH(
 
     return NextResponse.json({ ok: true, empresaId, dealStage });
   } catch (err) {
-    console.error("[PATCH /api/empresas/[id]/stage]", err);
+    log.error("api/empresas/[id]/stage PATCH", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

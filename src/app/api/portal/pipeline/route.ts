@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder } from "@/lib/finder-session";
 import { logFinderAction } from "@/lib/finder-access-log";
 import { FINDER_STATUSES, FINDER_STATUS_MAP, diasDesde } from "@/lib/crm";
+import { log } from "@/lib/logger";
 import type { FinderStatus } from "@/lib/crm";
 import type { DealStage } from "@/types";
 
@@ -123,7 +124,7 @@ export async function GET() {
     if ((err as { status?: number }).status === 401) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    console.error("[GET /api/portal/pipeline]", err);
+    log.error("api/portal/pipeline GET", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

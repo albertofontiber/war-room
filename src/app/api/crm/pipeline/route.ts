@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { DEAL_STAGES, diasDesde } from "@/lib/crm";
+import { log } from "@/lib/logger";
 import type { DealStage } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -215,7 +216,7 @@ export async function GET(req: NextRequest) {
       total: filtered.length,
     });
   } catch (err) {
-    console.error("[GET /api/crm/pipeline]", err);
+    log.error("api/crm/pipeline GET", err);
     return NextResponse.json(
       { error: "Internal error" },
       { status: 500 }

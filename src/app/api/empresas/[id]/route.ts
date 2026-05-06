@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 import { authOptions } from "@/lib/auth";
 import { calcTendencia, enrichFinancieros } from "@/lib/tendencia";
 import { isValidDealStage } from "@/lib/crm";
+import { log } from "@/lib/logger";
 import type { DealStage } from "@/types";
 
 export async function GET(
@@ -161,7 +162,7 @@ export async function GET(
     { headers: { "Cache-Control": "no-store" } }
   );
   } catch (error) {
-    console.error("GET /api/empresas/[id]", error);
+    log.error("api/empresas/[id] GET", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 }

@@ -14,6 +14,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { GRUPOS_SENALES } from "@/lib/borme-senales";
 import { bormePersonaToCargoKey } from "@/lib/normalize";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -217,7 +218,7 @@ export async function GET() {
 
     return NextResponse.json({ personas: results, total: results.length });
   } catch (err) {
-    console.error("[borme/personas-compartidas] Error:", err);
+    log.error("api/borme/personas-compartidas GET", err);
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }

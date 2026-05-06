@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { log } from "@/lib/logger";
 
 /**
  * GET /api/users?role=admin
@@ -28,7 +29,7 @@ export async function GET(req: Request) {
       },
     });
   } catch (err) {
-    console.error("[GET /api/users]", err);
+    log.error("api/users GET", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

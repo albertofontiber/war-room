@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { log } from "@/lib/logger";
 
 /**
  * GET /api/crm/pipeline-meta
@@ -56,7 +57,7 @@ export async function GET() {
       }
     );
   } catch (err) {
-    console.error("[GET pipeline-meta]", err);
+    log.error("api/crm/pipeline-meta GET", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

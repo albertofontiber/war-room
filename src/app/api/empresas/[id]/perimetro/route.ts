@@ -7,6 +7,7 @@ import { authOptions } from "@/lib/auth";
 import { PerimetroPatchSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
 import { getCurrentUser } from "@/lib/user-from-session";
+import { log } from "@/lib/logger";
 
 export async function PATCH(
   req: Request,
@@ -53,7 +54,7 @@ export async function PATCH(
 
     return NextResponse.json(empresa);
   } catch (error) {
-    console.error("PATCH /api/empresas/[id]/perimetro", error);
+    log.error("api/empresas/[id]/perimetro PATCH", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 }

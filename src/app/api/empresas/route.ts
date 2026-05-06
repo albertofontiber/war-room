@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { calcTendencia } from "@/lib/tendencia";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { log } from "@/lib/logger";
 
 // Quitamos `force-dynamic` para permitir cache HTTP. La respuesta es la misma
 // para cualquier admin autenticado (no varía por usuario), así que la CDN
@@ -144,7 +145,7 @@ export async function GET() {
       }
     );
   } catch (error) {
-    console.error("GET /api/empresas", error);
+    log.error("api/empresas GET", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 }

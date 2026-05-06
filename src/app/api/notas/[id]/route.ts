@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { NotaUpdateSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -59,7 +60,7 @@ export async function PATCH(
     }
     return NextResponse.json(nota);
   } catch (err) {
-    console.error("[PATCH nota]", err);
+    log.error("api/notas/[id] PATCH", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }
@@ -102,7 +103,7 @@ export async function DELETE(
     }
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("[DELETE nota]", err);
+    log.error("api/notas/[id] DELETE", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { LeadCreateSchema, zodError } from "@/lib/validation";
+import { log } from "@/lib/logger";
 import type { DealStage } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -100,7 +101,7 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (err) {
-    console.error("[POST /api/leads]", err);
+    log.error("api/leads POST", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { log } from "@/lib/logger";
 
 // Sin `force-dynamic` para permitir cache HTTP. Lista de grupos cambia
 // raramente (solo al crear/asignar grupo desde un panel) — 60s de cache
@@ -26,7 +27,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("GET /api/grupos", error);
+    log.error("api/grupos GET", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 }
