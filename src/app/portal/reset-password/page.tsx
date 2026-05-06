@@ -1,10 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
+// Next 14 App Router exige Suspense alrededor de useSearchParams; sin él,
+// `next build` falla con "missing-suspense-with-csr-bailout" al intentar
+// prerenderizar la página estáticamente. El form vive en un sub-componente
+// para que el wrapper exportado pueda envolverlo en <Suspense>.
 export default function PortalResetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordForm />
+    </Suspense>
+  );
+}
+
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
