@@ -92,22 +92,57 @@ model Empresa {
 
 // Contactos M&A (no confundir con PersonaCargo, que es BORME — administradores
 // legales). Aquí guardamos el director general, responsable de compras o quien
-// quiera que estemos hablando, con su email para que el matcher del shared
-// inbox pueda crear tareas automáticamente al mandar email.
+// quiera que estemos hablando, con su email para que el matcher del cron
+// SentItems pueda crear tareas automáticamente al mandar email.
 model Contacto {
-  id        Int      @id @default(autoincrement())
-  empresaId Int
-  empresa   Empresa  @relation(fields: [empresaId], references: [id], onDelete: Cascade)
-  nombre    String
-  cargo     String?
-  email     String?
-  telefono  String?
-  notas     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int           @id @default(autoincrement())
+  empresaId    Int
+  empresa      Empresa       @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  nombre       String
+  cargo        String?
+  email        String?
+  telefono     String?
+  notas        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  emailIngests EmailIngest[]
 
   @@index([empresaId])
-  @@index([email]) // matcher rápido del cron warroom@fontiber.com
+  @@index([email]) // matcher rápido del cron SentItems Microsoft Graph
+}
+
+// Cursor por buzón leído por el cron SentItems → tareas. Una fila por UPN
+// (alberto@, gabriel@). `lastSentDateTime` es la fecha del último email YA
+// procesado; el cron filtra `sentDateTime gt lastSentDateTime` para procesar
+// solo los nuevos. Se actualiza atómicamente al final de cada ronda exitosa.
+model EmailIngestCursor {
+  upn              String   @id
+  lastSentDateTime DateTime
+  updatedAt        DateTime @updatedAt
+}
+
+// Traza + dedup de emails procesados por el cron SentItems. Un email del
+// buzón Graph (`internetMessageId`) se procesa una sola vez. Si matchea con
+// un Contacto, se crea una Tarea ligada vía `tareaId` y se persiste aquí
+// para evitar duplicados. Si NO matchea, no se persiste nada (privacy: solo
+// guardamos metadata de los emails que sí entran al CRM).
+model EmailIngest {
+  id                Int       @id @default(autoincrement())
+  internetMessageId String    @unique
+  upn               String
+  recipientEmail    String
+  contactoId        Int?
+  contacto          Contacto? @relation(fields: [contactoId], references: [id], onDelete: SetNull)
+  empresaId         Int
+  tareaId           Int?      @unique
+  tarea             Tarea?    @relation(fields: [tareaId], references: [id], onDelete: SetNull)
+  sentAt            DateTime
+  subject           String?
+  createdAt         DateTime  @default(now())
+
+  @@index([upn])
+  @@index([sentAt])
+  @@index([empresaId])
 }
 
 model Financiero {
@@ -297,6 +332,8 @@ model Tarea {
   autorFinder         Finder?   @relation("TareaAutorFinder", fields: [autorFinderId], references: [id])
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
+  // Si la tarea fue creada por el cron SentItems, traza al EmailIngest.
+  emailIngest         EmailIngest?
 
   @@index([empresaId])
   @@index([fechaLimite, completada])
