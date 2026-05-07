@@ -5,6 +5,7 @@ import { useNavegacion } from "@/lib/navegacion";
 import { Separator } from "@/components/ui/separator";
 import { BadgesRow } from "./panel-empresa/BadgesRow";
 import { BormeSenales } from "./panel-empresa/BormeSenales";
+import { ContactosSection } from "./panel-empresa/ContactosSection";
 import { CrmBlock } from "./panel-empresa/CrmBlock";
 import { CrmKpiSection } from "./panel-empresa/CrmKpiSection";
 import { DatosGenerales } from "./panel-empresa/DatosGenerales";
@@ -93,6 +94,8 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
               });
             }}
           />
+
+          <ContactosSection empresaId={empresa.id} />
 
           {empresa.bormeAlertas.length > 0 && (
             <>
