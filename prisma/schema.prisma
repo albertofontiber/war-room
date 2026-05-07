@@ -77,6 +77,7 @@ model Empresa {
   crmLogs          CrmLog[]
   notas            Nota[]
   tareas           Tarea[]
+  contactos        Contacto[]
   // CRM finder module
   finderSourceId   String?
   finderSource     Finder?       @relation(fields: [finderSourceId], references: [id])
@@ -87,6 +88,26 @@ model Empresa {
   @@index([fuente])
   @@index([finderSourceId])
   @@index([esAnonima])
+}
+
+// Contactos M&A (no confundir con PersonaCargo, que es BORME — administradores
+// legales). Aquí guardamos el director general, responsable de compras o quien
+// quiera que estemos hablando, con su email para que el matcher del shared
+// inbox pueda crear tareas automáticamente al mandar email.
+model Contacto {
+  id        Int      @id @default(autoincrement())
+  empresaId Int
+  empresa   Empresa  @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  nombre    String
+  cargo     String?
+  email     String?
+  telefono  String?
+  notas     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([empresaId])
+  @@index([email]) // matcher rápido del cron warroom@fontiber.com
 }
 
 model Financiero {

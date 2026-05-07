@@ -57,6 +57,34 @@ export const NotaUpdateSchema = z.object({
   contenido: nonEmptyString,
 });
 
+// Email opcional, normalizado a lowercase para que el matcher del shared
+// inbox funcione case-insensitive sin tener que normalizar en cada lookup.
+const optionalEmail = z
+  .union([
+    z.string().trim().email().transform((v) => v.toLowerCase()),
+    z.string().trim().length(0),
+    z.null(),
+  ])
+  .optional();
+
+export const ContactoCreateSchema = z.object({
+  nombre: nonEmptyString,
+  cargo: z.string().trim().nullable().optional(),
+  email: optionalEmail,
+  telefono: z.string().trim().nullable().optional(),
+  notas: z.string().nullable().optional(),
+});
+
+export const ContactoUpdateSchema = z
+  .object({
+    nombre: nonEmptyString.optional(),
+    cargo: z.string().trim().nullable().optional(),
+    email: optionalEmail,
+    telefono: z.string().trim().nullable().optional(),
+    notas: z.string().nullable().optional(),
+  })
+  .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
+
 export const StageChangeSchema = z.object({
   dealStage: z.union([
     z.enum(DEAL_STAGES as [string, ...string[]]),
