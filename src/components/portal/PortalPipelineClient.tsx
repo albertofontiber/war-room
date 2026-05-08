@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { FINDER_STATUSES, FINDER_STATUS_PILL } from "@/lib/crm";
-import type { FinderStatus } from "@/lib/crm";
+import { DEAL_STAGES, DEAL_STAGE_LABEL, DEAL_STAGE_PILL_CLASS } from "@/lib/crm";
+import type { DealStage } from "@/types";
 
 type Card = {
   id: number;
@@ -12,17 +12,17 @@ type Card = {
   provincia: string | null;
   ccaa: string | null;
   sector: string | null;
-  status: FinderStatus;
-  diasEnStatus: number | null;
+  dealStage: DealStage;
+  diasEnStage: number | null;
   ultimaActividad: { fecha: string; tipo: string } | null;
   diasSinActividad: number | null;
   tareasPendientes: number;
 };
 
 type PipelineData = {
-  statuses: FinderStatus[];
-  grouped: Record<FinderStatus, Card[]>;
-  counts: Record<FinderStatus, number>;
+  stages: DealStage[];
+  grouped: Record<DealStage, Card[]>;
+  counts: Record<DealStage, number>;
   total: number;
   finder: { id: string; name: string };
 };
@@ -121,17 +121,17 @@ export default function PortalPipelineClient({ finderName }: { finderName: strin
             scroll natural con varias columnas visibles funciona mejor. */}
         {!loading && !error && data && (
           <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden flex gap-2 sm:gap-3 p-2 sm:p-4 snap-x snap-mandatory sm:snap-none">
-            {FINDER_STATUSES.map((status) => {
-              const cards = data.grouped[status];
+            {DEAL_STAGES.map((stage) => {
+              const cards = data.grouped[stage];
               return (
                 <div
-                  key={status}
+                  key={stage}
                   className="snap-start flex-shrink-0 w-[85vw] max-w-[18rem] sm:w-64 sm:max-w-none bg-wr-surface2/50 border border-wr-border rounded-lg flex flex-col"
                 >
                   <div className="px-3 py-2 border-b border-wr-border flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${FINDER_STATUS_PILL[status]}`}>
-                        {status}
+                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${DEAL_STAGE_PILL_CLASS[stage]}`}>
+                        {DEAL_STAGE_LABEL[stage]}
                       </span>
                     </div>
                     <span className="text-[10px] text-wr-hint">{cards.length}</span>

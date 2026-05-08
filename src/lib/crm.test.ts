@@ -8,7 +8,6 @@ import {
   FUNNEL_STAGES,
   SIDE_STAGES,
   TERMINAL_STAGES,
-  FINDER_STATUS_MAP,
   isValidDealStage,
   isValidTareaTipo,
   diasDesde,
@@ -37,9 +36,13 @@ describe("DEAL_STAGES integrity", () => {
     }
   });
 
-  it("FINDER_STATUS_MAP tiene entrada para cada stage", () => {
+  it("DEAL_STAGE_PILL_CLASS usa el mismo hex que DEAL_STAGE_COLOR (paridad visual portal/admin)", () => {
     for (const s of DEAL_STAGES) {
-      expect(s in FINDER_STATUS_MAP, `missing finder mapping for ${s}`).toBe(true);
+      const hex = DEAL_STAGE_COLOR[s].toLowerCase();
+      const pill = DEAL_STAGE_PILL_CLASS[s].toLowerCase();
+      expect(pill, `bg ${s}`).toContain(`bg-[${hex}]/`);
+      expect(pill, `text ${s}`).toContain(`text-[${hex}]`);
+      expect(pill, `border ${s}`).toContain(`border-[${hex}]/`);
     }
   });
 });

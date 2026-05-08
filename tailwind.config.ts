@@ -6,6 +6,10 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    // Mapas de constantes con clases Tailwind (DEAL_STAGE_PILL_CLASS, etc.).
+    // Sin esto, las clases arbitrarias `bg-[#hex]/20` definidas en lib/ no se
+    // emiten en el bundle CSS y los pills aparecen sin color.
+    "./src/lib/**/*.{js,ts}",
   ],
   theme: {
     extend: {
