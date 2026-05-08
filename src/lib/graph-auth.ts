@@ -49,10 +49,16 @@ export async function getAccessToken(opts?: { forceFresh?: boolean }): Promise<s
     scope: SCOPE,
   });
 
+  // `cache: "no-store"` es CRÍTICO: Next.js / runtime de Vercel cachea
+  // por defecto las respuestas de fetch en functions, incluso POSTs. Si no
+  // lo desactivamos explícitamente, recibimos respuestas cacheadas con
+  // tokens ya expirados (issuedAt en el pasado, exp también en el pasado),
+  // y todas las llamadas a Graph fallan con "Lifetime validation failed".
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString(),
+    cache: "no-store",
   });
 
   if (!res.ok) {
@@ -89,6 +95,10 @@ export async function graphFetch<T>(
   const method = init?.method ?? "GET";
   const bodyStr = init?.body ? JSON.stringify(init.body) : undefined;
 
+  // `cache: "no-store"` también aquí: las respuestas de Graph cambian con
+  // el tiempo (SentItems, mailFolders, etc.) y queremos garantizar lectura
+  // fresca cada vez. Sin esto, tras un fetch satisfactorio Next.js puede
+  // cachear y servir respuestas viejas en peticiones siguientes.
   const doFetch = async (token: string) =>
     fetch(url, {
       method,
@@ -97,6 +107,7 @@ export async function graphFetch<T>(
         ...(bodyStr ? { "Content-Type": "application/json" } : {}),
       },
       body: bodyStr,
+      cache: "no-store",
     });
 
   let token = await getAccessToken();
