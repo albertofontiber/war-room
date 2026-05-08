@@ -32,8 +32,10 @@ function envOrThrow(name: string): string {
   return v;
 }
 
-export async function getAccessToken(): Promise<string> {
-  if (tokenCache && tokenCache.expiresAt > Date.now()) return tokenCache.token;
+export async function getAccessToken(opts?: { forceFresh?: boolean }): Promise<string> {
+  if (!opts?.forceFresh && tokenCache && tokenCache.expiresAt > Date.now()) {
+    return tokenCache.token;
+  }
 
   const tenantId = envOrThrow("AZURE_TENANT_ID");
   const clientId = envOrThrow("AZURE_CLIENT_ID");
@@ -66,20 +68,47 @@ export async function getAccessToken(): Promise<string> {
   return tokenCache.token;
 }
 
+/**
+ * Llama a Microsoft Graph autenticando con el token cacheado. Si Graph
+ * devuelve 401 ("InvalidAuthenticationToken" / "Lifetime validation failed"),
+ * invalida el cache, obtiene un token fresco y reintenta UNA vez.
+ *
+ * Esta retry es necesaria porque:
+ *   1. Tras cambiar permisos en Azure AD (admin consent, Application Access
+ *      Policy), los tokens emitidos antes pueden quedar invalidados sin que
+ *      su `exp` haya pasado.
+ *   2. El cache en memoria sobrevive durante toda la vida de la función
+ *      serverless de Vercel — sin retry, esa instancia seguiría fallando
+ *      hasta que muriera (varios minutos en frío, más en caliente).
+ */
 export async function graphFetch<T>(
   path: string,
   init?: { method?: "GET" | "POST"; body?: unknown }
 ): Promise<T> {
-  const token = await getAccessToken();
   const url = path.startsWith("http") ? path : `${GRAPH_BASE}${path}`;
-  const res = await fetch(url, {
-    method: init?.method ?? "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      ...(init?.body ? { "Content-Type": "application/json" } : {}),
-    },
-    body: init?.body ? JSON.stringify(init.body) : undefined,
-  });
+  const method = init?.method ?? "GET";
+  const bodyStr = init?.body ? JSON.stringify(init.body) : undefined;
+
+  const doFetch = async (token: string) =>
+    fetch(url, {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(bodyStr ? { "Content-Type": "application/json" } : {}),
+      },
+      body: bodyStr,
+    });
+
+  let token = await getAccessToken();
+  let res = await doFetch(token);
+
+  // Retry on 401: invalida cache, pide token fresco, reintenta.
+  if (res.status === 401) {
+    _resetGraphAuthCache();
+    token = await getAccessToken({ forceFresh: true });
+    res = await doFetch(token);
+  }
+
   if (!res.ok) {
     const errText = await res.text().catch(() => "");
     throw new Error(`Graph ${path} failed (${res.status}): ${errText}`);
@@ -87,7 +116,26 @@ export async function graphFetch<T>(
   return (await res.json()) as T;
 }
 
-/** Limpia el cache de token (útil en tests). */
+/** Limpia el cache de token (útil en tests y tras 401 retry). */
 export function _resetGraphAuthCache() {
   tokenCache = null;
+}
+
+/**
+ * Decodifica un JWT sin verificar firma. Solo para diagnóstico (endpoint
+ * `/api/cron/email-tasks/debug`) — NO usar para validación de seguridad.
+ */
+export function decodeJwtPayload(token: string): Record<string, unknown> | null {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    const padded = parts[1] + "=".repeat((4 - (parts[1].length % 4)) % 4);
+    const decoded = Buffer.from(
+      padded.replace(/-/g, "+").replace(/_/g, "/"),
+      "base64"
+    ).toString("utf-8");
+    return JSON.parse(decoded) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
 }
