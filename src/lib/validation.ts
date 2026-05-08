@@ -30,7 +30,10 @@ export const TareaCreateSchema = z.object({
   titulo: nonEmptyString,
   descripcion: z.string().nullable().optional(),
   fechaLimite: nullableDateString,
+  // Asignado: solo uno de los dos. Si admin → asignadoId; si finder del
+  // target → asignadoFinderId. Mutex en el endpoint (limpia el otro).
   asignadoId: z.string().nullable().optional(),
+  asignadoFinderId: z.string().nullable().optional(),
   // Si se crea ya como histórico (acción ya hecha), pasa completada=true desde
   // el formulario "Ya hecho". Resultado opcional para narrar lo que pasó.
   completada: z.boolean().optional(),
@@ -44,6 +47,7 @@ export const TareaUpdateSchema = z
     descripcion: z.string().nullable().optional(),
     fechaLimite: nullableDateString,
     asignadoId: z.string().nullable().optional(),
+    asignadoFinderId: z.string().nullable().optional(),
     completada: z.boolean().optional(),
     resultado: z.string().nullable().optional(),
   })

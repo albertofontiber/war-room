@@ -33,6 +33,8 @@ type Tarea = {
   createdAt: string;
   autor?: { name: string } | null;
   autorFinder?: { name: string } | null;
+  asignado?: { id: string; name: string } | null;
+  asignadoFinder?: { id: string; name: string } | null;
 };
 
 type Target = {
@@ -60,9 +62,11 @@ const SECTOR_LABEL: Record<string, string> = {
 export default function PortalTargetClient({
   empresaId,
   finderName,
+  finderId,
 }: {
   empresaId: number;
   finderName: string;
+  finderId: string;
 }) {
   const router = useRouter();
   const [target, setTarget] = useState<Target | null>(null);
@@ -169,7 +173,12 @@ export default function PortalTargetClient({
               </p>
             )}
 
-            <TareasSection empresaId={empresaId} tareas={target.tareas} onChanged={load} />
+            <TareasSection
+              empresaId={empresaId}
+              tareas={target.tareas}
+              finderId={finderId}
+              onChanged={load}
+            />
             <NotasSection empresaId={empresaId} notas={target.notas} onChanged={load} />
           </div>
         )}
@@ -203,7 +212,17 @@ function SectionHeader({ title, count, onAdd, adding }: { title: string; count: 
 //   - "Ya hecho"  → completada=true + caja Resultado/Notas post-evento.
 // Ambos viven como Tarea internamente. Una vez creada, el item puede pasar de
 // pendiente → hecho rellenando el resultado al completar.
-function TareasSection({ empresaId, tareas, onChanged }: { empresaId: number; tareas: Tarea[]; onChanged: () => void }) {
+function TareasSection({
+  empresaId,
+  tareas,
+  finderId,
+  onChanged,
+}: {
+  empresaId: number;
+  tareas: Tarea[];
+  finderId: string;
+  onChanged: () => void;
+}) {
   const [adding, setAdding] = useState(false);
   const [modo, setModo] = useState<"pendiente" | "hecho">("pendiente");
   const [titulo, setTitulo] = useState("");
@@ -367,7 +386,7 @@ function TareasSection({ empresaId, tareas, onChanged }: { empresaId: number; ta
       ) : (
         <div className="space-y-2">
           {ordered.map((t) => (
-            <TareaCard key={t.id} tarea={t} onChanged={onChanged} />
+            <TareaCard key={t.id} tarea={t} finderId={finderId} onChanged={onChanged} />
           ))}
         </div>
       )}
@@ -375,13 +394,43 @@ function TareasSection({ empresaId, tareas, onChanged }: { empresaId: number; ta
   );
 }
 
-function TareaCard({ tarea, onChanged }: { tarea: Tarea; onChanged: () => void }) {
+function TareaCard({
+  tarea,
+  finderId,
+  onChanged,
+}: {
+  tarea: Tarea;
+  finderId: string;
+  onChanged: () => void;
+}) {
   const [editingResultado, setEditingResultado] = useState(false);
   const [resultadoDraft, setResultadoDraft] = useState(tarea.resultado ?? "");
   const [completing, setCompleting] = useState(false);
   const [resultadoOnComplete, setResultadoOnComplete] = useState("");
 
+  // "Mía" = el finder logueado es el autor (puede editar texto/fecha/borrar).
+  // El asignado-pero-no-autor solo puede toggle completada (lo permite el
+  // endpoint PATCH portal/tareas/[id]).
   const isMine = !!tarea.autorFinder;
+  const isAssignedToMe = tarea.asignadoFinder?.id === finderId;
+  const canToggleCompletada = isMine || isAssignedToMe;
+
+  // Etiqueta de origen / asignación. Si la tarea es de un admin, lo
+  // explicitamos. Si es de un finder y está asignada al admin, también.
+  const autorLabel = tarea.autorFinder?.name ?? tarea.autor?.name ?? null;
+  const asignadoLabel = tarea.asignadoFinder?.name ?? tarea.asignado?.name ?? null;
+  const autorIsAdmin = !!tarea.autor && !tarea.autorFinder;
+  const ownershipBadge: { text: string; tone: "you" | "admin" | "neutral" } | null = (() => {
+    if (isAssignedToMe && autorIsAdmin) return { text: `${autorLabel} → tú`, tone: "you" };
+    if (isMine && tarea.asignado) return { text: `Tú → ${tarea.asignado.name}`, tone: "neutral" };
+    if (autorIsAdmin) {
+      if (asignadoLabel && asignadoLabel !== autorLabel) {
+        return { text: `${autorLabel} → ${asignadoLabel}`, tone: "admin" };
+      }
+      return { text: `Tarea de ${autorLabel}`, tone: "admin" };
+    }
+    return null;
+  })();
 
   const patch = async (body: Record<string, unknown>) => {
     const res = await fetch(`/api/portal/tareas/${tarea.id}`, {
@@ -408,27 +457,53 @@ function TareaCard({ tarea, onChanged }: { tarea: Tarea; onChanged: () => void }
   return (
     <div className={`group p-3 rounded-lg border ${tarea.completada ? "border-wr-border bg-wr-surface2/30" : "border-wr-border bg-wr-surface"}`}>
       <div className="flex items-start gap-2">
-        <button
-          onClick={() => {
-            if (tarea.completada) {
-              // Re-abrir: simple toggle, sin resultado.
-              patch({ completada: false });
-            } else {
-              // Completar: si tiene resultado pre-rellenado, marcamos directo;
-              // si no, mostramos textarea para rellenarlo en el momento.
-              setCompleting(true);
-            }
-          }}
-          aria-label={tarea.completada ? "Marcar como pendiente" : "Marcar como completada"}
-          className={`w-3.5 h-3.5 mt-0.5 rounded border flex-shrink-0 transition-colors ${
-            tarea.completada ? "bg-wr-green border-wr-green" : "border-wr-border hover:border-wr-blue"
-          }`}
-        />
+        {canToggleCompletada ? (
+          <button
+            onClick={() => {
+              if (tarea.completada) {
+                // Re-abrir: simple toggle, sin resultado.
+                patch({ completada: false });
+              } else {
+                // Completar: si tiene resultado pre-rellenado, marcamos directo;
+                // si no, mostramos textarea para rellenarlo en el momento.
+                setCompleting(true);
+              }
+            }}
+            aria-label={tarea.completada ? "Marcar como pendiente" : "Marcar como completada"}
+            className={`w-3.5 h-3.5 mt-0.5 rounded border flex-shrink-0 transition-colors ${
+              tarea.completada ? "bg-wr-green border-wr-green" : "border-wr-border hover:border-wr-blue"
+            }`}
+          />
+        ) : (
+          // Tarea de admin asignada a otro admin: el finder solo la ve, no la
+          // toggle. Marcamos visualmente con un check fantasma para que se vea
+          // que es read-only.
+          <span
+            aria-label={tarea.completada ? "Completada" : "Pendiente"}
+            title="Tarea de admin (read-only para ti)"
+            className={`w-3.5 h-3.5 mt-0.5 rounded border flex-shrink-0 ${
+              tarea.completada ? "bg-wr-muted/30 border-wr-muted/40" : "border-wr-border opacity-50"
+            }`}
+          />
+        )}
         <div className="flex-1 min-w-0">
           <p className="text-[10px] text-wr-hint uppercase tracking-wider">
             <span className="font-semibold">{tipoIcon} {tipoLabel}</span>
             {fechaToShow && <> · {fmtDate(fechaToShow)}</>}
             {tarea.completada && <span className="ml-1 text-wr-green">· Hecho</span>}
+            {ownershipBadge && (
+              <span
+                className={`ml-1.5 inline-flex items-center px-1.5 rounded text-[9px] ${
+                  ownershipBadge.tone === "you"
+                    ? "bg-wr-blue/15 text-wr-blue border border-wr-blue/30"
+                    : ownershipBadge.tone === "admin"
+                    ? "bg-wr-amber/10 text-wr-amber border border-wr-amber/30"
+                    : "bg-wr-surface2 text-wr-muted border border-wr-border"
+                }`}
+              >
+                {ownershipBadge.text}
+              </span>
+            )}
           </p>
           <p className={`text-xs mt-0.5 ${tarea.completada ? "text-wr-muted" : "text-wr-text"}`}>
             {tarea.titulo}

@@ -5,6 +5,7 @@ import { TareaCreateSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
 import { log } from "@/lib/logger";
 import type { TareaTipo } from "@/types";
+import { sendFinderTaskAssignedEmail } from "@/lib/email-finder-assignment";
 
 export const dynamic = "force-dynamic";
 
@@ -72,7 +73,12 @@ export async function POST(
 
     const parsed = TareaCreateSchema.safeParse(await req.json());
     if (!parsed.success) return zodError(parsed.error);
-    const { tipo, titulo, descripcion, fechaLimite, asignadoId, completada, resultado } = parsed.data;
+    const { tipo, titulo, descripcion, fechaLimite, asignadoId, asignadoFinderId, completada, resultado } = parsed.data;
+
+    // Mutex: solo uno de los dos asignados activos. Si pasan ambos en el
+    // body (no debería desde la UI), prioridad al finder (asumimos intent).
+    const finalAsignadoFinderId = asignadoFinderId || null;
+    const finalAsignadoId = finalAsignadoFinderId ? null : asignadoId || null;
 
     const isCompletada = completada === true;
     const tarea = await prisma.tarea.create({
@@ -85,14 +91,16 @@ export async function POST(
         fechaLimite: fechaLimite ? new Date(fechaLimite) : null,
         completada: isCompletada,
         completadaAt: isCompletada ? new Date() : null,
-        asignadoId: asignadoId || null,
+        asignadoId: finalAsignadoId,
+        asignadoFinderId: finalAsignadoFinderId,
         autorId: user.id,
       },
       include: {
         autor: { select: { id: true, name: true } },
         autorFinder: { select: { id: true, name: true } },
         asignado: { select: { id: true, name: true } },
-        asignadoFinder: { select: { id: true, name: true } },
+        asignadoFinder: { select: { id: true, name: true, email: true } },
+        empresa: { select: { id: true, nombre: true } },
       },
     });
     void auditLog({
@@ -110,8 +118,27 @@ export async function POST(
         fechaLimite: tarea.fechaLimite,
         completada: tarea.completada,
         asignadoId: tarea.asignadoId,
+        asignadoFinderId: tarea.asignadoFinderId,
       },
     });
+
+    // Email al finder asignado al crearse la tarea (solo si no está ya
+    // completada — si es un registro histórico no tiene sentido notificar).
+    if (tarea.asignadoFinder?.email && !isCompletada) {
+      void sendFinderTaskAssignedEmail({
+        to: tarea.asignadoFinder.email,
+        finderName: tarea.asignadoFinder.name,
+        empresaId: tarea.empresa.id,
+        empresaNombre: tarea.empresa.nombre,
+        tareaTitulo: tarea.titulo,
+        tareaDescripcion: tarea.descripcion,
+        tareaFechaLimite: tarea.fechaLimite,
+        asignadoPor: user.name ?? "Un admin",
+      }).catch((err) =>
+        log.error("api/empresas/[id]/tareas POST email", err)
+      );
+    }
+
     return NextResponse.json(tarea, { status: 201 });
   } catch (err) {
     log.error("api/empresas/[id]/tareas POST", err);

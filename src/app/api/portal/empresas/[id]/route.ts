@@ -81,17 +81,11 @@ export async function GET(
     },
   });
 
-  // Tareas: autoasignadas/creadas por él o asignadas a él por admins.
-  // Tras la fusión Tarea+Actividad, esto incluye registros históricos
-  // (completada=true + resultado) además de las pendientes.
+  // Tareas: TODAS las del target (cambio 2026-05-08, antes solo las del
+  // finder). El finder ve la actividad completa porque el target le está
+  // asignado. Marca quién es asignado para distinguir "mías" vs "de admin".
   const tareas = await prisma.tarea.findMany({
-    where: {
-      empresaId: id,
-      OR: [
-        { asignadoFinderId: finder.id },
-        { autorFinderId: finder.id },
-      ],
-    },
+    where: { empresaId: id },
     orderBy: [{ completada: "asc" }, { fechaLimite: "asc" }, { createdAt: "desc" }],
     select: {
       id: true,
@@ -105,6 +99,8 @@ export async function GET(
       createdAt: true,
       autor: { select: { name: true } },
       autorFinder: { select: { name: true } },
+      asignado: { select: { id: true, name: true } },
+      asignadoFinder: { select: { id: true, name: true } },
     },
   });
 
