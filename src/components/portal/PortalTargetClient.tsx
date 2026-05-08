@@ -407,6 +407,15 @@ function TareaCard({
   const [resultadoDraft, setResultadoDraft] = useState(tarea.resultado ?? "");
   const [completing, setCompleting] = useState(false);
   const [resultadoOnComplete, setResultadoOnComplete] = useState("");
+  // Edición del cuerpo de la tarea (texto/fecha/tipo). Solo el autor finder y
+  // solo si NO está completada — mismas reglas que aplica el backend.
+  const [editing, setEditing] = useState(false);
+  const [editTipo, setEditTipo] = useState<TareaTipo>(tarea.tipo as TareaTipo);
+  const [editTitulo, setEditTitulo] = useState(tarea.titulo);
+  const [editDescripcion, setEditDescripcion] = useState(tarea.descripcion ?? "");
+  const [editFecha, setEditFecha] = useState(tarea.fechaLimite?.slice(0, 10) ?? "");
+  const [editError, setEditError] = useState<string | null>(null);
+  const [editSubmitting, setEditSubmitting] = useState(false);
 
   // "Mía" = el finder logueado es el autor (puede editar texto/fecha/borrar).
   // El asignado-pero-no-autor solo puede toggle completada (lo permite el
@@ -448,11 +457,118 @@ function TareaCard({
     if (res.ok) onChanged();
   };
 
+  const startEdit = () => {
+    setEditTipo(tarea.tipo as TareaTipo);
+    setEditTitulo(tarea.titulo);
+    setEditDescripcion(tarea.descripcion ?? "");
+    setEditFecha(tarea.fechaLimite?.slice(0, 10) ?? "");
+    setEditError(null);
+    setEditing(true);
+  };
+
+  const cancelEdit = () => {
+    setEditing(false);
+    setEditError(null);
+  };
+
+  const saveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editTitulo.trim()) {
+      setEditError("El título es obligatorio.");
+      return;
+    }
+    setEditSubmitting(true);
+    setEditError(null);
+    try {
+      const res = await fetch(`/api/portal/tareas/${tarea.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipo: editTipo,
+          titulo: editTitulo.trim(),
+          descripcion: editDescripcion || null,
+          fechaLimite: editFecha ? new Date(editFecha).toISOString() : null,
+        }),
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        setEditError(
+          json.issues?.map((i: { message: string }) => i.message).join("; ") ||
+          json.error ||
+          "Error"
+        );
+        return;
+      }
+      setEditing(false);
+      onChanged();
+    } catch (err) {
+      setEditError(String(err));
+    } finally {
+      setEditSubmitting(false);
+    }
+  };
+
   const tipoLabel = TAREA_TIPO_LABEL[tarea.tipo as TareaTipo] ?? tarea.tipo;
   const tipoIcon = TAREA_TIPO_ICON[tarea.tipo as TareaTipo] ?? "·";
   const fechaToShow = tarea.completada
     ? tarea.completadaAt ?? tarea.fechaLimite ?? tarea.createdAt
     : tarea.fechaLimite;
+
+  if (editing) {
+    return (
+      <div className="p-3 rounded-lg border border-wr-blue/40 bg-wr-surface">
+        <form onSubmit={saveEdit} className="space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <select
+              value={editTipo}
+              onChange={(e) => setEditTipo(e.target.value as TareaTipo)}
+              className="bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text"
+            >
+              {TAREA_TIPOS.map((t) => (
+                <option key={t} value={t}>{TAREA_TIPO_LABEL[t]}</option>
+              ))}
+            </select>
+            <input
+              type="date"
+              value={editFecha}
+              onChange={(e) => setEditFecha(e.target.value)}
+              className="bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text"
+            />
+          </div>
+          <input
+            value={editTitulo}
+            onChange={(e) => setEditTitulo(e.target.value)}
+            placeholder="Título"
+            className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue"
+          />
+          <textarea
+            value={editDescripcion}
+            onChange={(e) => setEditDescripcion(e.target.value)}
+            placeholder="Descripción (opcional)"
+            rows={2}
+            className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
+          />
+          {editError && <p className="text-wr-red text-[11px]">{editError}</p>}
+          <div className="flex justify-end gap-2 pt-1">
+            <button
+              type="button"
+              onClick={cancelEdit}
+              className="text-[10px] px-3 py-2 sm:py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={editSubmitting}
+              className="text-[10px] px-3 py-2 sm:py-1 rounded bg-wr-blue text-white hover:bg-blue-500 disabled:opacity-40"
+            >
+              {editSubmitting ? "Guardando…" : "Guardar"}
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className={`group p-3 rounded-lg border ${tarea.completada ? "border-wr-border bg-wr-surface2/30" : "border-wr-border bg-wr-surface"}`}>
@@ -606,13 +722,30 @@ function TareaCard({
           </p>
         </div>
         {isMine && !tarea.completada && (
-          <button
-            onClick={remove}
-            title="Borrar"
-            className="opacity-0 group-hover:opacity-60 text-[10px] text-wr-red hover:opacity-100"
-          >
-            ×
-          </button>
+          <div className="opacity-0 group-hover:opacity-80 flex gap-1 flex-shrink-0">
+            <button
+              onClick={startEdit}
+              title="Editar"
+              className="text-wr-hint hover:text-wr-text p-0.5"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+            </button>
+            <button
+              onClick={remove}
+              title="Borrar"
+              className="text-wr-hint hover:text-wr-red p-0.5"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 6h18" />
+                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                <path d="M10 11v6M14 11v6" />
+              </svg>
+            </button>
+          </div>
         )}
       </div>
     </div>
