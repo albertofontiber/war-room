@@ -17,6 +17,7 @@ export default async function PortalTargetPage({
     <PortalTargetClient
       empresaId={parseInt(params.id, 10)}
       finderName={session.user?.name ?? "Finder"}
+      finderId={session.finderId ?? ""}
     />
   );
 }

@@ -130,7 +130,14 @@ export function CrmBlock({
             )}
           </div>
 
-          <TareasSection empresaId={empresa.id} />
+          <TareasSection
+            empresaId={empresa.id}
+            finderAsignado={
+              empresa.finderSource
+                ? { id: empresa.finderSource.id, name: empresa.finderSource.name }
+                : null
+            }
+          />
           <HistorialSection empresaId={empresa.id} />
           <NotasSection empresaId={empresa.id} />
         </div>

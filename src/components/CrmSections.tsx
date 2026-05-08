@@ -289,7 +289,22 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
 
 type User = { id: string; name: string; email: string };
 
-export function TareasSection({ empresaId }: { empresaId: number }) {
+/**
+ * Finder asignado al target — opcional. Si se pasa, aparece como opción del
+ * dropdown "Asignar a…" además de los admins. La asignación es mutex (admin
+ * O finder, no ambos): el endpoint setea `asignadoId` o `asignadoFinderId`
+ * en función de qué se eligió. El selector usa prefijo `f:<id>` para
+ * distinguir finder de admin sin colisionar con IDs de usuarios.
+ */
+const FINDER_PREFIX = "f:";
+
+export function TareasSection({
+  empresaId,
+  finderAsignado,
+}: {
+  empresaId: number;
+  finderAsignado?: { id: string; name: string } | null;
+}) {
   const [tareas, setTareas] = useState<Tarea[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [incluirCompletadas, setIncluirCompletadas] = useState(false);
@@ -333,11 +348,20 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
       .catch(() => setUsers([]));
   }, [open]);
 
+  // Helper para parsear el valor del select unificado admin/finder.
+  // "" = sin asignar; "f:<id>" = finder; "<id>" = admin user.
+  const parseAsignado = (v: string): { asignadoId: string | null; asignadoFinderId: string | null } => {
+    if (!v) return { asignadoId: null, asignadoFinderId: null };
+    if (v.startsWith(FINDER_PREFIX)) return { asignadoId: null, asignadoFinderId: v.slice(FINDER_PREFIX.length) };
+    return { asignadoId: v, asignadoFinderId: null };
+  };
+
   async function crear() {
     if (!titulo.trim()) return;
     setSaving(true);
     setError(null);
     try {
+      const { asignadoId: aId, asignadoFinderId: afId } = parseAsignado(asignadoId);
       const res = await fetch(`/api/empresas/${empresaId}/tareas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -346,7 +370,8 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
           titulo,
           descripcion: descripcion.trim() || null,
           fechaLimite: fechaLimite || null,
-          asignadoId: asignadoId || null,
+          asignadoId: aId,
+          asignadoFinderId: afId,
         }),
       });
       if (res.ok) {
@@ -375,13 +400,20 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
     setEditTitulo(t.titulo);
     setEditDescripcion(t.descripcion ?? "");
     setEditFechaLimite(t.fechaLimite ? t.fechaLimite.split("T")[0] : "");
-    setEditAsignadoId(t.asignado?.id ?? "");
+    // Si la tarea está asignada a un finder, prefijamos `f:` para que el
+    // select unificado lo seleccione correctamente.
+    setEditAsignadoId(
+      t.asignadoFinder?.id
+        ? `${FINDER_PREFIX}${t.asignadoFinder.id}`
+        : t.asignado?.id ?? ""
+    );
   }
 
   async function guardarEdit() {
     if (editingId == null || !editTitulo.trim()) return;
     setError(null);
     try {
+      const { asignadoId: aId, asignadoFinderId: afId } = parseAsignado(editAsignadoId);
       const res = await fetch(`/api/tareas/${editingId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -390,7 +422,8 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
           titulo: editTitulo,
           descripcion: editDescripcion.trim() || null,
           fechaLimite: editFechaLimite || null,
-          asignadoId: editAsignadoId || null,
+          asignadoId: aId,
+          asignadoFinderId: afId,
         }),
       });
       if (res.ok) {
@@ -505,6 +538,11 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
                 {u.name}
               </option>
             ))}
+            {finderAsignado && (
+              <option value={`${FINDER_PREFIX}${finderAsignado.id}`}>
+                Finder: {finderAsignado.name}
+              </option>
+            )}
           </select>
         </div>
         <input
@@ -580,6 +618,11 @@ export function TareasSection({ empresaId }: { empresaId: number }) {
                           {u.name}
                         </option>
                       ))}
+                      {finderAsignado && (
+                        <option value={`${FINDER_PREFIX}${finderAsignado.id}`}>
+                          Finder: {finderAsignado.name}
+                        </option>
+                      )}
                     </select>
                   </div>
                   <input

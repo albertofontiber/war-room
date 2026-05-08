@@ -7,6 +7,7 @@ import { TareaUpdateSchema, zodError } from "@/lib/validation";
 import { auditLog, diffFields } from "@/lib/audit-log";
 import { log } from "@/lib/logger";
 import type { TareaTipo } from "@/types";
+import { sendFinderTaskAssignedEmail } from "@/lib/email-finder-assignment";
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +45,16 @@ export async function PATCH(
     if (body.resultado !== undefined) data.resultado = body.resultado?.trim() || null;
     if (body.fechaLimite !== undefined)
       data.fechaLimite = body.fechaLimite ? new Date(body.fechaLimite) : null;
-    if (body.asignadoId !== undefined) data.asignadoId = body.asignadoId || null;
+    // Mutex admin/finder: si se asigna a finder, limpiamos asignadoId y vv.
+    // Solo si el caller pasa explícitamente uno de los dos.
+    if (body.asignadoFinderId !== undefined) {
+      data.asignadoFinderId = body.asignadoFinderId || null;
+      if (body.asignadoFinderId) data.asignadoId = null;
+    }
+    if (body.asignadoId !== undefined) {
+      data.asignadoId = body.asignadoId || null;
+      if (body.asignadoId) data.asignadoFinderId = null;
+    }
     if (body.completada !== undefined) {
       data.completada = body.completada;
       data.completadaAt = body.completada ? new Date() : null;
@@ -54,7 +64,8 @@ export async function PATCH(
       where: { id: tareaId },
       select: {
         tipo: true, titulo: true, descripcion: true, resultado: true,
-        fechaLimite: true, completada: true, asignadoId: true,
+        fechaLimite: true, completada: true,
+        asignadoId: true, asignadoFinderId: true,
       },
     });
     const tarea = await prisma.tarea.update({
@@ -63,6 +74,8 @@ export async function PATCH(
       include: {
         autor: { select: { id: true, name: true } },
         asignado: { select: { id: true, name: true } },
+        asignadoFinder: { select: { id: true, name: true, email: true } },
+        empresa: { select: { id: true, nombre: true } },
       },
     });
     if (prev) {
@@ -74,6 +87,7 @@ export async function PATCH(
         fechaLimite: tarea.fechaLimite,
         completada: tarea.completada,
         asignadoId: tarea.asignadoId,
+        asignadoFinderId: tarea.asignadoFinderId,
       });
       if (Object.keys(diff.after).length > 0) {
         void auditLog({
@@ -85,6 +99,25 @@ export async function PATCH(
           before: diff.before,
           after: diff.after,
         });
+      }
+
+      // Email si el finder asignado cambió a alguien nuevo (no desasignar).
+      const finderAsignadoCambio =
+        prev.asignadoFinderId !== tarea.asignadoFinderId &&
+        tarea.asignadoFinderId !== null;
+      if (finderAsignadoCambio && tarea.asignadoFinder?.email && !tarea.completada) {
+        void sendFinderTaskAssignedEmail({
+          to: tarea.asignadoFinder.email,
+          finderName: tarea.asignadoFinder.name,
+          empresaId: tarea.empresa.id,
+          empresaNombre: tarea.empresa.nombre,
+          tareaTitulo: tarea.titulo,
+          tareaDescripcion: tarea.descripcion,
+          tareaFechaLimite: tarea.fechaLimite,
+          asignadoPor: user.name ?? "Un admin",
+        }).catch((err) =>
+          log.error("api/tareas/[id] PATCH email", err)
+        );
       }
     }
     return NextResponse.json(tarea);

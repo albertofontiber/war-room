@@ -6,6 +6,7 @@ import { FinderAssignSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { log } from "@/lib/logger";
+import { sendFinderTargetAssignedEmail } from "@/lib/email-finder-assignment";
 
 export const dynamic = "force-dynamic";
 
@@ -48,13 +49,14 @@ export async function PATCH(
     const user = await getCurrentUser();
     const prev = await prisma.empresa.findUnique({
       where: { id: empresaId },
-      select: { finderSourceId: true },
+      select: { finderSourceId: true, nombre: true },
     });
     const empresa = await prisma.empresa.update({
       where: { id: empresaId },
       data: { finderSourceId: finderId },
       select: {
         id: true,
+        nombre: true,
         finderSourceId: true,
         finderSource: { select: { id: true, name: true, email: true } },
       },
@@ -69,6 +71,20 @@ export async function PATCH(
         before: { finderSourceId: prev.finderSourceId },
         after: { finderSourceId: empresa.finderSourceId },
       });
+
+      // Email al finder nuevo (solo si se asigna alguien — desasignar no
+      // dispara email).
+      if (empresa.finderSource && empresa.finderSource.email) {
+        void sendFinderTargetAssignedEmail({
+          to: empresa.finderSource.email,
+          finderName: empresa.finderSource.name,
+          empresaId: empresa.id,
+          empresaNombre: empresa.nombre,
+          asignadoPor: user?.name ?? "Un admin",
+        }).catch((err) =>
+          log.error("api/empresas/[id]/finder PATCH email", err)
+        );
+      }
     }
 
     return NextResponse.json(empresa);
