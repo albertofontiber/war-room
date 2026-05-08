@@ -75,7 +75,10 @@ export async function GET(req: NextRequest) {
     try {
       const res = await fetch(
         `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(upn)}/mailFolders/SentItems/messages?$top=1&$select=subject`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        }
       );
       if (res.ok) {
         const json = (await res.json()) as { value: Array<{ subject: string | null }> };
