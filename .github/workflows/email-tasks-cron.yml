@@ -1,0 +1,41 @@
+# Cron de auto-tarea por email — alternativa al cron de Vercel.
+#
+# El plan Hobby de Vercel solo permite crons "una vez al día"; necesitamos
+# granularidad de 10-15 min para que las tareas creadas tras enviar un
+# email aparezcan en el CRM con poco delay. GitHub Actions schedule es
+# gratis con granularidad efectiva 5-15 min (mejor esfuerzo).
+#
+# Setup requerido en el repo:
+#   - Secret `CRON_SECRET` (Settings → Secrets and variables → Actions →
+#     New repository secret). Mismo valor que la env var de Vercel.
+#
+# El job hace una llamada GET autenticada al endpoint de prod. El endpoint
+# es idempotente (cursor por buzón en BD) — si una ronda no llega a tiempo
+# o se solapa con otra, no duplica tareas (dedup por internetMessageId).
+
+name: email-tasks-cron
+
+on:
+  schedule:
+    # Cada 15 minutos. GitHub Actions tolera intervalos cortos pero no
+    # garantiza puntualidad bajo carga; suele dispararse con 0-15 min de
+    # delay. Para auto-tareas de email es suficiente.
+    - cron: "*/15 * * * *"
+  workflow_dispatch: # permite trigger manual desde la UI de Actions
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Hit /api/cron/email-tasks
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::error::CRON_SECRET no configurado en repo secrets"
+            exit 1
+          fi
+          curl --fail-with-body -sS -X GET \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "https://warroom.fontiber.com/api/cron/email-tasks"
