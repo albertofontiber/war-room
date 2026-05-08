@@ -2,9 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder } from "@/lib/finder-session";
 import { logFinderAction } from "@/lib/finder-access-log";
-import { FINDER_STATUSES, FINDER_STATUS_MAP, diasDesde } from "@/lib/crm";
+import { DEAL_STAGES, diasDesde } from "@/lib/crm";
 import { log } from "@/lib/logger";
-import type { FinderStatus } from "@/lib/crm";
 import type { DealStage } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -13,8 +12,9 @@ export const dynamic = "force-dynamic";
  * GET /api/portal/pipeline
  *
  * Kanban del finder. Solo empresas con `finderSourceId === session.finderId`
- * y no anónimas. Columnas agregadas (6 estados, ver FINDER_STATUS_MAP) — el
- * stage interno del funnel NUNCA se expone al finder.
+ * y no anónimas. Columnas = los 9 stages reales del funnel (mismas que el
+ * admin) — el finder ve ahora la granularidad interna (decisión 2026-05-08,
+ * reversión del agregado de 6 estados anterior).
  *
  * Campos devueltos por tarjeta: nombre, provincia/sector, última actividad,
  * días desde última actividad, tareas pendientes suyas. Sin CIF, financieros,
@@ -67,8 +67,8 @@ export async function GET() {
       provincia: string | null;
       ccaa: string | null;
       sector: string | null;
-      status: FinderStatus;
-      diasEnStatus: number | null;
+      dealStage: DealStage;
+      diasEnStage: number | null;
       ultimaActividad: { fecha: string; tipo: string } | null;
       diasSinActividad: number | null;
       tareasPendientes: number;
@@ -76,7 +76,6 @@ export async function GET() {
 
     const tarjetas: Card[] = empresas.map((e) => {
       const stage = (e.crmEstado?.dealStage as DealStage | undefined) ?? "identificado";
-      const status = FINDER_STATUS_MAP[stage] ?? "Pendiente";
       const ultima = e.tareas[0] ?? null;
       const ultimaFecha = ultima?.completadaAt ?? null;
       return {
@@ -85,8 +84,8 @@ export async function GET() {
         provincia: e.provincia,
         ccaa: e.ccaa,
         sector: e.sector,
-        status,
-        diasEnStatus: e.crmEstado?.fechaEntradaStage
+        dealStage: stage,
+        diasEnStage: e.crmEstado?.fechaEntradaStage
           ? diasDesde(e.crmEstado.fechaEntradaStage)
           : null,
         ultimaActividad: ultima && ultimaFecha
@@ -97,24 +96,19 @@ export async function GET() {
       };
     });
 
-    const grouped: Record<FinderStatus, Card[]> = {
-      Pendiente: [],
-      Contactado: [],
-      "En negociación": [],
-      Cerrado: [],
-      "En pausa": [],
-      Descartado: [],
-    };
-    for (const c of tarjetas) grouped[c.status].push(c);
+    const grouped = Object.fromEntries(
+      DEAL_STAGES.map((s) => [s, [] as Card[]])
+    ) as Record<DealStage, Card[]>;
+    for (const c of tarjetas) grouped[c.dealStage].push(c);
 
     const counts = Object.fromEntries(
-      FINDER_STATUSES.map((s) => [s, grouped[s].length])
-    ) as Record<FinderStatus, number>;
+      DEAL_STAGES.map((s) => [s, grouped[s].length])
+    ) as Record<DealStage, number>;
 
     await logFinderAction({ finderId: finder.id, action: "view_deals" });
 
     return NextResponse.json({
-      statuses: FINDER_STATUSES,
+      stages: DEAL_STAGES,
       grouped,
       counts,
       total: tarjetas.length,

@@ -5,13 +5,12 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { fmtDate } from "@/lib/format";
 import {
-  FINDER_STATUS_MAP,
-  FINDER_STATUS_PILL,
+  DEAL_STAGE_LABEL,
+  DEAL_STAGE_PILL_CLASS,
   TAREA_TIPOS,
   TAREA_TIPO_LABEL,
   TAREA_TIPO_ICON,
 } from "@/lib/crm";
-import type { FinderStatus } from "@/lib/crm";
 import type { DealStage, TareaTipo } from "@/types";
 
 type Nota = {
@@ -90,7 +89,6 @@ export default function PortalTargetClient({
 
   const initials = finderName.split(" ").slice(0, 2).map((p) => p[0]?.toUpperCase()).join("");
   const stage = target?.crmEstado?.dealStage ?? null;
-  const status: FinderStatus | null = stage ? FINDER_STATUS_MAP[stage] : null;
 
   return (
     <div className="min-h-screen flex flex-col bg-wr-bg">
@@ -138,9 +136,9 @@ export default function PortalTargetClient({
                     .join(" · ")}
                 </p>
                 <div className="flex items-center gap-2 mt-2">
-                  {status && (
-                    <span className={`text-[10px] px-2 py-0.5 rounded border ${FINDER_STATUS_PILL[status]}`}>
-                      {status}
+                  {stage && (
+                    <span className={`text-[10px] px-2 py-0.5 rounded border ${DEAL_STAGE_PILL_CLASS[stage]}`}>
+                      {DEAL_STAGE_LABEL[stage]}
                     </span>
                   )}
                   {target.web && (
