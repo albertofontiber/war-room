@@ -7,7 +7,9 @@ import { isInFilter } from "@/lib/filtros";
 import { fmt, fmtM, fmtPct } from "@/lib/format";
 import { DEAL_STAGE_LABEL, DEAL_STAGE_TEXT_CLASS } from "@/lib/crm";
 import type { DealStage } from "@/types";
-import * as XLSX from "xlsx";
+// `xlsx` (~25 KB gzip) se importa dinámicamente sólo cuando el usuario
+// pulsa "Exportar a Excel" — la mayoría de visitas a la tabla nunca lo
+// usan, así que mantenerlo fuera del chunk inicial mejora TTI.
 
 const SECTOR_LABEL: Record<string, string> = {
   PCI: "PCI",
@@ -130,8 +132,9 @@ export default function TablaEmpresas() {
     });
   }, []);
 
-  // Export to Excel — mismo orden que la tabla
-  const handleExport = useCallback(() => {
+  // Export to Excel — mismo orden que la tabla. `xlsx` se carga dinámico
+  // dentro del callback para no engordar el chunk inicial de la tabla.
+  const handleExport = useCallback(async () => {
     const data = rows.map((r) => {
       const row: Record<string, unknown> = {
         Empresa: r.nombre,
@@ -158,6 +161,7 @@ export default function TablaEmpresas() {
       return row;
     });
 
+    const XLSX = await import("xlsx");
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Empresas");

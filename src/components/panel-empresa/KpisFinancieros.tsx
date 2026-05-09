@@ -1,8 +1,18 @@
+"use client";
+
+import dynamic from "next/dynamic";
 import { fmtM, fmtPct } from "@/lib/format";
 import { Separator } from "@/components/ui/separator";
 import type { EmpresaDetalle } from "@/types";
 import { SectionLabel, KpiRow, TendenciaArrow } from "./primitives";
-import { HistoricoChart } from "./HistoricoChart";
+
+// `recharts` (~95 KB gzip) sólo se carga cuando hay >1 año de financieros y
+// el panel está abierto. La mayoría de aperturas del panel no llegan a este
+// chart, así que vale la pena hacerlo dynamic.
+const HistoricoChart = dynamic(
+  () => import("./HistoricoChart").then((mod) => ({ default: mod.HistoricoChart })),
+  { ssr: false }
+);
 
 export function KpisFinancieros({ empresa }: { empresa: EmpresaDetalle }) {
   const latestFin = empresa.financieros[0] ?? null;

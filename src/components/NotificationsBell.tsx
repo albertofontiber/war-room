@@ -19,7 +19,10 @@ type ApiResponse = {
   unreadCount: number;
 };
 
-const POLL_MS = 30_000;
+// 60s — antes 30s. Reduce el polling a la mitad sin pérdida perceptible
+// (tareas/notas no llegan al segundo). Si en el futuro queremos casi-tiempo-
+// real, el siguiente paso sería SSE/WebSocket en vez de polling.
+const POLL_MS = 60_000;
 
 function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
