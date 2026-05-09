@@ -8,7 +8,9 @@ import type { DealStage } from "@/types";
 interface TooltipProps {
   x: number;
   y: number;
-  // GeoJSON feature properties
+  // GeoJSON feature properties. Algunos campos pueden ser `undefined` mientras
+  // el endpoint full está en vuelo (paint del mapa va con `/api/empresas/lite`,
+  // el full se hidrata en idle). Tratar como nullables.
   props: {
     id: number;
     nombre: string;
@@ -18,15 +20,15 @@ interface TooltipProps {
     ingresos: number | null;
     margenBrutoPct: number | null;
     ebitdaPct: number | null;
-    empleados: number | null;
+    empleados?: number | null;
     grupoNombre: string | null;
-    logoUrl: string | null;
-    web: string | null;
+    logoUrl?: string | null;
+    web?: string | null;
     tendencia: "up" | "flat" | "down";
-    variacionPct: number | null;
+    variacionPct?: number | null;
     hasBormeReciente: boolean;
     enPerimetro: boolean;
-    tareasPendientesCount: number;
+    tareasPendientesCount?: number;
   };
 }
 
@@ -37,17 +39,19 @@ const SECTOR_LABEL: Record<string, string> = {
 };
 
 
-function TendenciaIcon({ dir, pct }: { dir: string; pct: number | null }) {
+function TendenciaIcon({ dir, pct }: { dir: string; pct: number | null | undefined }) {
+  // Pct puede ser null (sin datos) o undefined (lite cargado, full pendiente).
+  const fmt = pct != null ? pct.toFixed(1) : null;
   if (dir === "up")
     return (
       <span className="text-wr-green text-xs flex items-center gap-0.5">
-        ↑ {pct !== null ? `+${pct.toFixed(1)}%` : ""}
+        ↑ {fmt !== null ? `+${fmt}%` : ""}
       </span>
     );
   if (dir === "down")
     return (
       <span className="text-wr-red text-xs flex items-center gap-0.5">
-        ↓ {pct !== null ? `${pct.toFixed(1)}%` : ""}
+        ↓ {fmt !== null ? `${fmt}%` : ""}
       </span>
     );
   return <span className="text-wr-muted text-xs">→</span>;
@@ -125,7 +129,7 @@ export default function MapTooltip({ x, y, props }: TooltipProps) {
               Fuera perímetro
             </span>
           )}
-          {props.tareasPendientesCount > 0 && (
+          {(props.tareasPendientesCount ?? 0) > 0 && (
             <span
               className="px-1.5 py-0.5 rounded text-[10px] bg-wr-amber/20 text-wr-amber border border-wr-amber/30"
               title={`${props.tareasPendientesCount} tareas pendientes`}

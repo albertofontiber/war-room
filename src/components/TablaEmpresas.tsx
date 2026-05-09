@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useNavegacion } from "@/lib/navegacion";
 import { isInFilter } from "@/lib/filtros";
@@ -78,8 +78,22 @@ export default function TablaEmpresas() {
     searchQuery,
     modoPresentacion,
     mapBounds,
+    empresasFullLoaded,
+    empresasFullLoading,
+    hydrateEmpresasFull,
   } = useWarRoomStore();
   const { seleccionarEmpresa, empresaSeleccionadaId } = useNavegacion();
+
+  // La tabla muestra `logoUrl, empleados, web, tareasPendientesCount,
+  // variacionPct` — campos exclusivos de `/api/empresas` (full). El store
+  // suele tener ya el full porque Navbar lo pre-fetchea en idle, pero si
+  // el usuario abre la tabla muy rápido o la red está saturada, lo
+  // disparamos aquí (idempotente).
+  useEffect(() => {
+    if (!empresasFullLoaded && !empresasFullLoading) {
+      void hydrateEmpresasFull();
+    }
+  }, [empresasFullLoaded, empresasFullLoading, hydrateEmpresasFull]);
 
   const [sortKey, setSortKey] = useState<SortKey>("nombre");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
