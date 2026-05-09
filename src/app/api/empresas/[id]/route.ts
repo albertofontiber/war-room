@@ -15,7 +15,10 @@ export async function GET(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session)
+    // Defense in depth: el middleware ya bloquea finders en host portal,
+    // pero validar `kind="admin"` aquí garantiza que ningún path llega al
+    // payload completo (CIF, financieros, owner, BORME) sin ser admin.
+    if (!session || session.kind !== "admin")
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const id = parseInt(params.id, 10);

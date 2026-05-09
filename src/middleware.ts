@@ -59,6 +59,23 @@ export default withAuth(
         url.search = "";
         return NextResponse.redirect(url);
       }
+      // Defensa en profundidad: un finder logueado en host portal NO debe
+      // poder llamar a APIs admin (ej. /api/empresas/[id], /api/grupos, etc.).
+      // Aunque el endpoint debería validar kind=admin, este check es la
+      // primera línea — bloquea cualquier path que no sea explícitamente
+      // del portal o NextAuth.
+      if (token?.kind === "finder") {
+        const isPortalRoute =
+          path === "/portal" ||
+          path.startsWith("/portal/") ||
+          path.startsWith("/api/portal/") ||
+          isApiAuth ||
+          isPortalPublic;
+        if (!isPortalRoute) {
+          // 404 (no 403) para no leak de existencia del recurso al finder.
+          return NextResponse.json({ error: "Not found" }, { status: 404 });
+        }
+      }
       // Si ya es finder y pide `/` → rewrite a `/portal` dashboard.
       if (token?.kind === "finder" && (path === "/" || path === "")) {
         const url = req.nextUrl.clone();
