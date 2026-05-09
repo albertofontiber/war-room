@@ -11,37 +11,51 @@ import {
 import { isInFilter } from "@/lib/filtros";
 
 /**
- * Shape real de `properties` en los features GeoJSON que devuelve
- * `/api/empresas`. Si cambias ese endpoint, sincroniza este tipo.
+ * Shape real de `properties` en los features GeoJSON.
+ *
+ * El store usa una sola interfaz para lite y full porque los componentes
+ * leen el mismo objeto; los campos exclusivos de full son opcionales y
+ * arrancan `undefined` mientras solo está cargado el lite.
+ *
+ *   - Lite (`/api/empresas/lite`): los campos requeridos abajo. Suficiente
+ *     para mapa, sidebar, filtros, búsqueda Navbar.
+ *   - Full (`/api/empresas`): añade los opcionales. Lo carga la tabla.
  */
 export interface EmpresaFeatureProperties {
+  // ── Núcleo (presente en lite y full) ──────────────────────────────────
   id: number;
   cif: string;
   nombre: string;
-  localidad: string | null;
   provincia: string | null;
   ccaa: string | null;
   sector: Sector | null;
   dealStage: DealStage | null;
+  // Financieros que usan filtros + sizeMetric del mapa
   ingresos: number | null;
-  margenBruto: number | null;
-  margenBrutoPct: number | null;
   ebitda: number | null;
+  margenBrutoPct: number | null;
   ebitdaPct: number | null;
-  empleados: number | null;
+  // Booleanos / categorías filtrables
   enPerimetro: boolean;
-  bormeAlertasCount: number;
-  hasBormeReciente: boolean;
-  tareasPendientesCount: number;
-  logoUrl: string | null;
-  web: string | null;
-  grupoId: number | null;
-  grupoNombre: string | null;
   cepreven: string | null;
   aerme: boolean;
-  score: number | null;
+  hasBormeReciente: boolean;
+  grupoId: number | null;
+  grupoNombre: string | null;
   tendencia: Tendencia;
-  variacionPct: number | null;
+
+  // ── Solo en full (`/api/empresas`) ────────────────────────────────────
+  // Mientras solo está cargado lite, estos son `undefined`. La tabla
+  // dispara `hydrateEmpresasFull()` antes de leerlos.
+  localidad?: string | null;
+  margenBruto?: number | null;
+  empleados?: number | null;
+  logoUrl?: string | null;
+  web?: string | null;
+  score?: number | null;
+  variacionPct?: number | null;
+  tareasPendientesCount?: number;
+  bormeAlertasCount?: number;
 }
 
 export interface RawFeature {
@@ -66,13 +80,20 @@ interface WarRoomState {
   mapViewState: { longitude: number; latitude: number; zoom: number };
   mapBounds: { west: number; south: number; east: number; north: number } | null;
 
-  // ── GeoJSON compartido (un único fetch desde Navbar; consumido por
-  //    Sidebar, MapaEspana, etc.). `empresasLoading` es flag de idempotencia
-  //    para evitar la triple-fetch que había antes (audit perf 2026-05-01):
-  //    los 3 useEffect montaban en el mismo tick y la guarda `if (geoJSON)`
-  //    no detenía las réplicas porque setState aún no había propagado.
+  // ── GeoJSON compartido (Navbar dispara el fetch lite; Tabla dispara el
+  //    full). `empresasLoading*` son flags de idempotencia para evitar la
+  //    triple-fetch que había antes (audit perf 2026-05-01).
+  //
+  //    Tras el split lite/full (PR endpoint-per-view, BFF):
+  //      - lite carga primero, ~17 campos, suficiente para mapa+sidebar+filtros.
+  //      - full la dispara TablaEmpresas onMount; reemplaza el GeoJSON con
+  //        el payload completo (incluye logoUrl, web, empleados, etc.).
+  //      - `empresasFullLoaded` es la única fuente de verdad sobre si los
+  //        campos opcionales están disponibles para leer.
   empresasGeoJSON: RawFeature[] | null;
   empresasLoading: boolean;
+  empresasFullLoading: boolean;
+  empresasFullLoaded: boolean;
 
   // ── Búsqueda ─────────────────────────────────────────────────────────────
   searchQuery: string;
@@ -92,10 +113,13 @@ interface WarRoomState {
   setMapBounds: (bounds: { west: number; south: number; east: number; north: number } | null) => void;
 
   setEmpresasGeoJSON: (features: RawFeature[]) => void;
-  /** Carga `/api/empresas` solo si aún no se ha cargado y no hay un fetch en
-   * vuelo. Llamar desde el primer componente que monte (Navbar). Resto de
-   * componentes consumen `empresasGeoJSON` del store sin hacer fetch propio. */
+  /** Carga `/api/empresas/lite` solo si aún no se ha cargado y no hay un
+   * fetch en vuelo. Llamar desde el primer componente que monte (Navbar).
+   * Idempotente: si ya está el full, no recarga. */
   hydrateEmpresas: () => Promise<void>;
+  /** Carga `/api/empresas` (full) y reemplaza el GeoJSON. La dispara
+   * TablaEmpresas onMount. Idempotente. */
+  hydrateEmpresasFull: () => Promise<void>;
 
   /** Actualiza in-place algunas properties de un feature concreto del GeoJSON.
    * Útil para que mapa y tabla reflejen al instante un cambio que el panel
@@ -135,6 +159,8 @@ export const useWarRoomStore = create<WarRoomState>()(
       mapBounds: null,
       empresasGeoJSON: null,
       empresasLoading: false,
+      empresasFullLoading: false,
+      empresasFullLoaded: false,
       searchQuery: "",
       filtros: { ...FILTROS_DEFAULT },
 
@@ -157,11 +183,18 @@ export const useWarRoomStore = create<WarRoomState>()(
 
       hydrateEmpresas: async () => {
         const state = get();
-        // Idempotente: si ya hay datos o un fetch en vuelo, no relanza.
-        if (state.empresasGeoJSON !== null || state.empresasLoading) return;
+        // Idempotente: si ya hay datos (lite o full) o un fetch en vuelo,
+        // no relanza. Si full ya está cargado, lite no aporta nada.
+        if (
+          state.empresasGeoJSON !== null ||
+          state.empresasLoading ||
+          state.empresasFullLoaded
+        ) {
+          return;
+        }
         set({ empresasLoading: true });
         try {
-          const r = await fetch("/api/empresas");
+          const r = await fetch("/api/empresas/lite");
           if (!r.ok) throw new Error(`API ${r.status}`);
           const data = await r.json();
           if (data?.type === "FeatureCollection" && Array.isArray(data.features)) {
@@ -171,6 +204,37 @@ export const useWarRoomStore = create<WarRoomState>()(
           console.error("[hydrateEmpresas]", err);
         } finally {
           set({ empresasLoading: false });
+        }
+
+        // Pre-fetch del full en idle time. La tabla y el tooltip se enriquecen
+        // cuando llega; entretanto la UI muestra los campos lite y trata los
+        // opcionales como undefined (con fallbacks visuales). Si la pestaña
+        // está oculta o la red está saturada, requestIdleCallback espera.
+        if (typeof window !== "undefined") {
+          const ric =
+            (window as Window & {
+              requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+            }).requestIdleCallback ??
+            ((cb: () => void) => window.setTimeout(cb, 1500));
+          ric(() => void get().hydrateEmpresasFull(), { timeout: 5000 });
+        }
+      },
+
+      hydrateEmpresasFull: async () => {
+        const state = get();
+        if (state.empresasFullLoaded || state.empresasFullLoading) return;
+        set({ empresasFullLoading: true });
+        try {
+          const r = await fetch("/api/empresas");
+          if (!r.ok) throw new Error(`API ${r.status}`);
+          const data = await r.json();
+          if (data?.type === "FeatureCollection" && Array.isArray(data.features)) {
+            set({ empresasGeoJSON: data.features, empresasFullLoaded: true });
+          }
+        } catch (err) {
+          console.error("[hydrateEmpresasFull]", err);
+        } finally {
+          set({ empresasFullLoading: false });
         }
       },
 
