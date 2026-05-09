@@ -101,21 +101,47 @@ export function useClusterPieImages(
   // Listener de seguridad: si Mapbox encuentra un icon-image referenciado
   // que no está registrado (race con el pre-registro, reuseMaps, style
   // recargada), lo generamos on-demand reconstruyendo la firma desde el ID.
+  //
+  // Importante: react-map-gl 8 carga `mapbox-gl` asíncronamente vía dynamic
+  // `import()`, así que `mapRef.current?.getMap()` devuelve null durante los
+  // primeros renders. Un `useEffect [mapRef]` corre UNA vez con map=null y
+  // no se vuelve a ejecutar (mapRef es estable, su .current cambia sin
+  // notificar). Por eso usamos retry-poll igual que hace MapaEspana.tsx con
+  // los iconos shape-square/hexagon.
   useEffect(() => {
-    const map = mapRef.current?.getMap();
-    if (!map) return;
+    let cancelled = false;
+    let retryTimeout: ReturnType<typeof setTimeout> | null = null;
+    let attachedMap: ReturnType<NonNullable<typeof mapRef.current>["getMap"]> | null = null;
+
     const onMissing = (e: { id: string }) => {
-      if (!e.id.startsWith(ID_PREFIX)) return;
-      if (map.hasImage(e.id)) return;
+      if (!attachedMap || !e.id.startsWith(ID_PREFIX)) return;
+      if (attachedMap.hasImage(e.id)) return;
       const marker = markerFromIconId(e.id);
       if (!marker) return;
       const img = generateClusterPieImage(marker);
       if (!img) return;
-      map.addImage(e.id, img.imageData, { pixelRatio: 2 });
+      attachedMap.addImage(e.id, img.imageData, { pixelRatio: 2 });
       registeredIdsRef.current.add(e.id);
     };
-    map.on("styleimagemissing", onMissing);
-    return () => { map.off("styleimagemissing", onMissing); };
+
+    const tryAttach = () => {
+      if (cancelled || attachedMap) return;
+      const m = mapRef.current?.getMap();
+      if (!m) {
+        retryTimeout = setTimeout(tryAttach, 50);
+        return;
+      }
+      attachedMap = m;
+      m.on("styleimagemissing", onMissing);
+    };
+
+    tryAttach();
+
+    return () => {
+      cancelled = true;
+      if (retryTimeout) clearTimeout(retryTimeout);
+      if (attachedMap) attachedMap.off("styleimagemissing", onMissing);
+    };
   }, [mapRef]);
 
   // Cleanup al desmontar: limpiar TODOS los icons registrados por este
