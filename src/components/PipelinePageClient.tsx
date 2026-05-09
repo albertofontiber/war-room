@@ -1,12 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import * as XLSX from "xlsx";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import KanbanBoard, { type KanbanCard, type SortOption, SORT_LABEL } from "@/components/KanbanBoard";
 import PanelEmpresa from "@/components/PanelEmpresa";
-import ChatIA from "@/components/ChatIA";
-import AddLeadModal from "@/components/AddLeadModal";
+// ChatIA y AddLeadModal son lazy: no se necesitan en el primer paint del
+// Kanban y el ChatIA carga `react-markdown` + ai-sdk hooks (~80 KB gzip).
+// `xlsx` (~25 KB gzip) se importa dinámicamente dentro del callback de
+// export para no engordar el chunk inicial.
+const ChatIA = dynamic(() => import("@/components/ChatIA"), { ssr: false });
+const AddLeadModal = dynamic(() => import("@/components/AddLeadModal"), { ssr: false });
 import PipelineFiltros, {
   EMPTY_FILTERS,
   type PipelineFilters,
@@ -168,7 +172,7 @@ export default function PipelinePageClient() {
     [data]
   );
 
-  const handleExport = useCallback(() => {
+  const handleExport = useCallback(async () => {
     const rows = allCards.map((c) => ({
       Empresa: c.nombre,
       CIF: c.cif,
@@ -190,6 +194,7 @@ export default function PipelinePageClient() {
       "Última actividad":
         c.ultimaActividad?.fecha?.split("T")[0] ?? "",
     }));
+    const XLSX = await import("xlsx");
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Pipeline");
