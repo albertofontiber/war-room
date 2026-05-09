@@ -21,7 +21,12 @@ on:
     # garantiza puntualidad bajo carga; suele dispararse con 0-15 min de
     # delay. Para auto-tareas de email es suficiente.
     - cron: "*/15 * * * *"
-  workflow_dispatch: # permite trigger manual desde la UI de Actions
+  workflow_dispatch:
+    inputs:
+      windowMin:
+        description: 'Backfill window en minutos (vacío = default 60 min del endpoint). Útil tras parones de propagación o test manual.'
+        required: false
+        default: ''
 
 jobs:
   trigger:
@@ -31,11 +36,17 @@ jobs:
       - name: Hit /api/cron/email-tasks
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          WINDOW_MIN: ${{ github.event.inputs.windowMin || '' }}
         run: |
           if [ -z "$CRON_SECRET" ]; then
             echo "::error::CRON_SECRET no configurado en repo secrets"
             exit 1
           fi
+          URL="https://warroom.fontiber.com/api/cron/email-tasks"
+          if [ -n "$WINDOW_MIN" ]; then
+            URL="$URL?windowMin=$WINDOW_MIN"
+            echo "Modo backfill: windowMin=$WINDOW_MIN min"
+          fi
           curl --fail-with-body -sS -X GET \
             -H "Authorization: Bearer $CRON_SECRET" \
-            "https://warroom.fontiber.com/api/cron/email-tasks"
+            "$URL"
