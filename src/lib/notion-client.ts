@@ -152,7 +152,3 @@ export async function createTargetPage(title: string): Promise<CreatedPage> {
   return { id: json.id, url: json.url, title };
 }
 
-/** Limpia el cache (útil en tests / scripts one-off). */
-export function _resetNotionCache() {
-  pagesCache = null;
-}

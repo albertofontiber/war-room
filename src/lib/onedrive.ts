@@ -9,7 +9,7 @@
  */
 
 import { log } from "@/lib/logger";
-import { graphFetch, _resetGraphAuthCache } from "@/lib/graph-auth";
+import { graphFetch } from "@/lib/graph-auth";
 
 export type OneDriveFolder = {
   id: string;
@@ -175,8 +175,3 @@ export async function createTargetFolder(rawName: string): Promise<CreatedFolder
   return { webUrl: parent.webUrl, name: folderName, number };
 }
 
-/** Limpia el cache de carpetas y de token (útil en tests). */
-export function _resetOneDriveCache() {
-  _resetGraphAuthCache();
-  foldersCache = null;
-}

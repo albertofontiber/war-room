@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fmtDate } from "@/lib/format";
 
 type Finder = {
   id: string;
@@ -20,14 +21,6 @@ function generatePassword(): string {
   return out;
 }
 
-function formatDate(iso: string | null): string {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("es-ES", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
 
 export default function FindersAdminClient() {
   const [finders, setFinders] = useState<Finder[]>([]);
@@ -418,7 +411,7 @@ export default function FindersAdminClient() {
                   <div className="rounded border border-wr-border bg-wr-surface2/40 p-3 space-y-1">
                     <p className="text-[10px] text-wr-muted uppercase tracking-wider">Estado</p>
                     <p className="text-wr-text">
-                      Password fijada el <span className="font-semibold">{formatDate(pwdModal.passwordSetAt)}</span>.
+                      Password fijada el <span className="font-semibold">{fmtDate(pwdModal.passwordSetAt, "—")}</span>.
                     </p>
                     <p className="text-[11px] text-wr-hint">
                       Por seguridad la contraseña no se puede recuperar (está hasheada). Si el finder la perdió o quieres rotarla, pulsa &laquo;Cambiar password&raquo;.
