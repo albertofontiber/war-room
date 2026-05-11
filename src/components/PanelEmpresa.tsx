@@ -4,7 +4,6 @@ import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useNavegacion } from "@/lib/navegacion";
 import { Separator } from "@/components/ui/separator";
 import { BadgesRow } from "./panel-empresa/BadgesRow";
-import { BormeSenales } from "./panel-empresa/BormeSenales";
 import { ContactosSection } from "./panel-empresa/ContactosSection";
 import { CrmBlock } from "./panel-empresa/CrmBlock";
 import { CrmKpiSection } from "./panel-empresa/CrmKpiSection";
@@ -15,6 +14,7 @@ import { KpisFinancieros } from "./panel-empresa/KpisFinancieros";
 import { PanelHeader } from "./panel-empresa/PanelHeader";
 import { PanelSkeleton } from "./panel-empresa/PanelSkeleton";
 import { useEmpresaDetalle } from "./panel-empresa/useEmpresaDetalle";
+import { TimelineSection } from "./TimelineSection";
 import type { PanelEmpresaProps } from "./panel-empresa/types";
 
 // Tarjeta unificada — antes había una versión compacta (mapa/tabla, con botón
@@ -40,9 +40,22 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
       />
 
       <div className="flex-1 min-h-0 overflow-y-auto">
+        {/*
+          Orden aprobado (2026-05-12):
+          1. Header
+          2. CRM (Funnel + Tareas + Notas)
+          3. KPIs financieros
+          4. Datos generales
+          5. Timeline (feed unificado — absorbe el antiguo Historial y BormeSenales)
+          6. Documentación
+
+          Bloques accesorios (BadgesRow, GestionBlock, descripción,
+          CrmKpiSection, ContactosSection) mantenidos en su contexto natural.
+        */}
         <div className="p-3 sm:p-4 space-y-4">
           <BadgesRow empresa={empresa} />
 
+          {/* 2. CRM */}
           <CrmBlock
             empresa={empresa}
             setEmpresa={setEmpresa}
@@ -66,8 +79,10 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
 
           <Separator className="bg-wr-border" />
 
+          {/* 3. KPIs financieros */}
           {!modoPresentacion && <KpisFinancieros empresa={empresa} />}
 
+          {/* 4. Datos generales */}
           <DatosGenerales empresa={empresa} modoPresentacion={modoPresentacion} />
 
           {empresa.crmEstado && (
@@ -77,6 +92,11 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
             </>
           )}
 
+          {/* 5. Timeline — feed cronológico unificado (incluye BORME). */}
+          <Separator className="bg-wr-border" />
+          <TimelineSection empresaId={empresa.id} />
+
+          {/* 6. Documentación + Contactos */}
           <Separator className="bg-wr-border" />
           <DocumentacionSection
             empresaId={empresa.id}
@@ -96,13 +116,6 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
           />
 
           <ContactosSection empresaId={empresa.id} />
-
-          {empresa.bormeAlertas.length > 0 && (
-            <>
-              <Separator className="bg-wr-border" />
-              <BormeSenales empresa={empresa} />
-            </>
-          )}
 
           <div className="h-4" />
         </div>

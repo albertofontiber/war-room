@@ -31,81 +31,18 @@
  */
 
 import { prisma } from "@/lib/prisma";
+import type {
+  TimelineActor,
+  TimelineEvent,
+  TimelineOptions,
+} from "@/lib/timeline-types";
 
-export type TimelineActor = {
-  kind: "admin" | "finder" | "system";
-  id: string | null;
-  name: string;
-};
-
-/**
- * Discriminado por `kind`. Cada variante lleva el payload mínimo necesario
- * para renderizar el item sin volver a hacer queries en el cliente.
- */
-export type TimelineEvent =
-  | {
-      kind: "nota";
-      id: string;
-      fecha: string;
-      actor: TimelineActor;
-      density: "full";
-      payload: {
-        notaId: number;
-        contenido: string;
-        parentId: number | null;
-        visibleAFinder: boolean;
-      };
-    }
-  | {
-      kind: "tarea_completada";
-      id: string;
-      fecha: string;
-      actor: TimelineActor;
-      density: "full";
-      payload: {
-        tareaId: number;
-        tipo: string;
-        titulo: string;
-        resultado: string | null;
-        source: "manual" | "graph-email" | "graph-calendar";
-      };
-    }
-  | {
-      kind: "stage_changed";
-      id: string;
-      fecha: string;
-      actor: TimelineActor;
-      density: "compact";
-      payload: {
-        from: string | null;
-        to: string | null;
-        note: string | null;
-      };
-    }
-  | {
-      kind: "borme";
-      id: string;
-      fecha: string;
-      actor: TimelineActor; // siempre "system" — el BORME no tiene autor humano
-      density: "full";
-      payload: {
-        bormeAlertaId: number;
-        tipoActo: string;
-        descripcion: string | null;
-        urlBorme: string | null;
-        grupoInferidoNombre: string | null;
-        personaDetectada: string | null;
-      };
-    };
-
-export type TimelineScope = "admin" | "portal";
-export type TimelineOptions = {
-  scope: TimelineScope;
-  /** Si el caller es un finder, su id — sirve para filtrar notas. */
-  finderId?: string;
-  /** Si el caller es un admin, su user.id — no se usa hoy pero permite extensiones. */
-  userId?: string;
-};
+export type {
+  TimelineActor,
+  TimelineEvent,
+  TimelineScope,
+  TimelineOptions,
+} from "@/lib/timeline-types";
 
 /**
  * Carga el timeline completo de una empresa. Por ahora sin paginación: el
