@@ -35,7 +35,15 @@ function timeAgo(iso: string): string {
   return `hace ${d}d`;
 }
 
-export default function NotificationsBell() {
+/**
+ * Campana reutilizable. Por defecto consume el endpoint admin
+ * (`/api/notificaciones`); el portal del finder pasa `endpoint` distinto y
+ * el componente funciona idéntico — el destinatario lo determina la sesión
+ * en el backend, no el cliente.
+ */
+export default function NotificationsBell({
+  endpoint = "/api/notificaciones",
+}: { endpoint?: string } = {}) {
   const router = useRouter();
   const [items, setItems] = useState<Notificacion[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -46,7 +54,7 @@ export default function NotificationsBell() {
 
   const fetchNotifs = useCallback(async () => {
     try {
-      const res = await fetch("/api/notificaciones?limit=10", { cache: "no-store" });
+      const res = await fetch(`${endpoint}?limit=10`, { cache: "no-store" });
       if (!res.ok) return;
       const data: ApiResponse = await res.json();
       setItems(data.items);
@@ -54,7 +62,7 @@ export default function NotificationsBell() {
     } catch {
       // silencioso: si falla el poll, mantenemos el estado anterior
     }
-  }, []);
+  }, [endpoint]);
 
   // Carga inicial + polling cada 30s
   useEffect(() => {
@@ -82,7 +90,7 @@ export default function NotificationsBell() {
     if (unreadCount === 0) return;
     setLoading(true);
     try {
-      await fetch("/api/notificaciones", {
+      await fetch(endpoint, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ markAllRead: true }),
@@ -91,7 +99,7 @@ export default function NotificationsBell() {
     } finally {
       setLoading(false);
     }
-  }, [unreadCount, fetchNotifs]);
+  }, [endpoint, unreadCount, fetchNotifs]);
 
   const handleItemClick = useCallback(
     async (n: Notificacion) => {
@@ -101,7 +109,7 @@ export default function NotificationsBell() {
           prev.map((it) => (it.id === n.id ? { ...it, leida: true } : it))
         );
         setUnreadCount((c) => Math.max(0, c - 1));
-        fetch("/api/notificaciones", {
+        fetch(endpoint, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ids: [n.id] }),
@@ -110,7 +118,7 @@ export default function NotificationsBell() {
       setOpen(false);
       if (n.link) router.push(n.link);
     },
-    [router]
+    [endpoint, router]
   );
 
   return (

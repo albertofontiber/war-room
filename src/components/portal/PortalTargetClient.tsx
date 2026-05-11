@@ -12,6 +12,12 @@ import {
   TAREA_TIPO_ICON,
 } from "@/lib/crm";
 import type { DealStage, TareaTipo } from "@/types";
+import { MentionTextarea } from "@/components/MentionTextarea";
+import { MentionRender } from "@/components/MentionRender";
+import NotificationsBell from "@/components/NotificationsBell";
+
+const MENTION_ENDPOINT_PORTAL = "/api/portal/menciones/candidatos";
+const NOTIFICATIONS_ENDPOINT_PORTAL = "/api/portal/notificaciones";
 
 type Nota = {
   id: number;
@@ -121,6 +127,7 @@ export default function PortalTargetClient({
           ← Pipeline
         </button>
         <div className="flex-1" />
+        <NotificationsBell endpoint={NOTIFICATIONS_ENDPOINT_PORTAL} />
         <span className="text-[11px] text-wr-hint">{finderName}</span>
         <button
           onClick={() => signOut({ callbackUrl: "/portal/login" })}
@@ -370,18 +377,22 @@ function TareasSection({
           />
 
           {modo === "pendiente" ? (
-            <textarea
+            <MentionTextarea
               value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-              placeholder="Descripción (opcional)"
+              onChange={setDescripcion}
+              candidatesEndpoint={MENTION_ENDPOINT_PORTAL}
+              empresaId={empresaId}
+              placeholder="Descripción (opcional, escribe @ para mencionar)"
               rows={2}
               className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
             />
           ) : (
-            <textarea
+            <MentionTextarea
               value={resultado}
-              onChange={(e) => setResultado(e.target.value)}
-              placeholder="Notas post-evento: qué pasó, próximos pasos…"
+              onChange={setResultado}
+              candidatesEndpoint={MENTION_ENDPOINT_PORTAL}
+              empresaId={empresaId}
+              placeholder="Notas post-evento: qué pasó, próximos pasos… (escribe @ para mencionar)"
               rows={3}
               className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
             />
@@ -405,7 +416,7 @@ function TareasSection({
       ) : (
         <div className="space-y-2">
           {ordered.map((t) => (
-            <TareaCard key={t.id} tarea={t} finderId={finderId} onChanged={onChanged} />
+            <TareaCard key={t.id} tarea={t} empresaId={empresaId} finderId={finderId} onChanged={onChanged} />
           ))}
         </div>
       )}
@@ -415,10 +426,12 @@ function TareasSection({
 
 function TareaCard({
   tarea,
+  empresaId,
   finderId,
   onChanged,
 }: {
   tarea: Tarea;
+  empresaId: number;
   finderId: string;
   onChanged: () => void;
 }) {
@@ -560,10 +573,12 @@ function TareaCard({
             placeholder="Título"
             className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue"
           />
-          <textarea
+          <MentionTextarea
             value={editDescripcion}
-            onChange={(e) => setEditDescripcion(e.target.value)}
-            placeholder="Descripción (opcional)"
+            onChange={setEditDescripcion}
+            candidatesEndpoint={MENTION_ENDPOINT_PORTAL}
+            empresaId={empresaId}
+            placeholder="Descripción (opcional, escribe @ para mencionar)"
             rows={2}
             className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
           />
@@ -641,10 +656,12 @@ function TareaCard({
             )}
           </p>
           <p className={`text-xs mt-0.5 ${tarea.completada ? "text-wr-muted" : "text-wr-text"}`}>
-            {tarea.titulo}
+            <MentionRender content={tarea.titulo} />
           </p>
           {tarea.descripcion && (
-            <p className="text-[11px] text-wr-muted mt-0.5">{tarea.descripcion}</p>
+            <p className="text-[11px] text-wr-muted mt-0.5">
+              <MentionRender content={tarea.descripcion} />
+            </p>
           )}
 
           {/* Resultado / notas post-evento */}
@@ -665,11 +682,13 @@ function TareaCard({
               </div>
               {editingResultado ? (
                 <>
-                  <textarea
+                  <MentionTextarea
                     value={resultadoDraft}
-                    onChange={(e) => setResultadoDraft(e.target.value)}
+                    onChange={setResultadoDraft}
+                    candidatesEndpoint={MENTION_ENDPOINT_PORTAL}
+                    empresaId={empresaId}
                     rows={3}
-                    placeholder="Qué pasó, próximos pasos…"
+                    placeholder="Qué pasó, próximos pasos… (escribe @ para mencionar)"
                     className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
                   />
                   <div className="flex justify-end gap-2 mt-1">
@@ -691,7 +710,9 @@ function TareaCard({
                   </div>
                 </>
               ) : tarea.resultado ? (
-                <p className="text-[11px] text-wr-text whitespace-pre-wrap leading-snug">{tarea.resultado}</p>
+                <p className="text-[11px] text-wr-text whitespace-pre-wrap leading-snug">
+                  <MentionRender content={tarea.resultado} />
+                </p>
               ) : (
                 <p className="text-[11px] text-wr-hint italic">Sin notas post-evento.</p>
               )}
@@ -704,11 +725,13 @@ function TareaCard({
               <p className="text-[10px] text-wr-hint uppercase tracking-wider font-semibold">
                 Notas post-evento (opcional)
               </p>
-              <textarea
+              <MentionTextarea
                 value={resultadoOnComplete}
-                onChange={(e) => setResultadoOnComplete(e.target.value)}
+                onChange={setResultadoOnComplete}
+                candidatesEndpoint={MENTION_ENDPOINT_PORTAL}
+                empresaId={empresaId}
                 rows={3}
-                placeholder="Qué pasó, próximos pasos…"
+                placeholder="Qué pasó, próximos pasos… (escribe @ para mencionar)"
                 autoFocus
                 className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
               />
@@ -832,9 +855,11 @@ function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; nota
 
       {adding && (
         <form onSubmit={submit} className="bg-wr-surface border border-wr-border rounded-lg p-3 space-y-2 mb-3">
-          <textarea
-            autoFocus value={contenido} onChange={(e) => setContenido(e.target.value)}
-            placeholder="Escribe tu nota…" rows={3}
+          <MentionTextarea
+            autoFocus value={contenido} onChange={setContenido}
+            candidatesEndpoint={MENTION_ENDPOINT_PORTAL}
+            empresaId={empresaId}
+            placeholder="Escribe tu nota… (escribe @ para mencionar)" rows={3}
             className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
             required
           />
@@ -859,6 +884,7 @@ function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; nota
           {tree.map((node) => (
             <PortalNotaItem
               key={node.id}
+              empresaId={empresaId}
               node={node}
               depth={0}
               editingId={editingId}
@@ -890,6 +916,7 @@ function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; nota
  * son read-only para él, pero puede responderlas.
  */
 function PortalNotaItem({
+  empresaId,
   node,
   depth,
   editingId,
@@ -904,6 +931,7 @@ function PortalNotaItem({
   onSubmitReply,
   onRemove,
 }: {
+  empresaId: number;
   node: NotaNode;
   depth: number;
   editingId: number | null;
@@ -926,9 +954,11 @@ function PortalNotaItem({
     <li style={{ marginLeft }} className="group bg-wr-surface border border-wr-border rounded-lg p-3">
       {editingId === node.id ? (
         <>
-          <textarea
+          <MentionTextarea
             value={editContenido}
-            onChange={(e) => onChangeEditContenido(e.target.value)}
+            onChange={onChangeEditContenido}
+            candidatesEndpoint={MENTION_ENDPOINT_PORTAL}
+            empresaId={empresaId}
             rows={3}
             className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
           />
@@ -941,7 +971,9 @@ function PortalNotaItem({
         </>
       ) : (
         <>
-          <p className="text-xs text-wr-text whitespace-pre-wrap leading-snug">{node.contenido}</p>
+          <p className="text-xs text-wr-text whitespace-pre-wrap leading-snug">
+            <MentionRender content={node.contenido} />
+          </p>
           <div className="flex items-center justify-between mt-1 gap-2">
             <p className="text-[10px] text-wr-hint">
               {node.autorFinder?.name ?? node.autor?.name ?? "—"} · {fmtDate(node.createdAt)}
@@ -979,6 +1011,7 @@ function PortalNotaItem({
 
       {replyingTo === node.id && (
         <PortalReplyForm
+          empresaId={empresaId}
           onCancel={onCancelReply}
           onSubmit={(c) => onSubmitReply(node.id, c)}
         />
@@ -989,6 +1022,7 @@ function PortalNotaItem({
           {node.respuestas.map((child) => (
             <PortalNotaItem
               key={child.id}
+              empresaId={empresaId}
               node={child}
               depth={depth + 1}
               editingId={editingId}
@@ -1011,9 +1045,11 @@ function PortalNotaItem({
 }
 
 function PortalReplyForm({
+  empresaId,
   onCancel,
   onSubmit,
 }: {
+  empresaId: number;
   onCancel: () => void;
   onSubmit: (contenido: string) => Promise<boolean>;
 }) {
@@ -1021,11 +1057,13 @@ function PortalReplyForm({
   const [submitting, setSubmitting] = useState(false);
   return (
     <div className="mt-2 bg-wr-surface2/60 rounded border border-wr-border p-2">
-      <textarea
+      <MentionTextarea
         autoFocus
         value={contenido}
-        onChange={(e) => setContenido(e.target.value)}
-        placeholder="Escribe tu respuesta…"
+        onChange={setContenido}
+        candidatesEndpoint={MENTION_ENDPOINT_PORTAL}
+        empresaId={empresaId}
+        placeholder="Escribe tu respuesta… (escribe @ para mencionar)"
         rows={2}
         className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text resize-none"
       />
