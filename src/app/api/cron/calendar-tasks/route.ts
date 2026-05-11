@@ -72,6 +72,7 @@ export async function GET(req: NextRequest) {
         cancelledSkipped: 0,
         internalOnlySkipped: 0,
         tareasCreated: 0,
+        tareasUpdated: 0,
         errors: 1,
         newCursor: null,
       });
@@ -79,12 +80,20 @@ export async function GET(req: NextRequest) {
   }
 
   const totalCreated = results.reduce((acc, r) => acc + r.tareasCreated, 0);
+  const totalUpdated = results.reduce((acc, r) => acc + r.tareasUpdated, 0);
   const totalErrors = results.reduce((acc, r) => acc + r.errors, 0);
   log.info("cron/calendar-tasks", "ejecutado", {
     totalCreated,
+    totalUpdated,
     totalErrors,
     results,
   });
 
-  return NextResponse.json({ ok: true, totalCreated, totalErrors, results });
+  return NextResponse.json({
+    ok: true,
+    totalCreated,
+    totalUpdated,
+    totalErrors,
+    results,
+  });
 }

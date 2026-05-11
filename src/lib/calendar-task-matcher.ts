@@ -2,13 +2,14 @@
  * Matcher Calendar Events → Tareas.
  *
  * Para cada evento del calendario:
- *   1. Skip si está cancelado o no tiene asistentes externos.
+ *   1. Skip si es cancelación nueva sin ingestar (no creamos tareas para algo
+ *      que no pasó). Si el evento YA estaba ingerido y ahora se cancela,
+ *      ver "Cancelación de evento ya ingerido" abajo.
  *   2. Extrae attendees (incluido organizer), normalizados a lowercase.
  *   3. Filtra los `@fontiber.com` (interno).
  *   4. Busca matches en `Contacto.email`.
- *   5. Por cada match, crea (idempotente) una Tarea + CalendarIngest.
- *      Dedup por `iCalUId` único (cross-user: si alberto Y gabriel están en
- *      la misma reunión, ambos calendarios tienen el mismo iCalUId → 1 tarea).
+ *   5. Por cada match: si NO existía CalendarIngest → CREATE Tarea+Ingest.
+ *      Si YA existía → UPDATE (ver "Actualización de evento ya ingerido").
  *
  * Tipo de tarea:
  *   - `isOnlineMeeting: true` → `videollamada`
@@ -20,14 +21,32 @@
  *   - Evento en el PASADO → completed (`completada: true`,
  *     `completadaAt: end`, `fechaLimite: start`). Registro histórico.
  *
+ * Actualización de evento ya ingerido (v2):
+ *   - Campos puramente derivados del calendario se actualizan SIEMPRE:
+ *     `titulo` (subject), `tipo` (online/presencial), `fechaLimite` (start),
+ *     y los espejos en `CalendarIngest` (startAt/endAt/subject/isOnlineMeeting).
+ *   - Campos que el usuario puede haber editado a mano se respetan: si
+ *     `Tarea.resultado` no es null, asumimos que fue tocada manualmente y
+ *     NO sobrescribimos `completada/completadaAt/resultado`. Esto cubre el
+ *     caso "Alberto rellenó qué pasó en la reunión y luego el evento se
+ *     reagenda" — la nota se preserva.
+ *
+ * Cancelación de evento ya ingerido (v2):
+ *   - Si pasa a `isCancelled=true` y la tarea NO fue editada (resultado==null),
+ *     se marca como completada con `resultado="Reunión cancelada por el
+ *     organizador"`. Sale del Kanban de pendientes pero queda como rastro.
+ *   - Si la tarea ya fue editada, no tocamos resultado/completada — el
+ *     usuario ya tomó nota de algo distinto.
+ *
  * Privacy: eventos que NO matchean ningún Contacto no dejan rastro en BD.
  * Solo se persiste subject + recipientEmail + start/end para los que sí entran.
  *
- * Limitaciones conocidas v1 (ver TODOs):
- *   - No actualiza tareas si el evento se reagenda tras ingestar (el cursor
- *     sí captura la modificación, pero `iCalUId` ya existe → no-op por dedup).
+ * Limitaciones conocidas v2 (ver TODOs):
  *   - Eventos recurrentes se ingestan UNA vez (toda la serie). Si se quiere
  *     una tarea por ocurrencia, refactorizar a fetch de `/calendarView`.
+ *   - Si un Contacto cambia tras la ingesta inicial (otra empresa pasa a
+ *     usar ese email), las tareas existentes mantienen el `empresaId`
+ *     original — no migramos la relación.
  */
 
 import { prisma } from "@/lib/prisma";
@@ -51,9 +70,12 @@ export type CalendarIngestStats = {
   cancelledSkipped: number;
   internalOnlySkipped: number;
   tareasCreated: number;
+  tareasUpdated: number;
   errors: number;
   newCursor: Date | null;
 };
+
+const CANCELLED_RESULT_TEXT = "Reunión cancelada por el organizador";
 
 /** True si el email es externo (no @fontiber.com) y tiene formato válido. */
 function isExternalEmail(email: string): boolean {
@@ -81,41 +103,61 @@ function externalCandidates(event: CalendarEvent): string[] {
 }
 
 /**
- * Procesa un evento individual. Si un attendee externo matchea con
- * `Contacto.email`, crea Tarea+CalendarIngest atómicamente. Si hay varios
- * matches (raro), usa el primero (criterio simplificado igual que email
- * matcher; refactorizar a N:M si surge la necesidad).
+ * Procesa un evento individual. Tres caminos posibles:
+ *   1. Si NO existía CalendarIngest y matchea Contacto → CREATE Tarea+Ingest.
+ *   2. Si YA existía CalendarIngest → diff y UPDATE de campos relevantes.
+ *   3. Otros casos: skip (cancelado nuevo, solo-interno, sin match).
  *
- * Retorna `{ created, matched, skipped }` donde `skipped` indica si el evento
- * se descartó por ser cancelado o solo-interno.
+ * Si hay varios matches en attendees (raro), usamos el primero (criterio
+ * simplificado igual que email matcher; refactorizar a N:M si surge la
+ * necesidad).
+ *
+ * Retorna `{ created, updated, matched, skipped }`. `matched=true` indica que
+ * el evento corresponde a un Contacto/CalendarIngest conocido (incluso si no
+ * hubo cambios). `skipped` indica si el evento se descartó por ser cancelado
+ * nuevo o solo-interno.
  */
 async function ingestCalendarEvent(
   event: CalendarEvent,
   upn: string
 ): Promise<{
   created: boolean;
+  updated: boolean;
   matched: boolean;
   skipped: "cancelled" | "internal-only" | null;
 }> {
-  // Skip cancelados — el organizador anuló la reunión, no tiene sentido
-  // crear tarea histórica de algo que no pasó. Si el evento se cancela
-  // DESPUÉS de que ingestáramos la tarea, queda huérfana — limitación v1.
-  if (event.isCancelled) {
-    return { created: false, matched: false, skipped: "cancelled" };
-  }
-
   // Dedup por iCalUId — única forma estable cross-user de identificar la
   // misma reunión en dos buzones distintos (alberto + gabriel invitados).
+  // Lo consultamos PRIMERO (incluso para eventos cancelados) porque si está
+  // ingerido ya, una cancelación es un evento de UPDATE — la rama de cancel
+  // es relevante para la lógica de v2.
   const existing = await prisma.calendarIngest.findUnique({
     where: { iCalUId: event.iCalUId },
-    select: { id: true },
+    select: {
+      id: true,
+      tareaId: true,
+      startAt: true,
+      endAt: true,
+      subject: true,
+      isOnlineMeeting: true,
+    },
   });
-  if (existing) return { created: false, matched: true, skipped: null };
+
+  if (existing) {
+    const result = await applyCalendarUpdate(existing, event, upn);
+    return { created: false, updated: result.updated, matched: true, skipped: null };
+  }
+
+  // Cancelados NO ingeridos — el organizador anuló la reunión antes de que
+  // la viéramos. No creamos histórico de algo que no pasó.
+  if (event.isCancelled) {
+    return { created: false, updated: false, matched: false, skipped: "cancelled" };
+  }
 
   const candidates = externalCandidates(event);
   if (candidates.length === 0) {
     // No hay attendees externos NI emails externos en el body. Skip.
-    return { created: false, matched: false, skipped: "internal-only" };
+    return { created: false, updated: false, matched: false, skipped: "internal-only" };
   }
 
   const contactos = await prisma.contacto.findMany({
@@ -123,7 +165,7 @@ async function ingestCalendarEvent(
     select: { id: true, email: true, empresaId: true, nombre: true },
   });
   if (contactos.length === 0) {
-    return { created: false, matched: false, skipped: null };
+    return { created: false, updated: false, matched: false, skipped: null };
   }
 
   const startAt = new Date(event.start.dateTime + "Z");
@@ -185,16 +227,189 @@ async function ingestCalendarEvent(
         },
       });
     });
-    return { created: true, matched: true, skipped: null };
+    return { created: true, updated: false, matched: true, skipped: null };
   } catch (err) {
     // Race: otro tick procesó el mismo iCalUId entre nuestro findUnique y
     // el create. Constraint @unique de iCalUId revienta — tratamos como
     // ya ingerido.
     if (err instanceof Error && err.message.includes("Unique constraint")) {
-      return { created: false, matched: true, skipped: null };
+      return { created: false, updated: false, matched: true, skipped: null };
     }
     throw err;
   }
+}
+
+type ExistingIngest = {
+  id: number;
+  tareaId: number | null;
+  startAt: Date;
+  endAt: Date;
+  subject: string | null;
+  isOnlineMeeting: boolean;
+};
+
+/**
+ * Compara el evento Graph con el snapshot guardado en CalendarIngest +
+ * la Tarea ligada. Si hay diff, actualiza ambos. Devuelve `updated:true`
+ * solo si efectivamente cambió algo en BD.
+ *
+ * Convención sobre "tarea editada manualmente":
+ *   `Tarea.resultado != null` actúa como flag conservador. El usuario solo
+ *   rellena `resultado` cuando narra qué pasó en la reunión — si lo tocó,
+ *   no sobreescribimos `completada/completadaAt/resultado` (preserva su
+ *   nota). Los campos puramente derivados del calendario (titulo, tipo,
+ *   fechaLimite) se actualizan siempre.
+ */
+async function applyCalendarUpdate(
+  existing: ExistingIngest,
+  event: CalendarEvent,
+  upn: string
+): Promise<{ updated: boolean }> {
+  // Sin tarea ligada (ingest huérfano por SetNull tras delete manual): no
+  // hay nada que actualizar. Sí refrescamos el snapshot del ingest para no
+  // re-procesar en cada tick.
+  if (!existing.tareaId) {
+    await refreshIngestSnapshotIfChanged(existing, event);
+    return { updated: false };
+  }
+
+  const tarea = await prisma.tarea.findUnique({
+    where: { id: existing.tareaId },
+    select: {
+      titulo: true,
+      tipo: true,
+      fechaLimite: true,
+      completada: true,
+      completadaAt: true,
+      resultado: true,
+    },
+  });
+  // Tarea borrada manualmente: tratamos como no actualizable.
+  if (!tarea) {
+    await refreshIngestSnapshotIfChanged(existing, event);
+    return { updated: false };
+  }
+
+  const startAt = new Date(event.start.dateTime + "Z");
+  const endAt = new Date(event.end.dateTime + "Z");
+  const subject = event.subject ?? "";
+  const newTitulo = (subject.length > 0 ? subject : "(sin asunto)").slice(0, 255);
+  const newTipo = event.isOnlineMeeting ? "videollamada" : "reunion_presencial";
+
+  const userEdited = tarea.resultado !== null;
+
+  const tareaUpdate: Record<string, unknown> = {};
+  // Campos puramente derivados — siempre se actualizan.
+  if (tarea.titulo !== newTitulo) tareaUpdate.titulo = newTitulo;
+  if (tarea.tipo !== newTipo) tareaUpdate.tipo = newTipo;
+  if (
+    !tarea.fechaLimite ||
+    tarea.fechaLimite.getTime() !== startAt.getTime()
+  ) {
+    tareaUpdate.fechaLimite = startAt;
+  }
+
+  // Campos que respetan edición manual.
+  if (!userEdited) {
+    if (event.isCancelled) {
+      // Cancelación nueva (sabemos que existe el ingest, así que la había
+      // creado un tick anterior) — completamos con texto explicativo.
+      if (!tarea.completada || tarea.resultado !== CANCELLED_RESULT_TEXT) {
+        tareaUpdate.completada = true;
+        tareaUpdate.completadaAt = tarea.completadaAt ?? new Date();
+        tareaUpdate.resultado = CANCELLED_RESULT_TEXT;
+      }
+    } else {
+      // Recalcula pasado/futuro con la nueva fecha.
+      const isPast = endAt.getTime() < Date.now();
+      if (tarea.completada !== isPast) {
+        tareaUpdate.completada = isPast;
+        tareaUpdate.completadaAt = isPast ? endAt : null;
+      }
+    }
+  }
+
+  // Snapshot del CalendarIngest — refresca si cambió cualquier campo.
+  const ingestUpdate: Record<string, unknown> = {};
+  if (existing.startAt.getTime() !== startAt.getTime()) ingestUpdate.startAt = startAt;
+  if (existing.endAt.getTime() !== endAt.getTime()) ingestUpdate.endAt = endAt;
+  if ((existing.subject ?? "") !== subject) ingestUpdate.subject = subject;
+  if (existing.isOnlineMeeting !== event.isOnlineMeeting) {
+    ingestUpdate.isOnlineMeeting = event.isOnlineMeeting;
+  }
+
+  if (Object.keys(tareaUpdate).length === 0 && Object.keys(ingestUpdate).length === 0) {
+    return { updated: false };
+  }
+
+  await prisma.$transaction(async (tx) => {
+    if (Object.keys(tareaUpdate).length > 0) {
+      await tx.tarea.update({
+        where: { id: existing.tareaId! },
+        data: tareaUpdate,
+      });
+      void auditLog({
+        actorType: "system",
+        action: "update",
+        entityType: "tarea",
+        entityId: existing.tareaId!,
+        before: pickAuditFields(tarea, tareaUpdate),
+        after: {
+          ...tareaUpdate,
+          source: "graph-calendar",
+          upn,
+          iCalUId: event.iCalUId,
+        },
+      });
+    }
+    if (Object.keys(ingestUpdate).length > 0) {
+      await tx.calendarIngest.update({
+        where: { id: existing.id },
+        data: ingestUpdate,
+      });
+    }
+  });
+
+  return { updated: Object.keys(tareaUpdate).length > 0 };
+}
+
+/**
+ * Refresca solo el snapshot del CalendarIngest (sin tocar Tarea). Se usa
+ * cuando la Tarea ligada ya no existe — para no procesar el evento de
+ * nuevo en cada tick aunque no tenga tarea destino.
+ */
+async function refreshIngestSnapshotIfChanged(
+  existing: ExistingIngest,
+  event: CalendarEvent
+): Promise<void> {
+  const startAt = new Date(event.start.dateTime + "Z");
+  const endAt = new Date(event.end.dateTime + "Z");
+  const subject = event.subject ?? "";
+  const ingestUpdate: Record<string, unknown> = {};
+  if (existing.startAt.getTime() !== startAt.getTime()) ingestUpdate.startAt = startAt;
+  if (existing.endAt.getTime() !== endAt.getTime()) ingestUpdate.endAt = endAt;
+  if ((existing.subject ?? "") !== subject) ingestUpdate.subject = subject;
+  if (existing.isOnlineMeeting !== event.isOnlineMeeting) {
+    ingestUpdate.isOnlineMeeting = event.isOnlineMeeting;
+  }
+  if (Object.keys(ingestUpdate).length > 0) {
+    await prisma.calendarIngest.update({
+      where: { id: existing.id },
+      data: ingestUpdate,
+    });
+  }
+}
+
+/** Devuelve solo los campos del `before` que aparecen en `after`. */
+function pickAuditFields(
+  before: Record<string, unknown>,
+  after: Record<string, unknown>
+): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const key of Object.keys(after)) {
+    out[key] = before[key];
+  }
+  return out;
 }
 
 /**
@@ -218,6 +433,7 @@ export async function ingestCalendarForUpn(
     cancelledSkipped: 0,
     internalOnlySkipped: 0,
     tareasCreated: 0,
+    tareasUpdated: 0,
     errors: 0,
     newCursor: null,
   };
@@ -240,14 +456,16 @@ export async function ingestCalendarForUpn(
   let lastProcessed: Date | null = null;
   for (const event of events) {
     try {
-      const { created, matched, skipped } = await ingestCalendarEvent(
+      const { created, updated, matched, skipped } = await ingestCalendarEvent(
         event,
         upn
       );
       if (skipped === "cancelled") stats.cancelledSkipped++;
       else if (skipped === "internal-only") stats.internalOnlySkipped++;
       if (created) stats.tareasCreated++;
-      if (matched && !created) stats.alreadyIngested++;
+      if (updated) stats.tareasUpdated++;
+      // alreadyIngested = vimos el iCalUId pero no hubo cambios (ni create ni update).
+      if (matched && !created && !updated) stats.alreadyIngested++;
       if (matched) stats.matched++;
       else if (!skipped) stats.noMatch++;
     } catch (err) {
@@ -278,4 +496,6 @@ export const __testing__ = {
   externalAttendees,
   externalCandidates,
   ingestCalendarEvent,
+  applyCalendarUpdate,
+  CANCELLED_RESULT_TEXT,
 };
