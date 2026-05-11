@@ -4,19 +4,31 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useState, useRef, useEffect, useMemo, FormEvent } from "react";
 import ReactMarkdown from "react-markdown";
+import {
+  dispatchEmpresaChanged,
+  type EmpresaChangedEntity,
+} from "@/lib/empresa-events";
 
 /**
- * Evento global que dispara el chat cuando un tool de tarea termina con
- * éxito (crear_tarea, actualizar_tarea). Cualquier componente que muestre
- * tareas debe escuchar `wr:tareas-changed` y refrescar si el `empresaId`
- * coincide con el suyo. Importable desde otros sitios:
- *
- *   import { TAREAS_CHANGED_EVENT } from "@/components/ChatIA";
- *   window.addEventListener(TAREAS_CHANGED_EVENT, handler);
- *
- * Detail: `{ empresaId: number; tareaId?: number; source: "crear_tarea"|"actualizar_tarea" }`.
+ * Mapping toolName → entidad afectada. Mantener alineado con los tools
+ * declarados en `src/app/api/chat/route.ts`. Si se añade un tool nuevo
+ * (ej. `crear_nota`), añadir aquí su entry y, opcionalmente, una entrada
+ * nueva en `EmpresaChangedEntity`.
  */
-export const TAREAS_CHANGED_EVENT = "wr:tareas-changed";
+const TOOL_TO_ENTITY: Record<string, EmpresaChangedEntity> = {
+  crear_tarea: "tarea",
+  actualizar_tarea: "tarea",
+};
+
+function entityForTool(toolName: string): EmpresaChangedEntity | null {
+  return TOOL_TO_ENTITY[toolName] ?? null;
+}
+
+function actionForTool(toolName: string): "create" | "update" | undefined {
+  if (toolName.startsWith("crear_")) return "create";
+  if (toolName.startsWith("actualizar_")) return "update";
+  return undefined;
+}
 
 export default function ChatIA() {
   const [open, setOpen] = useState(false);
@@ -39,14 +51,14 @@ export default function ChatIA() {
     }
   }, [messages, isLoading]);
 
-  // Observa los tool results en el stream del chat. Cuando crear_tarea o
-  // actualizar_tarea devuelven `{ok: true, tarea: {empresa: {id}}}`,
-  // dispara un window event para que TareasSection (y futuros consumers)
-  // refresquen su lista sin que el usuario tenga que pulsar F5.
+  // Observa los tool results en el stream del chat. Cuando un tool con
+  // efecto sobre una empresa termina (`{ok: true, ...}` con un campo de
+  // entidad reconocible), dispara `wr:empresa-changed` para que cualquier
+  // widget interesado refresque sin que el usuario pulse F5.
   //
   // Dedup por toolCallId (o un fallback si no existe): el stream emite el
   // mismo part en múltiples renders mientras llega, así que sin dedup
-  // dispararíamos N eventos por una sola tarea.
+  // dispararíamos N eventos por una sola operación.
   const dispatchedRef = useRef(new Set<string>());
   useEffect(() => {
     for (const msg of messages) {
@@ -63,14 +75,11 @@ export default function ChatIA() {
             }
           | undefined;
         if (!output?.ok) continue;
-        const empresaId = output.tarea?.empresa?.id;
-        if (!empresaId) continue;
 
         const callId =
           (anyPart.toolCallId as string | undefined) ??
           `${msg.id}-${output.tarea?.id ?? "?"}`;
         if (dispatchedRef.current.has(callId)) continue;
-        dispatchedRef.current.add(callId);
 
         // El toolName puede venir en `toolName` (v4 SDK) o codificado en
         // `type` como `tool-crear_tarea` (v5). Intentamos ambos.
@@ -78,17 +87,25 @@ export default function ChatIA() {
         const toolName =
           (anyPart.toolName as string | undefined) ??
           (rawType?.startsWith("tool-") ? rawType.slice(5) : undefined) ??
-          "tool";
+          "";
 
-        window.dispatchEvent(
-          new CustomEvent(TAREAS_CHANGED_EVENT, {
-            detail: {
-              empresaId,
-              tareaId: output.tarea?.id,
-              source: toolName,
-            },
-          })
-        );
+        const entity = entityForTool(toolName);
+        if (!entity) continue; // Tool sin efecto sobre empresa (ej. execute_sql, buscar_empresa).
+
+        // Resolver empresaId/entityId según la entidad. Hoy todos los
+        // tools que devuelven `tarea` lo embeben en `output.tarea.empresa.id`.
+        const empresaId = output.tarea?.empresa?.id;
+        const entityId = output.tarea?.id;
+        if (!empresaId) continue;
+
+        dispatchedRef.current.add(callId);
+        dispatchEmpresaChanged({
+          empresaId,
+          entity,
+          entityId,
+          action: actionForTool(toolName),
+          source: toolName,
+        });
       }
     }
   }, [messages]);
