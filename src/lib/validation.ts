@@ -55,6 +55,10 @@ export const TareaUpdateSchema = z
 
 export const NotaCreateSchema = z.object({
   contenido: nonEmptyString,
+  // Si está presente, la nota se crea como respuesta a otra nota.
+  // El endpoint valida que existe + es de la misma empresa + hereda visibleAFinder
+  // del root del thread.
+  parentId: z.number().int().positive().optional(),
 });
 
 export const NotaUpdateSchema = z.object({
@@ -180,6 +184,9 @@ export const FinderUpdateSchema = z
 
 export const PortalNotaCreateSchema = z.object({
   contenido: nonEmptyString,
+  // Threading desde el portal — el endpoint valida que el finder pueda LEER
+  // la nota padre (no se puede responder a algo que no se ve).
+  parentId: z.number().int().positive().optional(),
 });
 
 export const PortalNotaUpdateSchema = z.object({

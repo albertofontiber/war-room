@@ -29,6 +29,16 @@ export type NotifyAdminsInput = {
   email?: boolean;
 };
 
+export type NotifyUserInput = {
+  userId: string;
+  tipo: string;
+  titulo: string;
+  mensaje: string;
+  link?: string | null;
+  /** Si false, no envía email — solo persiste in-app. Default false (campanita-only). */
+  email?: boolean;
+};
+
 /**
  * Crea notificaciones in-app para todos los admins activos y, opcionalmente,
  * envía un email. No lanza si Resend falla — solo loguea.
@@ -82,6 +92,58 @@ export async function notifyAdmins(input: NotifyAdminsInput): Promise<void> {
     if (error) log.error("lib/notifications", "Resend error", { error });
   } catch (err) {
     log.error("lib/notifications", err);
+  }
+}
+
+/**
+ * Notifica a un único admin (campanita in-app + email opcional). Útil para
+ * eventos dirigidos como "te han respondido a tu nota" o "te han mencionado".
+ * Default email=false porque estos eventos suelen ser de alta frecuencia y
+ * conviene no inundar la bandeja.
+ */
+export async function notifyUser(input: NotifyUserInput): Promise<void> {
+  const user = await prisma.user.findUnique({
+    where: { id: input.userId },
+    select: { id: true, email: true, active: true },
+  });
+  if (!user || !user.active) return;
+
+  await prisma.notificacion.create({
+    data: {
+      userId: user.id,
+      tipo: input.tipo,
+      titulo: input.titulo,
+      mensaje: input.mensaje,
+      link: input.link ?? null,
+    },
+  });
+
+  if (input.email !== true) return;
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    log.warn("lib/notifications", "RESEND_API_KEY not set, skipping email");
+    return;
+  }
+
+  const link = input.link ? `${BASE_URL}${input.link}` : BASE_URL;
+  const html = renderEmail({
+    titulo: input.titulo,
+    mensaje: input.mensaje,
+    link,
+  });
+
+  try {
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
+      from: `War Room <${FROM}>`,
+      to: [user.email],
+      subject: input.titulo,
+      html,
+    });
+    if (error) log.error("lib/notifications notifyUser", "Resend error", { error });
+  } catch (err) {
+    log.error("lib/notifications notifyUser", err);
   }
 }
 

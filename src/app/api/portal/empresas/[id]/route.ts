@@ -62,7 +62,12 @@ export async function GET(
 
   if (!empresa) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Notas: del finder (siempre) + de admins marcadas visibles
+  // Notas: del finder (siempre) + de admins marcadas visibles. Las respuestas
+  // (parentId != null) heredan visibilidad del root al crearse — si el finder
+  // no debería ver la rama, las respuestas tendrán visibleAFinder=false y
+  // quedan filtradas por el OR. Por seguridad, también filtramos a mano:
+  // una respuesta solo aparece si el cliente además ve a su padre.
+  // Order asc para que el cliente arme el árbol con padres antes que hijos.
   const notas = await prisma.nota.findMany({
     where: {
       empresaId: id,
@@ -71,11 +76,12 @@ export async function GET(
         { visibleAFinder: true },
       ],
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: "asc" },
     select: {
       id: true,
       contenido: true,
       createdAt: true,
+      parentId: true,
       autor: { select: { name: true } },
       autorFinder: { select: { name: true } },
     },
