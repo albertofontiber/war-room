@@ -1,0 +1,50 @@
+# Cron de auto-tarea por evento de calendar — gemelo de email-tasks-cron.
+#
+# Los calendar invites se programan con días de antelación, no necesitamos
+# granularidad fina. Cada 30 min es más que suficiente para reflejar nuevos
+# invites en el CRM con poco delay.
+#
+# Setup requerido en el repo:
+#   - Secret `CRON_SECRET` (Settings → Secrets and variables → Actions). Mismo
+#     valor que la env var de Vercel. Compartido con email-tasks-cron.
+#
+# El job hace una llamada GET autenticada al endpoint de prod. El endpoint
+# es idempotente (cursor por buzón en BD + iCalUId @unique en CalendarIngest)
+# — si una ronda no llega a tiempo o se solapa con otra, no duplica tareas.
+
+name: calendar-tasks-cron
+
+on:
+  schedule:
+    # Cada 30 minutos. GitHub Actions tolera intervalos cortos pero no
+    # garantiza puntualidad bajo carga; suele dispararse con 0-15 min de
+    # delay. Para auto-tareas de calendar es de sobra.
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+    inputs:
+      windowDays:
+        description: "First-run window in days (override, default 7)"
+        required: false
+        type: string
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Hit /api/cron/calendar-tasks
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          WINDOW_DAYS: ${{ github.event.inputs.windowDays }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::error::CRON_SECRET no configurado en repo secrets"
+            exit 1
+          fi
+          URL="https://warroom.fontiber.com/api/cron/calendar-tasks"
+          if [ -n "$WINDOW_DAYS" ]; then
+            URL="${URL}?windowDays=${WINDOW_DAYS}"
+          fi
+          curl --fail-with-body -sS -X GET \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$URL"
