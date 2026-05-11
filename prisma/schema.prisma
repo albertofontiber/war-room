@@ -83,6 +83,7 @@ model Empresa {
   finderSource     Finder?       @relation(fields: [finderSourceId], references: [id])
   finderNotes      FinderNote[]
   proposals        TargetProposal[]
+  seenAts          EmpresaSeenAt[]
 
   @@index([nombre])
   @@index([fuente])
@@ -319,6 +320,7 @@ model User {
   crmEstadosOwner CrmEstado[]       @relation("CrmOwner")
   notificaciones  Notificacion[]
   menciones       Mencion[]         @relation("UserMencion")
+  empresaSeenAts  EmpresaSeenAt[]   @relation("EmpresaSeenAtUser")
 }
 
 model Nota {
@@ -428,6 +430,7 @@ model Finder {
   passwordResets    PasswordResetToken[]
   notificaciones    Notificacion[]    @relation("NotificacionFinder")
   menciones         Mencion[]         @relation("FinderMencion")
+  empresaSeenAts    EmpresaSeenAt[]   @relation("EmpresaSeenAtFinder")
 }
 
 // Self-service reset de password para finders. El finder pide reset desde
@@ -558,6 +561,29 @@ model Mencion {
   @@index([finderId, createdAt])
   @@index([notaId])
   @@index([tareaId])
+}
+
+// Cursor "leído hasta aquí" del Timeline por usuario × empresa. Se actualiza
+// cuando el usuario cierra el panel (o explícitamente "marcar como leído"). El
+// frontend pinta una línea horizontal "── N nuevas desde tu última visita ──"
+// entre los eventos con `fecha > lastSeenAt` y el resto. Mutex destinatario:
+// solo uno de los dos campos tiene valor; los endpoints garantizan la regla.
+model EmpresaSeenAt {
+  id          Int       @id @default(autoincrement())
+  empresaId   Int
+  empresa     Empresa   @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?     @relation("EmpresaSeenAtUser", fields: [userId], references: [id], onDelete: Cascade)
+  finderId    String?
+  finder      Finder?   @relation("EmpresaSeenAtFinder", fields: [finderId], references: [id], onDelete: Cascade)
+  lastSeenAt  DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Cada (empresa, user) y (empresa, finder) es único — una fila por par.
+  @@unique([empresaId, userId])
+  @@unique([empresaId, finderId])
+  @@index([userId])
+  @@index([finderId])
 }
 
 // ─────────────────────────────────────────────────────────────
