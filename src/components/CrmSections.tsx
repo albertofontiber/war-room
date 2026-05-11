@@ -69,17 +69,11 @@ type Tarea = {
   asignadoFinder?: Autor;
 };
 
-type HistorialItem = {
-  id: string;
-  // Tras la fusión Tarea+Actividad solo quedan dos kinds; las llamadas/emails/
-  // reuniones legacy ahora son `tarea_completada` con `meta.tipo` del enum.
-  kind: "stage" | "tarea_completada";
-  fecha: string;
-  autor: string | null;
-  autorKind?: "admin" | "finder" | null;
-  texto: string;
-  meta?: Record<string, unknown>;
-};
+// (HistorialItem y HistorialSection eliminados 2026-05-12. El feed cronológico
+// vive ahora en TimelineSection — ver `components/TimelineSection.tsx` y los
+// endpoints `/api/.../timeline`. El endpoint legacy `/api/.../historial` sigue
+// vivo por compatibilidad mientras se valida la migración; cuando confirmemos
+// que ningún cliente lo usa, también se elimina.)
 
 /** Badge distintivo cuando la entrada la creó un finder desde el portal. */
 function FinderBadge({ name }: { name: string }) {
@@ -969,144 +963,11 @@ export function TareasSection({
   );
 }
 
-// ─── Sección HISTORIAL ────────────────────────────────────────────────────
-
-const KIND_LABEL: Record<HistorialItem["kind"], string> = {
-  stage: "Cambio de stage",
-  tarea_completada: "Tarea completada",
-};
-
-const KIND_COLOR: Record<HistorialItem["kind"], string> = {
-  stage: "text-wr-amber",
-  tarea_completada: "text-wr-green",
-};
-
-export function HistorialSection({ empresaId }: { empresaId: number }) {
-  const [items, setItems] = useState<HistorialItem[]>([]);
-  const [open, setOpen] = useState(false);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
-
-  const reload = useCallback(() => {
-    fetch(`/api/empresas/${empresaId}/historial`, { cache: "no-store" })
-      .then((r) => r.json())
-      .then(setItems)
-      .catch(() => setItems([]));
-  }, [empresaId]);
-
-  useEffect(() => {
-    if (!open) return;
-    reload();
-  }, [open, reload]);
-
-  const borrarTarea = async (tareaId: number) => {
-    if (!confirm("¿Borrar esta tarea del historial? Acción irreversible.")) return;
-    setDeletingId(tareaId);
-    try {
-      const res = await fetch(`/api/tareas/${tareaId}`, { method: "DELETE" });
-      if (!res.ok) {
-        alert(`Error al borrar: ${res.status}`);
-        return;
-      }
-      reload();
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
-  return (
-    <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between"
-      >
-        <p className="text-[9px] font-semibold text-wr-muted uppercase tracking-widest">
-          Historial {open && `(${items.length})`}
-        </p>
-        <span className="text-base text-wr-muted leading-none">{open ? "▾" : "▸"}</span>
-      </button>
-      {open && (
-        <div className="space-y-1.5 max-h-80 overflow-y-auto">
-          {items.length === 0 && (
-            <p className="text-[10px] text-wr-hint italic text-center py-2">
-              Sin histórico
-            </p>
-          )}
-          {items.map((item) => {
-            // Para tareas completadas, el meta incluye el tipo de tarea → chip
-            const tareaTipo = item.meta?.tipo as string | undefined;
-            const tareaId = item.meta?.tareaId as number | undefined;
-            const esTareaValida =
-              item.kind === "tarea_completada" && tareaTipo && (TAREA_TIPOS as string[]).includes(tareaTipo);
-            // Quitar el prefijo ("{icono} {label} · ") del texto si ya vamos a mostrar el chip
-            const textoLimpio = esTareaValida
-              ? item.texto.replace(
-                  new RegExp(`^${TAREA_TIPO_ICON[tareaTipo as TareaTipo]} ${TAREA_TIPO_LABEL[tareaTipo as TareaTipo]} · `),
-                  ""
-                )
-              : item.texto;
-            // Solo las tareas completadas son borrables. Los cambios de stage
-            // (CrmLog) son auditoría inmutable.
-            const esBorrable = item.kind === "tarea_completada" && typeof tareaId === "number";
-            return (
-              <div
-                key={item.id}
-                className="group bg-wr-surface rounded border border-wr-border p-2 text-xs"
-              >
-                <div className="flex items-center justify-between mb-0.5 gap-2">
-                  <span
-                    className={`text-[9px] font-semibold uppercase tracking-wider ${KIND_COLOR[item.kind]}`}
-                  >
-                    {KIND_LABEL[item.kind]}
-                  </span>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="text-[9px] text-wr-hint">{fmtDate(item.fecha)}</span>
-                    {esBorrable && (
-                      <button
-                        onClick={() => borrarTarea(tareaId!)}
-                        disabled={deletingId === tareaId}
-                        title="Borrar tarea del historial"
-                        className="opacity-0 group-hover:opacity-60 hover:text-wr-red hover:opacity-100 disabled:opacity-30 text-wr-hint p-0.5"
-                      >
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M3 6h18" />
-                          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                          <path d="M10 11v6M14 11v6" />
-                        </svg>
-                      </button>
-                    )}
-                  </div>
-                </div>
-                {esTareaValida && (
-                  <div className="mb-1">
-                    <span
-                      className="text-[9px] bg-wr-surface2 border border-wr-border rounded px-1 py-0.5 text-wr-muted whitespace-nowrap inline-block"
-                      title={TAREA_TIPO_LABEL[tareaTipo as TareaTipo]}
-                    >
-                      {TAREA_TIPO_ICON[tareaTipo as TareaTipo]} {TAREA_TIPO_LABEL[tareaTipo as TareaTipo]}
-                    </span>
-                  </div>
-                )}
-                {textoLimpio && (
-                  <p className="text-wr-text whitespace-pre-wrap text-[11px] leading-snug">
-                    {textoLimpio}
-                  </p>
-                )}
-                {item.autor && (
-                  <p className="text-[9px] text-wr-hint mt-0.5">
-                    por{" "}
-                    {item.autorKind === "finder" ? (
-                      <FinderBadge name={item.autor} />
-                    ) : (
-                      <span>{item.autor}</span>
-                    )}
-                  </p>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
+// ─── (HistorialSection eliminada 2026-05-12) ──────────────────────────────
+//
+// El feed cronológico unificado vive ahora en `components/TimelineSection.tsx`
+// a nivel del PanelEmpresa (no dentro del CrmBlock). Razón: aplica también a
+// empresas sin CRM (BORME, emails ingestados, etc.). El endpoint legacy
+// `/api/empresas/[id]/historial` queda DEPRECATED — el cliente nuevo usa
+// `/api/empresas/[id]/timeline`. Si nadie más lo invoca, eliminar también
+// el endpoint en una limpieza posterior.

@@ -15,6 +15,7 @@ import type { DealStage, TareaTipo } from "@/types";
 import { MentionTextarea } from "@/components/MentionTextarea";
 import { MentionRender } from "@/components/MentionRender";
 import NotificationsBell from "@/components/NotificationsBell";
+import { TimelineSection } from "@/components/TimelineSection";
 
 const MENTION_ENDPOINT_PORTAL = "/api/portal/menciones/candidatos";
 const NOTIFICATIONS_ENDPOINT_PORTAL = "/api/portal/notificaciones";
@@ -206,6 +207,13 @@ export default function PortalTargetClient({
               onChanged={load}
             />
             <NotasSection empresaId={empresaId} notas={target.notas} onChanged={load} />
+
+            {/* Timeline — feed cronológico unificado (incluye BORME, emails, calendar). */}
+            <TimelineSection
+              empresaId={empresaId}
+              endpoint={`/api/portal/empresas/${empresaId}/timeline`}
+              seenEndpoint={`/api/portal/empresas/${empresaId}/seen`}
+            />
           </div>
         )}
       </main>

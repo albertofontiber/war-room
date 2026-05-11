@@ -2,17 +2,22 @@
 
 import { useState } from "react";
 import StageChevron from "@/components/StageChevron";
-import { NotasSection, TareasSection, HistorialSection } from "@/components/CrmSections";
+import { NotasSection, TareasSection } from "@/components/CrmSections";
 import FinderSelector from "@/components/FinderSelector";
 import { diasDesde } from "@/lib/crm";
 import { fmtDate } from "@/lib/format";
 import type { EmpresaDetalle, DealStage } from "@/types";
 
 /**
- * Bloque CRM (Funnel + Tareas + Historial + Notas) collapsible.
- * Default cerrado (PR #46) para que la financiera y BORME sean lo primero
+ * Bloque CRM (Funnel + Tareas + Notas) collapsible.
+ * Default cerrado para que la financiera y otros bloques sean lo primero
  * visible al abrir el panel; el usuario expande "CRM" cuando quiere ver el
  * detalle. El sub-bloque "Funnel" tiene su propio toggle individual.
+ *
+ * Tras el refactor del Timeline (2026-05-12): la `HistorialSection` se
+ * eliminó de aquí — el feed cronológico unificado vive ahora a nivel del
+ * panel (sección `TimelineSection`), no dentro del CRM. CRM = qué hacer.
+ * Timeline = qué pasó.
  */
 export function CrmBlock({
   empresa,
@@ -138,7 +143,6 @@ export function CrmBlock({
                 : null
             }
           />
-          <HistorialSection empresaId={empresa.id} />
           <NotasSection empresaId={empresa.id} />
         </div>
       )}
