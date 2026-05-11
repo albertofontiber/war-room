@@ -5,6 +5,19 @@ import { DefaultChatTransport } from "ai";
 import { useState, useRef, useEffect, useMemo, FormEvent } from "react";
 import ReactMarkdown from "react-markdown";
 
+/**
+ * Evento global que dispara el chat cuando un tool de tarea termina con
+ * éxito (crear_tarea, actualizar_tarea). Cualquier componente que muestre
+ * tareas debe escuchar `wr:tareas-changed` y refrescar si el `empresaId`
+ * coincide con el suyo. Importable desde otros sitios:
+ *
+ *   import { TAREAS_CHANGED_EVENT } from "@/components/ChatIA";
+ *   window.addEventListener(TAREAS_CHANGED_EVENT, handler);
+ *
+ * Detail: `{ empresaId: number; tareaId?: number; source: "crear_tarea"|"actualizar_tarea" }`.
+ */
+export const TAREAS_CHANGED_EVENT = "wr:tareas-changed";
+
 export default function ChatIA() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -25,6 +38,60 @@ export default function ChatIA() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isLoading]);
+
+  // Observa los tool results en el stream del chat. Cuando crear_tarea o
+  // actualizar_tarea devuelven `{ok: true, tarea: {empresa: {id}}}`,
+  // dispara un window event para que TareasSection (y futuros consumers)
+  // refresquen su lista sin que el usuario tenga que pulsar F5.
+  //
+  // Dedup por toolCallId (o un fallback si no existe): el stream emite el
+  // mismo part en múltiples renders mientras llega, así que sin dedup
+  // dispararíamos N eventos por una sola tarea.
+  const dispatchedRef = useRef(new Set<string>());
+  useEffect(() => {
+    for (const msg of messages) {
+      if (msg.role !== "assistant") continue;
+      for (const part of msg.parts ?? []) {
+        // Acceso defensivo — el shape exacto de los parts de tool depende
+        // de la versión del AI SDK. Buscamos un `output` (o `result`
+        // legacy) que tenga la forma de nuestros tools.
+        const anyPart = part as Record<string, unknown>;
+        const output = (anyPart.output ?? anyPart.result) as
+          | {
+              ok?: boolean;
+              tarea?: { id?: number; empresa?: { id?: number } };
+            }
+          | undefined;
+        if (!output?.ok) continue;
+        const empresaId = output.tarea?.empresa?.id;
+        if (!empresaId) continue;
+
+        const callId =
+          (anyPart.toolCallId as string | undefined) ??
+          `${msg.id}-${output.tarea?.id ?? "?"}`;
+        if (dispatchedRef.current.has(callId)) continue;
+        dispatchedRef.current.add(callId);
+
+        // El toolName puede venir en `toolName` (v4 SDK) o codificado en
+        // `type` como `tool-crear_tarea` (v5). Intentamos ambos.
+        const rawType = anyPart.type as string | undefined;
+        const toolName =
+          (anyPart.toolName as string | undefined) ??
+          (rawType?.startsWith("tool-") ? rawType.slice(5) : undefined) ??
+          "tool";
+
+        window.dispatchEvent(
+          new CustomEvent(TAREAS_CHANGED_EVENT, {
+            detail: {
+              empresaId,
+              tareaId: output.tarea?.id,
+              source: toolName,
+            },
+          })
+        );
+      }
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (open && inputRef.current) {
