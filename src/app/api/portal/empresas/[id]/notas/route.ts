@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder } from "@/lib/finder-session";
 import { logFinderAction } from "@/lib/finder-access-log";
-import { notifyAdmins } from "@/lib/notifications";
+import { notifyAdmins, notifyUser } from "@/lib/notifications";
 import { auditLog } from "@/lib/audit-log";
 import { PortalNotaCreateSchema, zodError } from "@/lib/validation";
+import { loadThreadRoot, visibilityForReply } from "@/lib/notas-thread";
 import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -37,18 +38,45 @@ export async function POST(
   });
   if (!empresa) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  // Si es respuesta, validar acceso del finder al thread y heredar visibilidad.
+  let visibleAFinder = false;
+  let notifyParentAuthorUserId: string | null = null;
+  if (parsed.data.parentId !== undefined) {
+    const root = await loadThreadRoot(parsed.data.parentId);
+    if (!root || root.empresaId !== id) {
+      return NextResponse.json(
+        { error: "Nota padre no encontrada o de otra empresa" },
+        { status: 400 }
+      );
+    }
+    // Bloqueo: si el root es de admin con visibleAFinder=false → el finder
+    // no debería ni saber que existe (no la ve en su lista). 404 sin leak.
+    if (root.autorId !== null && !root.visibleAFinder) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    visibleAFinder = visibilityForReply(root);
+
+    // Notificar al admin autor del padre directo (si el padre es de un admin).
+    const parent = await prisma.nota.findUnique({
+      where: { id: parsed.data.parentId },
+      select: { autorId: true },
+    });
+    if (parent?.autorId) notifyParentAuthorUserId = parent.autorId;
+  }
+
   const nota = await prisma.nota.create({
     data: {
       empresaId: id,
       autorFinderId: finder.id,
       contenido: parsed.data.contenido,
-      // visibleAFinder es irrelevante aquí (las notas del finder siempre las ve el
-      // propio finder y los admins las leen sin restricción). Dejamos default false.
+      parentId: parsed.data.parentId ?? null,
+      visibleAFinder,
     },
     select: {
       id: true,
       contenido: true,
       createdAt: true,
+      parentId: true,
       autorFinder: { select: { name: true } },
     },
   });
@@ -68,17 +96,31 @@ export async function POST(
     after: { contenido: nota.contenido, empresaId: id },
   });
 
-  // Campanita in-app a admins (sin email — irá en el digest diario).
+  // Campanita in-app:
+  //   - Notas root del finder → notifica a todos los admins (broadcast, igual que antes).
+  //   - Respuestas a una nota de admin → notifica solo al admin autor del padre (dirigido).
   const preview = nota.contenido.length > 140
     ? nota.contenido.slice(0, 140) + "…"
     : nota.contenido;
-  await notifyAdmins({
-    tipo: "note_added",
-    titulo: `${finder.name}: nueva nota en ${empresa.nombre}`,
-    mensaje: preview,
-    link: `/?empresa=${empresa.id}`,
-    email: false,
-  }).catch((err) => log.error("api/portal/empresas/[id]/notas POST notifyAdmins", err));
+
+  if (notifyParentAuthorUserId) {
+    void notifyUser({
+      userId: notifyParentAuthorUserId,
+      tipo: "nota_respuesta",
+      titulo: `${finder.name} respondió a tu nota en ${empresa.nombre}`,
+      mensaje: preview,
+      link: `/?empresa=${empresa.id}`,
+      email: false,
+    }).catch((err) => log.error("api/portal/empresas/[id]/notas POST notifyUser", err));
+  } else {
+    void notifyAdmins({
+      tipo: "note_added",
+      titulo: `${finder.name}: nueva nota en ${empresa.nombre}`,
+      mensaje: preview,
+      link: `/?empresa=${empresa.id}`,
+      email: false,
+    }).catch((err) => log.error("api/portal/empresas/[id]/notas POST notifyAdmins", err));
+  }
 
   return NextResponse.json(nota, { status: 201 });
 }

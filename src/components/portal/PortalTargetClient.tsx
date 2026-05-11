@@ -17,9 +17,30 @@ type Nota = {
   id: number;
   contenido: string;
   createdAt: string;
+  parentId: number | null;
   autor?: { name: string } | null;
   autorFinder?: { name: string } | null;
 };
+
+type NotaNode = Nota & { respuestas: NotaNode[] };
+
+/** Roots desc, respuestas asc dentro de cada thread. Mismo patrón que admin. */
+function buildNotaTree(notas: Nota[]): NotaNode[] {
+  const byId = new Map<number, NotaNode>();
+  for (const n of notas) byId.set(n.id, { ...n, respuestas: [] });
+  const roots: NotaNode[] = [];
+  for (const n of notas) {
+    const node = byId.get(n.id)!;
+    if (n.parentId && byId.has(n.parentId)) {
+      byId.get(n.parentId)!.respuestas.push(node);
+    } else {
+      roots.push(node);
+    }
+  }
+  return roots.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+}
+
+const NOTA_INDENT_MAX = 5;
 type Tarea = {
   id: number;
   tipo: string;
@@ -757,6 +778,7 @@ function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; nota
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editContenido, setEditContenido] = useState("");
+  const [replyingTo, setReplyingTo] = useState<number | null>(null);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -776,6 +798,16 @@ function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; nota
     finally { setSubmitting(false); }
   };
 
+  const responder = async (parentId: number, contenido: string): Promise<boolean> => {
+    const res = await fetch(`/api/portal/empresas/${empresaId}/notas`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contenido, parentId }),
+    });
+    if (res.ok) { onChanged(); return true; }
+    return false;
+  };
+
   const startEdit = (n: Nota) => {
     setEditingId(n.id); setEditContenido(n.contenido);
   };
@@ -787,10 +819,12 @@ function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; nota
     if (res.ok) { setEditingId(null); onChanged(); }
   };
   const remove = async (id: number) => {
-    if (!confirm("¿Borrar esta nota?")) return;
+    if (!confirm("¿Borrar esta nota? Si tiene respuestas, también se borrarán.")) return;
     const res = await fetch(`/api/portal/notas/${id}`, { method: "DELETE" });
     if (res.ok) onChanged();
   };
+
+  const tree = buildNotaTree(notas);
 
   return (
     <section>
@@ -818,49 +852,204 @@ function NotasSection({ empresaId, notas, onChanged }: { empresaId: number; nota
         </form>
       )}
 
-      {notas.length === 0 && !adding ? (
+      {tree.length === 0 && !adding ? (
         <p className="text-xs text-wr-hint italic">Sin notas visibles.</p>
       ) : (
         <ul className="space-y-2">
-          {notas.map((n) => {
-            const esFinder = !!n.autorFinder;
-            return (
-              <li key={n.id} className="group bg-wr-surface border border-wr-border rounded-lg p-3">
-                {editingId === n.id ? (
-                  <>
-                    <textarea value={editContenido} onChange={(e) => setEditContenido(e.target.value)} rows={3}
-                      className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
-                    />
-                    <div className="flex justify-end gap-2 mt-2">
-                      <button onClick={() => setEditingId(null)}
-                        className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted">Cancelar</button>
-                      <button onClick={() => saveEdit(n.id)} disabled={!editContenido.trim()}
-                        className="text-[10px] px-2 py-1 rounded bg-wr-blue text-white disabled:opacity-40">Guardar</button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-xs text-wr-text whitespace-pre-wrap leading-snug">{n.contenido}</p>
-                    <div className="flex items-center justify-between mt-1">
-                      <p className="text-[10px] text-wr-hint">
-                        {n.autorFinder?.name ?? n.autor?.name ?? "—"} · {fmtDate(n.createdAt)}
-                        {!esFinder && <span className="ml-1 text-wr-blue">· Fontiber</span>}
-                      </p>
-                      {esFinder && (
-                        <div className="opacity-0 group-hover:opacity-80 flex gap-1">
-                          <button onClick={() => startEdit(n)} className="text-[10px] text-wr-blue">Editar</button>
-                          <span className="text-wr-hint">·</span>
-                          <button onClick={() => remove(n.id)} className="text-[10px] text-wr-red">Borrar</button>
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-              </li>
-            );
-          })}
+          {tree.map((node) => (
+            <PortalNotaItem
+              key={node.id}
+              node={node}
+              depth={0}
+              editingId={editingId}
+              editContenido={editContenido}
+              replyingTo={replyingTo}
+              onStartEdit={startEdit}
+              onCancelEdit={() => setEditingId(null)}
+              onSaveEdit={saveEdit}
+              onChangeEditContenido={setEditContenido}
+              onStartReply={setReplyingTo}
+              onCancelReply={() => setReplyingTo(null)}
+              onSubmitReply={async (parentId, c) => {
+                const ok = await responder(parentId, c);
+                if (ok) setReplyingTo(null);
+                return ok;
+              }}
+              onRemove={remove}
+            />
+          ))}
         </ul>
       )}
     </section>
+  );
+}
+
+/**
+ * Render recursivo en el portal del finder. Permisos: el finder puede editar
+ * y borrar SOLO sus propias notas (autor finder). Las de admin (visibles)
+ * son read-only para él, pero puede responderlas.
+ */
+function PortalNotaItem({
+  node,
+  depth,
+  editingId,
+  editContenido,
+  replyingTo,
+  onStartEdit,
+  onCancelEdit,
+  onSaveEdit,
+  onChangeEditContenido,
+  onStartReply,
+  onCancelReply,
+  onSubmitReply,
+  onRemove,
+}: {
+  node: NotaNode;
+  depth: number;
+  editingId: number | null;
+  editContenido: string;
+  replyingTo: number | null;
+  onStartEdit: (n: Nota) => void;
+  onCancelEdit: () => void;
+  onSaveEdit: (id: number) => void;
+  onChangeEditContenido: (v: string) => void;
+  onStartReply: (id: number) => void;
+  onCancelReply: () => void;
+  onSubmitReply: (parentId: number, contenido: string) => Promise<boolean>;
+  onRemove: (id: number) => void;
+}) {
+  const esFinder = !!node.autorFinder;
+  const indent = Math.min(depth, NOTA_INDENT_MAX);
+  const marginLeft = indent * 12;
+
+  return (
+    <li style={{ marginLeft }} className="group bg-wr-surface border border-wr-border rounded-lg p-3">
+      {editingId === node.id ? (
+        <>
+          <textarea
+            value={editContenido}
+            onChange={(e) => onChangeEditContenido(e.target.value)}
+            rows={3}
+            className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue resize-none"
+          />
+          <div className="flex justify-end gap-2 mt-2">
+            <button onClick={onCancelEdit}
+              className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted">Cancelar</button>
+            <button onClick={() => onSaveEdit(node.id)} disabled={!editContenido.trim()}
+              className="text-[10px] px-2 py-1 rounded bg-wr-blue text-white disabled:opacity-40">Guardar</button>
+          </div>
+        </>
+      ) : (
+        <>
+          <p className="text-xs text-wr-text whitespace-pre-wrap leading-snug">{node.contenido}</p>
+          <div className="flex items-center justify-between mt-1 gap-2">
+            <p className="text-[10px] text-wr-hint">
+              {node.autorFinder?.name ?? node.autor?.name ?? "—"} · {fmtDate(node.createdAt)}
+              {!esFinder && <span className="ml-1 text-wr-blue">· Fontiber</span>}
+            </p>
+            <div className="flex gap-2 items-center">
+              <button
+                onClick={() => onStartReply(node.id)}
+                className="text-[10px] text-wr-blue hover:underline"
+              >
+                Responder
+              </button>
+              {esFinder && (
+                <>
+                  <span className="text-wr-hint opacity-0 group-hover:opacity-80">·</span>
+                  <button
+                    onClick={() => onStartEdit(node)}
+                    className="text-[10px] text-wr-blue opacity-0 group-hover:opacity-80"
+                  >
+                    Editar
+                  </button>
+                  <span className="text-wr-hint opacity-0 group-hover:opacity-80">·</span>
+                  <button
+                    onClick={() => onRemove(node.id)}
+                    className="text-[10px] text-wr-red opacity-0 group-hover:opacity-80"
+                  >
+                    Borrar
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+
+      {replyingTo === node.id && (
+        <PortalReplyForm
+          onCancel={onCancelReply}
+          onSubmit={(c) => onSubmitReply(node.id, c)}
+        />
+      )}
+
+      {node.respuestas.length > 0 && (
+        <ul className="mt-2 space-y-2">
+          {node.respuestas.map((child) => (
+            <PortalNotaItem
+              key={child.id}
+              node={child}
+              depth={depth + 1}
+              editingId={editingId}
+              editContenido={editContenido}
+              replyingTo={replyingTo}
+              onStartEdit={onStartEdit}
+              onCancelEdit={onCancelEdit}
+              onSaveEdit={onSaveEdit}
+              onChangeEditContenido={onChangeEditContenido}
+              onStartReply={onStartReply}
+              onCancelReply={onCancelReply}
+              onSubmitReply={onSubmitReply}
+              onRemove={onRemove}
+            />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+
+function PortalReplyForm({
+  onCancel,
+  onSubmit,
+}: {
+  onCancel: () => void;
+  onSubmit: (contenido: string) => Promise<boolean>;
+}) {
+  const [contenido, setContenido] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  return (
+    <div className="mt-2 bg-wr-surface2/60 rounded border border-wr-border p-2">
+      <textarea
+        autoFocus
+        value={contenido}
+        onChange={(e) => setContenido(e.target.value)}
+        placeholder="Escribe tu respuesta…"
+        rows={2}
+        className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-xs text-wr-text resize-none"
+      />
+      <div className="flex justify-end gap-2 mt-2">
+        <button
+          onClick={onCancel}
+          className="text-[10px] px-2 py-1 rounded bg-wr-surface2 border border-wr-border text-wr-muted"
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={async () => {
+            if (!contenido.trim() || submitting) return;
+            setSubmitting(true);
+            const ok = await onSubmit(contenido);
+            setSubmitting(false);
+            if (ok) setContenido("");
+          }}
+          disabled={!contenido.trim() || submitting}
+          className="text-[10px] px-2 py-1 rounded bg-wr-blue text-white disabled:opacity-40"
+        >
+          {submitting ? "Enviando…" : "Responder"}
+        </button>
+      </div>
+    </div>
   );
 }

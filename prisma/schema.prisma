@@ -336,12 +336,19 @@ model Nota {
   // Default false = nota interna de admins. Las notas de finders siempre las ven
   // los admins (este flag no aplica a ellas).
   visibleAFinder Boolean  @default(false)
+  // Threading: respuestas a otra nota. Profundidad ilimitada. Cuando la raíz
+  // se borra, las respuestas también (cascade). La visibilidad al finder se
+  // hereda del root al crear (se calcula en el endpoint POST, no en BD).
+  parentId       Int?
+  parent         Nota?    @relation("NotaThread", fields: [parentId], references: [id], onDelete: Cascade)
+  respuestas     Nota[]   @relation("NotaThread")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   @@index([empresaId, createdAt])
   @@index([autorId])
   @@index([autorFinderId])
+  @@index([parentId])
 }
 
 model Tarea {

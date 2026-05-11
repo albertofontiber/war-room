@@ -18,9 +18,37 @@ type Nota = {
   contenido: string;
   createdAt: string;
   updatedAt: string;
+  parentId: number | null;
   autor: Autor;
   autorFinder?: Autor;
 };
+
+/** Nodo del árbol construido a partir de la lista flat. */
+type NotaNode = Nota & { respuestas: NotaNode[] };
+
+/**
+ * Convierte la lista flat (devuelta por el API en orden createdAt asc) en un
+ * árbol. Roots se devuelven en orden DESC (más recientes primero). Respuestas
+ * dentro de cada thread quedan ASC (cronológico de conversación).
+ */
+function buildNotaTree(notas: Nota[]): NotaNode[] {
+  const byId = new Map<number, NotaNode>();
+  for (const n of notas) byId.set(n.id, { ...n, respuestas: [] });
+  const roots: NotaNode[] = [];
+  for (const n of notas) {
+    const node = byId.get(n.id)!;
+    if (n.parentId && byId.has(n.parentId)) {
+      byId.get(n.parentId)!.respuestas.push(node);
+    } else {
+      // Root o respuesta huérfana (padre fuera de la lista visible) → tratamos como root.
+      roots.push(node);
+    }
+  }
+  return roots.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+}
+
+/** Profundidad máxima donde indentamos visualmente. Más profundo = mismo indent. */
+const NOTA_INDENT_MAX = 5;
 
 type Tarea = {
   id: number;
@@ -96,6 +124,7 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<number | null>(null);
   const [editContent, setEditContent] = useState("");
+  const [replyingTo, setReplyingTo] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
 
   const load = useCallback(() => {
@@ -136,6 +165,22 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
     }
   }
 
+  async function responder(parentId: number, contenido: string): Promise<boolean> {
+    const res = await fetch(`/api/empresas/${empresaId}/notas`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contenido, parentId }),
+    });
+    if (res.ok) {
+      load();
+      return true;
+    }
+    const msg = await extractError(res);
+    console.error("[NotasSection.responder]", msg);
+    setError(msg);
+    return false;
+  }
+
   async function guardarEdit(id: number) {
     if (!editContent.trim()) return;
     setError(null);
@@ -160,10 +205,13 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
   }
 
   async function borrar(id: number) {
-    if (!confirm("¿Borrar esta nota?")) return;
+    // Cascade en BD borra respuestas. Avisamos para que no sea sorpresa.
+    if (!confirm("¿Borrar esta nota? Si tiene respuestas, también se borrarán.")) return;
     await fetch(`/api/notas/${id}`, { method: "DELETE" });
     load();
   }
+
+  const tree = buildNotaTree(notas);
 
   return (
     <div className="rounded-lg border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
@@ -201,90 +249,223 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
         )}
       </div>
 
-      <div className="space-y-1.5 max-h-64 overflow-y-auto">
-        {notas.length === 0 && (
+      <div className="space-y-1.5 max-h-80 overflow-y-auto">
+        {tree.length === 0 && (
           <p className="text-[10px] text-wr-hint italic text-center py-2">
             Sin notas
           </p>
         )}
-        {notas.map((n) => (
-          <div
-            key={n.id}
-            className="bg-wr-surface rounded border border-wr-border p-2 text-xs text-wr-text"
-          >
-            {editing === n.id ? (
-              <>
-                <textarea
-                  value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                  rows={2}
-                  className="w-full bg-wr-bg border border-wr-border rounded px-2 py-1 text-xs text-wr-text resize-none mb-1"
-                />
-                <div className="flex gap-1 justify-end">
-                  <button
-                    onClick={() => setEditing(null)}
-                    className="text-[10px] text-wr-muted hover:text-wr-text"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={() => guardarEdit(n.id)}
-                    className="text-[10px] text-wr-blue hover:underline"
-                  >
-                    Guardar
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <p className="whitespace-pre-wrap text-wr-text">{n.contenido}</p>
-                <div className="flex items-center justify-between mt-1.5 text-[9px] text-wr-hint gap-1.5">
-                  <span className="flex items-center gap-1.5 flex-wrap">
-                    {n.autorFinder ? <FinderBadge name={n.autorFinder.name} /> : <span>{n.autor?.name ?? "—"}</span>}
-                    <span className="text-wr-hint">· {fmtDate(n.createdAt)}</span>
-                  </span>
-                  <span className="flex gap-1.5 items-center">
-                    {/* Editar: solo notas de admin. Editar texto literal escrito por
-                       un finder lo tergiversaría — no procede. */}
-                    {!n.autorFinder && (
-                      <button
-                        onClick={() => {
-                          setEditing(n.id);
-                          setEditContent(n.contenido);
-                        }}
-                        className="hover:text-wr-text p-0.5"
-                        title="Editar"
-                      >
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                        </svg>
-                      </button>
-                    )}
-                    {/* Borrar: el admin puede borrar cualquier nota (admin o finder).
-                       Mismo principio que el botón borrar del Historial — el admin
-                       tiene control total sobre el contenido visible en su war room. */}
-                    <button
-                      onClick={() => borrar(n.id)}
-                      className="hover:text-wr-red p-0.5"
-                      title="Borrar"
-                    >
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M3 6h18" />
-                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                        <path d="M10 11v6M14 11v6" />
-                      </svg>
-                    </button>
-                  </span>
-                </div>
-              </>
-            )}
-          </div>
+        {tree.map((node) => (
+          <NotaItem
+            key={node.id}
+            node={node}
+            depth={0}
+            editingId={editing}
+            editContent={editContent}
+            replyingTo={replyingTo}
+            onStartEdit={(n) => { setEditing(n.id); setEditContent(n.contenido); }}
+            onCancelEdit={() => setEditing(null)}
+            onSaveEdit={guardarEdit}
+            onChangeEditContent={setEditContent}
+            onStartReply={setReplyingTo}
+            onCancelReply={() => setReplyingTo(null)}
+            onSubmitReply={async (parentId, contenido) => {
+              const ok = await responder(parentId, contenido);
+              if (ok) setReplyingTo(null);
+              return ok;
+            }}
+            onBorrar={borrar}
+          />
         ))}
       </div>
       </>
       )}
+    </div>
+  );
+}
+
+/**
+ * Render recursivo de un nodo del árbol de notas. Indenta visualmente hasta
+ * `NOTA_INDENT_MAX` y luego mantiene el indent (evita scroll horizontal en
+ * threads muy profundos). Forms de edit/reply son inline.
+ */
+function NotaItem({
+  node,
+  depth,
+  editingId,
+  editContent,
+  replyingTo,
+  onStartEdit,
+  onCancelEdit,
+  onSaveEdit,
+  onChangeEditContent,
+  onStartReply,
+  onCancelReply,
+  onSubmitReply,
+  onBorrar,
+}: {
+  node: NotaNode;
+  depth: number;
+  editingId: number | null;
+  editContent: string;
+  replyingTo: number | null;
+  onStartEdit: (n: Nota) => void;
+  onCancelEdit: () => void;
+  onSaveEdit: (id: number) => void;
+  onChangeEditContent: (v: string) => void;
+  onStartReply: (id: number) => void;
+  onCancelReply: () => void;
+  onSubmitReply: (parentId: number, contenido: string) => Promise<boolean>;
+  onBorrar: (id: number) => void;
+}) {
+  const indent = Math.min(depth, NOTA_INDENT_MAX);
+  // 8px por nivel — visible sin invadir el contenido.
+  const marginLeft = indent * 8;
+
+  return (
+    <div style={{ marginLeft }}>
+      <div className="bg-wr-surface rounded border border-wr-border p-2 text-xs text-wr-text">
+        {editingId === node.id ? (
+          <>
+            <textarea
+              value={editContent}
+              onChange={(e) => onChangeEditContent(e.target.value)}
+              rows={2}
+              className="w-full bg-wr-bg border border-wr-border rounded px-2 py-1 text-xs text-wr-text resize-none mb-1"
+            />
+            <div className="flex gap-1 justify-end">
+              <button onClick={onCancelEdit} className="text-[10px] text-wr-muted hover:text-wr-text">
+                Cancelar
+              </button>
+              <button
+                onClick={() => onSaveEdit(node.id)}
+                className="text-[10px] text-wr-blue hover:underline"
+              >
+                Guardar
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="whitespace-pre-wrap text-wr-text">{node.contenido}</p>
+            <div className="flex items-center justify-between mt-1.5 text-[9px] text-wr-hint gap-1.5">
+              <span className="flex items-center gap-1.5 flex-wrap">
+                {node.autorFinder ? <FinderBadge name={node.autorFinder.name} /> : <span>{node.autor?.name ?? "—"}</span>}
+                <span className="text-wr-hint">· {fmtDate(node.createdAt)}</span>
+              </span>
+              <span className="flex gap-1.5 items-center">
+                <button
+                  onClick={() => onStartReply(node.id)}
+                  className="hover:text-wr-text"
+                  title="Responder"
+                >
+                  Responder
+                </button>
+                {/* Editar: solo notas de admin. Editar texto literal de un finder lo tergiversaría. */}
+                {!node.autorFinder && (
+                  <button
+                    onClick={() => onStartEdit(node)}
+                    className="hover:text-wr-text p-0.5"
+                    title="Editar"
+                  >
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                  </button>
+                )}
+                <button
+                  onClick={() => onBorrar(node.id)}
+                  className="hover:text-wr-red p-0.5"
+                  title="Borrar"
+                >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M3 6h18" />
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                    <path d="M10 11v6M14 11v6" />
+                  </svg>
+                </button>
+              </span>
+            </div>
+          </>
+        )}
+      </div>
+
+      {replyingTo === node.id && (
+        <ReplyForm
+          onCancel={onCancelReply}
+          onSubmit={(c) => onSubmitReply(node.id, c)}
+        />
+      )}
+
+      {node.respuestas.length > 0 && (
+        <div className="mt-1.5 space-y-1.5">
+          {node.respuestas.map((child) => (
+            <NotaItem
+              key={child.id}
+              node={child}
+              depth={depth + 1}
+              editingId={editingId}
+              editContent={editContent}
+              replyingTo={replyingTo}
+              onStartEdit={onStartEdit}
+              onCancelEdit={onCancelEdit}
+              onSaveEdit={onSaveEdit}
+              onChangeEditContent={onChangeEditContent}
+              onStartReply={onStartReply}
+              onCancelReply={onCancelReply}
+              onSubmitReply={onSubmitReply}
+              onBorrar={onBorrar}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Form inline de respuesta. Estado local — no contamina el padre. */
+function ReplyForm({
+  onCancel,
+  onSubmit,
+}: {
+  onCancel: () => void;
+  onSubmit: (contenido: string) => Promise<boolean>;
+}) {
+  const [contenido, setContenido] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  return (
+    <div className="mt-1.5 ml-2 bg-wr-surface2/60 rounded border border-wr-border p-2">
+      <textarea
+        autoFocus
+        value={contenido}
+        onChange={(e) => setContenido(e.target.value)}
+        placeholder="Escribe tu respuesta…"
+        rows={2}
+        className="w-full bg-wr-bg border border-wr-border rounded px-2 py-1 text-xs text-wr-text resize-none"
+      />
+      <div className="flex gap-1 justify-end mt-1">
+        <button
+          onClick={onCancel}
+          className="text-[10px] text-wr-muted hover:text-wr-text px-2 py-1"
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={async () => {
+            if (!contenido.trim() || submitting) return;
+            setSubmitting(true);
+            const ok = await onSubmit(contenido);
+            setSubmitting(false);
+            if (ok) setContenido("");
+          }}
+          disabled={!contenido.trim() || submitting}
+          className="text-[10px] text-wr-blue hover:underline px-2 py-1 disabled:opacity-40"
+        >
+          {submitting ? "Enviando…" : "Responder"}
+        </button>
+      </div>
     </div>
   );
 }
