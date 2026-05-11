@@ -7,6 +7,7 @@ import { auditLog } from "@/lib/audit-log";
 import { TAREA_TIPO_LABEL } from "@/lib/crm";
 import type { TareaTipo } from "@/types";
 import { PortalTareaCreateSchema, zodError } from "@/lib/validation";
+import { processMenciones } from "@/lib/menciones-server";
 import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -109,6 +110,17 @@ export async function POST(
     link: `/?empresa=${empresa.id}`,
     email: false,
   }).catch((err) => log.error("api/portal/empresas/[id]/tareas POST notifyAdmins", err));
+
+  void processMenciones({
+    entity: { kind: "tarea", id: tarea.id },
+    empresaId: empresa.id,
+    empresaNombre: empresa.nombre,
+    contenido: [tarea.titulo, tarea.descripcion ?? "", tarea.resultado ?? ""].join(" "),
+    author: { kind: "f", id: finder.id, name: finder.name },
+    adminLink: `/?empresa=${empresa.id}`,
+    portalLink: `/portal/empresas/${empresa.id}`,
+    context: "tarea",
+  }).catch((err) => log.error("api/portal/empresas/[id]/tareas POST processMenciones", err));
 
   return NextResponse.json(tarea, { status: 201 });
 }

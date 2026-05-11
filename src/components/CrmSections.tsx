@@ -8,6 +8,10 @@ import {
   EMPRESA_CHANGED_EVENT,
   type EmpresaChangedDetail,
 } from "@/lib/empresa-events";
+import { MentionTextarea } from "@/components/MentionTextarea";
+import { MentionRender } from "@/components/MentionRender";
+
+const MENTION_ENDPOINT_ADMIN = "/api/menciones/candidatos";
 
 // ─── Tipos compartidos ────────────────────────────────────────────────────
 
@@ -228,10 +232,12 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
       {open && (
       <>
       <div className="space-y-1.5">
-        <textarea
+        <MentionTextarea
           value={nueva}
-          onChange={(e) => setNueva(e.target.value)}
-          placeholder="Nueva nota interna…"
+          onChange={setNueva}
+          candidatesEndpoint={MENTION_ENDPOINT_ADMIN}
+          empresaId={empresaId}
+          placeholder="Nueva nota interna… (escribe @ para mencionar)"
           rows={2}
           className="w-full bg-wr-bg border border-wr-border rounded-md px-2 py-1.5 text-xs text-wr-text placeholder:text-wr-hint focus:outline-none focus:border-wr-blue resize-none"
         />
@@ -258,6 +264,7 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
         {tree.map((node) => (
           <NotaItem
             key={node.id}
+            empresaId={empresaId}
             node={node}
             depth={0}
             editingId={editing}
@@ -290,6 +297,7 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
  * threads muy profundos). Forms de edit/reply son inline.
  */
 function NotaItem({
+  empresaId,
   node,
   depth,
   editingId,
@@ -304,6 +312,7 @@ function NotaItem({
   onSubmitReply,
   onBorrar,
 }: {
+  empresaId: number;
   node: NotaNode;
   depth: number;
   editingId: number | null;
@@ -327,9 +336,11 @@ function NotaItem({
       <div className="bg-wr-surface rounded border border-wr-border p-2 text-xs text-wr-text">
         {editingId === node.id ? (
           <>
-            <textarea
+            <MentionTextarea
               value={editContent}
-              onChange={(e) => onChangeEditContent(e.target.value)}
+              onChange={onChangeEditContent}
+              candidatesEndpoint={MENTION_ENDPOINT_ADMIN}
+              empresaId={empresaId}
               rows={2}
               className="w-full bg-wr-bg border border-wr-border rounded px-2 py-1 text-xs text-wr-text resize-none mb-1"
             />
@@ -347,7 +358,9 @@ function NotaItem({
           </>
         ) : (
           <>
-            <p className="whitespace-pre-wrap text-wr-text">{node.contenido}</p>
+            <p className="whitespace-pre-wrap text-wr-text">
+              <MentionRender content={node.contenido} />
+            </p>
             <div className="flex items-center justify-between mt-1.5 text-[9px] text-wr-hint gap-1.5">
               <span className="flex items-center gap-1.5 flex-wrap">
                 {node.autorFinder ? <FinderBadge name={node.autorFinder.name} /> : <span>{node.autor?.name ?? "—"}</span>}
@@ -394,6 +407,7 @@ function NotaItem({
 
       {replyingTo === node.id && (
         <ReplyForm
+          empresaId={empresaId}
           onCancel={onCancelReply}
           onSubmit={(c) => onSubmitReply(node.id, c)}
         />
@@ -404,6 +418,7 @@ function NotaItem({
           {node.respuestas.map((child) => (
             <NotaItem
               key={child.id}
+              empresaId={empresaId}
               node={child}
               depth={depth + 1}
               editingId={editingId}
@@ -427,9 +442,11 @@ function NotaItem({
 
 /** Form inline de respuesta. Estado local — no contamina el padre. */
 function ReplyForm({
+  empresaId,
   onCancel,
   onSubmit,
 }: {
+  empresaId: number;
   onCancel: () => void;
   onSubmit: (contenido: string) => Promise<boolean>;
 }) {
@@ -437,11 +454,13 @@ function ReplyForm({
   const [submitting, setSubmitting] = useState(false);
   return (
     <div className="mt-1.5 ml-2 bg-wr-surface2/60 rounded border border-wr-border p-2">
-      <textarea
+      <MentionTextarea
         autoFocus
         value={contenido}
-        onChange={(e) => setContenido(e.target.value)}
-        placeholder="Escribe tu respuesta…"
+        onChange={setContenido}
+        candidatesEndpoint={MENTION_ENDPOINT_ADMIN}
+        empresaId={empresaId}
+        placeholder="Escribe tu respuesta… (escribe @ para mencionar)"
         rows={2}
         className="w-full bg-wr-bg border border-wr-border rounded px-2 py-1 text-xs text-wr-text resize-none"
       />
@@ -755,10 +774,12 @@ export function TareasSection({
           placeholder="Título de la tarea…"
           className="w-full bg-wr-bg border border-wr-border rounded-md px-2 py-1.5 text-xs text-wr-text placeholder:text-wr-hint focus:outline-none focus:border-wr-blue"
         />
-        <textarea
+        <MentionTextarea
           value={descripcion}
-          onChange={(e) => setDescripcion(e.target.value)}
-          placeholder="Descripción (opcional)…"
+          onChange={setDescripcion}
+          candidatesEndpoint={MENTION_ENDPOINT_ADMIN}
+          empresaId={empresaId}
+          placeholder="Descripción (opcional, escribe @ para mencionar)…"
           rows={2}
           className="w-full bg-wr-bg border border-wr-border rounded-md px-2 py-1.5 text-xs text-wr-text placeholder:text-wr-hint focus:outline-none focus:border-wr-blue resize-none"
         />
@@ -834,11 +855,13 @@ export function TareasSection({
                     onChange={(e) => setEditTitulo(e.target.value)}
                     className="w-full bg-wr-bg border border-wr-border rounded-md px-2 py-1 text-xs text-wr-text focus:outline-none focus:border-wr-blue"
                   />
-                  <textarea
+                  <MentionTextarea
                     value={editDescripcion}
-                    onChange={(e) => setEditDescripcion(e.target.value)}
+                    onChange={setEditDescripcion}
+                    candidatesEndpoint={MENTION_ENDPOINT_ADMIN}
+                    empresaId={empresaId}
                     rows={2}
-                    placeholder="Descripción (opcional)…"
+                    placeholder="Descripción (opcional, escribe @ para mencionar)…"
                     className="w-full bg-wr-bg border border-wr-border rounded-md px-2 py-1 text-xs text-wr-text placeholder:text-wr-hint focus:outline-none focus:border-wr-blue resize-none"
                   />
                   <div className="flex gap-1 justify-end text-[10px]">
@@ -878,11 +901,11 @@ export function TareasSection({
                         t.completada ? "text-wr-hint line-through" : "text-wr-text"
                       }`}
                     >
-                      {t.titulo}
+                      <MentionRender content={t.titulo} />
                     </p>
                     {t.descripcion && (
                       <p className="text-[10px] text-wr-muted whitespace-pre-wrap mt-0.5">
-                        {t.descripcion}
+                        <MentionRender content={t.descripcion} />
                       </p>
                     )}
                     <p className="text-[9px] text-wr-hint mt-0.5 flex items-center gap-1.5 flex-wrap">

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { NotaUpdateSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
+import { processMenciones } from "@/lib/menciones-server";
 import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -40,7 +41,7 @@ export async function PATCH(
 
     const prev = await prisma.nota.findUnique({
       where: { id: notaId },
-      select: { contenido: true },
+      select: { contenido: true, empresaId: true, empresa: { select: { nombre: true } } },
     });
     const nota = await prisma.nota.update({
       where: { id: notaId },
@@ -57,6 +58,21 @@ export async function PATCH(
         before: { contenido: prev.contenido },
         after: { contenido: nota.contenido },
       });
+      // Reprocesar menciones — dedup contra existing impide notificar de nuevo
+      // a quien ya estaba mencionado en la versión anterior. Solo nuevos
+      // mencionados reciben campanita.
+      if (prev) {
+        void processMenciones({
+          entity: { kind: "nota", id: notaId },
+          empresaId: prev.empresaId,
+          empresaNombre: prev.empresa?.nombre ?? "una empresa",
+          contenido: nota.contenido,
+          author: { kind: "u", id: user.id, name: user.name ?? "Admin" },
+          adminLink: `/?empresa=${prev.empresaId}`,
+          portalLink: `/portal/empresas/${prev.empresaId}`,
+          context: "nota",
+        }).catch((err) => log.error("api/notas/[id] PATCH processMenciones", err));
+      }
     }
     return NextResponse.json(nota);
   } catch (err) {

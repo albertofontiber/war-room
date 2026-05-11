@@ -3,8 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { NotaCreateSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
-import { notifyUser } from "@/lib/notifications";
+import { notifyUser, notifyFinder } from "@/lib/notifications";
 import { loadThreadRoot, visibilityForReply } from "@/lib/notas-thread";
+import { stripMencionMarkers } from "@/lib/menciones";
+import { processMenciones } from "@/lib/menciones-server";
 import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -66,6 +68,7 @@ export async function POST(
 
     let visibleAFinder = false; // Default para notas root de admin (interna).
     let notifyParentAuthorUserId: string | null = null;
+    let notifyParentAuthorFinderId: string | null = null;
 
     if (parsed.data.parentId !== undefined) {
       const root = await loadThreadRoot(parsed.data.parentId);
@@ -77,15 +80,17 @@ export async function POST(
       }
       visibleAFinder = visibilityForReply(root);
 
-      // Si el autor del padre directo es admin distinto al responder,
-      // notificarle que tiene respuesta. Padres que son finders → diferido
-      // a PR de menciones (cuando exista Notificacion.finderId).
+      // Notificar al autor del padre directo (admin O finder distinto al
+      // responder). Si el padre es del propio admin, no autonotificar.
       const parent = await prisma.nota.findUnique({
         where: { id: parsed.data.parentId },
         select: { autorId: true, autorFinderId: true },
       });
       if (parent?.autorId && parent.autorId !== user.id) {
         notifyParentAuthorUserId = parent.autorId;
+      }
+      if (parent?.autorFinderId) {
+        notifyParentAuthorFinderId = parent.autorFinderId;
       }
     }
 
@@ -111,19 +116,45 @@ export async function POST(
       after: { contenido: nota.contenido, empresaId, parentId: nota.parentId },
     });
 
+    const previewClean = stripMencionMarkers(nota.contenido).slice(0, 140);
+
     if (notifyParentAuthorUserId) {
-      const preview = nota.contenido.length > 140
-        ? nota.contenido.slice(0, 140) + "…"
-        : nota.contenido;
       void notifyUser({
         userId: notifyParentAuthorUserId,
         tipo: "nota_respuesta",
         titulo: `${user.name ?? "Alguien"} respondió a tu nota`,
-        mensaje: preview,
+        mensaje: previewClean,
         link: `/?empresa=${empresaId}`,
         email: false,
       }).catch((err) => log.error("api/empresas/[id]/notas POST notifyUser", err));
     }
+    if (notifyParentAuthorFinderId) {
+      void notifyFinder({
+        finderId: notifyParentAuthorFinderId,
+        tipo: "nota_respuesta",
+        titulo: `${user.name ?? "Alguien"} respondió a tu nota`,
+        mensaje: previewClean,
+        link: `/portal/empresas/${empresaId}`,
+        email: false,
+      }).catch((err) => log.error("api/empresas/[id]/notas POST notifyFinder", err));
+    }
+
+    // Procesar menciones en el contenido — persiste filas Mencion y dispara
+    // notificaciones a admins/finders mencionados (excepto al propio autor).
+    const empresa = await prisma.empresa.findUnique({
+      where: { id: empresaId },
+      select: { nombre: true },
+    });
+    void processMenciones({
+      entity: { kind: "nota", id: nota.id },
+      empresaId,
+      empresaNombre: empresa?.nombre ?? "una empresa",
+      contenido: nota.contenido,
+      author: { kind: "u", id: user.id, name: user.name ?? "Admin" },
+      adminLink: `/?empresa=${empresaId}`,
+      portalLink: `/portal/empresas/${empresaId}`,
+      context: "nota",
+    }).catch((err) => log.error("api/empresas/[id]/notas POST processMenciones", err));
 
     return NextResponse.json(nota, { status: 201 });
   } catch (err) {

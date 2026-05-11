@@ -5,6 +5,7 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { DEAL_STAGES, DEAL_STAGE_LABEL, DEAL_STAGE_PILL_CLASS } from "@/lib/crm";
 import type { DealStage } from "@/types";
+import NotificationsBell from "@/components/NotificationsBell";
 
 type Card = {
   id: number;
@@ -80,6 +81,7 @@ export default function PortalPipelineClient({ finderName }: { finderName: strin
 
         <div className="flex-1" />
 
+        <NotificationsBell endpoint="/api/portal/notificaciones" />
         <span className="hidden sm:inline text-[11px] text-wr-hint truncate">{finderName}</span>
         <button
           onClick={() => signOut({ callbackUrl: "/portal/login" })}
