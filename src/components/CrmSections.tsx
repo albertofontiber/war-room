@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { fmtDate } from "@/lib/format";
 import { TAREA_TIPOS, TAREA_TIPO_LABEL, TAREA_TIPO_ICON } from "@/lib/crm";
 import type { TareaTipo } from "@/types";
+import { TAREAS_CHANGED_EVENT } from "@/components/ChatIA";
 
 // ─── Tipos compartidos ────────────────────────────────────────────────────
 
@@ -339,6 +340,20 @@ export function TareasSection({
   useEffect(() => {
     if (open) load();
   }, [open, load]);
+
+  // Escucha eventos globales del ChatIA tras crear/actualizar tareas.
+  // Si la sección está abierta y el evento aplica a esta empresa, refrescamos
+  // sin que el usuario tenga que pulsar F5. Si está cerrada, no hace falta —
+  // el próximo open ya dispara `load()` con datos frescos.
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: Event) => {
+      const ce = e as CustomEvent<{ empresaId?: number }>;
+      if (ce.detail?.empresaId === empresaId) load();
+    };
+    window.addEventListener(TAREAS_CHANGED_EVENT, handler);
+    return () => window.removeEventListener(TAREAS_CHANGED_EVENT, handler);
+  }, [open, empresaId, load]);
 
   useEffect(() => {
     if (!open) return;
