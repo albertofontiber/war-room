@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { requireCurrentFinder, canEditWithin24h } from "@/lib/finder-session";
 import { PortalNotaUpdateSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
+import { processMenciones } from "@/lib/menciones-server";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -54,7 +56,11 @@ export async function PATCH(
 
   const prev = await prisma.nota.findUnique({
     where: { id: res.notaId },
-    select: { contenido: true },
+    select: {
+      contenido: true,
+      empresaId: true,
+      empresa: { select: { nombre: true } },
+    },
   });
   const nota = await prisma.nota.update({
     where: { id: res.notaId },
@@ -76,6 +82,16 @@ export async function PATCH(
       before: { contenido: prev.contenido },
       after: { contenido: nota.contenido },
     });
+    void processMenciones({
+      entity: { kind: "nota", id: nota.id },
+      empresaId: prev.empresaId,
+      empresaNombre: prev.empresa?.nombre ?? "una empresa",
+      contenido: nota.contenido,
+      author: { kind: "f", id: finder.id, name: finder.name },
+      adminLink: `/?empresa=${prev.empresaId}`,
+      portalLink: `/portal/empresas/${prev.empresaId}`,
+      context: "nota",
+    }).catch((err) => log.error("api/portal/notas/[id] PATCH processMenciones", err));
   }
   return NextResponse.json(nota);
 }

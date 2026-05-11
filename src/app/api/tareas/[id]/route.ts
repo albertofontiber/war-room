@@ -8,6 +8,7 @@ import { auditLog, diffFields } from "@/lib/audit-log";
 import { log } from "@/lib/logger";
 import type { TareaTipo } from "@/types";
 import { sendFinderTaskAssignedEmail } from "@/lib/email-finder-assignment";
+import { processMenciones } from "@/lib/menciones-server";
 
 export const dynamic = "force-dynamic";
 
@@ -118,6 +119,25 @@ export async function PATCH(
         }).catch((err) =>
           log.error("api/tareas/[id] PATCH email", err)
         );
+      }
+
+      // Reprocesar menciones si tocan campos de texto. Dedup en processMenciones
+      // evita notificar dos veces al mismo mencionado.
+      const textChanged =
+        body.titulo !== undefined ||
+        body.descripcion !== undefined ||
+        body.resultado !== undefined;
+      if (textChanged) {
+        void processMenciones({
+          entity: { kind: "tarea", id: tareaId },
+          empresaId: tarea.empresa.id,
+          empresaNombre: tarea.empresa.nombre,
+          contenido: [tarea.titulo, tarea.descripcion ?? "", tarea.resultado ?? ""].join(" "),
+          author: { kind: "u", id: user.id, name: user.name ?? "Admin" },
+          adminLink: `/?empresa=${tarea.empresa.id}`,
+          portalLink: `/portal/empresas/${tarea.empresa.id}`,
+          context: "tarea",
+        }).catch((err) => log.error("api/tareas/[id] PATCH processMenciones", err));
       }
     }
     return NextResponse.json(tarea);

@@ -6,6 +6,7 @@ import { auditLog } from "@/lib/audit-log";
 import { log } from "@/lib/logger";
 import type { TareaTipo } from "@/types";
 import { sendFinderTaskAssignedEmail } from "@/lib/email-finder-assignment";
+import { processMenciones } from "@/lib/menciones-server";
 
 export const dynamic = "force-dynamic";
 
@@ -138,6 +139,18 @@ export async function POST(
         log.error("api/empresas/[id]/tareas POST email", err)
       );
     }
+
+    // Procesar menciones: busca @[Name](u:id|f:id) en titulo + descripcion + resultado.
+    void processMenciones({
+      entity: { kind: "tarea", id: tarea.id },
+      empresaId,
+      empresaNombre: tarea.empresa.nombre,
+      contenido: [tarea.titulo, tarea.descripcion ?? "", tarea.resultado ?? ""].join(" "),
+      author: { kind: "u", id: user.id, name: user.name ?? "Admin" },
+      adminLink: `/?empresa=${empresaId}`,
+      portalLink: `/portal/empresas/${empresaId}`,
+      context: "tarea",
+    }).catch((err) => log.error("api/empresas/[id]/tareas POST processMenciones", err));
 
     return NextResponse.json(tarea, { status: 201 });
   } catch (err) {

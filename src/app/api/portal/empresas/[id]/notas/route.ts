@@ -6,6 +6,8 @@ import { notifyAdmins, notifyUser } from "@/lib/notifications";
 import { auditLog } from "@/lib/audit-log";
 import { PortalNotaCreateSchema, zodError } from "@/lib/validation";
 import { loadThreadRoot, visibilityForReply } from "@/lib/notas-thread";
+import { stripMencionMarkers } from "@/lib/menciones";
+import { processMenciones } from "@/lib/menciones-server";
 import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -99,9 +101,7 @@ export async function POST(
   // Campanita in-app:
   //   - Notas root del finder → notifica a todos los admins (broadcast, igual que antes).
   //   - Respuestas a una nota de admin → notifica solo al admin autor del padre (dirigido).
-  const preview = nota.contenido.length > 140
-    ? nota.contenido.slice(0, 140) + "…"
-    : nota.contenido;
+  const preview = stripMencionMarkers(nota.contenido).slice(0, 140);
 
   if (notifyParentAuthorUserId) {
     void notifyUser({
@@ -121,6 +121,19 @@ export async function POST(
       email: false,
     }).catch((err) => log.error("api/portal/empresas/[id]/notas POST notifyAdmins", err));
   }
+
+  // Procesar menciones — finder puede mencionar admins (en el portal solo le
+  // sale en el autocomplete admins+su-propio-id, no otros finders).
+  void processMenciones({
+    entity: { kind: "nota", id: nota.id },
+    empresaId: id,
+    empresaNombre: empresa.nombre,
+    contenido: nota.contenido,
+    author: { kind: "f", id: finder.id, name: finder.name },
+    adminLink: `/?empresa=${empresa.id}`,
+    portalLink: `/portal/empresas/${empresa.id}`,
+    context: "nota",
+  }).catch((err) => log.error("api/portal/empresas/[id]/notas POST processMenciones", err));
 
   return NextResponse.json(nota, { status: 201 });
 }

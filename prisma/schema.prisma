@@ -318,6 +318,7 @@ model User {
   crmLogs         CrmLog[]
   crmEstadosOwner CrmEstado[]       @relation("CrmOwner")
   notificaciones  Notificacion[]
+  menciones       Mencion[]         @relation("UserMencion")
 }
 
 model Nota {
@@ -342,6 +343,7 @@ model Nota {
   parentId       Int?
   parent         Nota?    @relation("NotaThread", fields: [parentId], references: [id], onDelete: Cascade)
   respuestas     Nota[]   @relation("NotaThread")
+  menciones      Mencion[]
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -385,6 +387,7 @@ model Tarea {
   emailIngest         EmailIngest?
   // Si la tarea fue creada por el cron Calendar, traza al CalendarIngest.
   calendarIngest      CalendarIngest?
+  menciones           Mencion[]
 
   @@index([empresaId])
   @@index([fechaLimite, completada])
@@ -423,6 +426,8 @@ model Finder {
   tareasAsignadas   Tarea[]           @relation("TareaAsignadoFinder")
   crmLogsAutor      CrmLog[]          @relation("CrmLogAutorFinder")
   passwordResets    PasswordResetToken[]
+  notificaciones    Notificacion[]    @relation("NotificacionFinder")
+  menciones         Mencion[]         @relation("FinderMencion")
 }
 
 // Self-service reset de password para finders. El finder pide reset desde
@@ -503,14 +508,19 @@ model FinderAccessLog {
   @@index([action, createdAt])
 }
 
-// Notificaciones in-app dirigidas a admins (User). Genérico para soportar
-// futuros tipos (tareas vencidas, BORME, etc.) — por ahora solo se emite
-// "proposal_new" desde POST /api/portal/proposals.
+// Notificaciones in-app dirigidas a admins (User) O finders (Finder). Genérico
+// para soportar tipos como "proposal_new", "nota_respuesta", "mencion", etc.
+//
+// Destinatario: exactamente UNO de los dos campos tiene valor. Convención
+// mutex (no se persiste a nivel BD para evitar un CHECK constraint exótico
+// sobre dos NULL/NOT NULL; los endpoints garantizan que solo uno está set).
 model Notificacion {
   id         Int       @id @default(autoincrement())
-  userId     String
-  user       User      @relation(fields: [userId], references: [id])
-  tipo       String    // "proposal_new" (futuros: "task_due", "borme_signal", ...)
+  userId     String?
+  user       User?     @relation(fields: [userId], references: [id])
+  finderId   String?
+  finder     Finder?   @relation("NotificacionFinder", fields: [finderId], references: [id])
+  tipo       String    // "proposal_new" | "note_added" | "nota_respuesta" | "mencion" | ...
   titulo     String
   mensaje    String    @db.Text
   link       String?   // ruta dentro del war room (ej. "/finders/proposals?status=PENDING")
@@ -519,6 +529,35 @@ model Notificacion {
   createdAt  DateTime  @default(now())
 
   @@index([userId, leida, createdAt])
+  @@index([finderId, leida, createdAt])
+}
+
+// Menciones (@) en el contenido de Notas y Tareas. Una mención apunta a
+// EXACTAMENTE un destinatario (user o finder) y a EXACTAMENTE una entidad
+// (nota o tarea). Permite consultar "qué cosas me han mencionado" en O(1)
+// vía índices, sin reparsear el texto.
+//
+// Se persiste tras parsear el contenido en el endpoint POST/PATCH. Si la
+// mención se elimina del texto al editar, la fila se borra (con onDelete:
+// Cascade de la entidad padre, no perdura más allá de la vida del padre).
+// Una entrada por (entidad, destinatario): si se menciona dos veces al
+// mismo en el mismo texto, solo una mencion en BD (dedup en el parser).
+model Mencion {
+  id         Int      @id @default(autoincrement())
+  notaId     Int?
+  nota       Nota?    @relation(fields: [notaId], references: [id], onDelete: Cascade)
+  tareaId    Int?
+  tarea      Tarea?   @relation(fields: [tareaId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?    @relation("UserMencion", fields: [userId], references: [id])
+  finderId   String?
+  finder     Finder?  @relation("FinderMencion", fields: [finderId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([finderId, createdAt])
+  @@index([notaId])
+  @@index([tareaId])
 }
 
 // ─────────────────────────────────────────────────────────────
