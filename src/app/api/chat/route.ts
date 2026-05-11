@@ -166,7 +166,7 @@ export async function POST(req: Request) {
 
       crear_tarea: tool({
         description:
-          "Crea una tarea en el CRM ligada a una empresa. Usa SIEMPRE buscar_empresa antes para obtener el empresaId correcto — no inventes IDs. Si el usuario no especifica tipo, déjalo como 'otra'. Si especifica una fecha natural ('mañana', 'el viernes', 'en 3 días'), conviértela a ISO 8601 antes de pasarla. El autor de la tarea es el usuario autenticado (no se pasa explícitamente).",
+          "Crea una tarea en el CRM ligada a una empresa. Usa SIEMPRE buscar_empresa antes para obtener el empresaId correcto — no inventes IDs. Para el tipo, infiérelo del verbo del usuario según el mapping del system prompt (llamada/videollamada/reunion_presencial/mensaje_whatsapp/contacto_linkedin/email). Si el usuario NO da pista clara del medio, NO crees la tarea con tipo='otra' silenciosamente — pregúntale antes. Si especifica una fecha natural ('mañana', 'el viernes', 'en 3 días'), conviértela a ISO 8601 antes de pasarla. El autor de la tarea es el usuario autenticado (no se pasa explícitamente).",
         inputSchema: z.object({
           empresaId: z
             .number()
@@ -184,7 +184,7 @@ export async function POST(req: Request) {
             .enum(TAREA_TIPOS)
             .optional()
             .describe(
-              "Tipo de tarea. Si no se sabe, omitir → default 'otra'."
+              "Tipo de tarea. Inferir SIEMPRE del verbo del usuario (ver mapping del system prompt). 'otra' SOLO si el usuario lo pide expresamente — para casos ambiguos, preguntar antes de crear, no defaultar."
             ),
           descripcion: z
             .string()

@@ -194,6 +194,7 @@ export default function ChatIA() {
             <p className="text-wr-hint">&quot;¿Cuántas fusiones hubo este mes?&quot;</p>
             <p className="text-wr-hint">&quot;Crea una tarea para llamar a Aize mañana&quot;</p>
             <p className="text-wr-hint">&quot;Recuérdame mandar el NDA a Tesein el viernes&quot;</p>
+            <p className="text-wr-hint">&quot;Mueve la videollamada con Acme al jueves&quot;</p>
           </div>
         )}
 
