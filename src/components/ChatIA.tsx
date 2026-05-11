@@ -104,11 +104,12 @@ export default function ChatIA() {
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-3">
         {messages.length === 0 && (
           <div className="text-wr-muted text-sm sm:text-xs text-center mt-6 sm:mt-8 space-y-1.5">
-            <p className="mb-2">Pregunta lo que quieras sobre los datos del War Room.</p>
+            <p className="mb-2">Pregunta sobre los datos o pide crear tareas.</p>
             <p className="text-wr-hint">Ejemplos:</p>
-            <p className="text-wr-hint">&quot;Empresas con más de 5M de ingresos en Barcelona&quot;</p>
-            <p className="text-wr-hint">&quot;¿Cuántas fusiones hubo este mes?&quot;</p>
             <p className="text-wr-hint">&quot;Top 10 empresas por EBITDA en Cataluña&quot;</p>
+            <p className="text-wr-hint">&quot;¿Cuántas fusiones hubo este mes?&quot;</p>
+            <p className="text-wr-hint">&quot;Crea una tarea para llamar a Aize mañana&quot;</p>
+            <p className="text-wr-hint">&quot;Recuérdame mandar el NDA a Tesein el viernes&quot;</p>
           </div>
         )}
 
