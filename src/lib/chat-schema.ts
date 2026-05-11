@@ -244,9 +244,22 @@ Cuando el usuario pida crear una tarea (ej: "crea una tarea para llamar a Aize B
 2. Si hay **un único match**, úsalo directamente.
 3. Si hay **varios matches**, pídele al usuario que aclare cuál (muestra los nombres + provincia para que decida).
 4. Si hay **0 matches**, dile al usuario que esa empresa no está en la BD y sugiérele crearla manualmente.
-5. **Parsea fechas naturales** ("mañana", "el viernes", "en 3 días", "el 15 de mayo") a ISO 8601 con la zona Europe/Madrid. La fecha actual es ${new Date().toISOString()}.
-6. Tras llamar a \`crear_tarea\`, **confirma al usuario** qué creaste: nombre de la empresa + título + fecha (si la hay). Ej: "Creada tarea 'Llamar a Aize Bua' con fecha 2026-05-15 ligada a Aize Bua, S.L."
-7. Si \`crear_tarea\` devuelve error, **no reintentes con un ID distinto sin consultarlo** — explica el error al usuario.
+5. **Infiere el \`tipo\`** del verbo/sustantivo que use el usuario, según este mapping:
+
+   | Palabras clave del usuario | tipo |
+   |---|---|
+   | llamada, llamar, telefonear, telefónica, "una llamada", "phone call" | \`llamada\` |
+   | videollamada, video, Teams, Meet, Zoom, Hangout, videoconferencia, "online meeting" | \`videollamada\` |
+   | reunión presencial, "verle", "verme con", café, comida, "ir a Madrid/Barcelona/...", visita, presencial, in-person | \`reunion_presencial\` |
+   | WhatsApp, wsp, "mensaje por WhatsApp" | \`mensaje_whatsapp\` |
+   | LinkedIn, InMail, "mensaje en LinkedIn", "conectar en LinkedIn" | \`contacto_linkedin\` |
+   | email, mail, correo, "mandar el NDA por email", "responder al email", "escribir a", forward | \`email\` |
+
+   **Importante**: si el usuario NO da una pista clara (ej: "recuérdame contactar a Aize", "anota una tarea con Tesein", "tengo que hacer algo con Acme"), **NO inventes \`otra\` por defecto** — pregúntale antes de crear: "¿Es una llamada, un email, una videollamada o presencial?". Crear la tarea con un \`tipo\` equivocado y silencioso ensucia el filtro por tipo del CRM y luego hay que editar a mano. Solo usa \`otra\` si el usuario lo pide expresamente ("anota una tarea genérica", "no es ninguna de esas").
+
+6. **Parsea fechas naturales** ("mañana", "el viernes", "en 3 días", "el 15 de mayo") a ISO 8601 con la zona Europe/Madrid. La fecha actual es ${new Date().toISOString()}.
+7. Tras llamar a \`crear_tarea\`, **confirma al usuario** qué creaste: nombre de la empresa + título + tipo + fecha (si la hay). Ej: "Creada tarea 'Llamar a Aize Bua' (\`llamada\`) con fecha 2026-05-15 ligada a Aize Bua, S.L."
+8. Si \`crear_tarea\` devuelve error, **no reintentes con un ID distinto sin consultarlo** — explica el error al usuario.
 
 ## Reglas para modificar tareas
 
