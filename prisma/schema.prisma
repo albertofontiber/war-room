@@ -95,20 +95,21 @@ model Empresa {
 // quiera que estemos hablando, con su email para que el matcher del cron
 // SentItems pueda crear tareas automáticamente al mandar email.
 model Contacto {
-  id           Int           @id @default(autoincrement())
-  empresaId    Int
-  empresa      Empresa       @relation(fields: [empresaId], references: [id], onDelete: Cascade)
-  nombre       String
-  cargo        String?
-  email        String?
-  telefono     String?
-  notas        String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  emailIngests EmailIngest[]
+  id               Int                @id @default(autoincrement())
+  empresaId        Int
+  empresa          Empresa            @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  nombre           String
+  cargo            String?
+  email            String?
+  telefono         String?
+  notas            String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  emailIngests     EmailIngest[]
+  calendarIngests  CalendarIngest[]
 
   @@index([empresaId])
-  @@index([email]) // matcher rápido del cron SentItems Microsoft Graph
+  @@index([email]) // matcher rápido del cron SentItems + Calendar Microsoft Graph
 }
 
 // Cursor por buzón leído por el cron SentItems → tareas. Una fila por UPN
@@ -143,6 +144,47 @@ model EmailIngest {
   @@index([upn])
   @@index([sentAt])
   @@index([empresaId])
+}
+
+// Cursor por buzón leído por el cron Calendar → tareas. Una fila por UPN
+// (alberto@, gabriel@). Filtramos por `lastModifiedDateTime` (no `start`)
+// para capturar también re-schedules y cancelaciones de eventos antiguos.
+model CalendarIngestCursor {
+  upn                 String   @id
+  lastModifiedDateTime DateTime
+  updatedAt           DateTime @updatedAt
+}
+
+// Traza + dedup de eventos de calendar procesados por el cron. Un evento de
+// Graph se identifica por `iCalUId` (estable cross-user: si alberto Y gabriel
+// están en la misma reunión, sus calendarios tienen el mismo iCalUId pero
+// distinto `id`). Usamos iCalUId como unique para no duplicar la tarea cuando
+// el cron procesa ambos calendarios. `graphEventId` se guarda informativo
+// (event.id del calendario del UPN que procesamos primero).
+//
+// Privacy: igual que email, eventos sin match con Contacto no dejan rastro.
+model CalendarIngest {
+  id              Int       @id @default(autoincrement())
+  iCalUId         String    @unique
+  graphEventId    String
+  upn             String
+  organizerEmail  String
+  recipientEmail  String    // El asistente que matcheó con un Contacto
+  contactoId      Int?
+  contacto        Contacto? @relation(fields: [contactoId], references: [id], onDelete: SetNull)
+  empresaId       Int
+  tareaId         Int?      @unique
+  tarea           Tarea?    @relation(fields: [tareaId], references: [id], onDelete: SetNull)
+  startAt         DateTime
+  endAt           DateTime
+  subject         String?
+  isOnlineMeeting Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+
+  @@index([upn])
+  @@index([startAt])
+  @@index([empresaId])
+  @@index([graphEventId])
 }
 
 model Financiero {
@@ -334,6 +376,8 @@ model Tarea {
   updatedAt           DateTime  @updatedAt
   // Si la tarea fue creada por el cron SentItems, traza al EmailIngest.
   emailIngest         EmailIngest?
+  // Si la tarea fue creada por el cron Calendar, traza al CalendarIngest.
+  calendarIngest      CalendarIngest?
 
   @@index([empresaId])
   @@index([fechaLimite, completada])
