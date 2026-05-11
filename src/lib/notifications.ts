@@ -39,6 +39,17 @@ export type NotifyUserInput = {
   email?: boolean;
 };
 
+export type NotifyFinderInput = {
+  finderId: string;
+  tipo: string;
+  titulo: string;
+  mensaje: string;
+  /** Ruta dentro del PORTAL del finder (ej. "/portal/empresas/123"). */
+  link?: string | null;
+  /** Si false, no envía email. Default false (campanita-only). */
+  email?: boolean;
+};
+
 /**
  * Crea notificaciones in-app para todos los admins activos y, opcionalmente,
  * envía un email. No lanza si Resend falla — solo loguea.
@@ -144,6 +155,65 @@ export async function notifyUser(input: NotifyUserInput): Promise<void> {
     if (error) log.error("lib/notifications notifyUser", "Resend error", { error });
   } catch (err) {
     log.error("lib/notifications notifyUser", err);
+  }
+}
+
+/**
+ * Notifica a un único finder (campanita in-app + email opcional). Mismo
+ * patrón que `notifyUser` pero apunta a `Finder` en vez de `User`. La
+ * campanita aparece en el portal del finder, no en el war room admin.
+ *
+ * El portal del finder tiene su propio dominio (`portal.fontiber.com`); el
+ * `link` debe ser una ruta absoluta tipo `/portal/empresas/123`. Para los
+ * emails se usa el FROM del portal (`PORTAL_EMAIL_FROM`) en lugar del
+ * `SUMMARY_EMAIL_FROM` que va a admins.
+ */
+export async function notifyFinder(input: NotifyFinderInput): Promise<void> {
+  const finder = await prisma.finder.findUnique({
+    where: { id: input.finderId },
+    select: { id: true, email: true, active: true },
+  });
+  if (!finder || !finder.active) return;
+
+  await prisma.notificacion.create({
+    data: {
+      finderId: finder.id,
+      tipo: input.tipo,
+      titulo: input.titulo,
+      mensaje: input.mensaje,
+      link: input.link ?? null,
+    },
+  });
+
+  if (input.email !== true) return;
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    log.warn("lib/notifications", "RESEND_API_KEY not set, skipping email");
+    return;
+  }
+
+  const portalFrom = process.env.PORTAL_EMAIL_FROM ?? "portal@fontiber.com";
+  const portalBaseUrl =
+    process.env.NEXT_PUBLIC_PORTAL_URL ?? "https://portal.fontiber.com";
+  const link = input.link ? `${portalBaseUrl}${input.link}` : portalBaseUrl;
+  const html = renderEmail({
+    titulo: input.titulo,
+    mensaje: input.mensaje,
+    link,
+  });
+
+  try {
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
+      from: `Fontiber Portal <${portalFrom}>`,
+      to: [finder.email],
+      subject: input.titulo,
+      html,
+    });
+    if (error) log.error("lib/notifications notifyFinder", "Resend error", { error });
+  } catch (err) {
+    log.error("lib/notifications notifyFinder", err);
   }
 }
 

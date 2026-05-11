@@ -6,6 +6,7 @@ import { auditLog, diffFields } from "@/lib/audit-log";
 import { TAREA_TIPO_LABEL } from "@/lib/crm";
 import type { TareaTipo } from "@/types";
 import { PortalTareaUpdateSchema, zodError } from "@/lib/validation";
+import { processMenciones } from "@/lib/menciones-server";
 import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -193,6 +194,24 @@ export async function PATCH(
     }).catch((err) =>
       log.error("api/portal/tareas/[id] PATCH notifyAdmins", err)
     );
+  }
+
+  // Reprocesar menciones si tocaron campos de texto.
+  const textChanged =
+    body.titulo !== undefined ||
+    body.descripcion !== undefined ||
+    body.resultado !== undefined;
+  if (textChanged) {
+    void processMenciones({
+      entity: { kind: "tarea", id: tareaId },
+      empresaId: tarea.empresa.id,
+      empresaNombre: tarea.empresa.nombre,
+      contenido: [updated.titulo, updated.descripcion ?? "", updated.resultado ?? ""].join(" "),
+      author: { kind: "f", id: finder.id, name: finder.name },
+      adminLink: `/?empresa=${tarea.empresa.id}`,
+      portalLink: `/portal/empresas/${tarea.empresa.id}`,
+      context: "tarea",
+    }).catch((err) => log.error("api/portal/tareas/[id] PATCH processMenciones", err));
   }
 
   return NextResponse.json(updated);
