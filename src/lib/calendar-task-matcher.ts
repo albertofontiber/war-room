@@ -36,6 +36,7 @@ import { log } from "@/lib/logger";
 import {
   listCalendarEventsSince,
   attendeeEmailsOf,
+  extractEmailsFromBody,
   type CalendarEvent,
 } from "@/lib/calendar-graph";
 
@@ -54,14 +55,29 @@ export type CalendarIngestStats = {
   newCursor: Date | null;
 };
 
+/** True si el email es externo (no @fontiber.com) y tiene formato válido. */
+function isExternalEmail(email: string): boolean {
+  const at = email.lastIndexOf("@");
+  if (at < 0) return false;
+  return email.slice(at + 1) !== FONTIBER_DOMAIN;
+}
+
 /** Filtra attendees @fontiber.com (descartamos eventos solo internos). */
 function externalAttendees(event: CalendarEvent): string[] {
-  return attendeeEmailsOf(event).filter((email) => {
-    const at = email.lastIndexOf("@");
-    if (at < 0) return false;
-    const domain = email.slice(at + 1);
-    return domain !== FONTIBER_DOMAIN;
-  });
+  return attendeeEmailsOf(event).filter(isExternalEmail);
+}
+
+/**
+ * Devuelve la unión de attendees externos + emails encontrados en el body
+ * (también externos). Caso de uso: el organizador hace un block en su
+ * calendario sin invitar formalmente al contacto, pero menciona su email
+ * en el cuerpo. Ej: invite "[BLOCK] Test videollamada" con un solo asistente
+ * interno y `silvaglez.alberto@gmail.com` en el body → debe matchear.
+ */
+function externalCandidates(event: CalendarEvent): string[] {
+  const fromAttendees = externalAttendees(event);
+  const fromBody = extractEmailsFromBody(event.body).filter(isExternalEmail);
+  return Array.from(new Set([...fromAttendees, ...fromBody]));
 }
 
 /**
@@ -96,13 +112,14 @@ async function ingestCalendarEvent(
   });
   if (existing) return { created: false, matched: true, skipped: null };
 
-  const externals = externalAttendees(event);
-  if (externals.length === 0) {
+  const candidates = externalCandidates(event);
+  if (candidates.length === 0) {
+    // No hay attendees externos NI emails externos en el body. Skip.
     return { created: false, matched: false, skipped: "internal-only" };
   }
 
   const contactos = await prisma.contacto.findMany({
-    where: { email: { in: externals } },
+    where: { email: { in: candidates } },
     select: { id: true, email: true, empresaId: true, nombre: true },
   });
   if (contactos.length === 0) {
@@ -259,5 +276,6 @@ export async function ingestCalendarForUpn(
 /** Test helper: expone funciones internas para los tests. */
 export const __testing__ = {
   externalAttendees,
+  externalCandidates,
   ingestCalendarEvent,
 };

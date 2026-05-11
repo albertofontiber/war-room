@@ -12,7 +12,12 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { attendeeEmailsOf, type CalendarEvent } from "./calendar-graph";
+import {
+  attendeeEmailsOf,
+  extractEmailsFromBody,
+  type CalendarEvent,
+  type EventBody,
+} from "./calendar-graph";
 
 const findUniqueMock = vi.fn();
 const findManyMock = vi.fn();
@@ -67,6 +72,7 @@ function makeEvent(opts: {
   isCancelled?: boolean;
   isOnlineMeeting?: boolean;
   lastModifiedDateTime?: string;
+  body?: EventBody | null;
 }): CalendarEvent {
   return {
     id: opts.id ?? "evt-1",
@@ -91,6 +97,7 @@ function makeEvent(opts: {
       status: { response: a.declined ? ("declined" as const) : ("accepted" as const) },
       emailAddress: { name: null, address: a.address },
     })),
+    body: opts.body === undefined ? null : opts.body,
   };
 }
 
@@ -155,6 +162,70 @@ describe("externalAttendees", () => {
       attendees: [{ address: "gabriel@fontiber.com" }],
     });
     expect(externalAttendees(e)).toEqual([]);
+  });
+});
+
+describe("extractEmailsFromBody", () => {
+  it("plain text: extrae emails", () => {
+    const r = extractEmailsFromBody({
+      contentType: "text",
+      content: "Reunion con foo@bar.com y otro: BAZ@qux.io",
+    });
+    expect(r.sort()).toEqual(["baz@qux.io", "foo@bar.com"].sort());
+  });
+
+  it("HTML auto-linked mailto: extrae el href", () => {
+    const r = extractEmailsFromBody({
+      contentType: "html",
+      content: '<p>Contacto: <a href="mailto:Foo@Bar.com">Foo@Bar.com</a></p>',
+    });
+    expect(r).toEqual(["foo@bar.com"]);
+  });
+
+  it("HTML párrafo plano sin mailto: regex sigue pillando email", () => {
+    const r = extractEmailsFromBody({
+      contentType: "html",
+      content: "<p>Mi email es contacto@empresa.es y nada más</p>",
+    });
+    expect(r).toEqual(["contacto@empresa.es"]);
+  });
+
+  it("decodifica &#64; (entidad HTML que esconde @)", () => {
+    const r = extractEmailsFromBody({
+      contentType: "html",
+      content: "Hidden: foo&#64;bar.com",
+    });
+    expect(r).toEqual(["foo@bar.com"]);
+  });
+
+  it("dedup case-insensitive", () => {
+    const r = extractEmailsFromBody({
+      contentType: "html",
+      content: '<a href="mailto:Foo@Bar.com">FOO@BAR.COM</a> y foo@bar.com',
+    });
+    expect(r).toEqual(["foo@bar.com"]);
+  });
+
+  it("body null o vacío → []", () => {
+    expect(extractEmailsFromBody(null)).toEqual([]);
+    expect(extractEmailsFromBody({ contentType: "text", content: "" })).toEqual([]);
+  });
+
+  it("body sin emails → []", () => {
+    expect(
+      extractEmailsFromBody({
+        contentType: "text",
+        content: "Reunión a las 10. Sala 3.",
+      })
+    ).toEqual([]);
+  });
+
+  it("ignora cadenas sin TLD (foo@bar sin .ext)", () => {
+    const r = extractEmailsFromBody({
+      contentType: "text",
+      content: "garbage@nope and real@valid.com",
+    });
+    expect(r).toEqual(["real@valid.com"]);
   });
 });
 
@@ -352,6 +423,90 @@ describe("ingestCalendarEvent (vía mock de prisma)", () => {
     const r = await ingestCalendarEvent(e, "alberto@fontiber.com");
     expect(r.matched).toBe(false);
     // findMany debería llamarse con un array vacío de externos
+    expect(findManyMock).not.toHaveBeenCalled();
+  });
+
+  it("body-only: solo attendees internos pero email en body matchea Contacto", async () => {
+    // Caso real: Alberto hace [BLOCK] con un asistente interno y mete el
+    // email del contacto en el cuerpo del invite.
+    findUniqueMock.mockResolvedValue(null);
+    findManyMock.mockResolvedValue([
+      {
+        id: 7,
+        email: "silvaglez.alberto@gmail.com",
+        empresaId: 42,
+        nombre: "Alberto Silva",
+      },
+    ]);
+    tareaCreateMock.mockResolvedValue({ id: 1, titulo: "[BLOCK] Test videollamada" });
+    ingestCreateMock.mockResolvedValue({});
+
+    const e = makeEvent({
+      iCalUId: "ical-body-only",
+      subject: "[BLOCK] Test videollamada",
+      attendees: [{ address: "alberto@fontiber.com" }], // solo interno
+      isOnlineMeeting: true,
+      body: {
+        contentType: "html",
+        content:
+          '<p><a href="mailto:Silvaglez.alberto@gmail.com">Silvaglez.alberto@gmail.com</a></p>',
+      },
+    });
+    const r = await ingestCalendarEvent(e, "alberto@fontiber.com");
+    expect(r).toEqual({ created: true, matched: true, skipped: null });
+
+    // Contacto.findMany se llamó con el email extraído del body
+    expect(findManyMock).toHaveBeenCalledWith({
+      where: { email: { in: ["silvaglez.alberto@gmail.com"] } },
+      select: expect.any(Object),
+    });
+    expect(tareaCreateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          empresaId: 42,
+          tipo: "videollamada",
+        }),
+      })
+    );
+  });
+
+  it("body + attendees: union de candidatos, dedup en findMany", async () => {
+    findUniqueMock.mockResolvedValue(null);
+    findManyMock.mockResolvedValue([
+      { id: 7, email: "aize@empresa.com", empresaId: 42, nombre: "Aize" },
+    ]);
+    tareaCreateMock.mockResolvedValue({ id: 1 });
+    ingestCreateMock.mockResolvedValue({});
+
+    const e = makeEvent({
+      iCalUId: "ical-mix",
+      attendees: [{ address: "aize@empresa.com" }],
+      body: { contentType: "text", content: "CC: extra@otro.com" },
+    });
+    await ingestCalendarEvent(e, "alberto@fontiber.com");
+
+    // findMany debe llamarse con los dos emails externos
+    const call = findManyMock.mock.calls[0][0];
+    const emails = call.where.email.in as string[];
+    expect(emails.sort()).toEqual(["aize@empresa.com", "extra@otro.com"].sort());
+  });
+
+  it("body con email @fontiber.com NO se incluye como candidato", async () => {
+    findUniqueMock.mockResolvedValue(null);
+    findManyMock.mockResolvedValue([]); // simulamos no-match
+    const e = makeEvent({
+      iCalUId: "ical-body-internal",
+      attendees: [{ address: "alberto@fontiber.com" }],
+      body: { contentType: "text", content: "Aviso: cc gabriel@fontiber.com" },
+    });
+    const r = await ingestCalendarEvent(e, "alberto@fontiber.com");
+    // Ningún externo ni en attendees ni en body → skipped internal-only,
+    // findMany NO se llama (no hay candidatos).
+    expect(r).toEqual({
+      created: false,
+      matched: false,
+      skipped: "internal-only",
+    });
     expect(findManyMock).not.toHaveBeenCalled();
   });
 });
