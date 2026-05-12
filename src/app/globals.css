@@ -77,35 +77,39 @@
   }
 }
 
-/* RichTextEditor (Tiptap/ProseMirror): Tailwind preflight resetea
-   list-style a none y margins a 0 en ul/ol/li. Re-aplicamos los
-   marcadores dentro del editor para que las listas se vean. La misma
-   regla NO afecta al render side (RichTextRender), que pinta sus
-   propias clases list-disc/list-decimal vía componentes de
-   react-markdown. */
-.ProseMirror ul {
-  list-style: disc;
-  padding-left: 1.25em;
-  margin: 0.25em 0;
-}
-.ProseMirror ol {
-  list-style: decimal;
-  padding-left: 1.25em;
-  margin: 0.25em 0;
-}
-.ProseMirror li {
-  padding-left: 0.125em;
-}
-.ProseMirror li > p {
-  margin: 0;
-}
-/* Placeholder cuando el editor está vacío. Tiptap añade la clase
-   `is-editor-empty` al primer node si no hay contenido y rellena
-   `data-placeholder` con el texto pasado al extension. */
-.ProseMirror p.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
-  float: left;
-  color: #5b6478;
-  pointer-events: none;
-  height: 0;
+/* RichTextEditor (Tiptap/ProseMirror): Tailwind preflight (en @layer base)
+   resetea list-style:none y margins:0 en ul/ol/li. Envolvemos en
+   @layer components para que estas reglas vayan DESPUÉS de base en el
+   bundle final y ganen por orden de cascada (la specificity sería igual,
+   ya que ambas son selectores de elemento, pero `.ProseMirror ol` tiene
+   más specificity que `ol` solo — el problema previo era que las reglas
+   fuera de @layer quedaban ordenadas antes que utilities y podían
+   quedar tras la cascada de Tailwind dependiendo del bundler). */
+@layer components {
+  .ProseMirror ul {
+    list-style: disc;
+    padding-left: 1.25em;
+    margin: 0.25em 0;
+  }
+  .ProseMirror ol {
+    list-style: decimal;
+    padding-left: 1.25em;
+    margin: 0.25em 0;
+  }
+  .ProseMirror li {
+    padding-left: 0.125em;
+  }
+  .ProseMirror li > p {
+    margin: 0;
+  }
+  /* Placeholder cuando el editor está vacío. Tiptap añade la clase
+     `is-editor-empty` al primer node si no hay contenido y rellena
+     `data-placeholder` con el texto pasado al extension. */
+  .ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: #5b6478;
+    pointer-events: none;
+    height: 0;
+  }
 }
