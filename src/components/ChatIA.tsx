@@ -2,12 +2,13 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useState, useRef, useEffect, useMemo, FormEvent } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import {
   dispatchEmpresaChanged,
   type EmpresaChangedEntity,
 } from "@/lib/empresa-events";
+import { RichTextEditor } from "@/components/RichTextEditor";
 
 /**
  * Mapping toolName → entidad afectada. Mantener alineado con los tools
@@ -34,7 +35,6 @@ export default function ChatIA() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), []);
@@ -110,11 +110,9 @@ export default function ChatIA() {
     }
   }, [messages]);
 
-  useEffect(() => {
-    if (open && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [open]);
+  // El autofocus del RichTextEditor cuando `open` cambia a true ya gestiona
+  // el foco al abrir el chat — no necesitamos manipular el ref del input
+  // como hacíamos con el `<input>` plano.
 
   // En mobile el chat ocupa toda la pantalla. Cuando aparece el teclado virtual
   // de iOS, el `position: fixed` mantiene el contenedor a la altura completa
@@ -143,12 +141,13 @@ export default function ChatIA() {
     };
   }, [open]);
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  // El editor llama a onSubmit sin args; el botón Enviar también lo invoca
+  // directamente. Mantenemos el guard de loading + trim para idempotencia.
+  const onSubmit = useCallback(() => {
     if (!input.trim() || isLoading) return;
     sendMessage({ text: input });
     setInput("");
-  };
+  }, [input, isLoading, sendMessage]);
 
   if (!open) {
     return (
@@ -243,29 +242,34 @@ export default function ChatIA() {
       </div>
 
       {/* Input. `pb-[env(safe-area-inset-bottom)]` evita que el home indicator
-          de iOS tape el botón cuando el teclado está cerrado. */}
-      <form
-        onSubmit={onSubmit}
-        className="px-3 py-2.5 border-t border-wr-border shrink-0 pb-[max(env(safe-area-inset-bottom),0.625rem)] sm:pb-2.5"
-      >
-        <div className="flex gap-2">
-          <input
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Escribe tu pregunta..."
-            className="flex-1 bg-wr-surface2 border border-wr-border rounded px-3 py-2 sm:py-1.5 text-sm sm:text-xs text-wr-text placeholder:text-wr-hint focus:outline-none focus:border-wr-blue"
-            disabled={isLoading}
-          />
+          de iOS tape el botón cuando el teclado está cerrado.
+          Editor rich text: bold/italic/listas + Enter envía, Shift+Enter
+          nueva línea (consistente con Slack moderno). */}
+      <div className="px-3 py-2.5 border-t border-wr-border shrink-0 pb-[max(env(safe-area-inset-bottom),0.625rem)] sm:pb-2.5">
+        <div className="flex items-end gap-2">
+          <div className="flex-1 bg-wr-surface2 border border-wr-border rounded focus-within:border-wr-blue px-2 py-1">
+            <RichTextEditor
+              value={input}
+              onChange={setInput}
+              onSubmit={onSubmit}
+              placeholder="Escribe tu pregunta…"
+              rows={1}
+              disabled={isLoading}
+              autoFocus={open}
+              toolbar={true}
+              className="text-sm sm:text-xs text-wr-text placeholder:text-wr-hint"
+            />
+          </div>
           <button
-            type="submit"
+            type="button"
+            onClick={onSubmit}
             disabled={isLoading || !input.trim()}
             className="px-4 py-2 sm:px-3 sm:py-1.5 bg-wr-blue text-white text-sm sm:text-xs rounded hover:bg-wr-blue-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             Enviar
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
