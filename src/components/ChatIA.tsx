@@ -215,8 +215,12 @@ export default function ChatIA() {
               }`}
             >
               {msg.role === "user" ? (
-                <div className="bg-wr-surface2 rounded-lg px-3 py-2 text-right">
-                  {text}
+                // El user puede haber escrito con bold/italic/listas desde
+                // RichTextEditor — renderizamos su markdown igual que los
+                // mensajes del assistant. Alineamos a la derecha vía text-left
+                // dentro del bubble (más legible que text-right para listas).
+                <div className="bg-wr-surface2 rounded-lg px-3 py-2 prose prose-invert prose-sm max-w-none !text-sm sm:!text-xs !leading-relaxed prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-strong:text-wr-text">
+                  <ReactMarkdown>{text}</ReactMarkdown>
                 </div>
               ) : (
                 <div className="prose prose-invert prose-sm max-w-none !text-sm sm:!text-xs !leading-relaxed prose-p:my-1 prose-headings:my-2 prose-headings:text-sm prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-strong:text-wr-text prose-table:text-xs prose-th:px-2 prose-th:py-1 prose-td:px-2 prose-td:py-1 prose-th:border prose-th:border-wr-border prose-td:border prose-td:border-wr-border">
