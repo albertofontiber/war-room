@@ -76,3 +76,37 @@
     font-size: 16px !important;
   }
 }
+
+/* RichTextEditor (Tiptap/ProseMirror): Tailwind preflight (en @layer base)
+   resetea list-style:none + margin:0 + padding:0 en ul/ol/li. Envolvemos
+   en @layer components para garantizar que estas reglas se compilen
+   DESPUÉS de base en el bundle final y ganen la cascada. La specificity
+   `.ProseMirror ol` (0,1,1) > `ol` del preflight (0,0,1) también ayuda. */
+@layer components {
+  .ProseMirror ul {
+    list-style: disc;
+    padding-left: 1.25em;
+    margin: 0.25em 0;
+  }
+  .ProseMirror ol {
+    list-style: decimal;
+    padding-left: 1.25em;
+    margin: 0.25em 0;
+  }
+  .ProseMirror li {
+    padding-left: 0.125em;
+  }
+  .ProseMirror li > p {
+    margin: 0;
+  }
+  /* Placeholder cuando el editor está vacío. Tiptap añade la clase
+     `is-editor-empty` al primer node si no hay contenido y rellena
+     `data-placeholder` con el texto pasado al extension. */
+  .ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: #5b6478;
+    pointer-events: none;
+    height: 0;
+  }
+}
