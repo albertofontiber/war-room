@@ -76,3 +76,36 @@
     font-size: 16px !important;
   }
 }
+
+/* RichTextEditor (Tiptap/ProseMirror): Tailwind preflight resetea
+   list-style a none y margins a 0 en ul/ol/li. Re-aplicamos los
+   marcadores dentro del editor para que las listas se vean. La misma
+   regla NO afecta al render side (RichTextRender), que pinta sus
+   propias clases list-disc/list-decimal vía componentes de
+   react-markdown. */
+.ProseMirror ul {
+  list-style: disc;
+  padding-left: 1.25em;
+  margin: 0.25em 0;
+}
+.ProseMirror ol {
+  list-style: decimal;
+  padding-left: 1.25em;
+  margin: 0.25em 0;
+}
+.ProseMirror li {
+  padding-left: 0.125em;
+}
+.ProseMirror li > p {
+  margin: 0;
+}
+/* Placeholder cuando el editor está vacío. Tiptap añade la clase
+   `is-editor-empty` al primer node si no hay contenido y rellena
+   `data-placeholder` con el texto pasado al extension. */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #5b6478;
+  pointer-events: none;
+  height: 0;
+}
