@@ -358,6 +358,10 @@ export function RichTextEditor({
     loading: boolean;
   } | null>(null);
   const listRef = useRef<MentionListHandle | null>(null);
+  // Editor real disponible tras useEditor — handleKeyDown corre antes de
+  // que `editor` esté asignado, así que usamos un ref vivo asignado en
+  // onCreate para consultar isActive(...) en cada keypress.
+  const editorRefForKeyboard = useRef<{ isActive: (name: string) => boolean } | null>(null);
 
   const mentionSuggestion = useMemo(
     () => ({
@@ -472,8 +476,20 @@ export function RichTextEditor({
         style: `min-height: ${rows * 1.5}em`,
       },
       handleKeyDown: (_view, event) => {
-        // Si onSubmit está set: Enter envía, Shift+Enter es nueva línea.
+        // Si onSubmit está set (modo chat): Enter envía, Shift+Enter es
+        // hard break. EXCEPCIÓN: si el cursor está dentro de una lista,
+        // dejamos que Tiptap maneje Enter (crea nuevo item de la lista, o
+        // sale al final si el item está vacío). Para enviar estando en
+        // lista, el usuario pulsa el botón Enviar explícitamente.
+        // Sin esta excepción, no había forma de hacer listas multi-item en
+        // chat — Enter enviaba, Shift+Enter metía hardbreak DENTRO del
+        // mismo `<li>` y el markdown salía con escapes raros (1\., \\ ).
         if (onSubmit && event.key === "Enter" && !event.shiftKey) {
+          const editorRef = editorRefForKeyboard.current;
+          const inList =
+            editorRef?.isActive("bulletList") ||
+            editorRef?.isActive("orderedList");
+          if (inList) return false; // Tiptap crea nuevo item / sale al final.
           event.preventDefault();
           onSubmit();
           return true;
@@ -485,6 +501,12 @@ export function RichTextEditor({
       // Serializa a markdown vía tiptap-markdown.
       const md = (ed.storage as { markdown?: { getMarkdown: () => string } }).markdown?.getMarkdown() ?? ed.getText({ blockSeparator: "\n" });
       onChange(md);
+    },
+    onCreate: ({ editor: ed }) => {
+      editorRefForKeyboard.current = ed as unknown as { isActive: (n: string) => boolean };
+    },
+    onDestroy: () => {
+      editorRefForKeyboard.current = null;
     },
   });
 
