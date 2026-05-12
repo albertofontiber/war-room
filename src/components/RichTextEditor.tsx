@@ -430,6 +430,14 @@ export function RichTextEditor({
     // Listas + bold/italic vienen activadas en StarterKit por default.
     // Headings/blockquote/codeBlock/strike/horizontalRule deshabilitadas —
     // un editor de notas no es un editor de blog.
+    //
+    // HTMLAttributes en bulletList/orderedList/listItem: aplicamos clases
+    // de Tailwind directamente al markup que produce el editor. Approach
+    // estructural — Tailwind detecta estas clases en el código fuente y
+    // las incluye en el bundle final SIN dependencia de selectores
+    // `.ProseMirror` que pueden ser purgados. Sobreescribe el preflight
+    // (que setea `list-style:none + margin/padding:0`) por specificity de
+    // utility class > selector de elemento.
     const base: Extensions = [
       StarterKit.configure({
         heading: false,
@@ -437,6 +445,21 @@ export function RichTextEditor({
         codeBlock: false,
         horizontalRule: false,
         strike: false,
+        bulletList: {
+          HTMLAttributes: {
+            class: "list-disc list-outside pl-5 my-1 space-y-0.5",
+          },
+        },
+        orderedList: {
+          HTMLAttributes: {
+            class: "list-decimal list-outside pl-5 my-1 space-y-0.5",
+          },
+        },
+        listItem: {
+          HTMLAttributes: {
+            class: "leading-snug [&>p]:my-0",
+          },
+        },
       }),
       Placeholder.configure({ placeholder: placeholder ?? "" }),
       // tiptap-markdown serializa/deserializa entre JSON Tiptap y markdown
