@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { SectionLabel } from "./primitives";
 import { OneDriveLogo, NotionLogo, toNotionDesktopUrl } from "./logos";
+import { dispatchDataChanged } from "@/lib/data-events";
 import type { DocsState } from "./types";
 
 // Links externos a OneDrive y Notion por target. Útil a partir de "1ª reunión"
@@ -60,6 +61,12 @@ export function DocumentacionSection({
       const json = (await res.json()) as DocsState;
       onSaved(json);
       setEditing(false);
+      dispatchDataChanged({
+        resource: "documentacion",
+        action: "update",
+        parent: { resource: "empresa", id: empresaId },
+        source: "DocumentacionSection/save",
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error guardando");
     } finally {
@@ -82,6 +89,12 @@ export function DocumentacionSection({
       } else {
         // Cuando esté implementado, devolverá los nuevos campos
         onSaved(j as DocsState);
+        dispatchDataChanged({
+          resource: "documentacion",
+          action: "update",
+          parent: { resource: "empresa", id: empresaId },
+          source: "DocumentacionSection/autoSync",
+        });
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error en búsqueda automática");
@@ -108,6 +121,12 @@ export function DocumentacionSection({
         nombreComercial: initial.nombreComercial,
       });
       setEditing(false);
+      dispatchDataChanged({
+        resource: "documentacion",
+        action: "create",
+        parent: { resource: "empresa", id: empresaId },
+        source: "DocumentacionSection/createDocs",
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error creando docs");
     } finally {

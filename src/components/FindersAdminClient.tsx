@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fmtDate } from "@/lib/format";
+import { dispatchDataChanged, subscribeDataChanged } from "@/lib/data-events";
 
 type Finder = {
   id: string;
@@ -60,13 +61,18 @@ export default function FindersAdminClient() {
 
   const load = () => {
     setLoading(true);
-    fetch("/api/finders?includeInactive=1")
+    fetch("/api/finders?includeInactive=1", { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => setFinders(Array.isArray(data) ? data : []))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => { load(); }, []);
+
+  // Escucha el bus por si otro componente muta finders (hoy no ocurre, pero
+  // si en el futuro se añade un quick-edit en otra pantalla, esta lista
+  // refrescará sola).
+  useEffect(() => subscribeDataChanged({ resource: "finder" }, () => load()), []);
 
   // ─── Password modal ──────────────────────────────────────────────────────
   const openPwdModal = (f: Finder) => {
@@ -116,6 +122,12 @@ export default function FindersAdminClient() {
         return;
       }
       setSavedPassword(pwdValue);
+      dispatchDataChanged({
+        resource: "finder",
+        resourceId: pwdModal.id,
+        action: "update",
+        source: "FindersAdminClient/setPassword",
+      });
       load();
     } catch (e) {
       setPwdError(String(e));
@@ -178,6 +190,12 @@ export default function FindersAdminClient() {
         return;
       }
       setCreatedPassword(createForm.password);
+      dispatchDataChanged({
+        resource: "finder",
+        resourceId: json?.id,
+        action: "create",
+        source: "FindersAdminClient/create",
+      });
       load();
     } catch (e) {
       setCreateError(String(e));
@@ -245,6 +263,12 @@ export default function FindersAdminClient() {
         );
         return;
       }
+      dispatchDataChanged({
+        resource: "finder",
+        resourceId: editModal.id,
+        action: "update",
+        source: "FindersAdminClient/edit",
+      });
       load();
       closeEditModal();
     } catch (e) {

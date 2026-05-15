@@ -43,19 +43,16 @@ export async function GET() {
       if (e.provincia) provinciaSet.add(e.provincia);
     }
 
-    return NextResponse.json(
-      {
-        ccaa: Array.from(ccaaSet).sort(),
-        provincia: Array.from(provinciaSet).sort(),
-        owners: users.map((u) => ({ value: u.id, label: u.name })),
-        finders: finders.map((f) => ({ value: f.id, label: f.name })),
-      },
-      {
-        headers: {
-          "Cache-Control": "private, max-age=300, stale-while-revalidate=3600",
-        },
-      }
-    );
+    // Sin Cache-Control: aunque CCAA/provincia raramente cambian, los
+    // owners y finders SÍ se mutan desde la UI (crear/desactivar). Servir
+    // una lista cacheada esconde altas/bajas. La invalidación correcta
+    // va por el bus `wr:data-changed`.
+    return NextResponse.json({
+      ccaa: Array.from(ccaaSet).sort(),
+      provincia: Array.from(provinciaSet).sort(),
+      owners: users.map((u) => ({ value: u.id, label: u.name })),
+      finders: finders.map((f) => ({ value: f.id, label: f.name })),
+    });
   } catch (err) {
     log.error("api/crm/pipeline-meta GET", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });

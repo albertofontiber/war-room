@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { fmtDate } from "@/lib/format";
+import { dispatchDataChanged } from "@/lib/data-events";
 
 type Proposal = {
   id: number;
@@ -63,6 +64,21 @@ export default function ProposalsAdminClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status, rejectionReason: rejectionReason ?? null }),
       });
+      dispatchDataChanged({
+        resource: "propuesta",
+        resourceId: id,
+        action: "update",
+        source: "ProposalsAdminClient/review",
+      });
+      // Si la propuesta se aceptó, además se ha podido crear una Empresa.
+      // Notifica para que mapas / Kanban refresquen al volver al panel.
+      if (status === "ACCEPTED") {
+        dispatchDataChanged({
+          resource: "empresa",
+          action: "create",
+          source: "ProposalsAdminClient/review-accept",
+        });
+      }
       load();
     } finally {
       setActing(null);

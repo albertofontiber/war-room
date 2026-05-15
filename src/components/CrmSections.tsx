@@ -5,9 +5,9 @@ import { fmtDate } from "@/lib/format";
 import { TAREA_TIPOS, TAREA_TIPO_LABEL, TAREA_TIPO_ICON } from "@/lib/crm";
 import type { TareaTipo } from "@/types";
 import {
-  EMPRESA_CHANGED_EVENT,
-  type EmpresaChangedDetail,
-} from "@/lib/empresa-events";
+  dispatchDataChanged,
+  subscribeDataChanged,
+} from "@/lib/data-events";
 import { MentionTextarea } from "@/components/MentionTextarea";
 import { MentionRender } from "@/components/MentionRender";
 
@@ -137,6 +137,16 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
     if (open) load();
   }, [open, load]);
 
+  // Refresca cuando alguien (chat IA, portal del finder, otra pestaña en
+  // el futuro) crea/edita/borra una nota de esta empresa.
+  useEffect(() => {
+    if (!open) return;
+    return subscribeDataChanged(
+      { resource: "nota", parent: { resource: "empresa", id: empresaId } },
+      () => load()
+    );
+  }, [open, empresaId, load]);
+
   async function crear() {
     if (!nueva.trim()) return;
     setSaving(true);
@@ -149,6 +159,14 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
       });
       if (res.ok) {
         setNueva("");
+        const created = await res.json().catch(() => null);
+        dispatchDataChanged({
+          resource: "nota",
+          resourceId: created?.id,
+          action: "create",
+          parent: { resource: "empresa", id: empresaId },
+          source: "NotasSection/crear",
+        });
         load();
       } else {
         const msg = await extractError(res);
@@ -170,6 +188,14 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
       body: JSON.stringify({ contenido, parentId }),
     });
     if (res.ok) {
+      const created = await res.json().catch(() => null);
+      dispatchDataChanged({
+        resource: "nota",
+        resourceId: created?.id,
+        action: "create",
+        parent: { resource: "empresa", id: empresaId },
+        source: "NotasSection/responder",
+      });
       load();
       return true;
     }
@@ -190,6 +216,13 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
       });
       if (res.ok) {
         setEditing(null);
+        dispatchDataChanged({
+          resource: "nota",
+          resourceId: id,
+          action: "update",
+          parent: { resource: "empresa", id: empresaId },
+          source: "NotasSection/guardarEdit",
+        });
         load();
       } else {
         const msg = await extractError(res);
@@ -206,6 +239,13 @@ export function NotasSection({ empresaId }: { empresaId: number }) {
     // Cascade en BD borra respuestas. Avisamos para que no sea sorpresa.
     if (!confirm("¿Borrar esta nota? Si tiene respuestas, también se borrarán.")) return;
     await fetch(`/api/notas/${id}`, { method: "DELETE" });
+    dispatchDataChanged({
+      resource: "nota",
+      resourceId: id,
+      action: "delete",
+      parent: { resource: "empresa", id: empresaId },
+      source: "NotasSection/borrar",
+    });
     load();
   }
 
@@ -538,22 +578,15 @@ export function TareasSection({
     if (open) load();
   }, [open, load]);
 
-  // Escucha el bus global de cambios de empresa. Refresca solo si:
-  //   - la sección está abierta,
-  //   - el evento aplica a ESTA empresa, y
-  //   - la entidad afectada es "tarea".
-  // Si está cerrada, no hace falta — el próximo open ya dispara `load()`
-  // con datos frescos.
+  // Escucha el bus global. Refresca solo si la sección está abierta y
+  // el evento es una tarea bajo ESTA empresa. Si está cerrada, no hace
+  // falta — el próximo open ya dispara `load()` con datos frescos.
   useEffect(() => {
     if (!open) return;
-    const handler = (e: Event) => {
-      const ce = e as CustomEvent<EmpresaChangedDetail>;
-      if (ce.detail?.empresaId !== empresaId) return;
-      if (ce.detail?.entity !== "tarea") return;
-      load();
-    };
-    window.addEventListener(EMPRESA_CHANGED_EVENT, handler);
-    return () => window.removeEventListener(EMPRESA_CHANGED_EVENT, handler);
+    return subscribeDataChanged(
+      { resource: "tarea", parent: { resource: "empresa", id: empresaId } },
+      () => load()
+    );
   }, [open, empresaId, load]);
 
   useEffect(() => {
@@ -591,11 +624,19 @@ export function TareasSection({
         }),
       });
       if (res.ok) {
+        const created = await res.json().catch(() => null);
         setTitulo("");
         setDescripcion("");
         setFechaLimite("");
         setAsignadoId("");
         setTipo("llamada");
+        dispatchDataChanged({
+          resource: "tarea",
+          resourceId: created?.id,
+          action: "create",
+          parent: { resource: "empresa", id: empresaId },
+          source: "TareasSection/crear",
+        });
         load();
       } else {
         const msg = await extractError(res);
@@ -643,7 +684,15 @@ export function TareasSection({
         }),
       });
       if (res.ok) {
+        const id = editingId;
         setEditingId(null);
+        dispatchDataChanged({
+          resource: "tarea",
+          resourceId: id ?? undefined,
+          action: "update",
+          parent: { resource: "empresa", id: empresaId },
+          source: "TareasSection/guardarEdit",
+        });
         load();
       } else {
         const msg = await extractError(res);
@@ -670,6 +719,13 @@ export function TareasSection({
         setError(msg);
         return;
       }
+      dispatchDataChanged({
+        resource: "tarea",
+        resourceId: t.id,
+        action: "update",
+        parent: { resource: "empresa", id: empresaId },
+        source: "TareasSection/toggleCompletada",
+      });
       load();
     } catch (err) {
       console.error("[TareasSection.toggleCompletada] network", err);
@@ -680,6 +736,13 @@ export function TareasSection({
   async function borrar(id: number) {
     if (!confirm("¿Borrar esta tarea?")) return;
     await fetch(`/api/tareas/${id}`, { method: "DELETE" });
+    dispatchDataChanged({
+      resource: "tarea",
+      resourceId: id,
+      action: "delete",
+      parent: { resource: "empresa", id: empresaId },
+      source: "TareasSection/borrar",
+    });
     load();
   }
 

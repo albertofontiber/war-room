@@ -5,24 +5,24 @@ import { DefaultChatTransport } from "ai";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import {
-  dispatchEmpresaChanged,
-  type EmpresaChangedEntity,
-} from "@/lib/empresa-events";
+  dispatchDataChanged,
+  type ResourceKind,
+} from "@/lib/data-events";
 import { RichTextEditor } from "@/components/RichTextEditor";
 
 /**
- * Mapping toolName → entidad afectada. Mantener alineado con los tools
+ * Mapping toolName → recurso afectado. Mantener alineado con los tools
  * declarados en `src/app/api/chat/route.ts`. Si se añade un tool nuevo
- * (ej. `crear_nota`), añadir aquí su entry y, opcionalmente, una entrada
- * nueva en `EmpresaChangedEntity`.
+ * (ej. `crear_nota`), añadir aquí su entry; si introduce un tipo de
+ * recurso no listado, añadirlo a `ResourceKind` en `data-events.ts`.
  */
-const TOOL_TO_ENTITY: Record<string, EmpresaChangedEntity> = {
+const TOOL_TO_RESOURCE: Record<string, ResourceKind> = {
   crear_tarea: "tarea",
   actualizar_tarea: "tarea",
 };
 
-function entityForTool(toolName: string): EmpresaChangedEntity | null {
-  return TOOL_TO_ENTITY[toolName] ?? null;
+function resourceForTool(toolName: string): ResourceKind | null {
+  return TOOL_TO_RESOURCE[toolName] ?? null;
 }
 
 function actionForTool(toolName: string): "create" | "update" | undefined {
@@ -53,7 +53,7 @@ export default function ChatIA() {
 
   // Observa los tool results en el stream del chat. Cuando un tool con
   // efecto sobre una empresa termina (`{ok: true, ...}` con un campo de
-  // entidad reconocible), dispara `wr:empresa-changed` para que cualquier
+  // entidad reconocible), dispara `wr:data-changed` para que cualquier
   // widget interesado refresque sin que el usuario pulse F5.
   //
   // Dedup por toolCallId (o un fallback si no existe): el stream emite el
@@ -89,21 +89,21 @@ export default function ChatIA() {
           (rawType?.startsWith("tool-") ? rawType.slice(5) : undefined) ??
           "";
 
-        const entity = entityForTool(toolName);
-        if (!entity) continue; // Tool sin efecto sobre empresa (ej. execute_sql, buscar_empresa).
+        const resource = resourceForTool(toolName);
+        if (!resource) continue; // Tool sin efecto (ej. execute_sql, buscar_empresa).
 
-        // Resolver empresaId/entityId según la entidad. Hoy todos los
+        // Resolver empresaId/resourceId según el recurso. Hoy todos los
         // tools que devuelven `tarea` lo embeben en `output.tarea.empresa.id`.
         const empresaId = output.tarea?.empresa?.id;
-        const entityId = output.tarea?.id;
+        const resourceId = output.tarea?.id;
         if (!empresaId) continue;
 
         dispatchedRef.current.add(callId);
-        dispatchEmpresaChanged({
-          empresaId,
-          entity,
-          entityId,
+        dispatchDataChanged({
+          resource,
+          resourceId,
           action: actionForTool(toolName),
+          parent: { resource: "empresa", id: empresaId },
           source: toolName,
         });
       }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { dispatchDataChanged, subscribeDataChanged } from "@/lib/data-events";
 
 type Finder = {
   id: string;
@@ -25,12 +26,21 @@ export default function FinderSelector({ empresaId, finderActual, onChange }: Pr
   const [loading, setLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const loadFinders = useCallback(() => {
     fetch("/api/finders", { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => Array.isArray(data) && setFinders(data))
       .catch(() => setFinders([]));
   }, []);
+
+  useEffect(() => { loadFinders(); }, [loadFinders]);
+
+  // Refresca cuando alguien crea/edita/desactiva finders en /finders. Sin
+  // este listener, abrir el dropdown tras editar muestra el nombre viejo.
+  useEffect(
+    () => subscribeDataChanged({ resource: "finder" }, () => loadFinders()),
+    [loadFinders]
+  );
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -52,6 +62,14 @@ export default function FinderSelector({ empresaId, finderActual, onChange }: Pr
         if (res.ok) {
           const next = finderId ? finders.find((f) => f.id === finderId) ?? null : null;
           onChange?.(next);
+          // El cambio de finder source de una empresa es un cambio de la
+          // empresa, no del finder en sí — el listado de finders no varía.
+          dispatchDataChanged({
+            resource: "empresa",
+            resourceId: empresaId,
+            action: "update",
+            source: "FinderSelector/asignar",
+          });
         }
       } finally {
         setLoading(false);

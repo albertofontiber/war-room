@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { dispatchDataChanged } from "@/lib/data-events";
 
 type Contacto = {
   id: number;
@@ -124,6 +125,13 @@ export function ContactosSection({ empresaId }: { empresaId: number }) {
       );
       setDraft(EMPTY_DRAFT);
       setCreating(false);
+      dispatchDataChanged({
+        resource: "contacto",
+        resourceId: nuevo.id,
+        action: "create",
+        parent: { resource: "empresa", id: empresaId },
+        source: "ContactosSection/crear",
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error creando contacto");
     }
@@ -163,6 +171,13 @@ export function ContactosSection({ empresaId }: { empresaId: number }) {
           : [next]
       );
       setEditingId(null);
+      dispatchDataChanged({
+        resource: "contacto",
+        resourceId: id,
+        action: "update",
+        parent: { resource: "empresa", id: empresaId },
+        source: "ContactosSection/guardarEdit",
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error guardando");
     } finally {
@@ -177,6 +192,13 @@ export function ContactosSection({ empresaId }: { empresaId: number }) {
       const res = await fetch(`/api/contactos/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error(await extractError(res));
       setItems((prev) => (prev ? prev.filter((c) => c.id !== id) : prev));
+      dispatchDataChanged({
+        resource: "contacto",
+        resourceId: id,
+        action: "delete",
+        parent: { resource: "empresa", id: empresaId },
+        source: "ContactosSection/borrar",
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error borrando");
     }
