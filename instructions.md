@@ -868,6 +868,12 @@ Desde PR #26 (2026-04-28) la creación es íntegra desde la web — antes solo v
 
 En zona portal exige `session.kind === "finder"` → sino redirect a `/portal/login`. En zona war room bloquea sesiones finder → redirect `/login?wrongPortal=1`.
 
+**Orden de chequeos dentro de zona portal con sesión finder** (importa — fix PR #118):
+1. Si `path === "/"` → rewrite a `/portal` (dashboard). Va **antes** del check de defensa en profundidad, sino la raíz cae en 404.
+2. Defensa en profundidad: si `path` NO está en `/portal`, `/portal/*`, `/api/portal/*`, `/api/auth`, ni rutas públicas del portal → `NextResponse.json({error:"Not found"}, {status:404})`. Bloquea a un finder de llamar a APIs admin aunque el endpoint mismo no lo valide.
+
+Si añades una ruta nueva del portal, añadirla al check `isPortalRoute` o al set `isPortalPublic` para que el middleware no la corte.
+
 ### Auth (NextAuth — `src/lib/auth.ts`)
 
 Dos CredentialsProviders:
@@ -878,14 +884,33 @@ Callback `jwt` guarda `token.kind` y `token.finderId`. Callback `session` los le
 
 ### Access log
 
-`src/lib/finder-access-log.ts` → `logFinderAction({finderId, action, resourceId?})` fire-and-forget. Acciones registradas:
+`src/lib/finder-access-log.ts` → `logFinderAction({finderId?, email?, action, resourceId?, ip?, userAgent?})`. Fire-and-forget excepto en el `authorize` de NextAuth donde va con `await` (en serverless de Vercel un `return null` puede terminar la lambda antes del INSERT).
 
+Acciones registradas tras PR #119 (2026-05-15):
+
+- `login_success` / `login_failure` — `login_failure` también se emite cuando el email no existe (`finderId=null`, email en la columna). Captura `ip` (de `x-forwarded-for` o `x-real-ip`) y `userAgent`.
 - `view_deals` (carga Kanban `/portal`)
 - `view_deal` (abre ficha target)
-- `add_note` / `add_task` / `add_activity`
+- `add_note` / `edit_note` / `delete_note`
+- `add_task` / `edit_task` / `complete_task` / `delete_task`
 - `propose_target` / `propose_target_duplicate`
+- `add_activity` (legacy, no se emite desde la fusión Actividad+Tarea en PR #39)
 
-Pendiente de loguear (si hace falta auditoría más fina): `login_attempt`, `login_success`, `edit_*`, `delete_*`.
+**Semántica de `resourceId` por acción** (importante para `actividad_finders` del chat IA):
+- `view_deal` → `Empresa.id`
+- `*_note` → `Nota.id`
+- `*_task` → `Tarea.id`
+- `propose_target*` → `TargetProposal.id`
+- `login_*`, `view_deals` → null (el contexto del login va en `email`)
+
+**Consulta desde el chat IA admin** (PR #119): tools `actividad_finders(finderName?, action?, desde?, hasta?, limit?)` y `resumen_actividad_finders(desde?, hasta?, agruparPor)`. Resuelven el JOIN a Empresa según el tipo de acción. Preferir estos tools antes que `execute_sql` contra la tabla cruda.
+
+**Índices DB** (aplicados a prod 2026-05-15 con `CREATE INDEX CONCURRENTLY`):
+- `[finderId]` (legacy)
+- `[finderId, createdAt]` — query típica "qué hizo X entre fechas"
+- `[action, createdAt]`
+- `[createdAt]` — rangos sin filtro de finder
+- `[email]` — patrón "intentos con email X"
 
 ### Modelo de datos clave
 
@@ -987,3 +1012,40 @@ notifyAdmins({
 ```
 
 Fire-and-forget con `.catch(...)` — la propuesta + log pasan siempre aunque la notificación falle.
+
+---
+
+## 19. Refresco automático tras mutaciones (bus `wr:data-changed`, PR #120, 2026-05-15)
+
+Bus de invalidación cliente para que cualquier lista refresque sin que el usuario pulse `F5` tras guardar. Sustituye a `wr:empresa-changed` (que solo cubría entidades bajo Empresa).
+
+### Convención obligatoria para nuevos formularios
+
+1. **En el endpoint GET de la lista**, NO añadir `Cache-Control: max-age>0`. El navegador cachea y esconde mutaciones recientes. Si la entidad puede mutarse desde la UI, sin cache HTTP.
+2. **Tras cada mutación cliente exitosa**, dispatchear:
+   ```ts
+   dispatchDataChanged({
+     resource: "finder",         // ResourceKind
+     resourceId: id,
+     action: "update",            // "create" | "update" | "delete"
+     source: "Componente/handler",
+   });
+   ```
+3. **En componentes que muestran la lista**, suscribirse en un `useEffect`:
+   ```ts
+   useEffect(() => subscribeDataChanged({ resource: "finder" }, () => load()), []);
+   ```
+4. **Para entidades anidadas** (tarea bajo empresa), añadir `parent: { resource: "empresa", id }` tanto al dispatch como al filter del subscribe.
+
+### `ResourceKind` actuales
+
+Top-level: `empresa`, `finder`, `grupo`, `user`, `propuesta`, `notificacion`.
+Bajo empresa: `tarea`, `nota`, `stage`, `contacto`, `documentacion`.
+
+### Módulo
+
+`src/lib/data-events.ts` exporta `DATA_CHANGED_EVENT`, `dispatchDataChanged()`, `subscribeDataChanged(filter, callback)` con filtro tipado AND (resource + resourceId + action + parent).
+
+### Pre-flight antes de push
+
+Si una PR añade/quita imports o toca client components con hooks de routing, **correr `npm run build` localmente antes del push** — no basta `tsc --noEmit` + vitest. ESLint estricto de `next build` pilla imports unused (`@typescript-eslint/no-unused-vars`) y errores de Suspense que los otros silencian. El PR #120 falló en Vercel la primera vez por un import unused en `PipelinePageClient.tsx`.
