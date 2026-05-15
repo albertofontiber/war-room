@@ -59,6 +59,14 @@ export default withAuth(
         url.search = "";
         return NextResponse.redirect(url);
       }
+      // Si ya es finder y pide `/` → rewrite a `/portal` dashboard.
+      // Va ANTES de la defensa en profundidad: la raíz no encaja en
+      // `isPortalRoute` y, sin este rewrite primero, el finder vería un 404.
+      if (token?.kind === "finder" && (path === "/" || path === "")) {
+        const url = req.nextUrl.clone();
+        url.pathname = "/portal";
+        return NextResponse.rewrite(url);
+      }
       // Defensa en profundidad: un finder logueado en host portal NO debe
       // poder llamar a APIs admin (ej. /api/empresas/[id], /api/grupos, etc.).
       // Aunque el endpoint debería validar kind=admin, este check es la
@@ -75,12 +83,6 @@ export default withAuth(
           // 404 (no 403) para no leak de existencia del recurso al finder.
           return NextResponse.json({ error: "Not found" }, { status: 404 });
         }
-      }
-      // Si ya es finder y pide `/` → rewrite a `/portal` dashboard.
-      if (token?.kind === "finder" && (path === "/" || path === "")) {
-        const url = req.nextUrl.clone();
-        url.pathname = "/portal";
-        return NextResponse.rewrite(url);
       }
       return NextResponse.next();
     }
