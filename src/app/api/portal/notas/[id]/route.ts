@@ -4,6 +4,7 @@ import { requireCurrentFinder, canEditWithin24h } from "@/lib/finder-session";
 import { PortalNotaUpdateSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
 import { processMenciones } from "@/lib/menciones-server";
+import { logFinderAction } from "@/lib/finder-access-log";
 import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -73,6 +74,11 @@ export async function PATCH(
     },
   });
   if (prev && prev.contenido !== nota.contenido) {
+    void logFinderAction({
+      finderId: finder.id,
+      action: "edit_note",
+      resourceId: String(nota.id),
+    });
     void auditLog({
       actorType: "finder",
       actorId: finder.id,
@@ -117,6 +123,11 @@ export async function DELETE(
     select: { contenido: true, empresaId: true },
   });
   await prisma.nota.delete({ where: { id: res.notaId } });
+  void logFinderAction({
+    finderId: finder.id,
+    action: "delete_note",
+    resourceId: String(res.notaId),
+  });
   if (prev) {
     void auditLog({
       actorType: "finder",

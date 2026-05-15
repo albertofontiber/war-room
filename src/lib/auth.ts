@@ -2,6 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { logFinderAction } from "@/lib/finder-access-log";
 
 /**
  * Auth unificado con dos providers separados:
@@ -81,11 +82,21 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Contraseña", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) return null;
 
+        // Forwarded-for puede venir en `x-forwarded-for` (proxies Vercel). El
+        // primer valor es el cliente original; el resto, hops intermedios.
+        const headers = (req?.headers ?? {}) as Record<string, string | undefined>;
+        const ip =
+          headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+          headers["x-real-ip"] ||
+          null;
+        const userAgent = headers["user-agent"] ?? null;
+        const emailNorm = credentials.email.trim().toLowerCase();
+
         const finder = await prisma.finder.findUnique({
-          where: { email: credentials.email.trim().toLowerCase() },
+          where: { email: emailNorm },
           select: {
             id: true,
             name: true,
@@ -94,10 +105,38 @@ export const authOptions: NextAuthOptions = {
             passwordHash: true,
           },
         });
-        if (!finder || !finder.active || !finder.passwordHash) return null;
+        if (!finder || !finder.active || !finder.passwordHash) {
+          // Email desconocido, finder inactivo o sin contraseña fijada.
+          // Loguea el intento — útil para detectar tentativas de acceso.
+          void logFinderAction({
+            finderId: finder?.id ?? null,
+            email: emailNorm,
+            action: "login_failure",
+            ip,
+            userAgent,
+          });
+          return null;
+        }
 
         const ok = await bcrypt.compare(credentials.password, finder.passwordHash);
-        if (!ok) return null;
+        if (!ok) {
+          void logFinderAction({
+            finderId: finder.id,
+            email: emailNorm,
+            action: "login_failure",
+            ip,
+            userAgent,
+          });
+          return null;
+        }
+
+        void logFinderAction({
+          finderId: finder.id,
+          email: emailNorm,
+          action: "login_success",
+          ip,
+          userAgent,
+        });
 
         return {
           id: finder.id,

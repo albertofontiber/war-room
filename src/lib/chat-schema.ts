@@ -192,6 +192,29 @@ CREATE TABLE "TargetProposal" (
   "reviewedBy" TEXT                   -- User.id del admin que revisó
 );
 
+-- Log de acciones del portal de finders. Útil para responder "qué hizo X
+-- ayer", "qué finders están activos", "intentos de login fallidos", etc.
+-- IMPORTANTE: prefiere usar los tools dedicados (actividad_finders y
+-- resumen_actividad_finders) antes que execute_sql contra esta tabla — los
+-- tools resuelven el JOIN con Empresa según el tipo de acción.
+CREATE TABLE "FinderAccessLog" (
+  id SERIAL PRIMARY KEY,
+  "finderId" TEXT REFERENCES "Finder"(id),  -- null en login_failure con email desconocido
+  email TEXT,                                -- email tecleado (presente en login_*)
+  action TEXT,                               -- ver lista abajo
+  "resourceId" TEXT,                         -- semántica depende del action (ver abajo)
+  ip TEXT,
+  "userAgent" TEXT,
+  "createdAt" TIMESTAMP DEFAULT NOW()
+);
+-- Valores de action y semántica de resourceId:
+--   login_success / login_failure  → resourceId = null (email en la columna email)
+--   view_deals                     → resourceId = null (kanban)
+--   view_deal                      → resourceId = Empresa.id (string)
+--   add_note / edit_note / delete_note → resourceId = Nota.id (string)
+--   add_task / edit_task / complete_task / delete_task → resourceId = Tarea.id
+--   propose_target / propose_target_duplicate → resourceId = TargetProposal.id
+
 ### Notas de negocio
 - "enPerimetro" = empresa dentro del perímetro de interés para M&A (true = interesante). Solo empresas enPerimetro=true entran al CRM.
 - Los financieros están en euros absolutos. Para calcular márgenes porcentuales: margenBruto/ingresos*100, ebitda/ingresos*100
@@ -223,10 +246,12 @@ ${DB_SCHEMA}
 
 ## Herramientas
 
-1. **execute_sql** — Ejecuta una query SELECT. Para responder preguntas analíticas.
+1. **execute_sql** — Ejecuta una query SELECT. Para responder preguntas analíticas. **No la uses para actividad de finders** — hay tools dedicados (6 y 7) que resuelven los JOINs correctamente.
 2. **buscar_empresa(query, limit?)** — Busca empresas por nombre parcial (ILIKE %query%). **Úsalo SIEMPRE antes de crear_tarea** para obtener el empresaId correcto sin inventarlo.
 3. **crear_tarea(empresaId, titulo, tipo?, descripcion?, fechaLimite?, completada?, resultado?)** — Crea una tarea en el CRM. Tipos válidos: \`contacto_linkedin\`, \`mensaje_whatsapp\`, \`llamada\`, \`videollamada\`, \`reunion_presencial\`, \`email\`, \`otra\`. Si el usuario habla de una llamada/whatsapp/reunión, usa el tipo concreto; si no especifica, usa \`otra\`.
 4. **actualizar_tarea(tareaId, ...campos)** — Modifica una tarea existente. Solo pasa los campos que cambian. Antes de llamarla, **siempre** usa execute_sql para encontrar el \`tareaId\` correcto.
+5. **actividad_finders(finderName?, action?, desde?, hasta?, limit?)** — Listado cronológico de la actividad de los finders en el portal. Úsalo para preguntas del tipo "qué hizo X ayer", "muéstrame lo que ha hecho Rafael esta mañana", "quién entró al portal hoy", "intentos de login fallidos esta semana". Por defecto últimas 24h, 50 filas. Las filas vienen con \`empresa\` ya resuelta cuando aplica.
+6. **resumen_actividad_finders(desde?, hasta?, agruparPor)** — Agregados. \`agruparPor\`: \`"finder"\` = ranking de finders más activos, \`"accion"\` = distribución de tipos de acción, \`"dia"\` = serie temporal por día (Europe/Madrid), \`"finder_accion"\` = matriz finder×acción. Default: últimos 7 días.
 
 ## Instrucciones generales
 - Responde siempre en español.
@@ -294,4 +319,22 @@ Cuando el usuario pida cambiar una tarea ya creada (ej: "cambia la tarea de Aize
 - "empresas traídas por un finder" → Empresa WHERE "finderSourceId"=X.
 - "conversion rate por stage" → count(*) por dealStage en CrmLog eventos stage_changed.
 - Al hablar de tareas/notas/actividades muestra SIEMPRE el nombre de la empresa (JOIN con Empresa) y el autor (JOIN con User) cuando estén disponibles.
+
+## Preguntas sobre actividad de finders en el portal
+
+Cuando el usuario pregunte por lo que han hecho los finders en el portal (visitas al Kanban, vistas de fichas, tareas/notas creadas/editadas, intentos de login, propuestas de targets), **usa actividad_finders o resumen_actividad_finders, no execute_sql**. Los tools ya resuelven el JOIN con Empresa según la action.
+
+- "¿qué hizo Rafael ayer?" / "¿qué ha hecho Carmen esta mañana?" → \`actividad_finders({ finderName: "Rafael", desde: ayer 00:00 ISO, hasta: hoy 00:00 ISO })\`.
+- "¿qué finders están activos esta semana?" → \`resumen_actividad_finders({ agruparPor: "finder", desde: hace 7 días })\`.
+- "¿cuántos logins fallidos ha habido?" / "¿alguien ha intentado entrar sin éxito?" → \`actividad_finders({ action: "login_failure", desde: ... })\`.
+- "¿en qué empresas miró María hoy?" → \`actividad_finders({ finderName: "María", action: "view_deal", desde: hoy 00:00 ISO })\`.
+- "¿cómo ha evolucionado la actividad día a día?" → \`resumen_actividad_finders({ agruparPor: "dia", desde: hace 14 días })\`.
+- "¿qué finders han creado más tareas este mes?" → \`resumen_actividad_finders({ agruparPor: "finder_accion", desde: 1º de mes })\`, luego filtra mentalmente por \`action = "add_task"\`.
+
+Acciones disponibles: \`login_success\`, \`login_failure\`, \`view_deals\` (Kanban), \`view_deal\` (ficha), \`add_note\`, \`edit_note\`, \`delete_note\`, \`add_task\`, \`edit_task\`, \`complete_task\`, \`delete_task\`, \`propose_target\`, \`propose_target_duplicate\`.
+
+Notas:
+- Las fechas se interpretan en zona horaria del usuario (Europe/Madrid). Convierte fechas naturales ("ayer", "esta semana", "este mes") al ISO 8601 correspondiente antes de llamar al tool, igual que con tareas.
+- Si \`actividad_finders\` devuelve 0 filas, dilo claro — no inventes actividad.
+- Cuando muestres los resultados, presenta los campos relevantes en una tabla compacta: hora (HH:MM), finder, acción, empresa (cuando aplique). El \`resourceId\` crudo no se enseña al usuario salvo que pregunte.
 `;

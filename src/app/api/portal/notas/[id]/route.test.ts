@@ -41,6 +41,10 @@ vi.mock("@/lib/audit-log", () => ({
   auditLog: (...a: unknown[]) => auditLogMock(...a),
 }));
 
+vi.mock("@/lib/finder-access-log", () => ({
+  logFinderAction: vi.fn(),
+}));
+
 import { PATCH, DELETE } from "./route";
 
 function makeReq(body: unknown) {
