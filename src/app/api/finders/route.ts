@@ -36,14 +36,12 @@ export async function GET(req: NextRequest) {
       },
       orderBy: [{ active: "desc" }, { name: "asc" }],
     });
-    // Cache HTTP: lista de finders cambia raramente (alta/baja, edición de
-    // datos). 60s + SWR de 1h reduce la latencia del selector "asignar finder"
-    // que aparece en la ficha de empresa.
-    return NextResponse.json(finders, {
-      headers: {
-        "Cache-Control": "private, max-age=60, stale-while-revalidate=3600",
-      },
-    });
+    // Sin Cache-Control: el listado de finders se muta desde /finders
+    // (crear, editar comisión, activar/desactivar) y cualquier max-age
+    // hace que el navegador sirva una lista vieja tras la mutación.
+    // La invalidación correcta para post-mutación va por el bus
+    // `wr:data-changed` con resource="finder" (ver `src/lib/data-events.ts`).
+    return NextResponse.json(finders);
   } catch (err) {
     log.error("api/finders GET", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });

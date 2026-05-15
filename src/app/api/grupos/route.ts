@@ -21,11 +21,9 @@ export async function GET() {
       select: { id: true, nombre: true },
       orderBy: { nombre: "asc" },
     });
-    return NextResponse.json(grupos, {
-      headers: {
-        "Cache-Control": "private, max-age=60, stale-while-revalidate=3600",
-      },
-    });
+    // Sin Cache-Control: los grupos se crean/editan desde la UI; la cache
+    // HTTP escondería altas recientes. Invalidación por bus `wr:data-changed`.
+    return NextResponse.json(grupos);
   } catch (error) {
     log.error("api/grupos GET", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });

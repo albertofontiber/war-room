@@ -23,11 +23,13 @@ export async function GET(req: Request) {
       select: { id: true, name: true, email: true, role: true },
       orderBy: { name: "asc" },
     });
-    return NextResponse.json(users, {
-      headers: {
-        "Cache-Control": "private, max-age=300, stale-while-revalidate=3600",
-      },
-    });
+    // Sin Cache-Control: el listado de admins se muta desde la UI (crear,
+    // editar, desactivar) y cualquier max-age provoca que el navegador
+    // sirva una lista vieja tras la mutación. La latencia de Prisma local
+    // (<50ms) es despreciable comparada con el coste de un bug "tengo que
+    // pulsar F5". Si en el futuro hace falta cache, hacerlo invalidable
+    // por el bus `wr:data-changed`, no por TTL.
+    return NextResponse.json(users);
   } catch (err) {
     log.error("api/users GET", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });

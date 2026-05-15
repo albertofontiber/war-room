@@ -5,6 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import LinkLeadModal from "@/components/LinkLeadModal";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useNavegacion } from "@/lib/navegacion";
+import { dispatchDataChanged } from "@/lib/data-events";
 import type { EmpresaDetalle } from "@/types";
 
 /**
@@ -89,6 +90,12 @@ export function GestionBlock({
           grupoId: data.grupo?.id ?? null,
           grupoNombre: data.grupo?.nombre ?? null,
         });
+        dispatchDataChanged({
+          resource: "empresa",
+          resourceId: empresa.id,
+          action: "update",
+          source: "GestionBlock/selectGrupo",
+        });
       })
       .finally(() => { setSavingGrupo(false); setEditingGrupo(false); });
   }, [empresa, setEmpresa, updateEmpresaInGeoJSON]);
@@ -115,7 +122,22 @@ export function GestionBlock({
               ? prev
               : [...prev, data.grupo].sort((a, b) => a.nombre.localeCompare(b.nombre))
           );
+          // Si el `grupoNombre` introducido era nuevo, hemos creado un grupo
+          // que otros selectores (pipeline-meta, FinderSelector futuro) van
+          // a querer ver. Anuncia ambos cambios.
+          dispatchDataChanged({
+            resource: "grupo",
+            resourceId: data.grupo.id,
+            action: "create",
+            source: "GestionBlock/saveGrupo",
+          });
         }
+        dispatchDataChanged({
+          resource: "empresa",
+          resourceId: empresa.id,
+          action: "update",
+          source: "GestionBlock/saveGrupo",
+        });
       }
     } finally {
       setSavingGrupo(false);

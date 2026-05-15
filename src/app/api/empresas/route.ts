@@ -5,11 +5,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { log } from "@/lib/logger";
 
-// Quitamos `force-dynamic` para permitir cache HTTP. La respuesta es la misma
-// para cualquier admin autenticado (no varía por usuario), así que la CDN
-// puede servirla. Igualmente sigue siendo dynamic en la práctica por el
-// `getServerSession`. El payload se cachea con `Cache-Control: private`
-// (no compartido entre clientes) y SWR de 1h.
+// La respuesta es la misma para cualquier admin autenticado pero el universo
+// se muta desde la UI (CRM, perímetro, BORME nocturno). El Cache-Control
+// se retiró 2026-05-15 — la cache HTTP escondía cambios recientes; la
+// invalidación va por el bus `wr:data-changed`.
 
 // Deterministic coordinate jitter based on CIF — prevents pins from stacking exactly
 // Range: ±0.0004° ≈ ±44m (well within same-city accuracy, eliminates overlap)
@@ -132,18 +131,11 @@ export async function GET() {
         };
       });
 
-    return NextResponse.json(
-      { type: "FeatureCollection", features },
-      {
-        headers: {
-          // Browser cachea 60s; sirve stale hasta 1h mientras revalida en
-          // background. El universo cambia con BORME nocturno + ediciones
-          // puntuales del CRM — 60s de stale es seguro. `private` evita que
-          // proxies compartidos cacheen entre usuarios distintos.
-          "Cache-Control": "private, max-age=60, stale-while-revalidate=3600",
-        },
-      }
-    );
+    // Sin Cache-Control: las empresas se mutan desde la UI (edición de
+    // ficha, cambio de stage/owner, perímetro, lead anónimo, BORME nocturno).
+    // Cualquier max-age esconde cambios recientes. Invalidación correcta
+    // por el bus `wr:data-changed` con resource="empresa".
+    return NextResponse.json({ type: "FeatureCollection", features });
   } catch (error) {
     log.error("api/empresas GET", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });

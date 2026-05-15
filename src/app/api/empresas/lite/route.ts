@@ -120,17 +120,10 @@ export async function GET() {
         };
       });
 
-    return NextResponse.json(
-      { type: "FeatureCollection", features },
-      {
-        headers: {
-          // TTL idéntico al endpoint completo (60s + SWR 1h). El payload
-          // es disjunto, así que la cache HTTP los trata como entradas
-          // separadas. Lite cachea con su propia URL.
-          "Cache-Control": "private, max-age=60, stale-while-revalidate=3600",
-        },
-      }
-    );
+    // Sin Cache-Control: ver `api/empresas/route.ts` — las empresas mutan
+    // desde la UI, la cache HTTP escondía cambios recientes. Invalidación
+    // por bus `wr:data-changed`.
+    return NextResponse.json({ type: "FeatureCollection", features });
   } catch (error) {
     log.error("api/empresas/lite GET", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });

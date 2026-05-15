@@ -19,6 +19,7 @@ import WarRoomMobileMenu from "@/components/WarRoomMobileMenu";
 import { ResponsiveModal } from "@/components/ui/responsive";
 import { useIsDesktop } from "@/lib/breakpoints";
 import { useNavegacion } from "@/lib/navegacion";
+import { dispatchDataChanged } from "@/lib/data-events";
 import type { DealStage } from "@/types";
 import { DEAL_STAGES, DEAL_STAGE_LABEL } from "@/lib/crm";
 
@@ -159,6 +160,16 @@ export default function PipelinePageClient() {
           body: JSON.stringify({ dealStage: nuevoStage }),
         });
         if (!res.ok) throw new Error(`${res.status}`);
+        // Notifica: la ficha de empresa abierta y el mapa se actualizan al
+        // recibir esto. El optimistic update local ya hizo el cambio en el
+        // Kanban antes de la response.
+        dispatchDataChanged({
+          resource: "stage",
+          resourceId: empresaId,
+          action: "update",
+          parent: { resource: "empresa", id: empresaId },
+          source: "PipelinePageClient/stageChange",
+        });
       } catch (err) {
         console.error("[stage change]", err);
         loadPipeline(filters);

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { DEAL_STAGES, DEAL_STAGE_LABEL } from "@/lib/crm";
+import { dispatchDataChanged } from "@/lib/data-events";
 import type { DealStage } from "@/types";
 
 type User = { id: string; name: string; email: string };
@@ -96,6 +97,12 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
         setError(msg);
         return;
       }
+      dispatchDataChanged({
+        resource: "empresa",
+        resourceId: json.empresaId,
+        action: "create",
+        source: "AddLeadModal/create",
+      });
       onCreated(json.empresaId);
       onClose();
     } catch (err) {

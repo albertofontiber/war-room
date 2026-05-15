@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { DEAL_STAGE_LABEL, DEAL_STAGE_PILL_CLASS } from "@/lib/crm";
+import { dispatchDataChanged } from "@/lib/data-events";
 import type { DealStage } from "@/types";
 
 type SearchResult = {
@@ -77,6 +78,21 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
         setError(msg);
         return;
       }
+      // Linkear un lead a una empresa real cambia el lead (que pasa a apuntar
+      // a la real) Y la empresa real (que ahora tiene metadata del lead).
+      // Notifica ambas para que listas y mapa reflejen el cambio.
+      dispatchDataChanged({
+        resource: "empresa",
+        resourceId: leadId,
+        action: "delete", // lead anónimo desaparece del listado
+        source: "LinkLeadModal/link",
+      });
+      dispatchDataChanged({
+        resource: "empresa",
+        resourceId: selected.id,
+        action: "update",
+        source: "LinkLeadModal/link",
+      });
       onLinked(selected.id);
       onClose();
     } catch (err) {
