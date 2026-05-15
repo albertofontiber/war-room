@@ -1,8 +1,31 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
+import type { IncomingHttpHeaders } from "http";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { logFinderAction } from "@/lib/finder-access-log";
+
+/**
+ * Extrae IP del cliente y user-agent de los headers de la request de login.
+ * `x-forwarded-for` puede traer una cadena separada por comas o un array
+ * (cuando hay varios proxies); en ambos casos el cliente original es el
+ * primer valor. Usado para enriquecer `FinderAccessLog` en login_*.
+ */
+function extractRequestMetadata(headers: IncomingHttpHeaders | undefined): {
+  ip: string | null;
+  userAgent: string | null;
+} {
+  if (!headers) return { ip: null, userAgent: null };
+  const xff = headers["x-forwarded-for"];
+  const xffFirst = Array.isArray(xff) ? xff[0] : xff;
+  const xRealIp = headers["x-real-ip"];
+  const xRealIpStr = Array.isArray(xRealIp) ? xRealIp[0] : xRealIp;
+  const ip =
+    xffFirst?.split(",")[0]?.trim() || xRealIpStr?.trim() || null;
+  const ua = headers["user-agent"];
+  const userAgent = (Array.isArray(ua) ? ua[0] : ua) ?? null;
+  return { ip, userAgent };
+}
 
 /**
  * Auth unificado con dos providers separados:
@@ -85,14 +108,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) return null;
 
-        // Forwarded-for puede venir en `x-forwarded-for` (proxies Vercel). El
-        // primer valor es el cliente original; el resto, hops intermedios.
-        const headers = (req?.headers ?? {}) as Record<string, string | undefined>;
-        const ip =
-          headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-          headers["x-real-ip"] ||
-          null;
-        const userAgent = headers["user-agent"] ?? null;
+        const { ip, userAgent } = extractRequestMetadata(req?.headers);
         const emailNorm = credentials.email.trim().toLowerCase();
 
         const finder = await prisma.finder.findUnique({
@@ -105,10 +121,11 @@ export const authOptions: NextAuthOptions = {
             passwordHash: true,
           },
         });
+        // Awaiteamos los logs en vez de fire-and-forget: en serverless de
+        // Vercel el process puede terminar tras `return` y perder el INSERT.
+        // El helper ya tiene try/catch interno, así que await no tira.
         if (!finder || !finder.active || !finder.passwordHash) {
-          // Email desconocido, finder inactivo o sin contraseña fijada.
-          // Loguea el intento — útil para detectar tentativas de acceso.
-          void logFinderAction({
+          await logFinderAction({
             finderId: finder?.id ?? null,
             email: emailNorm,
             action: "login_failure",
@@ -120,7 +137,7 @@ export const authOptions: NextAuthOptions = {
 
         const ok = await bcrypt.compare(credentials.password, finder.passwordHash);
         if (!ok) {
-          void logFinderAction({
+          await logFinderAction({
             finderId: finder.id,
             email: emailNorm,
             action: "login_failure",
@@ -130,7 +147,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        void logFinderAction({
+        await logFinderAction({
           finderId: finder.id,
           email: emailNorm,
           action: "login_success",

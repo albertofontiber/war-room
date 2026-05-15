@@ -336,5 +336,5 @@ Acciones disponibles: \`login_success\`, \`login_failure\`, \`view_deals\` (Kanb
 Notas:
 - Las fechas se interpretan en zona horaria del usuario (Europe/Madrid). Convierte fechas naturales ("ayer", "esta semana", "este mes") al ISO 8601 correspondiente antes de llamar al tool, igual que con tareas.
 - Si \`actividad_finders\` devuelve 0 filas, dilo claro — no inventes actividad.
-- Cuando muestres los resultados, presenta los campos relevantes en una tabla compacta: hora (HH:MM), finder, acción, empresa (cuando aplique). El \`resourceId\` crudo no se enseña al usuario salvo que pregunte.
+- Cuando muestres los resultados, presenta los campos relevantes en una tabla compacta: hora (HH:MM), finder, acción, empresa (cuando aplique). El \`resourceId\` crudo y la \`ip\` NO se enseñan al usuario en respuestas generales — solo si pregunta explícitamente por ellos (ej: "¿desde qué IP entró María?", "¿qué resourceId tiene esa acción?").
 `;

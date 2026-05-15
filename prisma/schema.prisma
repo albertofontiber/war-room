@@ -508,7 +508,10 @@ model FinderAccessLog {
   createdAt  DateTime  @default(now())
 
   @@index([finderId])
+  @@index([finderId, createdAt])
   @@index([action, createdAt])
+  @@index([createdAt])
+  @@index([email])
 }
 
 // Notificaciones in-app dirigidas a admins (User) O finders (Finder). Genérico
