@@ -7,6 +7,7 @@ import { TAREA_TIPO_LABEL } from "@/lib/crm";
 import type { TareaTipo } from "@/types";
 import { PortalTareaUpdateSchema, zodError } from "@/lib/validation";
 import { processMenciones } from "@/lib/menciones-server";
+import { logFinderAction } from "@/lib/finder-access-log";
 import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -163,6 +164,14 @@ export async function PATCH(
       before: diff.before,
       after: diff.after,
     });
+    // FinderAccessLog: distinguir "completar" del resto de ediciones para que
+    // luego se filtre fácil en el chat IA. complete_task gana sobre edit_task
+    // cuando coinciden en la misma request.
+    void logFinderAction({
+      finderId: finder.id,
+      action: isCompletingNow ? "complete_task" : "edit_task",
+      resourceId: String(tareaId),
+    });
   }
 
   // Campanita admin si el finder acaba de completar la tarea.
@@ -247,6 +256,11 @@ export async function DELETE(
   }
 
   await prisma.tarea.delete({ where: { id: tareaId } });
+  void logFinderAction({
+    finderId: finder.id,
+    action: "delete_task",
+    resourceId: String(tareaId),
+  });
   void auditLog({
     actorType: "finder",
     actorId: finder.id,

@@ -501,14 +501,17 @@ model FinderAccessLog {
   finderId   String?
   finder     Finder?   @relation(fields: [finderId], references: [id])
   email      String?
-  action     String    // "login_attempt"|"login_success"|"view_deals"|"view_deal"|"add_note"|"edit_note"|"delete_note"|"propose_target"
+  action     String    // "login_success"|"login_failure"|"view_deals"|"view_deal"|"add_note"|"edit_note"|"delete_note"|"add_task"|"edit_task"|"complete_task"|"delete_task"|"propose_target"|"propose_target_duplicate"|"add_activity" (legacy, no se emite tras PR #39)
   resourceId String?
   ip         String?
   userAgent  String?   @db.Text
   createdAt  DateTime  @default(now())
 
   @@index([finderId])
+  @@index([finderId, createdAt])
   @@index([action, createdAt])
+  @@index([createdAt])
+  @@index([email])
 }
 
 // Notificaciones in-app dirigidas a admins (User) O finders (Finder). Genérico
