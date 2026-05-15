@@ -19,7 +19,7 @@ import WarRoomMobileMenu from "@/components/WarRoomMobileMenu";
 import { ResponsiveModal } from "@/components/ui/responsive";
 import { useIsDesktop } from "@/lib/breakpoints";
 import { useNavegacion } from "@/lib/navegacion";
-import { dispatchDataChanged, subscribeDataChanged } from "@/lib/data-events";
+import { dispatchDataChanged } from "@/lib/data-events";
 import type { DealStage } from "@/types";
 import { DEAL_STAGES, DEAL_STAGE_LABEL } from "@/lib/crm";
 
