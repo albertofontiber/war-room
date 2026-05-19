@@ -116,20 +116,22 @@ export default function ChatIA() {
   // el foco al abrir el chat — no necesitamos manipular el ref del input
   // como hacíamos con el `<input>` plano.
 
-  // En mobile el chat ocupa toda la pantalla. Cuando aparece el teclado virtual
-  // de iOS, dos cosas se rompen si solo confiamos en `position: fixed` + `dvh`:
+  // En mobile el chat ocupa toda la pantalla. Por defecto, `position: fixed`
+  // se referencia al *layout viewport* de iOS, que puede diferir del
+  // *visual viewport* (lo realmente visible) en 4 dimensiones:
   //
-  // 1. La altura del layout viewport NO se reduce con el teclado (en iOS
-  //    Safari, position:fixed se referencia al layout viewport, no al visual).
-  //    Resultado: el input queda escondido bajo el teclado.
-  // 2. Cuando el input recibe focus, Safari mueve el visual viewport hacia
-  //    arriba para "centrar" el campo. El modal — anclado a `top: 0` del
-  //    layout viewport — queda con su mitad superior FUERA del área visible
-  //    (lo que ve el usuario es el contenido subyacente al modal, p.ej. el
-  //    mapa).
+  // - altura: el teclado virtual reduce el visual viewport pero NO el layout
+  //   → el input queda escondido bajo el teclado.
+  // - offsetTop: Safari mueve el visual viewport arriba para "centrar" el
+  //   input con focus → el modal anclado a `top: 0` del layout queda con
+  //   su mitad superior FUERA de la zona visible (el usuario ve el contenido
+  //   subyacente, ej. el mapa).
+  // - ancho: con zoom (intencional o pinch accidental) el visual viewport
+  //   es más estrecho que el layout → el modal se desborda por la derecha
+  //   y el botón Enviar queda cortado.
+  // - offsetLeft: idem si el zoom se aplica desplazado.
   //
-  // Fix: usar visualViewport para ajustar SIMULTÁNEAMENTE height y top del
-  // modal, para que coincida exactamente con la zona realmente visible.
+  // Fix: forzar las 4 dimensiones del modal a coincidir con `visualViewport`.
   useEffect(() => {
     if (!open) return;
     const vv = window.visualViewport;
@@ -142,6 +144,8 @@ export default function ChatIA() {
       if (!el) return;
       el.style.height = `${vv.height}px`;
       el.style.top = `${vv.offsetTop}px`;
+      el.style.width = `${vv.width}px`;
+      el.style.left = `${vv.offsetLeft}px`;
     };
     apply();
     vv.addEventListener("resize", apply);
@@ -153,6 +157,8 @@ export default function ChatIA() {
       if (el) {
         el.style.height = "";
         el.style.top = "";
+        el.style.width = "";
+        el.style.left = "";
       }
     };
   }, [open]);
