@@ -16,6 +16,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { log } from "@/lib/logger";
+import { extractAdquirente } from "@/lib/borme-adquirente";
 
 export const dynamic = "force-dynamic";
 
@@ -25,53 +26,27 @@ const TIPOS_OPERACIONALES = [
   "cambio_denominacion",
   "nombramiento_grupo",
   "nombramiento",
+  // Tras la fusión de "Actividad reciente" en esta misma vista, también
+  // incluimos disoluciones y otros actos (ceses, dimisiones, depósitos de
+  // cuentas, ampliaciones de capital y modificaciones estatutarias que el
+  // classifier deja en `otros`).
+  "disolucion",
+  "otros",
 ];
 
-// Prioridad para deduplicación (mayor número = más fuerte)
+// Prioridad para deduplicación cuando un mismo día hay varios actos para la
+// misma empresa: se queda el de mayor prioridad. Disolución gana sobre todo
+// (la empresa se acaba — es la noticia más fuerte). `otros` es el catch-all
+// y queda en último lugar para no eclipsar señales reales.
 const TIPO_PRIORITY: Record<string, number> = {
+  disolucion: 7,
   fusion: 6,
   adquisicion: 5,
   posible_adquisicion: 4,
   cambio_denominacion: 3,
   nombramiento: 2,
+  otros: 1,
 };
-
-/** Extrae el nombre del adquirente del texto BORME para casos sin grupo conocido */
-function extractAdquirente(descripcion: string | null): string | null {
-  if (!descripcion) return null;
-  const d = descripcion;
-
-  // "Socio único: NOMBRE SA." / "Socio Unico. NOMBRE"
-  const socioMatch = d.match(
-    /[Ss]ocio\s+[Úú]nico[:\s.]+([A-ZÁÉÍÓÚÜÑ][^.;()\n]{2,60}?)(?:\.|;|\n|$)/
-  );
-  if (socioMatch) {
-    const name = socioMatch[1].trim().replace(/[.,;]+$/, "");
-    if (name.length > 2) return name;
-  }
-
-  // "Sociedad absorbente: NOMBRE" (fusiones)
-  const absoMatch = d.match(
-    /[Ss]ociedad\s+absorbente[:\s]+([A-ZÁÉÍÓÚÜÑ][^.;()\n]{2,60}?)(?:\.|;|\n|$)/
-  );
-  if (absoMatch) {
-    const name = absoMatch[1].trim().replace(/[.,;]+$/, "");
-    if (name.length > 2) return name;
-  }
-
-  // "Unipersonalidad. [Nombre]" — solo si el siguiente token parece un nombre de empresa
-  const uniMatch = d.match(
-    /[Uu]nipersonalidad[.\s]+([A-ZÁÉÍÓÚÜÑ][^.;()\n]{3,60}?)(?:\.|;|\n|$)/
-  );
-  if (uniMatch) {
-    const candidate = uniMatch[1].trim().replace(/[.,;]+$/, "");
-    if (candidate.length > 3 && !/^(Socio|La\s|El\s|Se\s)/i.test(candidate)) {
-      return candidate;
-    }
-  }
-
-  return null;
-}
 
 export async function GET() {
   try {

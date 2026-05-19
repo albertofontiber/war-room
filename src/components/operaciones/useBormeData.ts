@@ -1,16 +1,18 @@
 /**
- * Hook que centraliza los 3 fetches de datos de la vista OperacionesBorme:
+ * Hook que centraliza los 2 fetches de datos de la vista OperacionesBorme:
  *
- *   - `/api/borme/operaciones` (señales M&A) — eager, se carga al montar.
+ *   - `/api/borme/operaciones` (señales M&A + disoluciones + otros actos) —
+ *     eager, se carga al montar.
  *   - `/api/borme/personas-compartidas` — lazy, solo cuando subVista lo pide.
- *   - `/api/borme/recientes` — lazy, idem.
  *
- * Expone `refresh()` que invalida señales y vacía los caches lazy. Las
- * sub-vistas que pidan los datos volverán a fetchearlos al cambiar a esa pestaña.
+ * Expone `refresh()` que invalida señales y vacía el cache lazy de personas.
+ * La pestaña "Actividad reciente" se eliminó al fusionar sus tipos
+ * (`disolucion`, `otros`) dentro de Señales M&A — el endpoint
+ * `/api/borme/recientes` desapareció junto con esta limpieza.
  */
 
 import { useEffect, useState } from "react";
-import type { OperacionItem, PersonaCompartida, RecienteItem, SubVista } from "./types";
+import type { OperacionItem, PersonaCompartida, SubVista } from "./types";
 
 export function useBormeData(subVista: SubVista) {
   const [items, setItems] = useState<OperacionItem[]>([]);
@@ -20,10 +22,6 @@ export function useBormeData(subVista: SubVista) {
   const [personas, setPersonas] = useState<PersonaCompartida[]>([]);
   const [loadingPersonas, setLoadingPersonas] = useState(false);
   const [errorPersonas, setErrorPersonas] = useState<string | null>(null);
-
-  const [recientes, setRecientes] = useState<RecienteItem[]>([]);
-  const [loadingRecientes, setLoadingRecientes] = useState(false);
-  const [errorRecientes, setErrorRecientes] = useState<string | null>(null);
 
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -59,28 +57,11 @@ export function useBormeData(subVista: SubVista) {
       });
   }, [subVista, personas.length, loadingPersonas]);
 
-  // Fetch actividad reciente — lazy.
-  useEffect(() => {
-    if (subVista !== "actividad" || recientes.length > 0 || loadingRecientes) return;
-    setLoadingRecientes(true);
-    fetch("/api/borme/recientes")
-      .then((r) => r.json())
-      .then((d) => {
-        setRecientes(d.items ?? []);
-        setLoadingRecientes(false);
-      })
-      .catch((e) => {
-        setErrorRecientes(String(e));
-        setLoadingRecientes(false);
-      });
-  }, [subVista, recientes.length, loadingRecientes]);
-
-  /** Vacía caches lazy y dispara refetch de señales. Las sub-vistas relevantes
-   *  re-fetchearán cuando se vuelvan a abrir. */
+  /** Vacía cache lazy de personas y dispara refetch de señales. La pestaña
+   *  Alertas personas re-fetcheará cuando se vuelva a abrir. */
   const refresh = () => {
     setRefreshKey((k) => k + 1);
     setPersonas([]);
-    setRecientes([]);
   };
 
   return {
@@ -90,9 +71,6 @@ export function useBormeData(subVista: SubVista) {
     personas,
     loadingPersonas,
     errorPersonas,
-    recientes,
-    loadingRecientes,
-    errorRecientes,
     refresh,
   };
 }

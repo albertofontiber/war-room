@@ -10,20 +10,14 @@
 import { useMemo, useState } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { FILTER_TIPOS } from "./types";
-import type {
-  OperacionItem,
-  PersonaCompartida,
-  RecienteItem,
-  SortDir,
-} from "./types";
+import type { OperacionItem, PersonaCompartida, SortDir } from "./types";
 
 interface UseBormeFiltersInput {
   items: OperacionItem[];
   personas: PersonaCompartida[];
-  recientes: RecienteItem[];
 }
 
-export function useBormeFilters({ items, personas, recientes }: UseBormeFiltersInput) {
+export function useBormeFilters({ items, personas }: UseBormeFiltersInput) {
   const filtros = useWarRoomStore((s) => s.filtros);
 
   const [tiposActivos, setTiposActivos] = useState<Set<string>>(new Set(FILTER_TIPOS));
@@ -159,15 +153,6 @@ export function useBormeFilters({ items, personas, recientes }: UseBormeFiltersI
     [filteredPersonas]
   );
 
-  // ── Filtered actividad reciente ──────────────────────────────────────────
-  const filteredRecientes = useMemo(() => {
-    let result = applyStoreFilters(recientes);
-    if (fechaDesde) result = result.filter((i) => i.fecha >= fechaDesde);
-    if (fechaHasta) result = result.filter((i) => i.fecha <= fechaHasta + "T23:59:59");
-    return result;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recientes, filtros, fechaDesde, fechaHasta]);
-
   // Stats señales
   const stats = useMemo(() => {
     const porTipo: Record<string, number> = {};
@@ -210,7 +195,6 @@ export function useBormeFilters({ items, personas, recientes }: UseBormeFiltersI
     // derived
     filteredItems,
     filteredPersonas,
-    filteredRecientes,
     totalApariciones,
     stats,
     filtrosAplicados,

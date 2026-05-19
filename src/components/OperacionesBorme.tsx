@@ -21,7 +21,6 @@ import { DescriptionBanner } from "./operaciones/DescriptionBanner";
 import { StatsBar } from "./operaciones/StatsBar";
 import { SenalesTable } from "./operaciones/SenalesTable";
 import { AlertasPersonasTable } from "./operaciones/AlertasPersonasTable";
-import { ActividadRecienteTable } from "./operaciones/ActividadRecienteTable";
 import { useBormeData } from "./operaciones/useBormeData";
 import { useBormeFilters } from "./operaciones/useBormeFilters";
 
@@ -41,7 +40,6 @@ export default function OperacionesBorme() {
   const f = useBormeFilters({
     items: data.items,
     personas: data.personas,
-    recientes: data.recientes,
   });
 
   // Al hacer click en una empresa, abrimos el panel encima de la vista actual
@@ -61,7 +59,6 @@ export default function OperacionesBorme() {
         subVista={subVista}
         setSubVista={setSubVista}
         personasCount={data.personas.length}
-        recientesCount={data.recientes.length}
         loading={data.loading}
         tiposActivos={f.tiposActivos}
         toggleTipo={f.toggleTipo}
@@ -85,9 +82,6 @@ export default function OperacionesBorme() {
         loadingPersonas={data.loadingPersonas}
         errorPersonas={data.errorPersonas}
         totalApariciones={f.totalApariciones}
-        filteredRecientes={f.filteredRecientes}
-        loadingRecientes={data.loadingRecientes}
-        errorRecientes={data.errorRecientes}
         filtrosAplicados={f.filtrosAplicados}
       />
 
@@ -140,33 +134,6 @@ export default function OperacionesBorme() {
           </>
         )}
 
-        {subVista === "actividad" && (
-          <>
-            {data.loadingRecientes && (
-              <div className="flex items-center justify-center h-40">
-                <p className="text-wr-muted text-sm animate-pulse">Cargando actividad…</p>
-              </div>
-            )}
-            {data.errorRecientes && (
-              <div className="flex items-center justify-center h-40">
-                <p className="text-red-400 text-sm">Error: {data.errorRecientes}</p>
-              </div>
-            )}
-            {!data.loadingRecientes && !data.errorRecientes && f.filteredRecientes.length === 0 && (
-              <div className="flex items-center justify-center h-40">
-                <p className="text-wr-muted text-sm">
-                  Sin actividad para los filtros seleccionados.
-                </p>
-              </div>
-            )}
-            {!data.loadingRecientes && !data.errorRecientes && f.filteredRecientes.length > 0 && (
-              <ActividadRecienteTable
-                items={f.filteredRecientes}
-                onVerPerfil={handleVerPerfil}
-              />
-            )}
-          </>
-        )}
       </div>
     </div>
   );

@@ -2,13 +2,14 @@ import { BORME_TIPO } from "@/lib/borme-constants";
 import { FILTER_TIPOS } from "./types";
 import type { SubVista } from "./types";
 
-/** Barra superior con: toggle de sub-vista (3 tabs), refresh, chips de filtros
- *  globales del store, pills de tipo (solo en señales) y rango de fechas. */
+/** Barra superior con: toggle de sub-vista (2 tabs: Señales / Alertas personas),
+ *  refresh, chips de filtros globales del store, pills de tipo (solo en señales)
+ *  y rango de fechas. La pestaña "Actividad reciente" se eliminó tras fusionar
+ *  sus tipos (`disolucion`, `otros`) dentro de Señales M&A. */
 export function TopBar({
   subVista,
   setSubVista,
   personasCount,
-  recientesCount,
   loading,
   tiposActivos,
   toggleTipo,
@@ -22,7 +23,6 @@ export function TopBar({
   subVista: SubVista;
   setSubVista: (v: SubVista) => void;
   personasCount: number;
-  recientesCount: number;
   loading: boolean;
   tiposActivos: Set<string>;
   toggleTipo: (t: string) => void;
@@ -65,27 +65,6 @@ export function TopBar({
               }`}
             >
               {personasCount}
-            </span>
-          )}
-        </button>
-        <button
-          onClick={() => setSubVista("actividad")}
-          className={`px-3 py-1 text-xs rounded transition-colors flex items-center gap-1.5 ${
-            subVista === "actividad"
-              ? "bg-wr-blue text-white"
-              : "text-wr-muted hover:text-wr-text"
-          }`}
-        >
-          Actividad reciente
-          {recientesCount > 0 && (
-            <span
-              className={`text-[9px] font-bold px-1 rounded ${
-                subVista === "actividad"
-                  ? "bg-white/20"
-                  : "bg-wr-surface2 text-wr-muted"
-              }`}
-            >
-              {recientesCount}
             </span>
           )}
         </button>
