@@ -3,8 +3,10 @@
 import { useCallback, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { Vista } from "@/types";
+import type { SubVista } from "@/components/operaciones/types";
 
 const VISTAS_VALIDAS: Vista[] = ["mapa", "tabla", "operaciones", "grupos"];
+const OP_TABS_VALIDAS: SubVista[] = ["senales", "alertas_personas", "actividad"];
 
 /**
  * Single source of truth para "qué vista" y "qué empresa abierta":
@@ -35,6 +37,13 @@ export function useNavegacion() {
   const empresaSeleccionadaId = Number.isFinite(empresaParsed) ? empresaParsed : null;
   const panelAbierto = empresaSeleccionadaId !== null;
 
+  // Sub-pestaña dentro de /operaciones (?op=senales|alertas_personas|actividad).
+  // Default "senales" — no se serializa para URLs limpias.
+  const opTabParam = searchParams.get("op");
+  const opTab: SubVista = OP_TABS_VALIDAS.includes(opTabParam as SubVista)
+    ? (opTabParam as SubVista)
+    : "senales";
+
   const updateParams = useCallback(
     (updates: Record<string, string | number | null>) => {
       const params = new URLSearchParams(Array.from(searchParams.entries()));
@@ -53,6 +62,7 @@ export function useNavegacion() {
       vista,
       empresaSeleccionadaId,
       panelAbierto,
+      opTab,
 
       setVista: (v: Vista) => {
         if (v !== vista) {
@@ -69,7 +79,11 @@ export function useNavegacion() {
       seleccionarEmpresa: (id: number) => updateParams({ empresa: id }),
 
       cerrarPanel: () => updateParams({ empresa: null }),
+
+      // "senales" es default: no se serializa.
+      setOpTab: (tab: SubVista) =>
+        updateParams({ op: tab === "senales" ? null : tab }),
     }),
-    [vista, empresaSeleccionadaId, panelAbierto, updateParams]
+    [vista, empresaSeleccionadaId, panelAbierto, opTab, updateParams]
   );
 }

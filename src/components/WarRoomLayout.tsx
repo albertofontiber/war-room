@@ -98,8 +98,11 @@ export default function WarRoomLayout() {
               - Desktop (≥lg): overlay 560px sobre el contenido (preserva
                 el comportamiento original — sin backdrop, navega libre).
               - Mobile/tablet (<lg): ResponsiveModal fullscreen vía Sheet
-                (con backdrop sutil, cerrar tapping fuera o swipe). */}
-          {panelAbierto && vista !== "operaciones" && (
+                (con backdrop sutil, cerrar tapping fuera o swipe).
+              Funciona en TODAS las vistas (mapa, tabla, operaciones, grupos)
+              para que un click en empresa abra el panel encima sin perder
+              el contexto de navegación previo. */}
+          {panelAbierto && (
             isDesktop ? (
               <div className="absolute top-0 right-0 bottom-0 w-[560px] z-20 shadow-2xl shadow-black/40 flex">
                 <PanelEmpresa />
