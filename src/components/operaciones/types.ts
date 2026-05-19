@@ -4,7 +4,7 @@
  * cada módulo tipa solo lo que necesita.
  */
 
-export type SubVista = "senales" | "alertas_personas" | "actividad";
+export type SubVista = "senales" | "alertas_personas";
 
 export interface Adquirente {
   tipo: "grupo_conocido" | "empresa_extraida" | "desconocido";
@@ -75,36 +75,18 @@ export interface PersonaCompartida {
   empresas: PersonaEnEmpresa[];
 }
 
-// Actividad reciente (todos los tipos)
-export interface RecienteItem {
-  id: number;
-  fecha: string;
-  tipoActo: string;
-  descripcion: string | null;
-  urlBorme: string | null;
-  grupoNombre: string | null;
-  empresa: {
-    id: number;
-    nombre: string;
-    cif: string;
-    web: string | null;
-    grupoId: number | null;
-    enPerimetro: boolean;
-    ccaa: string | null;
-    provincia: string | null;
-    sector: string | null;
-    ingresos: number | null;
-    anioFinanciero: number | null;
-  };
-}
-
-/** Tipos del filtro pill superior para sub-vista "senales". */
+/** Tipos del filtro pill superior. Los 5 primeros son señales M&A puras;
+ *  los 2 últimos (disolución + otros) cubren el resto del BORME que antes
+ *  vivía en la pestaña "Actividad reciente" (eliminada). Por defecto los 7
+ *  están activos — el usuario los desactiva manualmente. */
 export const FILTER_TIPOS = [
   "fusion",
   "adquisicion",
   "posible_adquisicion",
   "nombramiento",
   "cambio_denominacion",
+  "disolucion",
+  "otros",
 ] as const;
 
 export type FilterTipo = (typeof FILTER_TIPOS)[number];

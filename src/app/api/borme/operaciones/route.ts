@@ -25,15 +25,26 @@ const TIPOS_OPERACIONALES = [
   "cambio_denominacion",
   "nombramiento_grupo",
   "nombramiento",
+  // Tras la fusión de "Actividad reciente" en esta misma vista, también
+  // incluimos disoluciones y otros actos (ceses, dimisiones, depósitos de
+  // cuentas, ampliaciones de capital y modificaciones estatutarias que el
+  // classifier deja en `otros`).
+  "disolucion",
+  "otros",
 ];
 
-// Prioridad para deduplicación (mayor número = más fuerte)
+// Prioridad para deduplicación cuando un mismo día hay varios actos para la
+// misma empresa: se queda el de mayor prioridad. Disolución gana sobre todo
+// (la empresa se acaba — es la noticia más fuerte). `otros` es el catch-all
+// y queda en último lugar para no eclipsar señales reales.
 const TIPO_PRIORITY: Record<string, number> = {
+  disolucion: 7,
   fusion: 6,
   adquisicion: 5,
   posible_adquisicion: 4,
   cambio_denominacion: 3,
   nombramiento: 2,
+  otros: 1,
 };
 
 /** Extrae el nombre del adquirente del texto BORME para casos sin grupo conocido */

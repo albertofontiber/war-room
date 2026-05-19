@@ -6,7 +6,7 @@ import type { Vista } from "@/types";
 import type { SubVista } from "@/components/operaciones/types";
 
 const VISTAS_VALIDAS: Vista[] = ["mapa", "tabla", "operaciones", "grupos"];
-const OP_TABS_VALIDAS: SubVista[] = ["senales", "alertas_personas", "actividad"];
+const OP_TABS_VALIDAS: SubVista[] = ["senales", "alertas_personas"];
 
 /**
  * Single source of truth para "qué vista" y "qué empresa abierta":
