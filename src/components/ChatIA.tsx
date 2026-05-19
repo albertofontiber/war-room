@@ -9,6 +9,7 @@ import {
   dispatchDataChanged,
   type ResourceKind,
 } from "@/lib/data-events";
+import { normalizeChatMarkdown } from "@/lib/normalize-chat-markdown";
 import { RichTextEditor } from "@/components/RichTextEditor";
 
 /**
@@ -221,7 +222,9 @@ export default function ChatIA() {
                 </div>
               ) : (
                 <div className="prose prose-invert prose-sm max-w-none !text-sm sm:!text-xs !leading-relaxed prose-p:my-1 prose-headings:my-2 prose-headings:text-sm prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-strong:text-wr-text prose-table:text-xs prose-th:px-2 prose-th:py-1 prose-td:px-2 prose-td:py-1 prose-th:border prose-th:border-wr-border prose-td:border prose-td:border-wr-border prose-table:my-2 overflow-x-auto">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {normalizeChatMarkdown(text)}
+                  </ReactMarkdown>
                 </div>
               )}
             </div>
