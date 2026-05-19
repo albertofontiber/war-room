@@ -24,12 +24,17 @@ import { AlertasPersonasTable } from "./operaciones/AlertasPersonasTable";
 import { ActividadRecienteTable } from "./operaciones/ActividadRecienteTable";
 import { useBormeData } from "./operaciones/useBormeData";
 import { useBormeFilters } from "./operaciones/useBormeFilters";
-import type { SubVista } from "./operaciones/types";
 
 export default function OperacionesBorme() {
-  const { seleccionarEmpresa, setVista } = useNavegacion();
+  // Sub-pestaña (senales / alertas_personas / actividad) vive en query param
+  // `?op=...` para que el browser back/forward y los enlaces compartidos
+  // preserven el estado. Same pattern que `vista` y `empresa`.
+  const {
+    seleccionarEmpresa,
+    opTab: subVista,
+    setOpTab: setSubVista,
+  } = useNavegacion();
 
-  const [subVista, setSubVista] = useState<SubVista>("senales");
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const data = useBormeData(subVista);
@@ -39,12 +44,15 @@ export default function OperacionesBorme() {
     recientes: data.recientes,
   });
 
+  // Al hacer click en una empresa, abrimos el panel encima de la vista actual
+  // (operaciones). Antes esto forzaba `setVista("mapa")` porque el panel solo
+  // se renderizaba fuera de operaciones — desde que WarRoomLayout lo permite
+  // en todas las vistas, basta con seleccionar la empresa.
   const handleVerPerfil = useCallback(
     (id: number) => {
       seleccionarEmpresa(id);
-      setVista("mapa");
     },
-    [seleccionarEmpresa, setVista]
+    [seleccionarEmpresa]
   );
 
   return (

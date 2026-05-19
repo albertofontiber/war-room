@@ -80,7 +80,14 @@ export const GRUPOS_SENALES: GrupoSenales[] = [
   },
   {
     grupoNombre: "Plana Fàbrega",
-    personas: [],
+    personas: [
+      // Persona jurídica que actúa como administrador en varias filiales del grupo.
+      "GRUFAEM",
+      // Persona física que aparece como administrador en múltiples sociedades
+      // de Plana Fàbrega. Incluimos las dos variantes habituales de orden en BORME.
+      "ONIELFA PEREZ XAVIER",
+      "XAVIER ONIELFA PEREZ",
+    ],
     keywordsDenominacion: ["PLANA FABREGA", "PLANA FABREGA"],
     keywordsSocioUnico: ["PLANA FABREGA"],
   },
