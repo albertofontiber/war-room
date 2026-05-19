@@ -88,9 +88,16 @@ export const GRUPOS_SENALES: GrupoSenales[] = [
       // Persona jurídica que actúa como administrador en varias filiales del grupo.
       "GRUFAEM",
       // Persona física que aparece como administrador en múltiples sociedades
-      // de Plana Fàbrega. Incluimos las dos variantes habituales de orden en BORME.
+      // del grupo. Incluimos:
+      //   - Variantes de orden de nombre y apellidos (BORME los presenta de
+      //     varias maneras según el acto).
+      //   - Variante con "Javier" (castellano) además de "Xavier" (catalán) —
+      //     en el scrape de empresia detectamos PLANA FABREGA BARCELONA con
+      //     "Onielfa Perez Javier" (no Xavier).
       "ONIELFA PEREZ XAVIER",
       "XAVIER ONIELFA PEREZ",
+      "ONIELFA PEREZ JAVIER",
+      "JAVIER ONIELFA PEREZ",
     ],
     keywordsDenominacion: ["PLANA FABREGA", "PLANA FABREGA"],
     keywordsSocioUnico: ["PLANA FABREGA"],
