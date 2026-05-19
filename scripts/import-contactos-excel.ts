@@ -58,7 +58,25 @@ interface EmpresaMatch {
     | "nombre_exact"
     | "nombre_norm"
     | "alias_paren"
-    | "palabra_distintiva";
+    | "palabra_distintiva"
+    | "nombre_colapsado"
+    | "subset_tokens";
+}
+
+/** Normaliza + colapsa espacios. Útil para matchear "EXTI NORTE" ≡ "EXTINORTE"
+ *  y "SIEF 2" ≡ "SIEF2" — variantes con/sin espacio del mismo nombre. */
+function normalizeAndCollapse(s: string): string {
+  return normalizePersona(s, true).replace(/\s/g, "");
+}
+
+/** Devuelve los tokens del nombre normalizado (sin filtrar genéricas) para
+ *  comparaciones de subset. */
+function tokensAll(name: string): Set<string> {
+  return new Set(
+    normalizePersona(name, true)
+      .split(/\s+/)
+      .filter((t) => t.length >= 2)
+  );
 }
 
 /** Palabras genéricas del dominio PCI/seguridad que NO sirven como distintivo
@@ -218,6 +236,81 @@ async function matchEmpresa(
         };
       }
     }
+  }
+
+  // Match por nombre colapsado (sin espacios): pilla variantes "EXTI NORTE" ≡
+  // "EXTINORTE" y "SIEF 2" ≡ "SIEF2" — mismo nombre escrito con/sin espacios.
+  // Pre-filtra el pool de BD por los primeros 4 chars del candidato colapsado,
+  // y luego compara la versión colapsada completa en memoria.
+  for (const candidato of candidatos) {
+    const candColl = normalizeAndCollapse(candidato);
+    if (candColl.length < 5) continue;
+    const prefix = candColl.substring(0, 4);
+    const pool = await prisma.empresa.findMany({
+      where: { nombre: { startsWith: prefix, mode: "insensitive" } },
+      select: { id: true, nombre: true },
+      take: 100,
+    });
+    const matches = pool.filter(
+      (e) => normalizeAndCollapse(e.nombre) === candColl
+    );
+    if (matches.length === 1) {
+      return {
+        empresaId: matches[0].id,
+        empresaNombre: matches[0].nombre,
+        via: "nombre_colapsado",
+      };
+    }
+    if (matches.length > 1) return "ambiguous";
+  }
+
+  // Match por subset de tokens: si todos los tokens del nombre BD están en
+  // el del Excel (o viceversa) y ambos tienen >= 3 tokens, considerar match.
+  // Pilla casos como "PROTECCION Y SEGURIDAD DEL NORTE" (Excel) vs
+  // "PROTECCION Y SEGURIDAD NORTE" (BD) — solo difieren en "DEL".
+  // El threshold de 3 tokens evita falsos positivos con nombres cortos.
+  for (const candidato of candidatos) {
+    const candTokens = tokensAll(candidato);
+    if (candTokens.size < 3) continue;
+
+    // Pre-filtro: buscar pool por una palabra distintiva (no genérica) de >= 5 chars.
+    // Fallback a una de >= 5 chars si no hay distintivas.
+    const palabraFiltro =
+      [...candTokens].find(
+        (t) => t.length >= 5 && !PALABRAS_GENERICAS.has(t)
+      ) ?? [...candTokens].find((t) => t.length >= 5);
+    if (!palabraFiltro) continue;
+
+    const pool = await prisma.empresa.findMany({
+      where: { nombre: { contains: palabraFiltro, mode: "insensitive" } },
+      select: { id: true, nombre: true },
+      take: 50,
+    });
+
+    const matches = pool.filter((e) => {
+      const bdTokens = tokensAll(e.nombre);
+      if (bdTokens.size < 3) return false;
+      const bdInCand = [...bdTokens].every((t) => candTokens.has(t));
+      const candInBd = [...candTokens].every((t) => bdTokens.has(t));
+      if (!(bdInCand || candInBd)) return false;
+      // Defensa contra falso positivo tipo "3F PROTECCION CONTRA INCENDIOS"
+      // emparejado erróneamente con "PROTECCION CONTRA INCENDIOS, S.A." por
+      // tener todos los tokens genéricos en común. Requerir al menos 1 token
+      // distintivo (no genérico, >= 5 chars) en la intersección.
+      const interseccion = [...bdTokens].filter((t) => candTokens.has(t));
+      return interseccion.some(
+        (t) => t.length >= 5 && !PALABRAS_GENERICAS.has(t)
+      );
+    });
+
+    if (matches.length === 1) {
+      return {
+        empresaId: matches[0].id,
+        empresaNombre: matches[0].nombre,
+        via: "subset_tokens",
+      };
+    }
+    if (matches.length > 1) return "ambiguous";
   }
 
   return "none";
