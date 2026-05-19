@@ -117,10 +117,19 @@ export default function ChatIA() {
   // como hacíamos con el `<input>` plano.
 
   // En mobile el chat ocupa toda la pantalla. Cuando aparece el teclado virtual
-  // de iOS, el `position: fixed` mantiene el contenedor a la altura completa
-  // del layout viewport — el input queda escondido bajo el teclado.
-  // Usamos `visualViewport` para reducir la altura del contenedor a la zona
-  // realmente visible y que el input aterrice justo encima del teclado.
+  // de iOS, dos cosas se rompen si solo confiamos en `position: fixed` + `dvh`:
+  //
+  // 1. La altura del layout viewport NO se reduce con el teclado (en iOS
+  //    Safari, position:fixed se referencia al layout viewport, no al visual).
+  //    Resultado: el input queda escondido bajo el teclado.
+  // 2. Cuando el input recibe focus, Safari mueve el visual viewport hacia
+  //    arriba para "centrar" el campo. El modal — anclado a `top: 0` del
+  //    layout viewport — queda con su mitad superior FUERA del área visible
+  //    (lo que ve el usuario es el contenido subyacente al modal, p.ej. el
+  //    mapa).
+  //
+  // Fix: usar visualViewport para ajustar SIMULTÁNEAMENTE height y top del
+  // modal, para que coincida exactamente con la zona realmente visible.
   useEffect(() => {
     if (!open) return;
     const vv = window.visualViewport;
@@ -129,9 +138,10 @@ export default function ChatIA() {
     if (!isMobile) return;
 
     const apply = () => {
-      if (containerRef.current) {
-        containerRef.current.style.height = `${vv.height}px`;
-      }
+      const el = containerRef.current;
+      if (!el) return;
+      el.style.height = `${vv.height}px`;
+      el.style.top = `${vv.offsetTop}px`;
     };
     apply();
     vv.addEventListener("resize", apply);
@@ -139,7 +149,11 @@ export default function ChatIA() {
     return () => {
       vv.removeEventListener("resize", apply);
       vv.removeEventListener("scroll", apply);
-      if (containerRef.current) containerRef.current.style.height = "";
+      const el = containerRef.current;
+      if (el) {
+        el.style.height = "";
+        el.style.top = "";
+      }
     };
   }, [open]);
 
@@ -165,10 +179,16 @@ export default function ChatIA() {
     );
   }
 
+  // En móvil: `top-0 left-0 right-0` ancla el modal pero NO el `bottom`
+  // (intencional: la altura la fija visualViewport vía style inline, para que
+  // el teclado iOS no tape el input). El `h-[100dvh]` actúa como fallback si
+  // el navegador no expone visualViewport.
+  // En desktop (sm+): `sm:top-auto sm:left-auto` cancela el anclaje móvil
+  // y vuelve a la posición flotante `sm:bottom-5 sm:right-5`.
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 h-[100dvh] sm:inset-auto sm:bottom-5 sm:right-5 sm:h-[540px] sm:w-[420px] z-50 flex flex-col bg-wr-surface border-0 sm:border border-wr-border shadow-2xl rounded-none sm:rounded-lg"
+      className="fixed top-0 left-0 right-0 h-[100dvh] sm:top-auto sm:left-auto sm:right-5 sm:bottom-5 sm:h-[540px] sm:w-[420px] z-50 flex flex-col bg-wr-surface border-0 sm:border border-wr-border shadow-2xl rounded-none sm:rounded-lg"
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 sm:py-2.5 border-b border-wr-border shrink-0">
