@@ -79,7 +79,11 @@ export const GRUPOS_SENALES: GrupoSenales[] = [
     keywordsSocioUnico: ["ATTLON TECHNOLOGIES", "ATTLON"],
   },
   {
-    grupoNombre: "Plana Fàbrega",
+    // Sin acento grave en "Fabrega" para coincidir EXACTO con `Grupo.nombre`
+    // en BD (que se creó manualmente desde la UI como "Plana Fabrega" sin
+    // tilde). El cron BORME hace `findFirst({ where: { nombre } })` literal,
+    // así que cualquier mismatch impedía la auto-asignación.
+    grupoNombre: "Plana Fabrega",
     personas: [
       // Persona jurídica que actúa como administrador en varias filiales del grupo.
       "GRUFAEM",
