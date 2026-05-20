@@ -1,17 +1,32 @@
 /**
- * Matcher de SentItems → Tareas.
+ * Matcher de emails → Tareas.
  *
- * Para cada email enviado:
- *   1. Extrae recipients (To+CC+BCC), normalizados a lowercase.
- *   2. Filtra los que están en `@fontiber.com` (interno — no nos interesa
- *      auto-loguear emails entre admins).
- *   3. Busca matches en `Contacto.email` (también lowercased en BD por la
- *      validación zod del endpoint POST/PATCH de contactos).
+ * Procesa dos flujos del buzón Graph de cada UPN:
+ *   - SentItems (salientes): emails que nosotros enviamos al contacto.
+ *   - `/messages`  (entrantes): emails recibidos del contacto, escaneando todo
+ *     el buzón (todas las carpetas) — no solo Inbox, porque mucha gente
+ *     archiva el correo en subcarpetas y un scan de Inbox a secas lo perdería.
+ *
+ * Para cada email:
+ *   1. Determina el "contraparte" — el email externo relevante:
+ *      · saliente → recipients To+CC+BCC.
+ *      · entrante → remitente (from); los enviados que aparecen en el scan de
+ *        `/messages` se descartan porque su remitente es interno.
+ *   2. Filtra los `@fontiber.com` (interno — no auto-logueamos correo entre
+ *      admins ni mail automático de Fontiber).
+ *   3. Busca matches en `Contacto.email` (lowercased en BD por la validación
+ *      zod del endpoint POST/PATCH de contactos).
  *   4. Por cada match, crea (idempotente) una Tarea + EmailIngest.
  *      Dedup por `internetMessageId` único.
  *
+ * La Tarea lleva `tipo: "email"` y la dirección se refleja en `descripcion`
+ * ("Email a X" vs "Email de X"); `EmailIngest.direction` la guarda explícita
+ * para analítica. Todo email se registra como `completada: true` — es un
+ * hecho histórico, no un to-do. La disciplina de tareas pendientes ("hay que
+ * responder") es decisión humana, no se autogenera.
+ *
  * Privacy: los emails que NO matchean ningún Contacto no dejan rastro en BD.
- * Solo se persiste subject + recipientEmail + sentAt para los que sí entran.
+ * Solo se persiste subject + email del contacto + fecha para los que sí entran.
  */
 
 import { prisma } from "@/lib/prisma";
@@ -19,75 +34,94 @@ import { auditLog } from "@/lib/audit-log";
 import { log } from "@/lib/logger";
 import {
   listSentItemsSince,
+  listReceivedMessagesSince,
   recipientsOf,
+  senderOf,
   type SentItem,
+  type ReceivedMessage,
 } from "@/lib/email-graph";
 
 const FONTIBER_DOMAIN = "fontiber.com";
 
+/** Ventana inicial cuando un cursor está vacío — procesa la última hora. */
+const FIRST_RUN_WINDOW_MS = 60 * 60 * 1000;
+
+export type EmailDirection = "saliente" | "entrante";
+
 export type IngestStats = {
   upn: string;
-  fetched: number;
+  sentFetched: number;
+  receivedFetched: number;
   alreadyIngested: number;
   matched: number;
   noMatch: number;
   internalSkipped: number;
   tareasCreated: number;
   errors: number;
-  newCursor: Date | null;
+  newSentCursor: Date | null;
+  newReceivedCursor: Date | null;
 };
 
-/** Filtra recipients @fontiber.com (descartamos emails internos). */
+/** True si el email es externo (no @fontiber.com) y tiene formato válido. */
+function isExternal(email: string): boolean {
+  const at = email.lastIndexOf("@");
+  if (at < 0) return false;
+  return email.slice(at + 1) !== FONTIBER_DOMAIN;
+}
+
+/** Filtra recipients @fontiber.com de un email saliente (descartamos internos). */
 function externalRecipients(item: SentItem): string[] {
-  return recipientsOf(item).filter((email) => {
-    const at = email.lastIndexOf("@");
-    if (at < 0) return false;
-    const domain = email.slice(at + 1);
-    return domain !== FONTIBER_DOMAIN;
-  });
+  return recipientsOf(item).filter(isExternal);
 }
 
 /**
- * Procesa un email individual. Si un recipient externo matchea con
- * `Contacto.email`, crea Tarea+EmailIngest atómicamente. Si hay varios
- * matches (raro: dos contactos con el mismo email), crea una tarea por
- * empresa distinta (un email a juan@x.com solo crea una tarea aunque haya
- * dos `Contacto` con ese email — usamos `findFirst` por simplicidad).
+ * Núcleo común de ingesta. Dado un email (en cualquier dirección) ya reducido
+ * a sus datos esenciales, dedup + match + creación atómica Tarea+EmailIngest.
  *
- * Retorna `{ created: boolean, matched: boolean }`.
+ * `counterpartyEmails` son los emails externos a matchear contra `Contacto`:
+ * destinatarios si el email es saliente, remitente si es entrante.
+ *
+ * Retorna `{ created, matched }`. `matched` indica que el email corresponde a
+ * un Contacto/EmailIngest conocido (aunque ya estuviera ingerido).
  */
-async function ingestSentItem(
-  item: SentItem,
+async function ingestEmail(
+  params: {
+    internetMessageId: string;
+    subject: string;
+    occurredAt: Date;
+    counterpartyEmails: string[];
+    direction: EmailDirection;
+  },
   upn: string
 ): Promise<{ created: boolean; matched: boolean }> {
   // Dedup por internetMessageId. Si ya existe, salir sin tocar nada.
   const existing = await prisma.emailIngest.findUnique({
-    where: { internetMessageId: item.internetMessageId },
+    where: { internetMessageId: params.internetMessageId },
     select: { id: true },
   });
   if (existing) return { created: false, matched: true };
 
-  const externals = externalRecipients(item);
-  if (externals.length === 0) return { created: false, matched: false };
+  if (params.counterpartyEmails.length === 0) {
+    return { created: false, matched: false };
+  }
 
   const contactos = await prisma.contacto.findMany({
-    where: { email: { in: externals } },
+    where: { email: { in: params.counterpartyEmails } },
     select: { id: true, email: true, empresaId: true, nombre: true },
   });
   if (contactos.length === 0) return { created: false, matched: false };
 
-  const sentAt = new Date(item.sentDateTime);
-  const subject = item.subject ?? "";
-
   // Una tarea por (empresa, messageId). Si hay dos contactos en la misma
-  // empresa, una sola tarea. Si dos contactos en empresas distintas, dos
-  // tareas (con el mismo internetMessageId — no se puede porque es @unique).
-  // Resolución: una sola tarea contra el primer contacto encontrado.
-  // Si en el futuro queremos taggear varias empresas, refactorizamos a
-  // tabla N:M, pero hasta entonces asumimos 1 email = 1 empresa.
+  // empresa, una sola tarea. Si dos contactos en empresas distintas, no se
+  // puede crear dos tareas con el mismo internetMessageId (es @unique):
+  // usamos el primer contacto encontrado. Si en el futuro queremos taggear
+  // varias empresas, refactorizamos a tabla N:M.
   const c = contactos[0];
-  const titulo = subject.length > 0 ? subject : "(sin asunto)";
-  const descripcion = `Email a ${c.nombre}${c.email ? ` <${c.email}>` : ""}`;
+  const titulo = params.subject.length > 0 ? params.subject : "(sin asunto)";
+  const verbo = params.direction === "entrante" ? "de" : "a";
+  const descripcion = `Email ${verbo} ${c.nombre}${c.email ? ` <${c.email}>` : ""}`;
+  const source =
+    params.direction === "entrante" ? "graph-inbox" : "graph-sent-items";
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -98,20 +132,21 @@ async function ingestSentItem(
           titulo: titulo.slice(0, 255),
           descripcion,
           completada: true,
-          completadaAt: sentAt,
-          fechaLimite: sentAt,
+          completadaAt: params.occurredAt,
+          fechaLimite: params.occurredAt,
         },
       });
       await tx.emailIngest.create({
         data: {
-          internetMessageId: item.internetMessageId,
+          internetMessageId: params.internetMessageId,
           upn,
+          direction: params.direction,
           recipientEmail: c.email ?? "",
           contactoId: c.id,
           empresaId: c.empresaId,
           tareaId: tarea.id,
-          sentAt,
-          subject,
+          sentAt: params.occurredAt,
+          subject: params.subject,
         },
       });
       void auditLog({
@@ -122,10 +157,11 @@ async function ingestSentItem(
         after: {
           empresaId: c.empresaId,
           tipo: "email",
+          direction: params.direction,
           titulo: tarea.titulo,
-          source: "graph-sent-items",
+          source,
           upn,
-          internetMessageId: item.internetMessageId,
+          internetMessageId: params.internetMessageId,
         },
       });
     });
@@ -141,15 +177,68 @@ async function ingestSentItem(
 }
 
 /**
- * Procesa la carpeta SentItems de `upn` desde el cursor en BD. Actualiza el
- * cursor al final con el `sentDateTime` del último email procesado (sea que
- * matcheó o no, para no releer emails que ya descartamos por no tener
- * Contacto).
+ * Procesa un email saliente (SentItems). El contraparte son los recipients
+ * externos To+CC+BCC.
+ */
+async function ingestSentItem(
+  item: SentItem,
+  upn: string
+): Promise<{ created: boolean; matched: boolean }> {
+  return ingestEmail(
+    {
+      internetMessageId: item.internetMessageId,
+      subject: item.subject ?? "",
+      occurredAt: new Date(item.sentDateTime),
+      counterpartyEmails: externalRecipients(item),
+      direction: "saliente",
+    },
+    upn
+  );
+}
+
+/**
+ * Procesa un email entrante. El contraparte es el remitente (from), si es
+ * externo. Un email cuyo remitente es `@fontiber.com` (ej. alberto le escribe
+ * a gabriel, un CC interno, o uno de nuestros propios enviados que aparece en
+ * el scan de `/messages`) se descarta — no es actividad de un contacto.
+ */
+async function ingestReceivedMessage(
+  item: ReceivedMessage,
+  upn: string
+): Promise<{ created: boolean; matched: boolean }> {
+  const sender = senderOf(item);
+  const externalSender = sender && isExternal(sender) ? [sender] : [];
+  return ingestEmail(
+    {
+      internetMessageId: item.internetMessageId,
+      subject: item.subject ?? "",
+      occurredAt: new Date(item.receivedDateTime),
+      counterpartyEmails: externalSender,
+      direction: "entrante",
+    },
+    upn
+  );
+}
+
+/** Acumula el resultado de un `ingestEmail` en las stats de la ronda. */
+function applyResult(
+  stats: IngestStats,
+  result: { created: boolean; matched: boolean }
+): void {
+  if (result.created) stats.tareasCreated++;
+  if (result.matched && !result.created) stats.alreadyIngested++;
+  if (result.matched) stats.matched++;
+  else stats.noMatch++;
+}
+
+/**
+ * Procesa enviados + recibidos de `upn` desde el cursor en BD. Mantiene dos
+ * cursores independientes (`lastSentDateTime` / `lastReceivedDateTime`) y los
+ * actualiza con la fecha del último email procesado de cada flujo.
  *
- * Si es la primera vez (sin cursor), arranca desde "hace N minutos" para no
- * tragarse 5 años de Sent Items. `firstRunWindowMs` controla esa ventana
- * inicial — default 60 min para que el primer despliegue procese poco y
- * podamos verificar que funciona.
+ * Si una carpeta no tiene cursor todavía (primera vez), arranca desde "hace N
+ * minutos" — `firstRunWindowMs`, default 60 min — para no tragarse años de
+ * historia. El backfill histórico lo hace un script aparte (`scripts/`).
  */
 export async function ingestUpn(
   upn: string,
@@ -157,62 +246,99 @@ export async function ingestUpn(
 ): Promise<IngestStats> {
   const stats: IngestStats = {
     upn,
-    fetched: 0,
+    sentFetched: 0,
+    receivedFetched: 0,
     alreadyIngested: 0,
     matched: 0,
     noMatch: 0,
     internalSkipped: 0,
     tareasCreated: 0,
     errors: 0,
-    newCursor: null,
+    newSentCursor: null,
+    newReceivedCursor: null,
   };
 
+  const windowMs = opts.firstRunWindowMs ?? FIRST_RUN_WINDOW_MS;
   const cursor = await prisma.emailIngestCursor.findUnique({ where: { upn } });
-  const since =
-    cursor?.lastSentDateTime ??
-    new Date(Date.now() - (opts.firstRunWindowMs ?? 60 * 60 * 1000));
 
-  let items: SentItem[];
+  // ─── Salientes (SentItems) ───────────────────────────────────────────────
+  const sentSince =
+    cursor?.lastSentDateTime ?? new Date(Date.now() - windowMs);
+  let sentItems: SentItem[] = [];
   try {
-    items = await listSentItemsSince(upn, since);
+    sentItems = await listSentItemsSince(upn, sentSince);
   } catch (err) {
     log.error("email-task-matcher:listSentItems", err, { upn });
     stats.errors++;
-    return stats;
   }
-  stats.fetched = items.length;
+  stats.sentFetched = sentItems.length;
 
-  let lastProcessed: Date | null = null;
-  for (const item of items) {
-    const externals = externalRecipients(item);
-    if (externals.length === 0) {
-      stats.internalSkipped++;
-    }
+  let lastSent: Date | null = null;
+  for (const item of sentItems) {
+    if (externalRecipients(item).length === 0) stats.internalSkipped++;
     try {
-      const { created, matched } = await ingestSentItem(item, upn);
-      if (created) stats.tareasCreated++;
-      if (matched && !created) stats.alreadyIngested++;
-      if (matched) stats.matched++;
-      else stats.noMatch++;
+      applyResult(stats, await ingestSentItem(item, upn));
     } catch (err) {
-      log.error("email-task-matcher:ingest", err, {
+      log.error("email-task-matcher:ingestSent", err, {
         upn,
         messageId: item.internetMessageId,
       });
       stats.errors++;
-      // No avanzamos el cursor si falla un item: la próxima ronda lo reintenta.
-      continue;
+      continue; // No avanzamos el cursor si falla un item.
     }
-    lastProcessed = new Date(item.sentDateTime);
+    lastSent = new Date(item.sentDateTime);
   }
 
-  if (lastProcessed) {
+  // ─── Entrantes (todo el buzón) ───────────────────────────────────────────
+  // La ventana del cron es de minutos, así que `/messages` devuelve pocos
+  // mensajes y filtramos el remitente en memoria — sin filtro server-side.
+  const recvSince =
+    cursor?.lastReceivedDateTime ?? new Date(Date.now() - windowMs);
+  let receivedItems: ReceivedMessage[] = [];
+  try {
+    receivedItems = await listReceivedMessagesSince(upn, recvSince);
+  } catch (err) {
+    log.error("email-task-matcher:listReceived", err, { upn });
+    stats.errors++;
+  }
+  stats.receivedFetched = receivedItems.length;
+
+  let lastReceived: Date | null = null;
+  for (const item of receivedItems) {
+    const sender = senderOf(item);
+    if (!sender || !isExternal(sender)) stats.internalSkipped++;
+    try {
+      applyResult(stats, await ingestReceivedMessage(item, upn));
+    } catch (err) {
+      log.error("email-task-matcher:ingestReceived", err, {
+        upn,
+        messageId: item.internetMessageId,
+      });
+      stats.errors++;
+      continue;
+    }
+    lastReceived = new Date(item.receivedDateTime);
+  }
+
+  // ─── Cursor ──────────────────────────────────────────────────────────────
+  // Actualizamos solo los cursores cuya carpeta procesó algo. Si la fila no
+  // existe (primer run), `lastSentDateTime` es obligatorio: usamos el último
+  // procesado o, si no hubo ninguno, la ventana escaneada.
+  if (lastSent || lastReceived) {
     await prisma.emailIngestCursor.upsert({
       where: { upn },
-      create: { upn, lastSentDateTime: lastProcessed },
-      update: { lastSentDateTime: lastProcessed },
+      create: {
+        upn,
+        lastSentDateTime: lastSent ?? sentSince,
+        lastReceivedDateTime: lastReceived ?? recvSince,
+      },
+      update: {
+        ...(lastSent ? { lastSentDateTime: lastSent } : {}),
+        ...(lastReceived ? { lastReceivedDateTime: lastReceived } : {}),
+      },
     });
-    stats.newCursor = lastProcessed;
+    stats.newSentCursor = lastSent;
+    stats.newReceivedCursor = lastReceived;
   }
 
   return stats;
@@ -220,6 +346,9 @@ export async function ingestUpn(
 
 /** Test helper: expone funciones internas para los tests. */
 export const __testing__ = {
+  isExternal,
   externalRecipients,
+  ingestEmail,
   ingestSentItem,
+  ingestReceivedMessage,
 };

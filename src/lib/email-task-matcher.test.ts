@@ -1,16 +1,18 @@
 /**
- * Tests del matcher SentItems → Tareas.
+ * Tests del matcher de emails → Tareas (salientes + entrantes).
  *
- * Cubre: filtro de dominios @fontiber.com (interno), extracción de recipients,
- * dedup por internetMessageId, no-op si no hay match (privacy), creación
- * atómica Tarea+EmailIngest cuando matchea, manejo de race conditions.
+ * Cubre: filtro de dominios @fontiber.com (interno), extracción de recipients
+ * y remitente, dedup por internetMessageId, no-op si no hay match (privacy),
+ * creación atómica Tarea+EmailIngest con `direction` correcta, manejo de race
+ * conditions.
  *
- * Mocks: prisma + auditLog. La integración con Microsoft Graph (listSentItems)
- * se cubrirá manualmente en preview tras desplegar.
+ * Mocks: prisma + auditLog. La integración con Microsoft Graph (listSentItems
+ * / listReceivedMessages) y la lógica de cursor dual de `ingestUpn` se cubren
+ * manualmente en preview tras desplegar.
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { recipientsOf, type SentItem } from "./email-graph";
+import { recipientsOf, type SentItem, type ReceivedMessage } from "./email-graph";
 
 const findUniqueMock = vi.fn();
 const findManyMock = vi.fn();
@@ -75,6 +77,30 @@ function makeItem(opts: {
     toRecipients: mkRcpts(opts.to),
     ccRecipients: mkRcpts(opts.cc),
     bccRecipients: mkRcpts(opts.bcc),
+  };
+}
+
+function makeReceivedMessage(opts: {
+  id?: string;
+  internetMessageId?: string;
+  subject?: string | null;
+  from?: string | null;
+  receivedDateTime?: string;
+}): ReceivedMessage {
+  return {
+    id: opts.id ?? "in-1",
+    internetMessageId: opts.internetMessageId ?? "<in-1@empresa.com>",
+    subject: opts.subject === undefined ? "Respuesta" : opts.subject,
+    receivedDateTime: opts.receivedDateTime ?? "2026-05-07T18:00:00.000Z",
+    from:
+      opts.from === null
+        ? null
+        : {
+            emailAddress: {
+              name: null,
+              address: opts.from ?? "contacto@empresa.com",
+            },
+          },
   };
 }
 
@@ -207,6 +233,7 @@ describe("ingestSentItem (vía mock de prisma)", () => {
           empresaId: 42,
           tipo: "email",
           titulo: "Saludo",
+          descripcion: "Email a Aize Bua <aize@empresa.com>",
           completada: true,
         }),
       })
@@ -215,6 +242,7 @@ describe("ingestSentItem (vía mock de prisma)", () => {
       expect.objectContaining({
         data: expect.objectContaining({
           internetMessageId: "<m1@x>",
+          direction: "saliente",
           recipientEmail: "aize@empresa.com",
           contactoId: 7,
           empresaId: 42,
@@ -275,5 +303,137 @@ describe("ingestSentItem (vía mock de prisma)", () => {
       where: { email: { in: ["aize@empresa.com"] } },
       select: expect.any(Object),
     });
+  });
+});
+
+describe("ingestReceivedMessage (vía mock de prisma)", () => {
+  let ingestReceivedMessage: typeof import("./email-task-matcher")["__testing__"]["ingestReceivedMessage"];
+
+  beforeEach(async () => {
+    findUniqueMock.mockReset();
+    findManyMock.mockReset();
+    txMock.mockReset();
+    tareaCreateMock.mockReset();
+    ingestCreateMock.mockReset();
+    auditLogMock.mockReset();
+    auditLogMock.mockResolvedValue(undefined);
+    txMock.mockImplementation((cb: (tx: unknown) => Promise<unknown>) =>
+      cb({
+        tarea: { create: (...a: unknown[]) => tareaCreateMock(...a) },
+        emailIngest: { create: (...a: unknown[]) => ingestCreateMock(...a) },
+      })
+    );
+    const mod = await import("./email-task-matcher");
+    ingestReceivedMessage = mod.__testing__.ingestReceivedMessage;
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("dedup: si ya existe EmailIngest con ese messageId, no crea nada", async () => {
+    findUniqueMock.mockResolvedValue({ id: 999 });
+    const item = makeReceivedMessage({ from: "contacto@empresa.com" });
+    const r = await ingestReceivedMessage(item, "alberto@fontiber.com");
+    expect(r).toEqual({ created: false, matched: true });
+    expect(findManyMock).not.toHaveBeenCalled();
+  });
+
+  it("no-op: remitente interno @fontiber.com (no es un target)", async () => {
+    findUniqueMock.mockResolvedValue(null);
+    const item = makeReceivedMessage({ from: "gabriel@fontiber.com" });
+    const r = await ingestReceivedMessage(item, "alberto@fontiber.com");
+    expect(r).toEqual({ created: false, matched: false });
+    expect(findManyMock).not.toHaveBeenCalled();
+  });
+
+  it("no-op: email sin remitente (from null)", async () => {
+    findUniqueMock.mockResolvedValue(null);
+    const item = makeReceivedMessage({ from: null });
+    const r = await ingestReceivedMessage(item, "alberto@fontiber.com");
+    expect(r).toEqual({ created: false, matched: false });
+    expect(findManyMock).not.toHaveBeenCalled();
+  });
+
+  it("privacy: remitente externo sin Contacto → NO se persiste", async () => {
+    findUniqueMock.mockResolvedValue(null);
+    findManyMock.mockResolvedValue([]);
+    const item = makeReceivedMessage({ from: "desconocido@externos.com" });
+    const r = await ingestReceivedMessage(item, "alberto@fontiber.com");
+    expect(r).toEqual({ created: false, matched: false });
+    expect(tareaCreateMock).not.toHaveBeenCalled();
+    expect(ingestCreateMock).not.toHaveBeenCalled();
+  });
+
+  it("match: crea Tarea entrante con descripcion 'Email de X' y direction 'entrante'", async () => {
+    findUniqueMock.mockResolvedValue(null);
+    findManyMock.mockResolvedValue([
+      { id: 7, email: "erik@extinorte.com", empresaId: 42, nombre: "Erik" },
+    ]);
+    tareaCreateMock.mockResolvedValue({ id: 1234, titulo: "Respuesta" });
+    ingestCreateMock.mockResolvedValue({});
+
+    const item = makeReceivedMessage({
+      internetMessageId: "<reply-1@extinorte.com>",
+      subject: "Respuesta",
+      from: "erik@extinorte.com",
+      receivedDateTime: "2026-03-18T10:00:00.000Z",
+    });
+    const r = await ingestReceivedMessage(item, "alberto@fontiber.com");
+    expect(r).toEqual({ created: true, matched: true });
+
+    expect(tareaCreateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          empresaId: 42,
+          tipo: "email",
+          descripcion: "Email de Erik <erik@extinorte.com>",
+          completada: true,
+        }),
+      })
+    );
+    expect(ingestCreateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          internetMessageId: "<reply-1@extinorte.com>",
+          direction: "entrante",
+          recipientEmail: "erik@extinorte.com",
+          contactoId: 7,
+          empresaId: 42,
+          tareaId: 1234,
+        }),
+      })
+    );
+  });
+
+  it("remitente con mayúsculas se normaliza a lowercase para el match", async () => {
+    findUniqueMock.mockResolvedValue(null);
+    findManyMock.mockResolvedValue([
+      { id: 7, email: "erik@extinorte.com", empresaId: 42, nombre: "Erik" },
+    ]);
+    tareaCreateMock.mockResolvedValue({ id: 1 });
+    ingestCreateMock.mockResolvedValue({});
+
+    const item = makeReceivedMessage({ from: "Erik@ExtiNorte.com" });
+    await ingestReceivedMessage(item, "alberto@fontiber.com");
+    expect(findManyMock).toHaveBeenCalledWith({
+      where: { email: { in: ["erik@extinorte.com"] } },
+      select: expect.any(Object),
+    });
+  });
+
+  it("race: unique constraint violation → no-op gracioso", async () => {
+    findUniqueMock.mockResolvedValue(null);
+    findManyMock.mockResolvedValue([
+      { id: 7, email: "erik@extinorte.com", empresaId: 42, nombre: "Erik" },
+    ]);
+    tareaCreateMock.mockResolvedValue({ id: 1 });
+    ingestCreateMock.mockRejectedValue(
+      new Error("Unique constraint failed on the fields: (`internetMessageId`)")
+    );
+
+    const item = makeReceivedMessage({ from: "erik@extinorte.com" });
+    const r = await ingestReceivedMessage(item, "alberto@fontiber.com");
+    expect(r).toEqual({ created: false, matched: true });
   });
 });

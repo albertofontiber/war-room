@@ -124,25 +124,34 @@ async function loadNotas(
 }
 
 async function loadTareasCompletadas(empresaId: number): Promise<TimelineEvent[]> {
-  const tareas = await prisma.tarea.findMany({
-    where: { empresaId, completada: true },
-    select: {
-      id: true,
-      tipo: true,
-      titulo: true,
-      resultado: true,
-      completadaAt: true,
-      createdAt: true,
-      autor: { select: { id: true, name: true } },
-      autorFinder: { select: { id: true, name: true } },
-      asignado: { select: { id: true, name: true } },
-      asignadoFinder: { select: { id: true, name: true } },
-      // Detecta si la tarea vino de un cron — el join indirecto identifica el origen.
-      emailIngest: { select: { id: true } },
-      calendarIngest: { select: { id: true } },
-    },
-    orderBy: { completadaAt: "desc" },
-  });
+  const [tareas, users] = await Promise.all([
+    prisma.tarea.findMany({
+      where: { empresaId, completada: true },
+      select: {
+        id: true,
+        tipo: true,
+        titulo: true,
+        resultado: true,
+        completadaAt: true,
+        createdAt: true,
+        autor: { select: { id: true, name: true } },
+        autorFinder: { select: { id: true, name: true } },
+        asignado: { select: { id: true, name: true } },
+        asignadoFinder: { select: { id: true, name: true } },
+        // Detecta si la tarea vino de un cron — el join indirecto identifica
+        // el origen. `upn`/`direction` resuelven el socio y el sentido del email.
+        emailIngest: { select: { id: true, upn: true, direction: true } },
+        calendarIngest: { select: { id: true } },
+      },
+      orderBy: { completadaAt: "desc" },
+    }),
+    // Tabla diminuta (admins). Para mapear `EmailIngest.upn` → socio.
+    prisma.user.findMany({ select: { id: true, name: true, email: true } }),
+  ]);
+
+  const userByEmail = new Map(
+    users.map((u) => [u.email.toLowerCase(), { id: u.id, name: u.name }])
+  );
 
   return tareas.map<TimelineEvent>((t) => {
     // Source: prioridad al ingest si existe, sino manual.
@@ -150,12 +159,32 @@ async function loadTareasCompletadas(empresaId: number): Promise<TimelineEvent[]
     if (t.emailIngest) source = "graph-email";
     else if (t.calendarIngest) source = "graph-calendar";
 
-    // Actor: quien completó es ambiguo. Usamos asignado primero (la persona
-    // que la tenía), sino autor, sino "system" si vino de cron.
-    const actor =
-      source !== "manual"
-        ? { kind: "system" as const, id: null, name: "Sistema (cron)" }
-        : actorFromAuthors(t.asignado ?? t.autor, t.asignadoFinder ?? t.autorFinder);
+    // Dirección del email — solo para tareas ingeridas del email.
+    const emailDirection: "saliente" | "entrante" | null = t.emailIngest
+      ? t.emailIngest.direction === "entrante"
+        ? "entrante"
+        : "saliente"
+      : null;
+
+    // Actor:
+    //  - Email ingerido → el socio (Alberto/Gabriel) dueño del buzón: quien
+    //    envió el saliente / recibió el entrante. Se resuelve por `upn`.
+    //  - Calendar ingerido → "Sistema (cron)" (una reunión es bidireccional).
+    //  - Manual → asignado primero (quien la tenía), sino autor.
+    let actor: TimelineActor;
+    if (t.emailIngest) {
+      const socio = userByEmail.get(t.emailIngest.upn.toLowerCase());
+      actor = socio
+        ? { kind: "admin", id: socio.id, name: socio.name }
+        : { kind: "system", id: null, name: "Sistema (cron)" };
+    } else if (t.calendarIngest) {
+      actor = { kind: "system", id: null, name: "Sistema (cron)" };
+    } else {
+      actor = actorFromAuthors(
+        t.asignado ?? t.autor,
+        t.asignadoFinder ?? t.autorFinder
+      );
+    }
 
     return {
       kind: "tarea_completada",
@@ -169,6 +198,7 @@ async function loadTareasCompletadas(empresaId: number): Promise<TimelineEvent[]
         titulo: t.titulo,
         resultado: t.resultado,
         source,
+        emailDirection,
       },
     };
   });

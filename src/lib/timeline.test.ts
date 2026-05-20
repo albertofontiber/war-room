@@ -16,6 +16,7 @@ const notaFindManyMock = vi.fn();
 const tareaFindManyMock = vi.fn();
 const crmLogFindManyMock = vi.fn();
 const bormeFindManyMock = vi.fn();
+const userFindManyMock = vi.fn();
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
@@ -23,20 +24,28 @@ vi.mock("@/lib/prisma", () => ({
     tarea: { findMany: (...a: unknown[]) => tareaFindManyMock(...a) },
     crmLog: { findMany: (...a: unknown[]) => crmLogFindManyMock(...a) },
     bormeAlerta: { findMany: (...a: unknown[]) => bormeFindManyMock(...a) },
+    user: { findMany: (...a: unknown[]) => userFindManyMock(...a) },
   },
 }));
 
 import { getEmpresaTimeline } from "./timeline";
+
+const SOCIOS = [
+  { id: "u1", name: "Alberto", email: "alberto@fontiber.com" },
+  { id: "u2", name: "Gabriel", email: "gabriel@fontiber.com" },
+];
 
 beforeEach(() => {
   notaFindManyMock.mockReset();
   tareaFindManyMock.mockReset();
   crmLogFindManyMock.mockReset();
   bormeFindManyMock.mockReset();
+  userFindManyMock.mockReset();
   notaFindManyMock.mockResolvedValue([]);
   tareaFindManyMock.mockResolvedValue([]);
   crmLogFindManyMock.mockResolvedValue([]);
   bormeFindManyMock.mockResolvedValue([]);
+  userFindManyMock.mockResolvedValue(SOCIOS);
 });
 
 afterEach(() => {
@@ -128,20 +137,20 @@ describe("getEmpresaTimeline", () => {
     expect(callArgs.where).toEqual({ empresaId: 42 });
   });
 
-  it("tarea con emailIngest → source 'graph-email' y actor system", async () => {
+  it("email saliente → source 'graph-email', emailDirection 'saliente', actor = socio del upn", async () => {
     tareaFindManyMock.mockResolvedValue([
       {
         id: 10,
         tipo: "email",
-        titulo: "Re: NDA",
+        titulo: "RE: NDA",
         resultado: null,
         completadaAt: new Date("2026-05-11T14:00:00Z"),
         createdAt: new Date("2026-05-11T13:00:00Z"),
-        autor: { id: "u1", name: "Alberto" },
+        autor: null,
         autorFinder: null,
         asignado: null,
         asignadoFinder: null,
-        emailIngest: { id: 999 },
+        emailIngest: { id: 999, upn: "gabriel@fontiber.com", direction: "saliente" },
         calendarIngest: null,
       },
     ]);
@@ -150,7 +159,57 @@ describe("getEmpresaTimeline", () => {
     const t = events.find((e) => e.kind === "tarea_completada");
     if (t?.kind !== "tarea_completada") throw new Error("expected tarea");
     expect(t.payload.source).toBe("graph-email");
-    expect(t.actor.kind).toBe("system");
+    expect(t.payload.emailDirection).toBe("saliente");
+    expect(t.actor).toEqual({ kind: "admin", id: "u2", name: "Gabriel" });
+  });
+
+  it("email entrante → emailDirection 'entrante', actor = socio del buzón receptor", async () => {
+    tareaFindManyMock.mockResolvedValue([
+      {
+        id: 13,
+        tipo: "email",
+        titulo: "Re: Puntos pendientes",
+        resultado: null,
+        completadaAt: new Date("2026-03-05T09:00:00Z"),
+        createdAt: new Date("2026-03-05T09:00:00Z"),
+        autor: null,
+        autorFinder: null,
+        asignado: null,
+        asignadoFinder: null,
+        emailIngest: { id: 1000, upn: "alberto@fontiber.com", direction: "entrante" },
+        calendarIngest: null,
+      },
+    ]);
+
+    const events = await getEmpresaTimeline(42, { scope: "admin", userId: "u1" });
+    const t = events.find((e) => e.kind === "tarea_completada");
+    if (t?.kind !== "tarea_completada") throw new Error("expected tarea");
+    expect(t.payload.emailDirection).toBe("entrante");
+    expect(t.actor).toEqual({ kind: "admin", id: "u1", name: "Alberto" });
+  });
+
+  it("email cuyo upn no matchea ningún User → actor 'system' (fallback)", async () => {
+    tareaFindManyMock.mockResolvedValue([
+      {
+        id: 14,
+        tipo: "email",
+        titulo: "X",
+        resultado: null,
+        completadaAt: new Date("2026-05-11T14:00:00Z"),
+        createdAt: new Date("2026-05-11T13:00:00Z"),
+        autor: null,
+        autorFinder: null,
+        asignado: null,
+        asignadoFinder: null,
+        emailIngest: { id: 1001, upn: "otro@fontiber.com", direction: "saliente" },
+        calendarIngest: null,
+      },
+    ]);
+
+    const events = await getEmpresaTimeline(42, { scope: "admin", userId: "u1" });
+    const t = events.find((e) => e.kind === "tarea_completada");
+    if (t?.kind !== "tarea_completada") throw new Error("expected tarea");
+    expect(t.actor).toEqual({ kind: "system", id: null, name: "Sistema (cron)" });
   });
 
   it("tarea con calendarIngest → source 'graph-calendar'", async () => {

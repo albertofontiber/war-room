@@ -40,6 +40,9 @@ export type TimelineEvent =
         titulo: string;
         resultado: string | null;
         source: "manual" | "graph-email" | "graph-calendar";
+        // Dirección del email: "saliente" (lo enviamos) / "entrante" (lo
+        // recibimos del contacto). null para tareas que no son email ingerido.
+        emailDirection: "saliente" | "entrante" | null;
       };
     }
   | {
