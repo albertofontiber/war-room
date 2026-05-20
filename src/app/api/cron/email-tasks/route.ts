@@ -1,15 +1,16 @@
 /**
  * /api/cron/email-tasks
  *
- * Lee SentItems de los UPNs en `EMAIL_TASK_OWNER_UPNS` (alberto, gabriel) vía
- * Microsoft Graph y crea tareas en el CRM cuando un recipient matchea con un
- * `Contacto.email`. Dedup por `internetMessageId` único.
+ * Lee SentItems (salientes) e Inbox (entrantes) de los UPNs en
+ * `EMAIL_TASK_OWNER_UPNS` (alberto, gabriel) vía Microsoft Graph y crea tareas
+ * en el CRM cuando el contraparte del email matchea con un `Contacto.email`.
+ * Dedup por `internetMessageId` único.
  *
  * Vercel cron — cada 10 min (ver vercel.json).
  *
- * Privacy: emails sin match no dejan rastro en BD. Solo subject + recipient
- * + sentAt para los que sí entran. Permission `Mail.Read` está limitado a 2
- * buzones vía Application Access Policy de Exchange Online.
+ * Privacy: emails sin match no dejan rastro en BD. Solo subject + email del
+ * contacto + fecha para los que sí entran. Permission `Mail.Read` está
+ * limitado a 2 buzones vía Application Access Policy de Exchange Online.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -53,14 +54,16 @@ export async function GET(req: NextRequest) {
       log.error("cron/email-tasks:ingestUpn", err, { upn });
       results.push({
         upn,
-        fetched: 0,
+        sentFetched: 0,
+        receivedFetched: 0,
         alreadyIngested: 0,
         matched: 0,
         noMatch: 0,
         internalSkipped: 0,
         tareasCreated: 0,
         errors: 1,
-        newCursor: null,
+        newSentCursor: null,
+        newReceivedCursor: null,
       });
     }
   }

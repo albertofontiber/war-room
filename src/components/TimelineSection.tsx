@@ -427,8 +427,14 @@ function TareaItem({
   event: Extract<TimelineEvent, { kind: "tarea_completada" }>;
 }) {
   const tipo = event.payload.tipo as TareaTipo;
-  const icon = TAREA_TIPO_ICON[tipo] ?? "•";
-  const label = TAREA_TIPO_LABEL[tipo] ?? event.payload.tipo;
+  const dir = event.payload.emailDirection;
+  // Para emails con dirección conocida, icono + label reflejan el sentido.
+  let icon = TAREA_TIPO_ICON[tipo] ?? "•";
+  let label = TAREA_TIPO_LABEL[tipo] ?? event.payload.tipo;
+  if (tipo === "email" && dir) {
+    icon = dir === "entrante" ? "📥" : "📤";
+    label = dir === "entrante" ? "Email recibido" : "Email enviado";
+  }
   const sourceLabel =
     event.payload.source === "graph-email"
       ? "Email auto"

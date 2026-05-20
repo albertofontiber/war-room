@@ -113,31 +113,40 @@ model Contacto {
   @@index([email]) // matcher rápido del cron SentItems + Calendar Microsoft Graph
 }
 
-// Cursor por buzón leído por el cron SentItems → tareas. Una fila por UPN
-// (alberto@, gabriel@). `lastSentDateTime` es la fecha del último email YA
-// procesado; el cron filtra `sentDateTime gt lastSentDateTime` para procesar
-// solo los nuevos. Se actualiza atómicamente al final de cada ronda exitosa.
+// Cursor por buzón leído por el cron de email → tareas. Una fila por UPN
+// (alberto@, gabriel@). El cron procesa DOS carpetas:
+//   - SentItems (salientes): filtra `sentDateTime gt lastSentDateTime`.
+//   - Inbox (entrantes):     filtra `receivedDateTime gt lastReceivedDateTime`.
+// Ambos cursores son la fecha del último email YA procesado de cada carpeta.
+// `lastReceivedDateTime` es nullable: las filas creadas antes de activar la
+// ingesta de entrantes no lo tienen — el cron arranca desde una ventana inicial.
 model EmailIngestCursor {
-  upn              String   @id
-  lastSentDateTime DateTime
-  updatedAt        DateTime @updatedAt
+  upn                  String    @id
+  lastSentDateTime     DateTime
+  lastReceivedDateTime DateTime?
+  updatedAt            DateTime  @updatedAt
 }
 
-// Traza + dedup de emails procesados por el cron SentItems. Un email del
-// buzón Graph (`internetMessageId`) se procesa una sola vez. Si matchea con
-// un Contacto, se crea una Tarea ligada vía `tareaId` y se persiste aquí
-// para evitar duplicados. Si NO matchea, no se persiste nada (privacy: solo
+// Traza + dedup de emails procesados por el cron de email. Un email del buzón
+// Graph (`internetMessageId`) se procesa una sola vez. Si matchea con un
+// Contacto, se crea una Tarea ligada vía `tareaId` y se persiste aquí para
+// evitar duplicados. Si NO matchea, no se persiste nada (privacy: solo
 // guardamos metadata de los emails que sí entran al CRM).
 model EmailIngest {
   id                Int       @id @default(autoincrement())
   internetMessageId String    @unique
   upn               String
+  // "saliente" = email enviado por nosotros al contacto.
+  // "entrante" = email recibido del contacto en nuestro buzón.
+  direction         String    @default("saliente")
+  // Email del contacto externo: destinatario si saliente, remitente si entrante.
   recipientEmail    String
   contactoId        Int?
   contacto          Contacto? @relation(fields: [contactoId], references: [id], onDelete: SetNull)
   empresaId         Int
   tareaId           Int?      @unique
   tarea             Tarea?    @relation(fields: [tareaId], references: [id], onDelete: SetNull)
+  // Timestamp del email: fecha de envío si saliente, de recepción si entrante.
   sentAt            DateTime
   subject           String?
   createdAt         DateTime  @default(now())
