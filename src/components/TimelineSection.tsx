@@ -421,6 +421,30 @@ function NotaItem({ event }: { event: Extract<TimelineEvent, { kind: "nota" }> }
   );
 }
 
+/** Cuerpo de un email en el timeline: muestra ~3 líneas y despliega el resto. */
+function EmailBody({ body }: { body: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const lines = body.split("\n");
+  const isLong = lines.length > 4 || body.length > 320;
+  const preview = isLong ? lines.slice(0, 3).join("\n").slice(0, 320) : body;
+  return (
+    <div className="mt-1 pt-1 border-t border-wr-border/50">
+      <p className="text-[11px] text-wr-muted whitespace-pre-wrap leading-snug">
+        {expanded ? body : preview}
+        {!expanded && isLong && "…"}
+      </p>
+      {isLong && (
+        <button
+          onClick={() => setExpanded((v) => !v)}
+          className="text-[10px] text-wr-blue hover:underline mt-0.5"
+        >
+          {expanded ? "ver menos" : "ver más"}
+        </button>
+      )}
+    </div>
+  );
+}
+
 function TareaItem({
   event,
 }: {
@@ -459,6 +483,21 @@ function TareaItem({
       <p className="text-wr-text leading-snug">
         <MentionRender content={event.payload.titulo} />
       </p>
+      {event.payload.emailContacto && (
+        <p className="text-[10px] text-wr-muted mt-0.5">
+          <span className="text-wr-hint">
+            {event.payload.emailDirection === "entrante" ? "De: " : "Para: "}
+          </span>
+          {event.payload.emailContacto.nombre && (
+            <span className="text-wr-text">
+              {event.payload.emailContacto.nombre}
+              {event.payload.emailContacto.email ? " · " : ""}
+            </span>
+          )}
+          {event.payload.emailContacto.email}
+        </p>
+      )}
+      {event.payload.emailBody && <EmailBody body={event.payload.emailBody} />}
       {event.payload.resultado && (
         <p className="text-[11px] text-wr-muted whitespace-pre-wrap leading-snug mt-1 pt-1 border-t border-wr-border/50">
           <MentionRender content={event.payload.resultado} />

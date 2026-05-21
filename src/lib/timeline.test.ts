@@ -137,7 +137,7 @@ describe("getEmpresaTimeline", () => {
     expect(callArgs.where).toEqual({ empresaId: 42 });
   });
 
-  it("email saliente → source 'graph-email', emailDirection 'saliente', actor = socio del upn", async () => {
+  it("email saliente → source/dirección/actor + contacto y cuerpo en el payload", async () => {
     tareaFindManyMock.mockResolvedValue([
       {
         id: 10,
@@ -150,7 +150,14 @@ describe("getEmpresaTimeline", () => {
         autorFinder: null,
         asignado: null,
         asignadoFinder: null,
-        emailIngest: { id: 999, upn: "gabriel@fontiber.com", direction: "saliente" },
+        emailIngest: {
+          id: 999,
+          upn: "gabriel@fontiber.com",
+          direction: "saliente",
+          recipientEmail: "erik@extinorte.com",
+          body: "Hola Erik, te confirmo la reunión.",
+          contacto: { nombre: "Erik Etxeberria", email: "erik@extinorte.com" },
+        },
         calendarIngest: null,
       },
     ]);
@@ -161,6 +168,11 @@ describe("getEmpresaTimeline", () => {
     expect(t.payload.source).toBe("graph-email");
     expect(t.payload.emailDirection).toBe("saliente");
     expect(t.actor).toEqual({ kind: "admin", id: "u2", name: "Gabriel" });
+    expect(t.payload.emailContacto).toEqual({
+      nombre: "Erik Etxeberria",
+      email: "erik@extinorte.com",
+    });
+    expect(t.payload.emailBody).toBe("Hola Erik, te confirmo la reunión.");
   });
 
   it("email entrante → emailDirection 'entrante', actor = socio del buzón receptor", async () => {
@@ -176,7 +188,14 @@ describe("getEmpresaTimeline", () => {
         autorFinder: null,
         asignado: null,
         asignadoFinder: null,
-        emailIngest: { id: 1000, upn: "alberto@fontiber.com", direction: "entrante" },
+        emailIngest: {
+          id: 1000,
+          upn: "alberto@fontiber.com",
+          direction: "entrante",
+          recipientEmail: "nestor@eldur.eu",
+          body: "Os mando la información solicitada.",
+          contacto: { nombre: "Néstor", email: "nestor@eldur.eu" },
+        },
         calendarIngest: null,
       },
     ]);
@@ -186,9 +205,14 @@ describe("getEmpresaTimeline", () => {
     if (t?.kind !== "tarea_completada") throw new Error("expected tarea");
     expect(t.payload.emailDirection).toBe("entrante");
     expect(t.actor).toEqual({ kind: "admin", id: "u1", name: "Alberto" });
+    expect(t.payload.emailContacto).toEqual({
+      nombre: "Néstor",
+      email: "nestor@eldur.eu",
+    });
+    expect(t.payload.emailBody).toBe("Os mando la información solicitada.");
   });
 
-  it("email cuyo upn no matchea ningún User → actor 'system' (fallback)", async () => {
+  it("email con upn desconocido y Contacto borrado → actor 'system', email cae a recipientEmail", async () => {
     tareaFindManyMock.mockResolvedValue([
       {
         id: 14,
@@ -201,7 +225,14 @@ describe("getEmpresaTimeline", () => {
         autorFinder: null,
         asignado: null,
         asignadoFinder: null,
-        emailIngest: { id: 1001, upn: "otro@fontiber.com", direction: "saliente" },
+        emailIngest: {
+          id: 1001,
+          upn: "otro@fontiber.com",
+          direction: "saliente",
+          recipientEmail: "huerfano@target.com",
+          body: "cuerpo",
+          contacto: null,
+        },
         calendarIngest: null,
       },
     ]);
@@ -210,6 +241,46 @@ describe("getEmpresaTimeline", () => {
     const t = events.find((e) => e.kind === "tarea_completada");
     if (t?.kind !== "tarea_completada") throw new Error("expected tarea");
     expect(t.actor).toEqual({ kind: "system", id: null, name: "Sistema (cron)" });
+    expect(t.payload.emailContacto).toEqual({
+      nombre: "",
+      email: "huerfano@target.com",
+    });
+  });
+
+  it("portal: el cuerpo del email NO se expone a finders (emailBody null)", async () => {
+    tareaFindManyMock.mockResolvedValue([
+      {
+        id: 15,
+        tipo: "email",
+        titulo: "RE: Oferta",
+        resultado: null,
+        completadaAt: new Date("2026-05-11T14:00:00Z"),
+        createdAt: new Date("2026-05-11T13:00:00Z"),
+        autor: null,
+        autorFinder: null,
+        asignado: null,
+        asignadoFinder: null,
+        emailIngest: {
+          id: 1002,
+          upn: "alberto@fontiber.com",
+          direction: "entrante",
+          recipientEmail: "nestor@eldur.eu",
+          body: "Contenido sensible de negociación.",
+          contacto: { nombre: "Néstor", email: "nestor@eldur.eu" },
+        },
+        calendarIngest: null,
+      },
+    ]);
+
+    const events = await getEmpresaTimeline(42, { scope: "portal", finderId: "f1" });
+    const t = events.find((e) => e.kind === "tarea_completada");
+    if (t?.kind !== "tarea_completada") throw new Error("expected tarea");
+    // El cuerpo se oculta, pero el contacto (metadato) sí se ve.
+    expect(t.payload.emailBody).toBeNull();
+    expect(t.payload.emailContacto).toEqual({
+      nombre: "Néstor",
+      email: "nestor@eldur.eu",
+    });
   });
 
   it("tarea con calendarIngest → source 'graph-calendar'", async () => {

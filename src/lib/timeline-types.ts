@@ -43,6 +43,12 @@ export type TimelineEvent =
         // Dirección del email: "saliente" (lo enviamos) / "entrante" (lo
         // recibimos del contacto). null para tareas que no son email ingerido.
         emailDirection: "saliente" | "entrante" | null;
+        // Contacto externo del email (para la línea "De:" / "Para:").
+        // null para tareas que no son email ingerido.
+        emailContacto: { nombre: string; email: string } | null;
+        // Cuerpo del email en texto plano. null si no es email, si no se ha
+        // poblado todavía, o si el scope es portal (los finders no ven cuerpos).
+        emailBody: string | null;
       };
     }
   | {

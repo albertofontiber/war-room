@@ -35,6 +35,7 @@ import { log } from "@/lib/logger";
 import {
   listSentItemsSince,
   listReceivedMessagesSince,
+  getMessageBody,
   recipientsOf,
   senderOf,
   type SentItem,
@@ -86,6 +87,7 @@ function externalRecipients(item: SentItem): string[] {
  */
 async function ingestEmail(
   params: {
+    graphId: string;
     internetMessageId: string;
     subject: string;
     occurredAt: Date;
@@ -117,6 +119,12 @@ async function ingestEmail(
   // usamos el primer contacto encontrado. Si en el futuro queremos taggear
   // varias empresas, refactorizamos a tabla N:M.
   const c = contactos[0];
+
+  // Cuerpo del email — se pide SOLO ahora que sabemos que entra al CRM
+  // (matchea Contacto). Best-effort: si Graph falla, la tarea se crea sin
+  // cuerpo. La llamada va fuera de la transacción (es un fetch de red).
+  const body = await getMessageBody(upn, params.graphId);
+
   const titulo = params.subject.length > 0 ? params.subject : "(sin asunto)";
   const verbo = params.direction === "entrante" ? "de" : "a";
   const descripcion = `Email ${verbo} ${c.nombre}${c.email ? ` <${c.email}>` : ""}`;
@@ -147,6 +155,7 @@ async function ingestEmail(
           tareaId: tarea.id,
           sentAt: params.occurredAt,
           subject: params.subject,
+          body,
         },
       });
       void auditLog({
@@ -186,6 +195,7 @@ async function ingestSentItem(
 ): Promise<{ created: boolean; matched: boolean }> {
   return ingestEmail(
     {
+      graphId: item.id,
       internetMessageId: item.internetMessageId,
       subject: item.subject ?? "",
       occurredAt: new Date(item.sentDateTime),
@@ -210,6 +220,7 @@ async function ingestReceivedMessage(
   const externalSender = sender && isExternal(sender) ? [sender] : [];
   return ingestEmail(
     {
+      graphId: item.id,
       internetMessageId: item.internetMessageId,
       subject: item.subject ?? "",
       occurredAt: new Date(item.receivedDateTime),

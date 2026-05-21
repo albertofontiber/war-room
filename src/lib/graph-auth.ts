@@ -89,7 +89,12 @@ export async function getAccessToken(opts?: { forceFresh?: boolean }): Promise<s
  */
 export async function graphFetch<T>(
   path: string,
-  init?: { method?: "GET" | "POST"; body?: unknown }
+  init?: {
+    method?: "GET" | "POST";
+    body?: unknown;
+    /** Headers extra (ej. `Prefer`). Se mergean tras Authorization. */
+    headers?: Record<string, string>;
+  }
 ): Promise<T> {
   const url = path.startsWith("http") ? path : `${GRAPH_BASE}${path}`;
   const method = init?.method ?? "GET";
@@ -105,6 +110,7 @@ export async function graphFetch<T>(
       headers: {
         Authorization: `Bearer ${token}`,
         ...(bodyStr ? { "Content-Type": "application/json" } : {}),
+        ...(init?.headers ?? {}),
       },
       body: bodyStr,
       cache: "no-store",
