@@ -131,7 +131,7 @@ model EmailIngestCursor {
 // Graph (`internetMessageId`) se procesa una sola vez. Si matchea con un
 // Contacto, se crea una Tarea ligada vía `tareaId` y se persiste aquí para
 // evitar duplicados. Si NO matchea, no se persiste nada (privacy: solo
-// guardamos metadata de los emails que sí entran al CRM).
+// guardamos metadata + cuerpo de los emails que sí entran al CRM).
 model EmailIngest {
   id                Int       @id @default(autoincrement())
   internetMessageId String    @unique
@@ -149,6 +149,9 @@ model EmailIngest {
   // Timestamp del email: fecha de envío si saliente, de recepción si entrante.
   sentAt            DateTime
   subject           String?
+  // Cuerpo del email en texto plano (HTML convertido por Graph). null si aún
+  // no se ha poblado (filas previas al backfill de cuerpos) o si venía vacío.
+  body              String?   @db.Text
   createdAt         DateTime  @default(now())
 
   @@index([upn])

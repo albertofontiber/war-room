@@ -20,6 +20,7 @@ const txMock = vi.fn();
 const tareaCreateMock = vi.fn();
 const ingestCreateMock = vi.fn();
 const auditLogMock = vi.fn();
+const getMessageBodyMock = vi.fn();
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
@@ -49,7 +50,8 @@ vi.mock("@/lib/email-graph", async () => {
   const actual = await vi.importActual<typeof import("./email-graph")>(
     "./email-graph"
   );
-  return { ...actual };
+  // getMessageBody se mockea — los tests no deben pegar a Microsoft Graph.
+  return { ...actual, getMessageBody: (...a: unknown[]) => getMessageBodyMock(...a) };
 });
 
 import { __testing__ } from "./email-task-matcher";
@@ -169,6 +171,8 @@ describe("ingestSentItem (vía mock de prisma)", () => {
     ingestCreateMock.mockReset();
     auditLogMock.mockReset();
     auditLogMock.mockResolvedValue(undefined);
+    getMessageBodyMock.mockReset();
+    getMessageBodyMock.mockResolvedValue("Cuerpo del email de prueba");
     txMock.mockImplementation((cb: (tx: unknown) => Promise<unknown>) =>
       cb({
         tarea: { create: (...a: unknown[]) => tareaCreateMock(...a) },
@@ -247,7 +251,27 @@ describe("ingestSentItem (vía mock de prisma)", () => {
           contactoId: 7,
           empresaId: 42,
           tareaId: 1234,
+          body: "Cuerpo del email de prueba",
         }),
+      })
+    );
+  });
+
+  it("body: si getMessageBody falla y devuelve null, la tarea se crea igual", async () => {
+    findUniqueMock.mockResolvedValue(null);
+    findManyMock.mockResolvedValue([
+      { id: 7, email: "aize@empresa.com", empresaId: 42, nombre: "Aize" },
+    ]);
+    getMessageBodyMock.mockResolvedValue(null); // fallo best-effort
+    tareaCreateMock.mockResolvedValue({ id: 1 });
+    ingestCreateMock.mockResolvedValue({});
+
+    const item = makeItem({ to: ["aize@empresa.com"] });
+    const r = await ingestSentItem(item, "alberto@fontiber.com");
+    expect(r).toEqual({ created: true, matched: true });
+    expect(ingestCreateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ body: null }),
       })
     );
   });
@@ -317,6 +341,8 @@ describe("ingestReceivedMessage (vía mock de prisma)", () => {
     ingestCreateMock.mockReset();
     auditLogMock.mockReset();
     auditLogMock.mockResolvedValue(undefined);
+    getMessageBodyMock.mockReset();
+    getMessageBodyMock.mockResolvedValue("Cuerpo del email de prueba");
     txMock.mockImplementation((cb: (tx: unknown) => Promise<unknown>) =>
       cb({
         tarea: { create: (...a: unknown[]) => tareaCreateMock(...a) },
@@ -401,6 +427,7 @@ describe("ingestReceivedMessage (vía mock de prisma)", () => {
           contactoId: 7,
           empresaId: 42,
           tareaId: 1234,
+          body: "Cuerpo del email de prueba",
         }),
       })
     );

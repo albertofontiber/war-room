@@ -56,7 +56,7 @@ export async function getEmpresaTimeline(
 ): Promise<TimelineEvent[]> {
   const [notas, tareasCompletadas, crmLogs, bormes] = await Promise.all([
     loadNotas(empresaId, opts),
-    loadTareasCompletadas(empresaId),
+    loadTareasCompletadas(empresaId, opts),
     loadCrmLogs(empresaId),
     loadBormes(empresaId),
   ]);
@@ -123,7 +123,10 @@ async function loadNotas(
   }));
 }
 
-async function loadTareasCompletadas(empresaId: number): Promise<TimelineEvent[]> {
+async function loadTareasCompletadas(
+  empresaId: number,
+  opts: TimelineOptions
+): Promise<TimelineEvent[]> {
   const [tareas, users] = await Promise.all([
     prisma.tarea.findMany({
       where: { empresaId, completada: true },
@@ -139,8 +142,18 @@ async function loadTareasCompletadas(empresaId: number): Promise<TimelineEvent[]
         asignado: { select: { id: true, name: true } },
         asignadoFinder: { select: { id: true, name: true } },
         // Detecta si la tarea vino de un cron — el join indirecto identifica
-        // el origen. `upn`/`direction` resuelven el socio y el sentido del email.
-        emailIngest: { select: { id: true, upn: true, direction: true } },
+        // el origen. `upn`/`direction` resuelven el socio y el sentido; el
+        // `contacto`/`body` alimentan la línea "De:/Para:" y el cuerpo.
+        emailIngest: {
+          select: {
+            id: true,
+            upn: true,
+            direction: true,
+            recipientEmail: true,
+            body: true,
+            contacto: { select: { nombre: true, email: true } },
+          },
+        },
         calendarIngest: { select: { id: true } },
       },
       orderBy: { completadaAt: "desc" },
@@ -165,6 +178,19 @@ async function loadTareasCompletadas(empresaId: number): Promise<TimelineEvent[]
         ? "entrante"
         : "saliente"
       : null;
+
+    // Contacto externo del email (línea "De:"/"Para:"). Si el Contacto se
+    // borró (`contactoId` SetNull), caemos al email guardado en el ingest.
+    const emailContacto = t.emailIngest
+      ? {
+          nombre: t.emailIngest.contacto?.nombre ?? "",
+          email: t.emailIngest.contacto?.email ?? t.emailIngest.recipientEmail,
+        }
+      : null;
+    // Cuerpo del email. Solo se expone a admin — los finders del portal no
+    // ven el contenido de la correspondencia, solo metadatos.
+    const emailBody =
+      t.emailIngest && opts.scope === "admin" ? t.emailIngest.body : null;
 
     // Actor:
     //  - Email ingerido → el socio (Alberto/Gabriel) dueño del buzón: quien
@@ -199,6 +225,8 @@ async function loadTareasCompletadas(empresaId: number): Promise<TimelineEvent[]
         resultado: t.resultado,
         source,
         emailDirection,
+        emailContacto,
+        emailBody,
       },
     };
   });

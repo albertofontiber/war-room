@@ -172,3 +172,79 @@ export function senderOf(item: ReceivedMessage): string | null {
   const addr = item.from?.emailAddress?.address;
   return addr ? addr.toLowerCase() : null;
 }
+
+// ─── Cuerpo del email ──────────────────────────────────────────────────────
+
+/**
+ * Cap defensivo del cuerpo almacenado (en chars). Un email normal, incluso con
+ * hilo citado largo, no se acerca; protege de reenvíos patológicos.
+ */
+const BODY_MAX_CHARS = 100_000;
+
+/**
+ * Strip básico de HTML a texto. Solo se usa como defensa por si Graph ignora
+ * el `Prefer: outlook.body-content-type="text"` y devuelve HTML igualmente.
+ */
+function stripHtml(html: string): string {
+  return html
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<\/(p|div|tr|li|h[1-6])>/gi, "\n")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&#(\d+);/g, (_m, n) => String.fromCharCode(Number(n)))
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+type GraphBody = { contentType: string; content: string } | null | undefined;
+
+/**
+ * Normaliza el `body` de un mensaje Graph a texto plano listo para guardar.
+ * Devuelve null si no hay contenido. Capa el resultado a `BODY_MAX_CHARS`.
+ */
+export function bodyToPlainText(body: GraphBody): string | null {
+  if (!body || !body.content) return null;
+  const raw =
+    body.contentType?.toLowerCase() === "html"
+      ? stripHtml(body.content)
+      : body.content.trim();
+  if (raw.length === 0) return null;
+  return raw.length > BODY_MAX_CHARS
+    ? raw.slice(0, BODY_MAX_CHARS) + "\n\n…[cuerpo truncado]"
+    : raw;
+}
+
+/**
+ * Trae el cuerpo de un mensaje concreto en texto plano. Se llama SOLO para los
+ * emails que matchean un Contacto (privacy: no leemos el cuerpo del correo que
+ * no entra al CRM). Best-effort: si Graph falla — mensaje movido/borrado entre
+ * el scan y esta llamada, error transitorio — devuelve null y la tarea se crea
+ * igual, sin cuerpo.
+ *
+ * `Prefer: outlook.body-content-type="text"` hace que Graph convierta el HTML
+ * a texto en su lado — mucho más limpio que un strip casero.
+ */
+export async function getMessageBody(
+  upn: string,
+  messageId: string
+): Promise<string | null> {
+  try {
+    const json = await graphFetch<{ body?: GraphBody }>(
+      `/users/${encodeURIComponent(upn)}/messages/${encodeURIComponent(
+        messageId
+      )}?$select=body`,
+      { headers: { Prefer: 'outlook.body-content-type="text"' } }
+    );
+    return bodyToPlainText(json.body);
+  } catch {
+    return null;
+  }
+}

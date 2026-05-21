@@ -39,6 +39,7 @@ import { prisma } from "../src/lib/prisma";
 import {
   listSentItemsSince,
   listReceivedMessagesSince,
+  getMessageBody,
   recipientsOf,
   senderOf,
   type SentItem,
@@ -70,6 +71,7 @@ function externalRecipients(item: SentItem): string[] {
 }
 
 interface EmailEssentials {
+  graphId: string;
   internetMessageId: string;
   subject: string;
   occurredAt: Date;
@@ -99,6 +101,10 @@ interface Stats {
   toCreateSaliente: number;
   toCreateEntrante: number;
   created: number;
+  // Filas ya ingeridas a las que les falta el cuerpo. En dry-run = se poblarían.
+  bodyMissing: number;
+  // Cuerpos poblados con éxito (solo APPLY).
+  bodyUpdated: number;
   errors: number;
 }
 
@@ -114,10 +120,25 @@ async function ingestOne(
 ): Promise<void> {
   const existing = await prisma.emailIngest.findUnique({
     where: { internetMessageId: e.internetMessageId },
-    select: { id: true },
+    select: { id: true, body: true },
   });
   if (existing) {
     stats.alreadyIngested++;
+    // Re-backfill de cuerpos: si la fila ya existe pero le falta el body, lo
+    // poblamos. Dry-run solo cuenta; APPLY pide el cuerpo a Graph y actualiza.
+    if (existing.body === null) {
+      stats.bodyMissing++;
+      if (APPLY) {
+        const body = await getMessageBody(upn, e.graphId);
+        if (body !== null) {
+          await prisma.emailIngest.update({
+            where: { id: existing.id },
+            data: { body },
+          });
+          stats.bodyUpdated++;
+        }
+      }
+    }
     return;
   }
   if (e.counterpartyEmails.length === 0) {
@@ -157,6 +178,8 @@ async function ingestOne(
 
   if (!APPLY) return;
 
+  // Cuerpo del email — solo para el que entra al CRM (matchea Contacto).
+  const body = await getMessageBody(upn, e.graphId);
   const titulo = (e.subject.length > 0 ? e.subject : "(sin asunto)").slice(0, 255);
   const verbo = e.direction === "entrante" ? "de" : "a";
   const descripcion = `Email ${verbo} ${c.nombre}${c.email ? ` <${c.email}>` : ""}`;
@@ -186,6 +209,7 @@ async function ingestOne(
           tareaId: tarea.id,
           sentAt: e.occurredAt,
           subject: e.subject,
+          body,
         },
       });
       void auditLog({
@@ -232,6 +256,8 @@ async function processUpn(
     toCreateSaliente: 0,
     toCreateEntrante: 0,
     created: 0,
+    bodyMissing: 0,
+    bodyUpdated: 0,
     errors: 0,
   };
   const planned: PlannedTarea[] = [];
@@ -244,6 +270,7 @@ async function processUpn(
   for (const item of sentItems) {
     await ingestOne(
       {
+        graphId: item.id,
         internetMessageId: item.internetMessageId,
         subject: item.subject ?? "",
         occurredAt: new Date(item.sentDateTime),
@@ -272,6 +299,7 @@ async function processUpn(
     const externalSender = sender && isExternal(sender) ? [sender] : [];
     await ingestOne(
       {
+        graphId: item.id,
         internetMessageId: item.internetMessageId,
         subject: item.subject ?? "",
         occurredAt: new Date(item.receivedDateTime),
@@ -338,6 +366,9 @@ async function ensureSchema(): Promise<void> {
     `ALTER TABLE "EmailIngest" ADD COLUMN IF NOT EXISTS "direction" TEXT NOT NULL DEFAULT 'saliente'`
   );
   await prisma.$executeRawUnsafe(
+    `ALTER TABLE "EmailIngest" ADD COLUMN IF NOT EXISTS "body" TEXT`
+  );
+  await prisma.$executeRawUnsafe(
     `ALTER TABLE "EmailIngestCursor" ADD COLUMN IF NOT EXISTS "lastReceivedDateTime" TIMESTAMP(3)`
   );
 }
@@ -371,10 +402,14 @@ async function main() {
   console.log(`  Flujos: Enviados (saliente) + buzón completo (entrante)`);
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
-  if (APPLY) {
-    await ensureSchema();
-    console.log("  ✔ Schema verificado (EmailIngest.direction, EmailIngestCursor.lastReceivedDateTime)");
-  }
+  // El schema se asegura SIEMPRE (no solo en APPLY): el script lee
+  // `EmailIngest.body`, así que la columna debe existir incluso para el
+  // dry-run. Los ALTER son aditivos e idempotentes (ADD COLUMN IF NOT
+  // EXISTS) — no tocan datos, solo garantizan el prerequisito de schema.
+  await ensureSchema();
+  console.log(
+    "  ✔ Schema verificado (EmailIngest.direction, EmailIngest.body, EmailIngestCursor.lastReceivedDateTime)"
+  );
 
   const allStats: Stats[] = [];
   const allPlanned: PlannedTarea[] = [];
@@ -396,6 +431,8 @@ async function main() {
         toCreateSaliente: 0,
         toCreateEntrante: 0,
         created: 0,
+        bodyMissing: 0,
+        bodyUpdated: 0,
         errors: 1,
       });
     }
@@ -413,8 +450,10 @@ async function main() {
     console.log(`    sin match:         ${s.noMatch}`);
     console.log(`    a crear saliente:  ${s.toCreateSaliente}`);
     console.log(`    a crear entrante:  ${s.toCreateEntrante}`);
+    console.log(`    cuerpos a poblar:  ${s.bodyMissing}`);
     if (APPLY) {
       console.log(`    creadas:           ${s.created}`);
+      console.log(`    cuerpos poblados:  ${s.bodyUpdated}`);
       console.log(`    errores:           ${s.errors}`);
     }
   }
@@ -456,16 +495,26 @@ async function main() {
     }
   }
 
+  const totalBodyMissing = allStats.reduce((a, s) => a + s.bodyMissing, 0);
+
   console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   if (!APPLY) {
     console.log(
       `✅ DRY-RUN completado. Tareas únicas que se crearían: ${uniquePlanned.length} (📤 ${totalSal} · 📥 ${totalEnt})`
     );
+    if (totalBodyMissing > 0) {
+      console.log(
+        `   Además: ${totalBodyMissing} emails ya creados sin cuerpo → se poblarían al aplicar.`
+      );
+    }
     console.log(`   Para aplicar: APPLY=1 npx tsx scripts/backfill-email-tasks.ts`);
   } else {
     const totalCreated = allStats.reduce((a, s) => a + s.created, 0);
+    const totalBodyUpdated = allStats.reduce((a, s) => a + s.bodyUpdated, 0);
     const totalErrors = allStats.reduce((a, s) => a + s.errors, 0);
-    console.log(`✅ Backfill aplicado. Tareas creadas: ${totalCreated}, errores: ${totalErrors}`);
+    console.log(
+      `✅ Backfill aplicado. Tareas creadas: ${totalCreated}, cuerpos poblados: ${totalBodyUpdated}, errores: ${totalErrors}`
+    );
   }
 
   await prisma.$disconnect();
