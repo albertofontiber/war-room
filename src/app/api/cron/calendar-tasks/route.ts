@@ -56,10 +56,19 @@ export async function GET(req: NextRequest) {
     ? Math.max(1, parseInt(windowDaysParam, 10)) * 24 * 60 * 60 * 1000
     : undefined;
 
+  // Presupuesto de tiempo compartido entre los UPNs — el endpoint tiene
+  // maxDuration=60. Si una ronda no termina dentro, el guard de
+  // `ingestCalendarForUpn` corta y el cursor avanza hasta lo procesado; la
+  // siguiente ronda reanuda. Sin esto, un backlog haría timeout (504).
+  const deadline = Date.now() + 45_000;
+
   const results: CalendarIngestStats[] = [];
   for (const upn of upns) {
     try {
-      const stats = await ingestCalendarForUpn(upn, { firstRunWindowMs });
+      const stats = await ingestCalendarForUpn(upn, {
+        firstRunWindowMs,
+        deadline,
+      });
       results.push(stats);
     } catch (err) {
       log.error("cron/calendar-tasks:ingest", err, { upn });
@@ -74,6 +83,7 @@ export async function GET(req: NextRequest) {
         tareasCreated: 0,
         tareasUpdated: 0,
         errors: 1,
+        budgetExceeded: false,
         newCursor: null,
       });
     }
