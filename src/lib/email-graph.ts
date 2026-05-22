@@ -207,15 +207,78 @@ function stripHtml(html: string): string {
 type GraphBody = { contentType: string; content: string } | null | undefined;
 
 /**
- * Normaliza el `body` de un mensaje Graph a texto plano listo para guardar.
- * Devuelve null si no hay contenido. Capa el resultado a `BODY_MAX_CHARS`.
+ * Recorta el hilo citado de un email en texto plano — deja SOLO el mensaje
+ * más reciente (el que generó la actividad), no la cadena de respuestas
+ * anteriores. Detecta el inicio de la cita por:
+ *   - Cabecera de email citado: una línea `From:`/`De:` seguida en las
+ *     próximas líneas por otro campo (`Sent:`/`Enviado:`/`To:`/`Subject:`…).
+ *   - Separador `-----Original Message-----` / `-----Mensaje original-----`.
+ *   - Línea estilo Gmail `On … wrote:` / `El … escribió:` (con fecha).
+ *
+ * Best-effort: si no reconoce ningún marcador devuelve el texto íntegro (no
+ * hay regresión — peor caso = comportamiento anterior). Si el marcador está
+ * al inicio (forward sin texto propio) tampoco recorta — mejor el contenido
+ * que dejarlo vacío.
+ */
+export function trimQuotedThread(text: string): string {
+  const lines = text.split(/\r?\n/);
+  const SEPARATOR_RE =
+    /^\s*-{2,}\s*(original message|mensaje original|forwarded message|mensaje reenviado)\s*-{2,}\s*$/i;
+  // "On <fecha> … wrote:" / "El <fecha> … escribió:" — exige un dígito (fecha).
+  const WROTE_RE =
+    /^\s*(on|el)\s(?=.*\d).{6,400}\s(wrote|escribió|escribio):\s*$/i;
+  const HEADER_FROM_RE = /^\s*(from|de|von|da)\s*:\s*\S/i;
+  const HEADER_FIELD_RE =
+    /^\s*(sent|enviado|enviada|to|para|cc|cco|bcc|subject|asunto|date|fecha)\s*:\s/i;
+
+  let cutAt = -1;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (SEPARATOR_RE.test(line) || WROTE_RE.test(line)) {
+      cutAt = i;
+      break;
+    }
+    if (HEADER_FROM_RE.test(line)) {
+      // Confirma que es un bloque de cabecera citada: alguna de las próximas
+      // ~5 líneas es otro campo de cabecera. Evita falsos positivos con un
+      // "From:" que aparezca como texto normal del mensaje.
+      const end = Math.min(i + 5, lines.length - 1);
+      for (let j = i + 1; j <= end; j++) {
+        if (HEADER_FIELD_RE.test(lines[j])) {
+          cutAt = i;
+          break;
+        }
+      }
+      if (cutAt >= 0) break;
+    }
+  }
+
+  // Sin marcador, o todo el cuerpo es la cita (forward sin intro): no recorta.
+  if (cutAt <= 0) return text.trim();
+
+  const kept = lines.slice(0, cutAt);
+  // Quita líneas finales vacías o de separación (____ / ----).
+  while (kept.length > 0) {
+    const last = kept[kept.length - 1].trim();
+    if (last === "" || /^[_\-—–]{2,}$/.test(last)) kept.pop();
+    else break;
+  }
+  const result = kept.join("\n").trim();
+  return result.length > 0 ? result : text.trim();
+}
+
+/**
+ * Normaliza el `body` de un mensaje Graph a texto plano listo para guardar:
+ * convierte HTML si hace falta, recorta el hilo citado y capa a
+ * `BODY_MAX_CHARS`. Devuelve null si no queda contenido.
  */
 export function bodyToPlainText(body: GraphBody): string | null {
   if (!body || !body.content) return null;
-  const raw =
+  const text =
     body.contentType?.toLowerCase() === "html"
       ? stripHtml(body.content)
-      : body.content.trim();
+      : body.content;
+  const raw = trimQuotedThread(text);
   if (raw.length === 0) return null;
   return raw.length > BODY_MAX_CHARS
     ? raw.slice(0, BODY_MAX_CHARS) + "\n\n…[cuerpo truncado]"

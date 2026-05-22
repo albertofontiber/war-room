@@ -72,6 +72,10 @@ export type CalendarIngestStats = {
   tareasCreated: number;
   tareasUpdated: number;
   errors: number;
+  // True si la ronda cortó por presupuesto de tiempo sin procesar todos los
+  // eventos. El cursor avanza hasta el último procesado; la siguiente ronda
+  // reanuda. Si esto sale true de forma sostenida → hay backlog.
+  budgetExceeded: boolean;
   newCursor: Date | null;
 };
 
@@ -419,10 +423,16 @@ function pickAuditFields(
  * `firstRunWindowMs` controla la ventana inicial — default 7 días para que
  * el primer despliegue capture reuniones próximas sin tragarse el histórico
  * entero del calendario.
+ *
+ * `deadline` (epoch ms): si se pasa, el bucle corta al alcanzarlo. Como los
+ * eventos se procesan en orden `lastModifiedDateTime asc` y el cursor avanza
+ * hasta el último procesado, un corte parcial deja la siguiente ronda lista
+ * para reanudar — así un backlog grande se digiere en varias rondas sin que
+ * el endpoint serverless haga timeout (Vercel mata la función a los 60s).
  */
 export async function ingestCalendarForUpn(
   upn: string,
-  opts: { firstRunWindowMs?: number } = {}
+  opts: { firstRunWindowMs?: number; deadline?: number } = {}
 ): Promise<CalendarIngestStats> {
   const stats: CalendarIngestStats = {
     upn,
@@ -435,8 +445,15 @@ export async function ingestCalendarForUpn(
     tareasCreated: 0,
     tareasUpdated: 0,
     errors: 0,
+    budgetExceeded: false,
     newCursor: null,
   };
+
+  // Presupuesto ya agotado por un UPN previo de la misma ronda: ni el fetch.
+  if (opts.deadline && Date.now() > opts.deadline) {
+    stats.budgetExceeded = true;
+    return stats;
+  }
 
   const cursor = await prisma.calendarIngestCursor.findUnique({ where: { upn } });
   const since =
@@ -455,6 +472,16 @@ export async function ingestCalendarForUpn(
 
   let lastProcessed: Date | null = null;
   for (const event of events) {
+    // Corte por presupuesto: paramos y dejamos que el cursor avance hasta el
+    // último evento ya procesado. La siguiente ronda reanuda desde ahí.
+    if (opts.deadline && Date.now() > opts.deadline) {
+      stats.budgetExceeded = true;
+      log.info("calendar-task-matcher:budget", "corte por presupuesto de tiempo", {
+        upn,
+        fetched: events.length,
+      });
+      break;
+    }
     try {
       const { created, updated, matched, skipped } = await ingestCalendarEvent(
         event,
