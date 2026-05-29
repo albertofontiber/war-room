@@ -346,6 +346,17 @@ async function main() {
       const k = keys.find((k) => k.toLowerCase().includes(substr.toLowerCase()));
       return k ? clean(r[k]) : null;
     };
+    // "Rol / Cargo" — OJO: find("rol") también casa con "Ref. Roll-up"
+    // (la subcadena "roll" contiene "rol") y esa columna va ANTES en el Excel,
+    // así que devolvía la carpeta ("29. Tratein") como cargo. Priorizamos
+    // "cargo" (único) y, como fallback, "rol" excluyendo "roll".
+    const findCargo = (): string | null => {
+      const k = keys.find((k) => {
+        const low = k.toLowerCase();
+        return low.includes("cargo") || (low.includes("rol") && !low.includes("roll"));
+      });
+      return k ? clean(r[k]) : null;
+    };
     const contacto = find("contacto");
     const empresa = find("empresa");
     if (!contacto || !empresa) return [];
@@ -353,7 +364,7 @@ async function main() {
       ref: find("ref") ?? "",
       empresa: empresa,
       contacto: contacto,
-      cargo: find("rol") ?? find("cargo"),
+      cargo: findCargo(),
       email: find("email")?.toLowerCase() ?? null,
       telefono: find("teléfono") ?? find("telefono"),
       fuente: find("fuente"),
