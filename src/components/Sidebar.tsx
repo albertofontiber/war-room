@@ -236,7 +236,7 @@ export default function Sidebar() {
  * filtros + stat cards). Sin wrapper visual; el consumer decide cómo
  * envolverlo (aside fijo en desktop, drawer en mobile).
  */
-export function SidebarContent() {
+export function SidebarContent({ scroll = true }: { scroll?: boolean } = {}) {
   const {
     filtros,
     setFiltro,
@@ -370,7 +370,15 @@ export function SidebarContent() {
   // ─────────────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-wr-surface text-wr-text">
+    <div
+      className={`bg-wr-surface text-wr-text ${
+        // En desktop SidebarContent gestiona su propio scroll (aside de altura
+        // fija). Embebido en el drawer mobile (scroll={false}) fluye en altura
+        // natural y el scroll lo lleva el drawer completo — así no queda una
+        // franja mínima scrollable bajo la navegación.
+        scroll ? "flex-1 flex flex-col min-h-0" : ""
+      }`}
+    >
 
       {/* ── Header ── */}
       <div className="px-4 py-3 border-b border-wr-border bg-wr-surface">
@@ -395,7 +403,7 @@ export function SidebarContent() {
       </div>
 
       {/* ── Scrollable body ── */}
-      <div className="flex-1 overflow-y-auto bg-wr-surface">
+      <div className={`bg-wr-surface ${scroll ? "flex-1 overflow-y-auto" : ""}`}>
 
         {/* Chips de filtros activos */}
         {activeChips.length > 0 && (
