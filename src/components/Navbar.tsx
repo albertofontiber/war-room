@@ -6,6 +6,7 @@ import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useNavegacion } from "@/lib/navegacion";
+import { useIsDesktop } from "@/lib/breakpoints";
 import type { Vista } from "@/types";
 import NotificationsBell from "@/components/NotificationsBell";
 
@@ -20,6 +21,7 @@ export default function Navbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
+  const isDesktop = useIsDesktop();
   const onPipelinePage = pathname === "/pipeline";
 
   // Único owner del fetch de /api/empresas. Sidebar y MapaEspana antes hacían
@@ -142,8 +144,8 @@ export default function Navbar() {
         <span className="hidden lg:inline text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2.5 py-1 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
           Fontiber War Room
         </span>
-        <span className="lg:hidden text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2 py-1 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
-          War Room
+        <span className="lg:hidden text-xs font-semibold tracking-[0.1em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2 py-1 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
+          WR
         </span>
       </Link>
 
@@ -162,7 +164,7 @@ export default function Navbar() {
             onChange={(e) => { setInputValue(e.target.value); setDropdownOpen(true); setSelectedIdx(-1); }}
             onFocus={() => inputValue.trim() && setDropdownOpen(true)}
             onKeyDown={handleKeyDown}
-            placeholder="Buscar empresa o CIF…"
+            placeholder={isDesktop ? "Buscar empresa o CIF…" : "Buscar…"}
             className="w-full bg-wr-surface2 border border-wr-border rounded-md pl-8 pr-8 py-1.5 text-xs text-wr-text placeholder:text-wr-hint focus:outline-none focus:border-wr-blue transition-colors"
           />
           {inputValue && (
