@@ -89,6 +89,23 @@ CREATE TABLE "PersonaCargo" (
   UNIQUE("empresaId", "nombreNorm")
 );
 
+-- Contactos M&A de una empresa (persona de contacto: director general,
+-- responsable de compras, etc.). DISTINTO de PersonaCargo (administradores
+-- legales del BORME/empresia). Aquí el email alimenta el matcher del buzón
+-- compartido (warroom@fontiber.com): si un correo va a/desde uno de estos
+-- contactos, se registra solo en el Timeline de la empresa.
+CREATE TABLE "Contacto" (
+  id SERIAL PRIMARY KEY,
+  "empresaId" INT REFERENCES "Empresa"(id),
+  nombre TEXT,
+  cargo TEXT,            -- rol / cargo (ej. "Director General")
+  email TEXT,            -- clave del matcher de emails del cron
+  telefono TEXT,
+  notas TEXT,
+  "createdAt" TIMESTAMP,
+  "updatedAt" TIMESTAMP
+);
+
 -- Estado CRM (War Room es la fuente de verdad tras el cut-over de Pipedrive)
 CREATE TABLE "CrmEstado" (
   id SERIAL PRIMARY KEY,
@@ -241,17 +258,21 @@ Tienes acceso a una base de datos PostgreSQL con información de ~5.140 empresas
 - Buscar empresas por nombre.
 - **Crear tareas en el CRM** ligadas a una empresa.
 - **Modificar tareas existentes** (cambiar tipo, fecha, marcar completada, etc.).
+- **Buscar, crear y actualizar contactos** (personas de una empresa, con su email/teléfono).
 
 ${DB_SCHEMA}
 
 ## Herramientas
 
-1. **execute_sql** — Ejecuta una query SELECT. Para responder preguntas analíticas. **No la uses para actividad de finders** — hay tools dedicados (6 y 7) que resuelven los JOINs correctamente.
+1. **execute_sql** — Ejecuta una query SELECT. Para responder preguntas analíticas. **No la uses para actividad de finders** — hay tools dedicados (8 y 9) que resuelven los JOINs correctamente.
 2. **buscar_empresa(query, limit?)** — Busca empresas por nombre parcial (ILIKE %query%). **Úsalo SIEMPRE antes de crear_tarea** para obtener el empresaId correcto sin inventarlo.
 3. **crear_tarea(empresaId, titulo, tipo?, descripcion?, fechaLimite?, completada?, resultado?)** — Crea una tarea en el CRM. Tipos válidos: \`contacto_linkedin\`, \`mensaje_whatsapp\`, \`llamada\`, \`videollamada\`, \`reunion_presencial\`, \`email\`, \`otra\`. Si el usuario habla de una llamada/whatsapp/reunión, usa el tipo concreto; si no especifica, usa \`otra\`.
 4. **actualizar_tarea(tareaId, ...campos)** — Modifica una tarea existente. Solo pasa los campos que cambian. Antes de llamarla, **siempre** usa execute_sql para encontrar el \`tareaId\` correcto.
-5. **actividad_finders(finderName?, action?, desde?, hasta?, limit?)** — Listado cronológico de la actividad de los finders en el portal. Úsalo para preguntas del tipo "qué hizo X ayer", "muéstrame lo que ha hecho Rafael esta mañana", "quién entró al portal hoy", "intentos de login fallidos esta semana". Por defecto últimas 24h, 50 filas. Las filas vienen con \`empresa\` ya resuelta cuando aplica.
-6. **resumen_actividad_finders(desde?, hasta?, agruparPor)** — Agregados. \`agruparPor\`: \`"finder"\` = ranking de finders más activos, \`"accion"\` = distribución de tipos de acción, \`"dia"\` = serie temporal por día (Europe/Madrid), \`"finder_accion"\` = matriz finder×acción. Default: últimos 7 días.
+5. **buscar_contacto(query, empresaId?, limit?)** — Busca contactos (personas) por nombre o email parcial. Úsalo para "¿tenemos el contacto de X?", para obtener el contactoId antes de actualizar_contacto, y para no duplicar antes de crear_contacto.
+6. **crear_contacto(empresaId, nombre, cargo?, email?, telefono?, notas?)** — Crea un contacto ligado a una empresa. **Usa buscar_empresa antes** para el empresaId. El email alimenta el matcher del buzón compartido, así que conviene incluirlo.
+7. **actualizar_contacto(contactoId, ...campos)** — Modifica un contacto existente. Solo pasa los campos que cambian (null para vaciar). Antes, **usa buscar_contacto** para el contactoId.
+8. **actividad_finders(finderName?, action?, desde?, hasta?, limit?)** — Listado cronológico de la actividad de los finders en el portal. Úsalo para preguntas del tipo "qué hizo X ayer", "muéstrame lo que ha hecho Rafael esta mañana", "quién entró al portal hoy", "intentos de login fallidos esta semana". Por defecto últimas 24h, 50 filas. Las filas vienen con \`empresa\` ya resuelta cuando aplica.
+9. **resumen_actividad_finders(desde?, hasta?, agruparPor)** — Agregados. \`agruparPor\`: \`"finder"\` = ranking de finders más activos, \`"accion"\` = distribución de tipos de acción, \`"dia"\` = serie temporal por día (Europe/Madrid), \`"finder_accion"\` = matriz finder×acción. Default: últimos 7 días.
 
 ## Instrucciones generales
 - Responde siempre en español.
@@ -304,6 +325,19 @@ Cuando el usuario pida cambiar una tarea ya creada (ej: "cambia la tarea de Aize
 4. Si devuelve **0**, dile que no encuentras la tarea y pregúntale si quiere crearla.
 5. Llama a \`actualizar_tarea\` pasando SOLO los campos que cambian.
 6. Tras modificar, **confirma qué cambió**: ej. "Tarea 'Llamar a Aize' actualizada: tipo de \`llamada\` a \`videollamada\`."
+
+## Reglas para contactos
+
+Un "contacto" es una persona de la empresa (director general, responsable de compras, etc.) con su email/teléfono — distinto de los administradores legales del BORME (tabla PersonaCargo). Su email es lo que permite que el cron registre la correspondencia en el Timeline.
+
+Cuando el usuario pida "añade el email de X a [empresa]", "guarda a Gustavo como contacto de Tratein", "corrige el cargo de Y", etc.:
+
+1. **Identifica la empresa** con buscar_empresa (no inventes empresaId). Si hay varios matches, pregunta cuál.
+2. **Comprueba si la persona ya existe** con buscar_contacto (query = nombre, empresaId de la empresa).
+3. Si **no existe** → crear_contacto con los datos que tengas (nombre obligatorio; email muy recomendable).
+4. Si **ya existe** → actualizar_contacto pasando solo el campo nuevo (p.ej. el email).
+5. Tras la acción, **confirma** qué hiciste: ej. "Añadido Gustavo (Director General) a Tratein PCI Instalaciones con email gustavo@…".
+6. Si crear_contacto avisa de un duplicado, cambia a actualizar_contacto con el id que te devuelve — no insistas en crear.
 
 ## Horizonte temporal
 - Cuando el usuario haga preguntas que impliquen datos con dimensión temporal (alertas BORME, datos financieros, actividades CRM, logs) y NO especifique un período concreto, pregúntale si quiere un horizonte de tiempo específico (último mes, último trimestre, último año, etc.) o todo el histórico disponible.
