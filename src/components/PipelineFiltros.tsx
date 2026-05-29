@@ -166,9 +166,13 @@ export default function PipelineFiltros({
         Con tarea pendiente
       </label>
 
-      {/* Días sin actividad mínimo */}
+      {/* Días sin actividad mínimo. "días" va como etiqueta estática (no como
+          placeholder del input): en móvil el input se fuerza a 16px para evitar
+          el zoom de iOS, y un placeholder de texto a 16px desentonaba con el
+          resto de filtros densos. Así el input queda compacto (solo dígitos) y
+          la unidad la da una etiqueta a 10px, consistente con lo demás. */}
       <div className="flex items-center gap-1 bg-wr-surface2 border border-wr-border rounded-md px-2 py-1">
-        <label className="text-[10px] text-wr-muted">Sin actividad ≥</label>
+        <label className="text-[10px] text-wr-muted whitespace-nowrap">Sin actividad ≥</label>
         <input
           type="number"
           min={0}
@@ -179,9 +183,10 @@ export default function PipelineFiltros({
               diasSinActividadMin: e.target.value ? Number(e.target.value) : null,
             })
           }
-          placeholder="días"
-          className="w-12 bg-transparent text-[10px] text-wr-text focus:outline-none placeholder:text-wr-hint"
+          placeholder="—"
+          className="w-9 bg-transparent text-[10px] text-wr-text text-center focus:outline-none placeholder:text-wr-hint"
         />
+        <span className="text-[10px] text-wr-muted">días</span>
       </div>
 
       {count > 0 && (
