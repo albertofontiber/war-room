@@ -109,9 +109,14 @@ export function TopBar({
         </div>
       )}
 
-      {/* Tipo pills — señales only */}
+      {/* Tipo pills — señales only.
+          `flex-wrap` + `whitespace-nowrap`/`flex-shrink-0` en cada pill: en
+          móvil los chips envuelven a varias líneas pero cada uno se mantiene en
+          una sola línea. Antes el contenedor no envolvía y el flex encogía los
+          chips, partiendo el único label con espacio ("Posible adq.") en dos
+          líneas → quedaba más alto que el resto. */}
       {subVista === "senales" && (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 flex-wrap">
           {FILTER_TIPOS.map((t) => {
             const cfg = BORME_TIPO[t];
             const on = tiposActivos.has(t);
@@ -119,7 +124,7 @@ export function TopBar({
               <button
                 key={t}
                 onClick={() => toggleTipo(t)}
-                className={`px-2 py-0.5 rounded text-[9px] font-bold border transition-colors ${
+                className={`px-2 py-0.5 rounded text-[9px] font-bold border transition-colors whitespace-nowrap flex-shrink-0 ${
                   on
                     ? cfg.pill
                     : "bg-transparent border-wr-border text-wr-hint hover:border-wr-muted"

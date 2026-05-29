@@ -130,6 +130,19 @@ function GrupoCard({ grupo, onEmpresaClick }: {
         </div>
       </div>
 
+      {/* Stats agregados — versión móvil. En sm+ van inline en el header
+          (hidden sm:flex), pero en móvil ese bloque se ocultaba y el grupo
+          quedaba sin sus métricas resumidas. Aquí los mostramos siempre
+          (también colapsado) como resumen rápido del grupo. */}
+      <div className="sm:hidden flex flex-wrap items-center gap-x-5 gap-y-2 px-3 pb-3 pt-2.5 border-t border-wr-border">
+        <StatChip label="Ingresos" value={fmtM(grupo.totalIngresos)} />
+        <StatChip label="EBITDA" value={fmtM(grupo.totalEbitda)} />
+        <StatChip label="EBITDA%" value={fmtPct(grupo.ebitdaPct)} />
+        {grupo.totalEmpleados != null && (
+          <StatChip label="Empleados" value={grupo.totalEmpleados.toLocaleString("es-ES")} />
+        )}
+      </div>
+
       {/* Empresa table */}
       {expanded && (
         <div className="border-t border-wr-border overflow-x-auto">

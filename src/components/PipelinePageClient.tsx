@@ -252,10 +252,12 @@ export default function PipelinePageClient() {
         <div className="hidden lg:block flex-1" />
         <div className="basis-full h-0 lg:hidden" aria-hidden />
 
+        {/* En móvil el select crece para ocupar el ancho y empuja los botones
+            de acción a la derecha. En lg+ vuelve a su ancho natural. */}
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value as SortOption)}
-          className="bg-wr-surface2 border border-wr-border rounded-md px-2 py-1 text-[10px] text-wr-muted focus:outline-none focus:border-wr-blue cursor-pointer"
+          className="flex-1 lg:flex-none min-w-0 bg-wr-surface2 border border-wr-border rounded-md px-2 py-1 text-[10px] text-wr-muted focus:outline-none focus:border-wr-blue cursor-pointer"
           title="Ordenar dentro de cada columna"
         >
           {(Object.keys(SORT_LABEL) as SortOption[]).map((k) => (
@@ -264,22 +266,28 @@ export default function PipelinePageClient() {
             </option>
           ))}
         </select>
-        <button
-          onClick={() => setLeadModalOpen(true)}
-          className="text-[11px] bg-wr-amber/15 text-wr-amber border border-wr-amber/30 rounded px-2 py-1 lg:px-2.5 hover:bg-wr-amber/25 transition-colors"
-          title="Añadir un target confidencial cuya identidad aún no se conoce"
-        >
-          <span className="lg:hidden">+ Lead</span>
-          <span className="hidden lg:inline">+ Lead sin identificar</span>
-        </button>
-        <button
-          onClick={handleExport}
-          disabled={allCards.length === 0}
-          className="text-[11px] bg-wr-green/15 text-wr-green border border-wr-green/30 rounded px-2 py-1 lg:px-2.5 hover:bg-wr-green/25 disabled:opacity-40 transition-colors"
-        >
-          <span className="lg:hidden">Excel ({allCards.length})</span>
-          <span className="hidden lg:inline">Export Excel ({allCards.length})</span>
-        </button>
+        {/* "+ Lead" y "Excel" agrupados para que siempre caigan en la misma
+            línea (antes Excel se descolgaba a una fila aparte en móvil).
+            `lg:contents` disuelve el wrapper en escritorio para conservar el
+            layout original (botones empujados a la derecha por el spacer). */}
+        <div className="flex items-center gap-2 flex-shrink-0 lg:contents">
+          <button
+            onClick={() => setLeadModalOpen(true)}
+            className="text-[11px] bg-wr-amber/15 text-wr-amber border border-wr-amber/30 rounded px-2 py-1 lg:px-2.5 hover:bg-wr-amber/25 transition-colors whitespace-nowrap"
+            title="Añadir un target confidencial cuya identidad aún no se conoce"
+          >
+            <span className="lg:hidden">+ Lead</span>
+            <span className="hidden lg:inline">+ Lead sin identificar</span>
+          </button>
+          <button
+            onClick={handleExport}
+            disabled={allCards.length === 0}
+            className="text-[11px] bg-wr-green/15 text-wr-green border border-wr-green/30 rounded px-2 py-1 lg:px-2.5 hover:bg-wr-green/25 disabled:opacity-40 transition-colors whitespace-nowrap"
+          >
+            <span className="lg:hidden">Excel ({allCards.length})</span>
+            <span className="hidden lg:inline">Export Excel ({allCards.length})</span>
+          </button>
+        </div>
       </div>
       <div className="flex-1 relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">

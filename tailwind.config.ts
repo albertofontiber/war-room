@@ -59,8 +59,14 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        // Usar las CSS vars que define next/font (layout.tsx). Antes se
+        // referenciaba el literal "Inter"/"JetBrains Mono", que NO coincide con
+        // la familia hasheada que genera next/font → la fuente cargada quedaba
+        // huérfana y cada dispositivo caía a su fuente de sistema (Segoe UI en
+        // el portátil, San Francisco en iOS), de ahí la inconsistencia de tipo
+        // de letra entre móvil y escritorio.
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       // CRM stage colors for markers
       keyframes: {

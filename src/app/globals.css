@@ -65,14 +65,18 @@
   100% { transform: scale(2.5); opacity: 0; }
 }
 
-/* Mobile: inputs y textareas a 16px para evitar el zoom-in de iOS Safari
-   al focusear un input con font-size < 16px. La densidad informacional
-   en desktop (text-[10px]/[11px]/[12px]) se preserva — esta regla solo
-   aplica < 640px. select se incluye porque iOS también hace zoom.
-   `!important` necesario: las utilidades Tailwind (.text-xs, .text-sm)
-   son selectores de clase y ganan en especificidad a `input { … }`. */
+/* Mobile: inputs de TEXTO y textareas a 16px para evitar el zoom-in de iOS
+   Safari al focusear (abren teclado; con font-size < 16px iOS hace zoom).
+   `!important` necesario: las utilidades Tailwind (.text-xs, .text-sm) son
+   selectores de clase y ganan en especificidad a `input { … }`.
+   NO incluimos `select` ni `input[type=date]` (ni checkbox/radio/range/etc.):
+   abren un picker nativo, no teclado → iOS no hace zoom, así que pueden
+   conservar su tamaño denso (text-[10px]) y quedar consistentes con la
+   versión de escritorio. Incluirlos los inflaba a 16px y rompía la
+   coherencia visual con los chips/botones de al lado. */
 @media (max-width: 639px) {
-  input, textarea, select {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="date"]):not([type="range"]):not([type="color"]):not([type="file"]),
+  textarea {
     font-size: 16px !important;
   }
 }
