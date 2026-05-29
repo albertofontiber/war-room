@@ -75,7 +75,7 @@ export default function WarRoomMobileMenu() {
 
   return (
     <MobileDrawer open={sidebarMobileOpen} onOpenChange={setSidebarMobileOpen} side="left">
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col min-h-full">
         {/* Header del drawer — clic vuelve al inicio. */}
         <Link
           href="/"
@@ -150,10 +150,11 @@ export default function WarRoomMobileMenu() {
           </div>
         </nav>
 
-        {/* Sección filtros (reutiliza SidebarContent) */}
-        <div className="flex-1 min-h-0 flex flex-col">
-          <SidebarContent />
-        </div>
+        {/* Sección filtros (reutiliza SidebarContent). En mobile el scroll lo
+            lleva el drawer completo, no un sub-scroll: scroll={false} hace que
+            SidebarContent fluya en altura natural y se desplace junto con la
+            navegación de arriba. */}
+        <SidebarContent scroll={false} />
       </div>
     </MobileDrawer>
   );
