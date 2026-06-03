@@ -7,7 +7,8 @@ import {
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   useDroppable,
@@ -22,6 +23,8 @@ import {
   SIDE_STAGES,
 } from "@/lib/crm";
 import { fmtM } from "@/lib/format";
+import { useIsDesktop } from "@/lib/breakpoints";
+import { BottomSheet } from "@/components/ui/responsive";
 import type { DealStage } from "@/types";
 
 export type SortOption = "nombre" | "ingresos_desc" | "ingresos_asc" | "act_desc" | "act_asc" | "stage_desc" | "stage_asc";
@@ -124,7 +127,6 @@ function Card({ card, onClick, blur = false }: { card: KanbanCard; onClick?: () 
       className={`bg-wr-surface border border-wr-border rounded-md p-2.5 cursor-grab active:cursor-grabbing hover:border-wr-muted transition-colors ${
         isDragging ? "opacity-40" : ""
       }`}
-      style={{ touchAction: "none" }}
     >
       <div className="flex items-start justify-between gap-2 mb-1.5">
         <h4 className={`text-xs font-semibold text-wr-text truncate flex-1 ${blurCls}`} title={card.nombre}>
@@ -314,7 +316,22 @@ export default function KanbanBoard({ grouped, onStageChange, onCardClick, sort 
     muerto: true,
   });
   const [activeId, setActiveId] = useState<string | null>(null);
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
+  const isDesktop = useIsDesktop();
+  // En móvil/tablet pedimos confirmación antes de mover (el drag táctil es
+  // propenso a sueltas accidentales). null = no hay confirmación pendiente.
+  const [pendingMove, setPendingMove] = useState<{
+    empresaId: number;
+    nombre: string;
+    fromStage: DealStage;
+    toStage: DealStage;
+  } | null>(null);
+  // Ratón: arrastra al superar 6px (preciso). Táctil: pulsación mantenida de
+  // 200ms inicia el arrastre; un swipe (mover >8px antes) deja scrollear la
+  // columna en vez de capturar la tarjeta como drag.
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } })
+  );
 
   const sortedGrouped = useMemo(() => {
     const out: Record<DealStage, KanbanCard[]> = {} as Record<DealStage, KanbanCard[]>;
@@ -344,9 +361,29 @@ export default function KanbanBoard({ grouped, onStageChange, onCardClick, sort 
         break;
       }
     }
-    if (actualStage === nuevoStage) return;
+    if (!actualStage || actualStage === nuevoStage) return;
+
+    // En desktop (ratón, preciso) movemos directo. En móvil/tablet abrimos un
+    // bottom-sheet de confirmación: hasta confirmar no llamamos a onStageChange,
+    // así la tarjeta vuelve a su columna y un movimiento accidental no persiste.
+    if (!isDesktop) {
+      const card = grouped[actualStage].find((c) => c.id === empresaId);
+      setPendingMove({
+        empresaId,
+        nombre: card?.nombre ?? `#${empresaId}`,
+        fromStage: actualStage,
+        toStage: nuevoStage,
+      });
+      return;
+    }
 
     onStageChange(empresaId, nuevoStage);
+  }
+
+  function confirmMove() {
+    if (!pendingMove) return;
+    onStageChange(pendingMove.empresaId, pendingMove.toStage);
+    setPendingMove(null);
   }
 
   const activeCard = activeId
@@ -356,28 +393,68 @@ export default function KanbanBoard({ grouped, onStageChange, onCardClick, sort 
     : null;
 
   return (
-    <DndContext sensors={sensors} onDragStart={handleStart} onDragEnd={handleEnd}>
-      <div className="flex gap-2 sm:gap-3 overflow-x-auto h-full p-2 sm:p-4">
-        {FUNNEL_STAGES.map((s) => (
-          <Column key={s} stage={s} cards={sortedGrouped[s] ?? []} onCardClick={onCardClick} blur={modoPresentacion} />
-        ))}
-        {SIDE_STAGES.map((s) => (
-          <Column
-            key={s}
-            stage={s}
-            cards={sortedGrouped[s] ?? []}
-            onCardClick={onCardClick}
-            collapsed={sideCollapsed[s]}
-            onToggleCollapse={() =>
-              setSideCollapsed((prev) => ({ ...prev, [s]: !prev[s] }))
-            }
-            blur={modoPresentacion}
-          />
-        ))}
-      </div>
-      <DragOverlay>
-        {activeCard ? <Card card={activeCard} blur={modoPresentacion} /> : null}
-      </DragOverlay>
-    </DndContext>
+    <>
+      <DndContext sensors={sensors} onDragStart={handleStart} onDragEnd={handleEnd}>
+        <div className="flex gap-2 sm:gap-3 overflow-x-auto h-full p-2 sm:p-4">
+          {FUNNEL_STAGES.map((s) => (
+            <Column key={s} stage={s} cards={sortedGrouped[s] ?? []} onCardClick={onCardClick} blur={modoPresentacion} />
+          ))}
+          {SIDE_STAGES.map((s) => (
+            <Column
+              key={s}
+              stage={s}
+              cards={sortedGrouped[s] ?? []}
+              onCardClick={onCardClick}
+              collapsed={sideCollapsed[s]}
+              onToggleCollapse={() =>
+                setSideCollapsed((prev) => ({ ...prev, [s]: !prev[s] }))
+              }
+              blur={modoPresentacion}
+            />
+          ))}
+        </div>
+        <DragOverlay>
+          {activeCard ? <Card card={activeCard} blur={modoPresentacion} /> : null}
+        </DragOverlay>
+      </DndContext>
+
+      <BottomSheet
+        open={pendingMove != null}
+        onOpenChange={(o) => {
+          if (!o) setPendingMove(null);
+        }}
+        title="Mover target"
+        footer={
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={() => setPendingMove(null)}
+              className="px-3 py-2 text-sm rounded border border-wr-border text-wr-muted hover:text-wr-text transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={confirmMove}
+              className="px-4 py-2 text-sm rounded bg-wr-blue text-white hover:bg-wr-blue-light transition-colors"
+            >
+              Mover
+            </button>
+          </div>
+        }
+      >
+        {pendingMove && (
+          <p className="text-sm text-wr-text leading-relaxed">
+            ¿Mover <span className="font-semibold">{pendingMove.nombre}</span> de{" "}
+            <span className="font-medium" style={{ color: DEAL_STAGE_COLOR[pendingMove.fromStage] }}>
+              {DEAL_STAGE_LABEL[pendingMove.fromStage]}
+            </span>{" "}
+            a{" "}
+            <span className="font-medium" style={{ color: DEAL_STAGE_COLOR[pendingMove.toStage] }}>
+              {DEAL_STAGE_LABEL[pendingMove.toStage]}
+            </span>
+            ?
+          </p>
+        )}
+      </BottomSheet>
+    </>
   );
 }
