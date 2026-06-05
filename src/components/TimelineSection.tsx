@@ -483,6 +483,11 @@ function TareaItem({
       <p className="text-wr-text leading-snug">
         <MentionRender content={event.payload.titulo} />
       </p>
+      {event.payload.descripcion && (
+        <p className="text-[11px] text-wr-muted whitespace-pre-wrap leading-snug mt-0.5">
+          <MentionRender content={event.payload.descripcion} />
+        </p>
+      )}
       {event.payload.emailContacto && (
         <p className="text-[10px] text-wr-muted mt-0.5">
           <span className="text-wr-hint">
