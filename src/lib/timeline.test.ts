@@ -308,12 +308,13 @@ describe("getEmpresaTimeline", () => {
     expect(t.actor.kind).toBe("system");
   });
 
-  it("tarea manual con asignado → actor = asignado admin", async () => {
+  it("tarea manual con asignado → actor = asignado admin + descripcion en payload", async () => {
     tareaFindManyMock.mockResolvedValue([
       {
         id: 12,
         tipo: "llamada",
         titulo: "Llamar a CFO",
+        descripcion: "Confirmar fecha de la 1ª reunión y pedir cuentas 2024.",
         resultado: "Cerrado",
         completadaAt: new Date("2026-05-11T14:00:00Z"),
         createdAt: new Date("2026-05-11T10:00:00Z"),
@@ -331,6 +332,35 @@ describe("getEmpresaTimeline", () => {
     if (t?.kind !== "tarea_completada") throw new Error("expected tarea");
     expect(t.payload.source).toBe("manual");
     expect(t.actor).toEqual({ kind: "admin", id: "u2", name: "Gabriel" });
+    // El detalle escrito al crear la tarea viaja al timeline (antes se perdía).
+    expect(t.payload.descripcion).toBe(
+      "Confirmar fecha de la 1ª reunión y pedir cuentas 2024."
+    );
+  });
+
+  it("tarea sin descripcion → payload.descripcion = null", async () => {
+    tareaFindManyMock.mockResolvedValue([
+      {
+        id: 16,
+        tipo: "llamada",
+        titulo: "Llamada rápida",
+        descripcion: null,
+        resultado: null,
+        completadaAt: new Date("2026-05-11T14:00:00Z"),
+        createdAt: new Date("2026-05-11T10:00:00Z"),
+        autor: { id: "u1", name: "Alberto" },
+        autorFinder: null,
+        asignado: null,
+        asignadoFinder: null,
+        emailIngest: null,
+        calendarIngest: null,
+      },
+    ]);
+
+    const events = await getEmpresaTimeline(42, { scope: "admin", userId: "u1" });
+    const t = events.find((e) => e.kind === "tarea_completada");
+    if (t?.kind !== "tarea_completada") throw new Error("expected tarea");
+    expect(t.payload.descripcion).toBeNull();
   });
 
   it("borme actor siempre 'system' con nombre 'BORME'", async () => {

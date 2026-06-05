@@ -38,6 +38,10 @@ export type TimelineEvent =
         tareaId: number;
         tipo: string;
         titulo: string;
+        // Detalle escrito al crear la tarea (campo `descripcion`). Distinto de
+        // `resultado`, que son las notas post-evento al completarla. null si no
+        // se escribió. Visible a finders (no es sensible como `emailBody`).
+        descripcion: string | null;
         resultado: string | null;
         source: "manual" | "graph-email" | "graph-calendar";
         // Dirección del email: "saliente" (lo enviamos) / "entrante" (lo
