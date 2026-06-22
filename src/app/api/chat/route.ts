@@ -89,7 +89,7 @@ export async function POST(req: Request) {
   const modelMessages = await convertToModelMessages(messagesWithoutId);
 
   const result = streamText({
-    model: anthropic("claude-sonnet-4-20250514"),
+    model: anthropic("claude-sonnet-4-6"),
     system: SYSTEM_PROMPT,
     messages: modelMessages,
     // Bumpeado a 8 porque ahora puede encadenar buscar_empresa → crear_tarea
