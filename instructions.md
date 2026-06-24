@@ -832,6 +832,14 @@ Desde PR #26 (2026-04-28) la creación es íntegra desde la web — antes solo v
 - `active=false` no permite login (el provider `finder-credentials` en `auth.ts` rechaza `!finder.active`); las filas inactivas aparecen atenuadas.
 - `GET /api/finders` acepta `?includeInactive=1` para listar todos. La página `/finders` lo pasa; el resto de consumidores (selector "asignar a finder" en la ficha de empresa) sigue recibiendo solo activos.
 
+### Corte de acceso en caliente — guard de página + revocación de sesiones (PR #144, 2026-06-24)
+
+La sesión es JWT (`strategy:"jwt"`, sin `maxAge` → 30 días por defecto, auto-renovada con el uso). Antes de #144 `active=false` solo bloqueaba el **próximo** login: una sesión viva seguía abriendo el portal hasta que el token caducaba. Dos capas lo cierran:
+
+- **Guard server-side**: `requireFinderPageOrRedirect()` (en `finder-session.ts`) revalida contra BD en cada render de las 3 páginas autenticadas del portal (`/portal`, `/portal/empresas/:id`, `/portal/proponer`) y redirige a `/portal/login` si el finder ya no es válido (inactivo o sesión revocada). El middleware solo mira el `kind` del token, por eso el guard vive en las páginas y **no** en `layout.tsx` (que cuelga también del login → provocaría un bucle de redirección).
+- **Revocación de sesiones** vía `Finder.sessionVersion` (Int, default 0): se embebe en el JWT al login. `getCurrentFinder()` rechaza la sesión si `token.sessionVersion ≠ BD` (helper puro `finderSessionMatches`, que normaliza los tokens antiguos sin el campo a `0` → sin re-login masivo al desplegar). `POST /api/finders/:id/revoke-sessions` (solo admin, con AuditLog) sube el contador → invalida **todos** los JWT vivos del finder al instante. Botón **"Cerrar sesiones activas"** en el modal de edición de `/finders`.
+- Distinción de controles: **Desactivar** (toggle) bloquea futuros logins **y** expulsa la sesión viva en la siguiente navegación; **Cerrar sesiones activas** mantiene al finder activo pero invalida sus tokens ahora mismo (sesión olvidada en equipo ajeno, rotación de credencial, etc.). Rotar la password (`POST /api/finders/:id/password`) también revoca sesiones.
+
 ### Gestión de password (PRs #26 + #27, 2026-04-28)
 
 - Antes el modal de password auto-generaba una nueva cada vez al abrir. Ahora muestra **"Fijada el {fecha}"** y un botón explícito **"Cambiar password"** que entra en modo edición con input vacío + "Generar". Permite abrir el modal sin riesgo.
@@ -883,7 +891,7 @@ Dos CredentialsProviders:
 - `admin-credentials` (user+password via ENV `ADMIN_USER_1/2` + `ADMIN_PASS_1/2`) — para Alberto y Gabriel.
 - `finder-credentials` (email+password bcrypt contra tabla `Finder`) — para finders externos.
 
-Callback `jwt` guarda `token.kind` y `token.finderId`. Callback `session` los lee. Fallback: token sin `kind` → `admin` (para sesiones pre-PR #11, antes del rollout del portal).
+Callback `jwt` guarda `token.kind`, `token.finderId` y (solo finders, PR #144) `token.sessionVersion`. Callback `session` los lee. Fallback: token sin `kind` → `admin` (para sesiones pre-PR #11, antes del rollout del portal). El `sessionVersion` del token se compara contra `Finder.sessionVersion` en `getCurrentFinder()`/`finderSessionMatches` para invalidar sesiones revocadas.
 
 ### Access log
 
