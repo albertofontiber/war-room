@@ -1,13 +1,10 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { requireFinderPageOrRedirect } from "@/lib/finder-session";
 import PortalPipelineClient from "@/components/portal/PortalPipelineClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function PortalHome() {
-  const session = await getServerSession(authOptions);
-  if (!session || session.kind !== "finder") redirect("/portal/login");
+  const finder = await requireFinderPageOrRedirect();
 
-  return <PortalPipelineClient finderName={session.user?.name ?? "Finder"} />;
+  return <PortalPipelineClient finderName={finder.name} />;
 }

@@ -428,6 +428,11 @@ model Finder {
   // POST /api/finders/:id/password y se la comunican al finder por canal seguro.
   passwordHash      String?
   passwordSetAt     DateTime?
+  // Versión de sesión: se embebe en el JWT al hacer login. Si este valor en BD
+  // cambia (lo sube el endpoint /revoke-sessions o un reset de password), los
+  // tokens emitidos antes dejan de validar en `getCurrentFinder()` → cierre de
+  // todas las sesiones vivas sin necesidad de desactivar el finder.
+  sessionVersion    Int               @default(0)
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
 

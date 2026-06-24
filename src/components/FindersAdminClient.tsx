@@ -58,6 +58,10 @@ export default function FindersAdminClient() {
   });
   const [editSubmitting, setEditSubmitting] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
+  // Acción "Cerrar sesiones activas" dentro del modal de edición.
+  const [revoking, setRevoking] = useState(false);
+  const [revokeDone, setRevokeDone] = useState(false);
+  const [revokeError, setRevokeError] = useState<string | null>(null);
 
   const load = () => {
     setLoading(true);
@@ -219,11 +223,44 @@ export default function FindersAdminClient() {
       active: f.active,
     });
     setEditError(null);
+    setRevoking(false);
+    setRevokeDone(false);
+    setRevokeError(null);
   };
 
   const closeEditModal = () => {
     setEditModal(null);
     setEditError(null);
+    setRevoking(false);
+    setRevokeDone(false);
+    setRevokeError(null);
+  };
+
+  const handleRevokeSessions = async () => {
+    if (!editModal) return;
+    setRevoking(true);
+    setRevokeError(null);
+    try {
+      const res = await fetch(`/api/finders/${editModal.id}/revoke-sessions`, {
+        method: "POST",
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setRevokeError(json.error || "Error");
+        return;
+      }
+      setRevokeDone(true);
+      dispatchDataChanged({
+        resource: "finder",
+        resourceId: editModal.id,
+        action: "update",
+        source: "FindersAdminClient/revokeSessions",
+      });
+    } catch (e) {
+      setRevokeError(String(e));
+    } finally {
+      setRevoking(false);
+    }
   };
 
   const handleEditSave = async () => {
@@ -691,6 +728,35 @@ export default function FindersAdminClient() {
                   </span>
                 </span>
               </label>
+
+              {/* Cerrar sesiones vivas. Desactivar bloquea futuros logins y
+                  expulsa al finder en su próxima navegación; este botón fuerza
+                  el corte AHORA aunque siga activo (p.ej. sesión olvidada en un
+                  equipo ajeno). El finder podrá volver a entrar con su password. */}
+              <div className="rounded border border-wr-border bg-wr-surface2/40 p-3 space-y-2">
+                <div>
+                  <p className="text-[10px] text-wr-muted uppercase tracking-wider">Sesiones activas</p>
+                  <p className="text-[11px] text-wr-hint mt-1">
+                    Cierra al instante cualquier sesión abierta de este finder (móvil, portátil…),
+                    incluso si dejó la sesión iniciada sin cerrar. Seguirá pudiendo entrar con su password.
+                  </p>
+                </div>
+                {revokeDone ? (
+                  <p className="text-[11px] text-green-400">
+                    Sesiones cerradas. El finder tendrá que volver a iniciar sesión.
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleRevokeSessions}
+                    disabled={revoking}
+                    className="text-[11px] px-2.5 py-1 rounded bg-wr-amber/10 border border-wr-amber/30 text-wr-amber hover:bg-wr-amber/20 disabled:opacity-40"
+                  >
+                    {revoking ? "Cerrando…" : "Cerrar sesiones activas"}
+                  </button>
+                )}
+                {revokeError && <p className="text-wr-red text-[11px]">{revokeError}</p>}
+              </div>
 
               {editError && <p className="text-wr-red text-[11px]">{editError}</p>}
 
