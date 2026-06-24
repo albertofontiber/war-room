@@ -50,7 +50,14 @@ export async function POST(
   try {
     await prisma.finder.update({
       where: { id: params.id },
-      data: { passwordHash: hash, passwordSetAt: now },
+      // Rotar la password invalida las sesiones vivas: subir sessionVersion
+      // desincroniza los JWT emitidos con la password anterior. Coherente con
+      // el aviso del modal ("la password anterior deja de funcionar").
+      data: {
+        passwordHash: hash,
+        passwordSetAt: now,
+        sessionVersion: { increment: 1 },
+      },
     });
   } catch (err) {
     log.error("api/finders/[id]/password POST", err, { finderId: params.id });

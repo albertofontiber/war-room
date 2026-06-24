@@ -46,10 +46,14 @@ declare module "next-auth" {
   interface Session {
     kind?: "admin" | "finder";
     finderId?: string | null;
+    // Sólo presente en sesiones de finder. Se compara contra Finder.sessionVersion
+    // en `getCurrentFinder()`: si no coincide, la sesión está revocada.
+    sessionVersion?: number | null;
   }
   interface User {
     kind?: "admin" | "finder";
     finderId?: string | null;
+    sessionVersion?: number | null;
   }
 }
 
@@ -57,6 +61,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     kind?: "admin" | "finder";
     finderId?: string | null;
+    sessionVersion?: number | null;
   }
 }
 
@@ -119,6 +124,7 @@ export const authOptions: NextAuthOptions = {
             email: true,
             active: true,
             passwordHash: true,
+            sessionVersion: true,
           },
         });
         // Awaiteamos los logs en vez de fire-and-forget: en serverless de
@@ -161,6 +167,7 @@ export const authOptions: NextAuthOptions = {
           email: finder.email,
           kind: "finder" as const,
           finderId: finder.id,
+          sessionVersion: finder.sessionVersion,
         };
       },
     }),
@@ -173,6 +180,8 @@ export const authOptions: NextAuthOptions = {
         token.name = user.name;
         token.kind = user.kind ?? "admin";
         token.finderId = user.finderId ?? null;
+        // Sólo los finders llevan sessionVersion; los admin lo dejan undefined.
+        token.sessionVersion = user.sessionVersion ?? null;
       }
       return token;
     },
@@ -180,6 +189,8 @@ export const authOptions: NextAuthOptions = {
       if (session.user) session.user.name = token.name as string;
       session.kind = (token.kind as "admin" | "finder" | undefined) ?? "admin";
       session.finderId = (token.finderId as string | null | undefined) ?? null;
+      session.sessionVersion =
+        (token.sessionVersion as number | null | undefined) ?? null;
       return session;
     },
   },

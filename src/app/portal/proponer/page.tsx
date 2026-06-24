@@ -1,13 +1,10 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { requireFinderPageOrRedirect } from "@/lib/finder-session";
 import PortalProposeClient from "@/components/portal/PortalProposeClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProponerPage() {
-  const session = await getServerSession(authOptions);
-  if (!session || session.kind !== "finder") redirect("/portal/login");
+  const finder = await requireFinderPageOrRedirect();
 
-  return <PortalProposeClient finderName={session.user?.name ?? "Finder"} />;
+  return <PortalProposeClient finderName={finder.name} />;
 }

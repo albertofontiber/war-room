@@ -79,6 +79,7 @@ describe("finder-credentials authorize", () => {
       email: "rafa@externo.com",
       active: true,
       passwordHash: "$2a$10$hash",
+      sessionVersion: 3,
     });
     bcryptCompare.mockResolvedValueOnce(true);
 
@@ -88,10 +89,12 @@ describe("finder-credentials authorize", () => {
       REQ
     );
 
+    // sessionVersion viaja al JWT para poder invalidar la sesión luego.
     expect(result).toMatchObject({
       id: "f1",
       kind: "finder",
       finderId: "f1",
+      sessionVersion: 3,
     });
     expect(logFinderActionMock).toHaveBeenCalledTimes(1);
     expect(logFinderActionMock).toHaveBeenCalledWith(

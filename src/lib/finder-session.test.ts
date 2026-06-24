@@ -1,11 +1,36 @@
 /**
- * Tests para canEditWithin24h — regla central de la ventana de edición del
- * portal de finders. Pasadas 24h, el finder no puede editar/borrar lo que él
- * mismo creó (notas; las tareas usan otra regla, no aplica esta).
+ * Tests del módulo finder-session:
+ *   - `canEditWithin24h` — ventana de edición del portal (lógica pura).
+ *   - `finderSessionMatches` — validez de una sesión de finder frente al estado
+ *     en BD (inactivo / sessionVersion / tokens antiguos sin el campo).
+ *   - `getCurrentFinder` — combina la sesión (getServerSession) con la BD.
+ *   - `requireFinderPageOrRedirect` — redirige a /portal/login si no es válida.
  */
 
 import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
-import { canEditWithin24h, PORTAL_EDIT_WINDOW_MS } from "./finder-session";
+
+const getServerSessionMock = vi.fn();
+const finderFindUnique = vi.fn();
+const redirectMock = vi.fn();
+
+vi.mock("next-auth", () => ({
+  getServerSession: (...a: unknown[]) => getServerSessionMock(...a),
+}));
+vi.mock("@/lib/auth", () => ({ authOptions: {} }));
+vi.mock("@/lib/prisma", () => ({
+  prisma: { finder: { findUnique: (...a: unknown[]) => finderFindUnique(...a) } },
+}));
+vi.mock("next/navigation", () => ({
+  redirect: (...a: unknown[]) => redirectMock(...a),
+}));
+
+import {
+  canEditWithin24h,
+  PORTAL_EDIT_WINDOW_MS,
+  finderSessionMatches,
+  getCurrentFinder,
+  requireFinderPageOrRedirect,
+} from "./finder-session";
 
 describe("canEditWithin24h", () => {
   // Fijamos "ahora" para tener un baseline determinista.
@@ -65,5 +90,100 @@ describe("canEditWithin24h", () => {
   it("PORTAL_EDIT_WINDOW_MS está fijado a 24h en milisegundos", () => {
     expect(PORTAL_EDIT_WINDOW_MS).toBe(24 * 60 * 60 * 1000);
     expect(PORTAL_EDIT_WINDOW_MS).toBe(86_400_000);
+  });
+});
+
+describe("finderSessionMatches", () => {
+  it("false si el finder no existe", () => {
+    expect(finderSessionMatches(null, 0)).toBe(false);
+    expect(finderSessionMatches(undefined, 0)).toBe(false);
+  });
+
+  it("false si el finder está inactivo (pausado por un admin)", () => {
+    expect(finderSessionMatches({ active: false, sessionVersion: 0 }, 0)).toBe(false);
+  });
+
+  it("true cuando activo y el sessionVersion coincide", () => {
+    expect(finderSessionMatches({ active: true, sessionVersion: 5 }, 5)).toBe(true);
+  });
+
+  it("false cuando el token tiene un sessionVersion antiguo (sesión revocada)", () => {
+    expect(finderSessionMatches({ active: true, sessionVersion: 6 }, 5)).toBe(false);
+  });
+
+  it("normaliza a 0 los tokens sin sessionVersion (emitidos antes de la feature)", () => {
+    // No fuerza re-login mientras el finder siga en la versión 0 por defecto.
+    expect(finderSessionMatches({ active: true, sessionVersion: 0 }, undefined)).toBe(true);
+    expect(finderSessionMatches({ active: true, sessionVersion: 0 }, null)).toBe(true);
+    // Pero si ya se revocó alguna vez (>0), el token viejo queda fuera.
+    expect(finderSessionMatches({ active: true, sessionVersion: 1 }, undefined)).toBe(false);
+  });
+});
+
+describe("getCurrentFinder", () => {
+  beforeEach(() => {
+    getServerSessionMock.mockReset();
+    finderFindUnique.mockReset();
+  });
+
+  it("null si no hay sesión", async () => {
+    getServerSessionMock.mockResolvedValue(null);
+    expect(await getCurrentFinder()).toBeNull();
+    expect(finderFindUnique).not.toHaveBeenCalled();
+  });
+
+  it("null si la sesión es de admin (no de finder)", async () => {
+    getServerSessionMock.mockResolvedValue({ kind: "admin", finderId: null });
+    expect(await getCurrentFinder()).toBeNull();
+    expect(finderFindUnique).not.toHaveBeenCalled();
+  });
+
+  it("null si el finder está inactivo", async () => {
+    getServerSessionMock.mockResolvedValue({ kind: "finder", finderId: "f1", sessionVersion: 0 });
+    finderFindUnique.mockResolvedValue({
+      id: "f1", name: "Rafa", email: "r@x.com", active: false, sessionVersion: 0,
+    });
+    expect(await getCurrentFinder()).toBeNull();
+  });
+
+  it("null si el sessionVersion del token no coincide con el de BD (sesión revocada)", async () => {
+    getServerSessionMock.mockResolvedValue({ kind: "finder", finderId: "f1", sessionVersion: 2 });
+    finderFindUnique.mockResolvedValue({
+      id: "f1", name: "Rafa", email: "r@x.com", active: true, sessionVersion: 3,
+    });
+    expect(await getCurrentFinder()).toBeNull();
+  });
+
+  it("devuelve el finder cuando está activo y el sessionVersion coincide", async () => {
+    getServerSessionMock.mockResolvedValue({ kind: "finder", finderId: "f1", sessionVersion: 3 });
+    const row = { id: "f1", name: "Rafa", email: "r@x.com", active: true, sessionVersion: 3 };
+    finderFindUnique.mockResolvedValue(row);
+    expect(await getCurrentFinder()).toEqual(row);
+  });
+});
+
+describe("requireFinderPageOrRedirect", () => {
+  beforeEach(() => {
+    getServerSessionMock.mockReset();
+    finderFindUnique.mockReset();
+    redirectMock.mockReset();
+  });
+
+  it("redirige a /portal/login si la sesión no es válida", async () => {
+    getServerSessionMock.mockResolvedValue({ kind: "finder", finderId: "f1", sessionVersion: 1 });
+    finderFindUnique.mockResolvedValue({
+      id: "f1", name: "Rafa", email: "r@x.com", active: false, sessionVersion: 1,
+    });
+    await requireFinderPageOrRedirect();
+    expect(redirectMock).toHaveBeenCalledWith("/portal/login");
+  });
+
+  it("no redirige y devuelve el finder si la sesión es válida", async () => {
+    getServerSessionMock.mockResolvedValue({ kind: "finder", finderId: "f1", sessionVersion: 0 });
+    const row = { id: "f1", name: "Rafa", email: "r@x.com", active: true, sessionVersion: 0 };
+    finderFindUnique.mockResolvedValue(row);
+    const result = await requireFinderPageOrRedirect();
+    expect(redirectMock).not.toHaveBeenCalled();
+    expect(result).toEqual(row);
   });
 });
