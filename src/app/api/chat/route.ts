@@ -91,7 +91,7 @@ export async function POST(req: Request) {
   const modelMessages = await convertToModelMessages(messagesWithoutId);
 
   const result = streamText({
-    model: anthropic("claude-sonnet-4-6"),
+    model: anthropic("claude-sonnet-5"),
     // El system prompt va como mensajes de sistema (no como `system:`) para
     // poder partirlo en dos bloques:
     // 1. SYSTEM_PROMPT (~5k tokens, estático) con cache de Anthropic — los
