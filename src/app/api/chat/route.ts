@@ -15,7 +15,9 @@ import type { TareaTipo } from "@/types";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 30;
+// 60s: con 16 pasos de tools posibles, 30s cortaba a medias las cadenas
+// largas (buscar → varias queries → crear → verificar).
+export const maxDuration = 60;
 
 // Tipos válidos de tarea. Sincronizado con `TareaTipo` en types/index.ts.
 const TAREA_TIPOS = [
@@ -90,11 +92,33 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: anthropic("claude-sonnet-4-6"),
-    system: SYSTEM_PROMPT,
-    messages: modelMessages,
-    // Bumpeado a 8 porque ahora puede encadenar buscar_empresa → crear_tarea
-    // → execute_sql (verificar) en un solo turno.
-    stopWhen: stepCountIs(8),
+    // El system prompt va como mensajes de sistema (no como `system:`) para
+    // poder partirlo en dos bloques:
+    // 1. SYSTEM_PROMPT (~5k tokens, estático) con cache de Anthropic — los
+    //    turnos siguientes lo leen a ~10% del coste y con menos latencia.
+    //    OJO: el bloque cacheado debe ser byte-idéntico entre requests; nada
+    //    dinámico (fechas, ids) puede entrar en él o se invalida el cache.
+    // 2. La fecha actual, por request y FUERA del bloque cacheado. Antes vivía
+    //    interpolada en SYSTEM_PROMPT y se evaluaba al cargar el módulo: en
+    //    lambdas calientes el modelo creía que "hoy" era la fecha del cold
+    //    start y convertía mal "mañana"/"el viernes" al crear tareas.
+    messages: [
+      {
+        role: "system",
+        content: SYSTEM_PROMPT,
+        providerOptions: {
+          anthropic: { cacheControl: { type: "ephemeral" } },
+        },
+      },
+      {
+        role: "system",
+        content: `Fecha y hora actuales: ${new Date().toISOString()} (el usuario está en Europe/Madrid).`,
+      },
+      ...modelMessages,
+    ],
+    // 16 pasos: con 8, las cadenas largas (buscar_empresa → varias queries →
+    // crear/actualizar → verificar) se quedaban a medias y el agente "se rendía".
+    stopWhen: stepCountIs(16),
     tools: {
       execute_sql: tool({
         description:
