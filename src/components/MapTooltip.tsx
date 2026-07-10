@@ -44,13 +44,13 @@ function TendenciaIcon({ dir, pct }: { dir: string; pct: number | null | undefin
   const fmt = pct != null ? pct.toFixed(1) : null;
   if (dir === "up")
     return (
-      <span className="text-wr-green text-xs flex items-center gap-0.5">
+      <span className="text-wr-green text-xs whitespace-nowrap flex items-center gap-0.5">
         ↑ {fmt !== null ? `+${fmt}%` : ""}
       </span>
     );
   if (dir === "down")
     return (
-      <span className="text-wr-red text-xs flex items-center gap-0.5">
+      <span className="text-wr-red text-xs whitespace-nowrap flex items-center gap-0.5">
         ↓ {fmt !== null ? `${fmt}%` : ""}
       </span>
     );
@@ -139,9 +139,11 @@ export default function MapTooltip({ x, y, props }: TooltipProps) {
           )}
         </div>
 
-        {/* Financieros — ocultos en modo presentación */}
+        {/* Financieros — ocultos en modo presentación. Columnas auto+1fr: la
+            de etiquetas encoge a su contenido y deja sitio al valor con
+            tendencia ("63.9M€ ↑ +39.5%") sin partirse en dos líneas. */}
         {!modoPresentacion && (
-          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 mb-1.5">
+          <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 mb-1.5">
             <div className="text-wr-hint">Ingresos</div>
             <div className="text-wr-text flex items-center gap-1">
               {fmtM(props.ingresos)}
