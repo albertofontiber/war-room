@@ -21,6 +21,7 @@ import { RichTextEditor } from "@/components/RichTextEditor";
 const TOOL_TO_RESOURCE: Record<string, ResourceKind> = {
   crear_tarea: "tarea",
   actualizar_tarea: "tarea",
+  cambiar_etapa: "stage",
 };
 
 function resourceForTool(toolName: string): ResourceKind | null {
@@ -30,6 +31,7 @@ function resourceForTool(toolName: string): ResourceKind | null {
 function actionForTool(toolName: string): "create" | "update" | undefined {
   if (toolName.startsWith("crear_")) return "create";
   if (toolName.startsWith("actualizar_")) return "update";
+  if (toolName === "cambiar_etapa") return "update";
   return undefined;
 }
 
@@ -74,13 +76,15 @@ export default function ChatIA() {
           | {
               ok?: boolean;
               tarea?: { id?: number; empresa?: { id?: number } };
+              // Shape de cambiar_etapa: la empresa va a nivel raíz.
+              empresa?: { id?: number };
             }
           | undefined;
         if (!output?.ok) continue;
 
         const callId =
           (anyPart.toolCallId as string | undefined) ??
-          `${msg.id}-${output.tarea?.id ?? "?"}`;
+          `${msg.id}-${output.tarea?.id ?? output.empresa?.id ?? "?"}`;
         if (dispatchedRef.current.has(callId)) continue;
 
         // El toolName puede venir en `toolName` (v4 SDK) o codificado en
@@ -94,9 +98,10 @@ export default function ChatIA() {
         const resource = resourceForTool(toolName);
         if (!resource) continue; // Tool sin efecto (ej. execute_sql, buscar_empresa).
 
-        // Resolver empresaId/resourceId según el recurso. Hoy todos los
-        // tools que devuelven `tarea` lo embeben en `output.tarea.empresa.id`.
-        const empresaId = output.tarea?.empresa?.id;
+        // Resolver empresaId/resourceId según el recurso. Los tools de tarea
+        // embeben la empresa en `output.tarea.empresa.id`; cambiar_etapa la
+        // devuelve a nivel raíz (`output.empresa.id`) y no tiene id propio.
+        const empresaId = output.tarea?.empresa?.id ?? output.empresa?.id;
         const resourceId = output.tarea?.id;
         if (!empresaId) continue;
 
