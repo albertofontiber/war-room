@@ -385,7 +385,7 @@ flowchart TB
 ```mermaid
 flowchart LR
     User[💬 Alberto<br><i>¿cuántas adquisiciones<br>en Cataluña este mes?</i>] --> Stream[POST /api/chat<br><i>Vercel AI SDK v6</i>]
-    Stream --> Claude[Claude Sonnet 4.6<br><i>+ schema BD en system prompt</i>]
+    Stream --> Claude[Claude Sonnet 5<br><i>+ schema BD en system prompt</i>]
     Claude -->|tool call| Tool[execute_sql<br><i>solo SELECT</i>]
     Tool -->|prisma.queryRawUnsafe| DB[(Postgres)]
     DB -->|rows| Tool
