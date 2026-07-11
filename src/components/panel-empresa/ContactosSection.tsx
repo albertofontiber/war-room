@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { dispatchDataChanged } from "@/lib/data-events";
+import { dispatchDataChanged, subscribeDataChanged } from "@/lib/data-events";
 
 type Contacto = {
   id: number;
@@ -89,6 +89,23 @@ export function ContactosSection({ empresaId }: { empresaId: number }) {
       void reload();
     }
   }, [open, items, loading, reload]);
+
+  // Refresca cuando un contacto de ESTA empresa cambia desde fuera de la
+  // sección (tools crear_contacto/actualizar_contacto del chat IA). Los
+  // cambios propios se excluyen por `source` — ya recargan tras cada
+  // mutación. Solo recarga si la sección ya fetcheó (items !== null): si
+  // sigue lazy, el primer despliegue traerá datos frescos de todos modos.
+  useEffect(
+    () =>
+      subscribeDataChanged(
+        { resource: "contacto", parent: { resource: "empresa", id: empresaId } },
+        (detail) => {
+          if (detail.source?.startsWith("ContactosSection/")) return;
+          if (items !== null) void reload();
+        }
+      ),
+    [empresaId, items, reload]
+  );
 
   // Reset cuando cambia la empresa: limpia items y formularios para evitar
   // mezclar contactos de otra ficha.
