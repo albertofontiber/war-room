@@ -45,11 +45,44 @@ export default function ChatIA() {
 
   const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), []);
 
-  const { messages, sendMessage, status, error } = useChat({
+  const { messages, sendMessage, setMessages, status, error } = useChat({
     transport,
   });
 
   const isLoading = status === "streaming" || status === "submitted";
+
+  // Rehidratar el hilo persistido (ChatThread) una sola vez al montar. El
+  // server guarda la conversación al final de cada turno (onFinish del
+  // stream), así que reabrir la app recupera donde lo dejaste.
+  const historyLoadedRef = useRef(false);
+  useEffect(() => {
+    if (historyLoadedRef.current) return;
+    historyLoadedRef.current = true;
+    (async () => {
+      try {
+        const res = await fetch("/api/chat/history");
+        if (!res.ok) return;
+        const data = (await res.json()) as { messages?: unknown[] };
+        if (Array.isArray(data.messages) && data.messages.length > 0) {
+          setMessages(data.messages as Parameters<typeof setMessages>[0]);
+        }
+      } catch {
+        // Sin historial no pasa nada — el chat empieza vacío.
+      }
+    })();
+  }, [setMessages]);
+
+  // "Nueva conversación": borra el hilo en servidor y limpia el estado local.
+  const nuevaConversacion = useCallback(async () => {
+    if (isLoading) return;
+    setMessages([]);
+    try {
+      await fetch("/api/chat/history", { method: "DELETE" });
+    } catch {
+      // Si falla el DELETE, el próximo turno re-guardará el hilo viejo; no
+      // es crítico y el usuario ya ve el chat vacío.
+    }
+  }, [isLoading, setMessages]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -211,16 +244,28 @@ export default function ChatIA() {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 sm:py-2.5 border-b border-wr-border shrink-0">
         <span className="text-sm font-semibold text-wr-text">Chat IA</span>
-        <button
-          onClick={() => setOpen(false)}
-          className="text-wr-muted hover:text-wr-text transition-colors p-1 -m-1"
-          aria-label="Cerrar chat"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
+        <div className="flex items-center gap-2">
+          {messages.length > 0 && (
+            <button
+              onClick={() => void nuevaConversacion()}
+              disabled={isLoading}
+              className="text-wr-muted hover:text-wr-text transition-colors text-[11px] px-2 py-1 rounded border border-wr-border disabled:opacity-50"
+              title="Borra el historial y empieza de cero"
+            >
+              Nueva conversación
+            </button>
+          )}
+          <button
+            onClick={() => setOpen(false)}
+            className="text-wr-muted hover:text-wr-text transition-colors p-1 -m-1"
+            aria-label="Cerrar chat"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Messages */}

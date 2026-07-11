@@ -1,10 +1,16 @@
-import { streamText, stepCountIs, convertToModelMessages } from "ai";
+import {
+  streamText,
+  stepCountIs,
+  convertToModelMessages,
+  type UIMessage,
+} from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { SYSTEM_PROMPT } from "@/lib/chat-schema";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { buildChatTools } from "@/lib/chat-tools";
+import { saveChatThread } from "@/lib/chat-thread";
 
 export const dynamic = "force-dynamic";
 // 60s: con 16 pasos de tools posibles, 30s cortaba a medias las cadenas
@@ -76,5 +82,13 @@ export async function POST(req: Request) {
     tools: buildChatTools({ currentUser: { id: currentUser.id } }),
   });
 
-  return result.toUIMessageStreamResponse();
+  // Persistir el hilo al terminar el stream: `originalMessages` (los
+  // UIMessages que mandó el cliente, con ids) + la respuesta generada.
+  // `saveChatThread` degrada a no-op si la tabla aún no existe.
+  return result.toUIMessageStreamResponse({
+    originalMessages: (body.messages ?? []) as UIMessage[],
+    onFinish: async ({ messages }) => {
+      await saveChatThread(currentUser.id, messages);
+    },
+  });
 }

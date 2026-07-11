@@ -333,6 +333,21 @@ model User {
   notificaciones  Notificacion[]
   menciones       Mencion[]         @relation("UserMencion")
   empresaSeenAts  EmpresaSeenAt[]   @relation("EmpresaSeenAtUser")
+  chatThread      ChatThread?
+}
+
+// Historial del chat IA — un hilo activo por admin. Antes la conversación
+// vivía solo en el estado del cliente y cerrar el panel la perdía. Se guarda
+// el array de UIMessages (AI SDK) como JSON, capado a los últimos N mensajes
+// (ver CHAT_THREAD_MAX_MESSAGES en src/lib/chat-thread.ts). "Nueva
+// conversación" borra la fila.
+model ChatThread {
+  id        Int      @id @default(autoincrement())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Nota {
