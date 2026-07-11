@@ -19,7 +19,7 @@ import WarRoomMobileMenu from "@/components/WarRoomMobileMenu";
 import { ResponsiveModal } from "@/components/ui/responsive";
 import { useIsDesktop } from "@/lib/breakpoints";
 import { useNavegacion } from "@/lib/navegacion";
-import { dispatchDataChanged } from "@/lib/data-events";
+import { dispatchDataChanged, subscribeDataChanged } from "@/lib/data-events";
 import type { DealStage } from "@/types";
 import { DEAL_STAGES, DEAL_STAGE_LABEL } from "@/lib/crm";
 
@@ -127,6 +127,19 @@ export default function PipelinePageClient() {
     const t = setTimeout(() => loadPipeline(filters), 250);
     return () => clearTimeout(t);
   }, [filters, loadPipeline]);
+
+  // Refresca el Kanban cuando el stage de una empresa cambia desde FUERA del
+  // propio tablero (tool cambiar_etapa del chat IA, StageChevron de la ficha).
+  // El drag propio se excluye por `source`: ya aplicó su optimistic update y
+  // recargar aquí pisaría la posición de la tarjeta con un fetch redundante.
+  useEffect(
+    () =>
+      subscribeDataChanged({ resource: "stage" }, (detail) => {
+        if (detail.source === "PipelinePageClient/stageChange") return;
+        void loadPipeline(filters);
+      }),
+    [filters, loadPipeline]
+  );
 
   const handleStageChange = useCallback(
     async (empresaId: number, nuevoStage: DealStage) => {

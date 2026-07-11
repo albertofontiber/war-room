@@ -21,6 +21,8 @@ import { RichTextEditor } from "@/components/RichTextEditor";
 const TOOL_TO_RESOURCE: Record<string, ResourceKind> = {
   crear_tarea: "tarea",
   actualizar_tarea: "tarea",
+  crear_contacto: "contacto",
+  actualizar_contacto: "contacto",
   cambiar_etapa: "stage",
 };
 
@@ -76,6 +78,7 @@ export default function ChatIA() {
           | {
               ok?: boolean;
               tarea?: { id?: number; empresa?: { id?: number } };
+              contacto?: { id?: number; empresa?: { id?: number } };
               // Shape de cambiar_etapa: la empresa va a nivel raíz.
               empresa?: { id?: number };
             }
@@ -84,7 +87,7 @@ export default function ChatIA() {
 
         const callId =
           (anyPart.toolCallId as string | undefined) ??
-          `${msg.id}-${output.tarea?.id ?? output.empresa?.id ?? "?"}`;
+          `${msg.id}-${output.tarea?.id ?? output.contacto?.id ?? output.empresa?.id ?? "?"}`;
         if (dispatchedRef.current.has(callId)) continue;
 
         // El toolName puede venir en `toolName` (v4 SDK) o codificado en
@@ -99,10 +102,14 @@ export default function ChatIA() {
         if (!resource) continue; // Tool sin efecto (ej. execute_sql, buscar_empresa).
 
         // Resolver empresaId/resourceId según el recurso. Los tools de tarea
-        // embeben la empresa en `output.tarea.empresa.id`; cambiar_etapa la
-        // devuelve a nivel raíz (`output.empresa.id`) y no tiene id propio.
-        const empresaId = output.tarea?.empresa?.id ?? output.empresa?.id;
-        const resourceId = output.tarea?.id;
+        // y contacto embeben la empresa en `output.{tarea,contacto}.empresa.id`;
+        // cambiar_etapa la devuelve a nivel raíz (`output.empresa.id`) y no
+        // tiene id propio.
+        const empresaId =
+          output.tarea?.empresa?.id ??
+          output.contacto?.empresa?.id ??
+          output.empresa?.id;
+        const resourceId = output.tarea?.id ?? output.contacto?.id;
         if (!empresaId) continue;
 
         dispatchedRef.current.add(callId);
