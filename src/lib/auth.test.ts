@@ -8,7 +8,10 @@
  *   - extracción de ip / userAgent desde headers (incluyendo x-forwarded-for
  *     con varios hops y cuando viene como array)
  *
- * No testea el provider admin (no escribe en FinderAccessLog).
+ * Y del provider `admin-credentials` (hardening 2026-07):
+ *   - adminPasswordMatches: hash bcrypt (preferido), texto plano legacy en
+ *     tiempo constante, credencial vacía nunca matchea
+ *   - authorize: success con hash, failure con password errónea (y log.warn)
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -31,7 +34,16 @@ vi.mock("@/lib/finder-access-log", () => ({
   logFinderAction: (...a: unknown[]) => logFinderActionMock(...a),
 }));
 
-import { authOptions } from "./auth";
+const logWarnMock = vi.fn();
+vi.mock("@/lib/logger", () => ({
+  log: {
+    info: vi.fn(),
+    warn: (...a: unknown[]) => logWarnMock(...a),
+    error: vi.fn(),
+  },
+}));
+
+import { adminPasswordMatches, authOptions } from "./auth";
 
 type AuthorizeFn = (
   credentials: Record<string, string> | undefined,
@@ -237,5 +249,93 @@ describe("finder-credentials authorize", () => {
     expect(logFinderActionMock).toHaveBeenCalledWith(
       expect.objectContaining({ ip: null, userAgent: null })
     );
+  });
+});
+
+// ─── Provider admin-credentials (hardening) ─────────────────────────────────
+
+function getAdminAuthorize(): AuthorizeFn {
+  const providers = authOptions.providers as unknown as Array<{
+    options?: { id?: string; authorize?: AuthorizeFn };
+  }>;
+  const found = providers.find((p) => p.options?.id === "admin-credentials");
+  if (!found?.options?.authorize) {
+    throw new Error("admin-credentials authorize not found");
+  }
+  return found.options.authorize;
+}
+
+describe("adminPasswordMatches", () => {
+  beforeEach(() => {
+    bcryptCompare.mockReset();
+  });
+
+  it("texto plano legacy: match exacto en tiempo constante", async () => {
+    expect(await adminPasswordMatches("secreto", { password: "secreto" })).toBe(true);
+    expect(await adminPasswordMatches("secretO", { password: "secreto" })).toBe(false);
+    expect(await adminPasswordMatches("secret", { password: "secreto" })).toBe(false);
+  });
+
+  it("credencial vacía nunca matchea (default '' de las envs)", async () => {
+    expect(await adminPasswordMatches("", { password: "" })).toBe(false);
+    expect(await adminPasswordMatches("", {})).toBe(false);
+    expect(await adminPasswordMatches("lo-que-sea", { password: undefined })).toBe(false);
+  });
+
+  it("si hay hash, gana el hash (bcrypt.compare) e ignora el texto plano", async () => {
+    bcryptCompare.mockResolvedValueOnce(true);
+    expect(
+      await adminPasswordMatches("pw", { password: "otra", passwordHash: "$2a$10$hash" })
+    ).toBe(true);
+    expect(bcryptCompare).toHaveBeenCalledWith("pw", "$2a$10$hash");
+
+    bcryptCompare.mockResolvedValueOnce(false);
+    expect(
+      await adminPasswordMatches("pw-mala", { password: "pw-mala", passwordHash: "$2a$10$hash" })
+    ).toBe(false);
+  });
+});
+
+describe("authorize (admin-credentials)", () => {
+  beforeEach(() => {
+    bcryptCompare.mockReset();
+    logWarnMock.mockReset();
+    vi.stubEnv("ADMIN_USER_1", "alberto");
+    vi.stubEnv("ADMIN_PASS_HASH_1", "$2a$10$hash-alberto");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("success con hash: devuelve kind admin y no loguea warn", async () => {
+    bcryptCompare.mockResolvedValueOnce(true);
+    const authorize = getAdminAuthorize();
+    const user = (await authorize(
+      { username: "alberto", password: "correcta" },
+      REQ
+    )) as { kind: string; name: string } | null;
+    expect(user).toMatchObject({ kind: "admin", name: "alberto" });
+    expect(logWarnMock).not.toHaveBeenCalled();
+  });
+
+  it("password errónea: null + log.warn con username e ip", async () => {
+    bcryptCompare.mockResolvedValueOnce(false);
+    const authorize = getAdminAuthorize();
+    const user = await authorize({ username: "alberto", password: "mala" }, REQ);
+    expect(user).toBeNull();
+    expect(logWarnMock).toHaveBeenCalledWith(
+      "auth/admin",
+      "login_failure",
+      expect.objectContaining({ username: "alberto", ip: "203.0.113.5" })
+    );
+  });
+
+  it("username desconocido: null + log.warn (sin filtrar si existe o no)", async () => {
+    const authorize = getAdminAuthorize();
+    const user = await authorize({ username: "intruso", password: "x" }, REQ);
+    expect(user).toBeNull();
+    expect(bcryptCompare).not.toHaveBeenCalled();
+    expect(logWarnMock).toHaveBeenCalled();
   });
 });

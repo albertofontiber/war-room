@@ -1,9 +1,11 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
 import type { IncomingHttpHeaders } from "http";
+import { createHash, timingSafeEqual } from "crypto";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { logFinderAction } from "@/lib/finder-access-log";
+import { log } from "@/lib/logger";
 
 /**
  * Extrae IP del cliente y user-agent de los headers de la request de login.
@@ -25,6 +27,31 @@ function extractRequestMetadata(headers: IncomingHttpHeaders | undefined): {
   const ua = headers["user-agent"];
   const userAgent = (Array.isArray(ua) ? ua[0] : ua) ?? null;
   return { ip, userAgent };
+}
+
+/**
+ * Verifica la contraseña de un admin. Dos modos, por env var:
+ *
+ * - `ADMIN_PASS_HASH_n` (preferido): hash bcrypt — la contraseña real no vive
+ *   en ninguna env. Generar con `npx tsx scripts/hash-admin-password.ts`.
+ * - `ADMIN_PASS_n` (legacy): texto plano. Se compara en tiempo constante
+ *   (digest sha256 + timingSafeEqual) en vez de `===`.
+ *
+ * Si ambas están definidas gana el hash. Una credencial vacía nunca matchea
+ * (los defaults `?? ""` de las envs no deben abrir la puerta).
+ * Exportado para tests.
+ */
+export async function adminPasswordMatches(
+  input: string,
+  stored: { password?: string; passwordHash?: string }
+): Promise<boolean> {
+  if (stored.passwordHash) {
+    return bcrypt.compare(input, stored.passwordHash);
+  }
+  if (!stored.password) return false;
+  const a = createHash("sha256").update(input).digest();
+  const b = createHash("sha256").update(stored.password).digest();
+  return timingSafeEqual(a, b);
 }
 
 /**
@@ -74,26 +101,41 @@ export const authOptions: NextAuthOptions = {
         username: { label: "Usuario", type: "text" },
         password: { label: "Contraseña", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.username || !credentials?.password) return null;
 
+        const { ip, userAgent } = extractRequestMetadata(req?.headers);
         const users = [
           {
             id: "1",
             name: process.env.ADMIN_USER_1 ?? "alberto",
-            password: process.env.ADMIN_PASS_1 ?? "",
+            password: process.env.ADMIN_PASS_1,
+            passwordHash: process.env.ADMIN_PASS_HASH_1,
           },
           {
             id: "2",
             name: process.env.ADMIN_USER_2 ?? "gabriel",
-            password: process.env.ADMIN_PASS_2 ?? "",
+            password: process.env.ADMIN_PASS_2,
+            passwordHash: process.env.ADMIN_PASS_HASH_2,
           },
         ];
 
-        const user = users.find(
-          (u) => u.name === credentials.username && u.password === credentials.password
-        );
-        if (!user) return null;
+        const user = users.find((u) => u.name === credentials.username);
+        const ok = user
+          ? await adminPasswordMatches(credentials.password, user)
+          : false;
+        if (!user || !ok) {
+          // Los admins no tienen tabla de access log (los finders sí);
+          // registramos en el logger estructurado → visible en Vercel logs.
+          log.warn("auth/admin", "login_failure", {
+            username: credentials.username,
+            ip,
+            userAgent,
+          });
+          return null;
+        }
+
+        log.info("auth/admin", "login_success", { username: user.name, ip });
         return {
           id: user.id,
           name: user.name,
