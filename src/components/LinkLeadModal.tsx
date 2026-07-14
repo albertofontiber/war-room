@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DEAL_STAGE_LABEL, DEAL_STAGE_PILL_CLASS } from "@/lib/crm";
 import { dispatchDataChanged } from "@/lib/data-events";
+import { useMobileViewportRecovery } from "@/lib/use-mobile-viewport-recovery";
 import type { DealStage } from "@/types";
 
 type SearchResult = {
@@ -30,6 +31,12 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
   const [searching, setSearching] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const recoverMobileViewport = useMobileViewportRecovery();
+
+  const closeModal = useCallback(() => {
+    recoverMobileViewport();
+    onClose();
+  }, [onClose, recoverMobileViewport]);
 
   // Reset cuando se abre/cierra
   useEffect(() => {
@@ -94,7 +101,7 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
         source: "LinkLeadModal/link",
       });
       onLinked(selected.id);
-      onClose();
+      closeModal();
     } catch (err) {
       setError(String(err));
     } finally {
@@ -104,12 +111,12 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 px-3 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-sm"
+      onClick={closeModal}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-[520px] max-w-[96vw] max-h-[92vh] overflow-auto bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
+        className="w-full max-w-[520px] max-h-full overflow-y-auto overscroll-contain bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
       >
         <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-wr-border">
           <div>
@@ -118,7 +125,7 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
               «{leadNombre}» → empresa de la BD
             </p>
           </div>
-          <button onClick={onClose} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
+          <button onClick={closeModal} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
         </div>
 
         <div className="p-3 sm:p-5 space-y-3 text-xs">
@@ -204,7 +211,7 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
           <div className="flex justify-end gap-2 pt-2 border-t border-wr-border">
             <button
               type="button"
-              onClick={onClose}
+              onClick={closeModal}
               disabled={submitting}
               className="text-xs px-3 py-2 sm:py-1.5 bg-wr-surface2 border border-wr-border rounded text-wr-muted hover:text-wr-text"
             >

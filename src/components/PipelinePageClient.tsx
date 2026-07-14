@@ -229,7 +229,7 @@ export default function PipelinePageClient() {
   }, [allCards]);
 
   return (
-    <div className="h-screen flex flex-col bg-wr-bg text-wr-text">
+    <div className="fixed inset-x-0 top-0 h-[100dvh] w-full flex flex-col overflow-hidden bg-wr-bg text-wr-text">
       <Navbar />
       {/* Drawer mobile (controlado por sidebarMobileOpen del store, abierto
           por el hamburger del Navbar). Sin esto, en /pipeline el hamburger

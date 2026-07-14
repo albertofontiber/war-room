@@ -10,6 +10,7 @@ import {
   type ResourceKind,
 } from "@/lib/data-events";
 import { normalizeChatMarkdown } from "@/lib/normalize-chat-markdown";
+import { useMobileViewportRecovery } from "@/lib/use-mobile-viewport-recovery";
 import { RichTextEditor } from "@/components/RichTextEditor";
 
 /**
@@ -42,7 +43,7 @@ export default function ChatIA() {
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const restoreTimerRef = useRef<number | null>(null);
+  const recoverMobileViewport = useMobileViewportRecovery();
 
   const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), []);
 
@@ -215,40 +216,10 @@ export default function ChatIA() {
   // (cabecera bajo la barra de estado y botón del chat cortado a la derecha).
   // Restauramos el scroll tras el blur y emitimos resize para los consumidores
   // que dependen de las dimensiones del viewport, como Mapbox.
-  const restoreMobileViewport = useCallback(() => {
-    if (window.innerWidth >= 640) return;
-
-    const restore = () => {
-      window.scrollTo({ left: 0, top: 0, behavior: "auto" });
-      window.dispatchEvent(new Event("resize"));
-    };
-
-    restore();
-    window.requestAnimationFrame(restore);
-    if (restoreTimerRef.current !== null) {
-      window.clearTimeout(restoreTimerRef.current);
-    }
-    restoreTimerRef.current = window.setTimeout(() => {
-      restore();
-      restoreTimerRef.current = null;
-    }, 300);
-  }, []);
-
   const closeChat = useCallback(() => {
-    const activeElement = document.activeElement;
-    if (activeElement instanceof HTMLElement) activeElement.blur();
+    recoverMobileViewport();
     setOpen(false);
-    restoreMobileViewport();
-  }, [restoreMobileViewport]);
-
-  useEffect(
-    () => () => {
-      if (restoreTimerRef.current !== null) {
-        window.clearTimeout(restoreTimerRef.current);
-      }
-    },
-    []
-  );
+  }, [recoverMobileViewport]);
 
   // El editor llama a onSubmit sin args; el botón Enviar también lo invoca
   // directamente. Mantenemos el guard de loading + trim para idempotencia.
