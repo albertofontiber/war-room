@@ -73,6 +73,7 @@ interface WarRoomState {
   // Drawer mobile (Navbar abre, Sidebar/Nav lo cierran al elegir).
   // Solo aplica en viewport < lg; en desktop el Sidebar siempre está fijo.
   sidebarMobileOpen: boolean;
+  filtersMobileOpen: boolean;
 
   // ── Mapa ─────────────────────────────────────────────────────────────────
   sizeMetric: SizeMetric;
@@ -106,6 +107,7 @@ interface WarRoomState {
 
   setSidebarMobileOpen: (open: boolean) => void;
   toggleSidebarMobile: () => void;
+  setFiltersMobileOpen: (open: boolean) => void;
 
   setSizeMetric: (metric: SizeMetric) => void;
   setFlyToEmpresaId: (id: number | null) => void;
@@ -153,6 +155,7 @@ export const useWarRoomStore = create<WarRoomState>()(
     (set, get) => ({
       modoPresentacion: false,
       sidebarMobileOpen: false,
+      filtersMobileOpen: false,
       sizeMetric: "ingresos",
       flyToEmpresaId: null,
       mapViewState: { longitude: -3.7, latitude: 40.4, zoom: 5.0 },
@@ -171,6 +174,7 @@ export const useWarRoomStore = create<WarRoomState>()(
       setSidebarMobileOpen: (open) => set({ sidebarMobileOpen: open }),
       toggleSidebarMobile: () =>
         set((s) => ({ sidebarMobileOpen: !s.sidebarMobileOpen })),
+      setFiltersMobileOpen: (open) => set({ filtersMobileOpen: open }),
 
       // ── Mapa / métrica ───────────────────────────────────────────────────
       setSizeMetric: (metric) => set({ sizeMetric: metric }),

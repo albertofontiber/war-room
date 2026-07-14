@@ -62,6 +62,21 @@ migración `CronRun` esté aplicada, una ejecución programada nueva aparecerá 
 5. Tras desplegar el código, aplicar `npx prisma migrate deploy` con las
    variables de producción.
 
+### Seguridad de acceso a datos (RLS)
+
+War Room usa Prisma en el servidor; los roles de la Data API de Supabase
+(`anon`, `authenticated` y `service_role`) no tienen permisos sobre las tablas
+del esquema `public`. La migración
+`20260714140000_rls_data_api_lockdown` activa RLS y elimina esos permisos en
+las tablas existentes, además de retirar los privilegios por defecto para los
+objetos creados por `postgres`.
+
+Al crear una nueva tabla en `public`, la misma migración debe incluir
+explícitamente `ALTER TABLE ... ENABLE ROW LEVEL SECURITY`. Solo si se decide
+exponer una funcionalidad mediante la Data API se otorgarán los privilegios
+mínimos y se añadirán políticas RLS revisadas en esa misma migración. Tras
+cualquier cambio de este tipo, comprobar el Security Advisor de Supabase.
+
 ## Observabilidad
 
 - Los logs ya se emiten como JSON estructurado con `level`, `scope`,

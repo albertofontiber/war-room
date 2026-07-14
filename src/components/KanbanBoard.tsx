@@ -250,7 +250,7 @@ function Column({
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col min-w-[240px] w-[240px] ${collapsed ? "!w-[48px] !min-w-[48px]" : ""} bg-wr-bg border border-wr-border rounded-lg overflow-hidden transition-all ${
+      className={`snap-start flex flex-col min-w-[240px] w-[240px] ${collapsed ? "!w-[48px] !min-w-[48px]" : ""} bg-wr-bg border border-wr-border rounded-lg overflow-hidden transition-all ${
         isOver ? "border-wr-blue shadow-lg shadow-wr-blue/20" : ""
       }`}
     >
@@ -395,7 +395,7 @@ export default function KanbanBoard({ grouped, onStageChange, onCardClick, sort 
   return (
     <>
       <DndContext sensors={sensors} onDragStart={handleStart} onDragEnd={handleEnd}>
-        <div className="flex gap-2 sm:gap-3 overflow-x-auto h-full p-2 sm:p-4">
+        <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto p-2 sm:gap-3 sm:snap-none sm:p-4 h-full">
           {FUNNEL_STAGES.map((s) => (
             <Column key={s} stage={s} cards={sortedGrouped[s] ?? []} onCardClick={onCardClick} blur={modoPresentacion} />
           ))}

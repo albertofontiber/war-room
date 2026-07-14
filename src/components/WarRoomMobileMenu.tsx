@@ -6,20 +6,12 @@ import { useRouter, usePathname } from "next/navigation";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useNavegacion } from "@/lib/navegacion";
 import { MobileDrawer } from "@/components/ui/responsive";
-import { SidebarContent } from "@/components/Sidebar";
 import type { Vista } from "@/types";
 
 /**
- * Drawer del War Room en mobile/tablet (<lg). Combina dos secciones:
- *  1. Navegación: vistas (Mapa/Tabla/Operaciones/Grupos/Pipeline) + acceso
- *     a Finders + toggle métrica + toggle modo presentación.
- *  2. Filtros: el SidebarContent completo, igual que en desktop.
- *
- * En desktop estos dos bloques viven en sitios distintos (Navbar vs Sidebar
- * fijo). Mobile los unifica para evitar dos drawers separados.
- *
- * El estado `sidebarMobileOpen` vive en el store; Navbar lo abre con el
- * hamburger, este componente y los items de navegación lo cierran al elegir.
+ * Drawer de navegación para mobile/tablet (<lg). Los filtros viven en una
+ * hoja inferior independiente, accesible desde Navbar, para que no queden
+ * escondidos al final de una navegación larga.
  */
 export default function WarRoomMobileMenu() {
   const router = useRouter();
@@ -33,10 +25,18 @@ export default function WarRoomMobileMenu() {
     setSizeMetric,
     modoPresentacion,
     toggleModoPresentacion,
+    setFiltersMobileOpen,
+    getFiltrosActivos,
   } = useWarRoomStore();
   const { vista, setVista } = useNavegacion();
 
   const close = useCallback(() => setSidebarMobileOpen(false), [setSidebarMobileOpen]);
+  const activeFilterCount = getFiltrosActivos().length;
+
+  const openFilters = useCallback(() => {
+    close();
+    setFiltersMobileOpen(true);
+  }, [close, setFiltersMobileOpen]);
 
   // Cerrar el drawer cuando cambia la vista o la ruta. El base-ui Sheet no
   // siempre cierra de forma fiable si se llama setSidebarMobileOpen(false)
@@ -112,6 +112,9 @@ export default function WarRoomMobileMenu() {
           <NavButton active={onPipelinePage} onClick={goToPipeline}>
             Pipeline
           </NavButton>
+          <NavButton onClick={openFilters}>
+            {activeFilterCount ? `Filtros (${activeFilterCount})` : "Filtros"}
+          </NavButton>
 
           <div className="pt-2 mt-2 border-t border-wr-border">
             <NavButton onClick={goToFinders}>Gestión de finders</NavButton>
@@ -124,7 +127,7 @@ export default function WarRoomMobileMenu() {
             <div className="flex bg-wr-surface2 border border-wr-border rounded-md p-0.5">
               <button
                 onClick={() => setSizeMetric("ingresos")}
-                className={`flex-1 px-2.5 py-1.5 text-xs rounded transition-colors ${
+                className={`tap-target-h flex-1 px-2.5 py-1.5 text-xs rounded transition-colors ${
                   sizeMetric === "ingresos" ? "bg-wr-surface text-wr-text" : "text-wr-muted"
                 }`}
               >
@@ -132,7 +135,7 @@ export default function WarRoomMobileMenu() {
               </button>
               <button
                 onClick={() => setSizeMetric("ebitda")}
-                className={`flex-1 px-2.5 py-1.5 text-xs rounded transition-colors ${
+                className={`tap-target-h flex-1 px-2.5 py-1.5 text-xs rounded transition-colors ${
                   sizeMetric === "ebitda" ? "bg-wr-surface text-wr-text" : "text-wr-muted"
                 }`}
               >
@@ -145,7 +148,7 @@ export default function WarRoomMobileMenu() {
                 toggleModoPresentacion();
                 close();
               }}
-              className={`w-full text-left px-3 py-2 rounded text-xs transition-colors border ${
+              className={`tap-target-h w-full text-left px-3 py-2 rounded text-xs transition-colors border ${
                 modoPresentacion
                   ? "border-wr-amber/40 text-wr-amber bg-wr-amber/10"
                   : "border-wr-border text-wr-muted hover:text-wr-text"
@@ -156,11 +159,6 @@ export default function WarRoomMobileMenu() {
           </div>
         </nav>
 
-        {/* Sección filtros (reutiliza SidebarContent). En mobile el scroll lo
-            lleva el drawer completo, no un sub-scroll: scroll={false} hace que
-            SidebarContent fluya en altura natural y se desplace junto con la
-            navegación de arriba. */}
-        <SidebarContent scroll={false} />
       </div>
     </MobileDrawer>
   );

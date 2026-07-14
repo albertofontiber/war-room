@@ -16,6 +16,8 @@ export default function Navbar() {
     sizeMetric, setSizeMetric, setSearchQuery,
     empresasGeoJSON, hydrateEmpresas, setFlyToEmpresaId,
     toggleSidebarMobile,
+    setFiltersMobileOpen,
+    getFiltrosActivos,
   } = useWarRoomStore();
   const { vista, setVista, seleccionarEmpresa } = useNavegacion();
   const { data: session } = useSession();
@@ -118,6 +120,7 @@ export default function Navbar() {
   const initials = session?.user?.name
     ? session.user.name.slice(0, 2).toUpperCase()
     : "??";
+  const activeFilterCount = getFiltrosActivos().length;
 
   return (
     <header className="h-11 flex-shrink-0 flex items-center px-3 lg:px-4 gap-2 lg:gap-3 border-b border-wr-border bg-wr-surface">
@@ -200,6 +203,25 @@ export default function Navbar() {
           </div>
         )}
       </div>
+
+      <button
+        onClick={() => setFiltersMobileOpen(true)}
+        aria-label={`Abrir filtros${activeFilterCount ? ` (${activeFilterCount} activos)` : ""}`}
+        className={`lg:hidden tap-target relative flex items-center justify-center rounded-md border transition-colors ${
+          activeFilterCount
+            ? "border-wr-blue/40 bg-wr-blue/15 text-wr-blue"
+            : "border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted"
+        }`}
+      >
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M4 6h16M7 12h10M10 18h4" />
+        </svg>
+        {activeFilterCount > 0 && (
+          <span className="absolute -right-1 -top-1 min-w-4 h-4 rounded-full bg-wr-blue text-[9px] leading-4 text-white">
+            {activeFilterCount > 9 ? "9+" : activeFilterCount}
+          </span>
+        )}
+      </button>
 
       {/* Modo presentación */}
       {modoPresentacion && (
@@ -336,7 +358,7 @@ export default function Navbar() {
       <button
         onClick={() => signOut({ callbackUrl: "/login" })}
         title={`${session?.user?.name} — Cerrar sesión`}
-        className="w-7 h-7 rounded-full bg-wr-blue/20 border border-wr-blue/30 text-wr-blue text-xs font-semibold flex items-center justify-center hover:bg-wr-blue/30 transition-colors"
+        className="tap-target rounded-full bg-wr-blue/20 border border-wr-blue/30 text-wr-blue text-xs font-semibold flex items-center justify-center hover:bg-wr-blue/30 transition-colors"
       >
         {initials}
       </button>

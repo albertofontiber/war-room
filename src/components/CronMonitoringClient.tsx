@@ -103,7 +103,7 @@ export default function CronMonitoringClient() {
           </div>
           <button
             onClick={() => void load()}
-            className="rounded-md border border-wr-border px-3 py-2 text-sm text-wr-muted transition-colors hover:border-wr-muted hover:text-wr-text"
+            className="tap-target-h rounded-md border border-wr-border px-3 py-2 text-sm text-wr-muted transition-colors hover:border-wr-muted hover:text-wr-text"
           >
             Actualizar
           </button>
@@ -128,7 +128,32 @@ export default function CronMonitoringClient() {
           <div className="border-b border-wr-border px-4 py-3">
             <h2 className="font-medium">Últimas ejecuciones</h2>
           </div>
-          <div className="overflow-x-auto">
+          <div className="divide-y divide-wr-border sm:hidden">
+            {!loading && runs.length === 0 && (
+              <p className="px-4 py-10 text-center text-sm text-wr-muted">Aún no hay ejecuciones registradas.</p>
+            )}
+            {runs.map((run) => (
+              <article key={run.id} className="space-y-2 px-4 py-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-medium text-wr-text">{JOB_LABELS[run.job] ?? run.job}</p>
+                    <p className="mt-0.5 text-xs text-wr-hint">{run.source}</p>
+                  </div>
+                  <span className={`inline-flex shrink-0 rounded-full border px-2 py-0.5 text-xs font-medium ${STATUS_CLASSES[run.status]}`}>
+                    {STATUS_LABELS[run.status]}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-3 text-xs text-wr-muted">
+                  <span>{formatDate(run.startedAt)}</span>
+                  <span className="shrink-0">{formatDuration(run.durationMs)}</span>
+                </div>
+                <p className="break-words text-xs leading-relaxed text-wr-muted">
+                  {run.status === "FAILED" ? "Error técnico: consulta Vercel Logs" : summaryText(run.summary)}
+                </p>
+              </article>
+            ))}
+          </div>
+          <div className="hidden overflow-x-auto sm:block">
             <table className="w-full min-w-[760px] text-left text-sm">
               <thead className="bg-wr-surface2 text-xs uppercase tracking-wider text-wr-hint">
                 <tr>
