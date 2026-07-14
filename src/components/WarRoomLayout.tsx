@@ -8,6 +8,7 @@ import { ResponsiveModal } from "@/components/ui/responsive";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import WarRoomMobileMenu from "@/components/WarRoomMobileMenu";
+import WarRoomMobileFilters from "@/components/WarRoomMobileFilters";
 
 // Lazy-load de componentes pesados (audit perf 2026-05-01). Antes todos
 // estaban en el First Load JS aunque la vista activa solo monte uno:
@@ -69,7 +70,7 @@ export default function WarRoomLayout() {
 
   return (
     // Pantalla completa sin scroll externo
-    <div className="h-screen w-screen flex overflow-hidden bg-wr-bg">
+    <div className="h-[100dvh] w-full flex overflow-hidden bg-wr-bg">
       {/* ── Sidebar izquierdo 260px (solo desktop ≥lg) ── */}
       <div className="hidden lg:flex">
         <Sidebar />
@@ -77,6 +78,7 @@ export default function WarRoomLayout() {
 
       {/* ── Drawer mobile (<lg): controlado por sidebarMobileOpen del store ── */}
       <WarRoomMobileMenu />
+      <WarRoomMobileFilters />
 
       {/* ── Área central (flex-1) ── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">

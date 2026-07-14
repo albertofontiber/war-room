@@ -92,7 +92,7 @@ function TogglePill({
   children: React.ReactNode;
   color?: PillColor;
 }) {
-  const base = "px-2 py-1 rounded text-[11px] border transition-colors";
+  const base = "max-lg:tap-target-h px-2 py-1 rounded text-[11px] border transition-colors";
   const inactive = "bg-wr-surface2 text-wr-muted border-wr-border hover:border-wr-muted";
 
   if (!active) {
@@ -167,7 +167,7 @@ function FilterChecklist({
         {selected.length > 0 && (
           <button
             onClick={onClear}
-            className="text-[10px] text-wr-hint hover:text-wr-amber transition-colors"
+            className="max-lg:tap-target-h text-[10px] text-wr-hint hover:text-wr-amber transition-colors"
           >
             Limpiar
           </button>
@@ -179,7 +179,7 @@ function FilterChecklist({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={`Buscar ${label.toLowerCase()}…`}
-          className="w-full mb-1.5 px-2 py-1 text-[11px] bg-wr-surface2 border border-wr-border rounded text-wr-text placeholder:text-wr-hint outline-none focus:border-wr-blue/50 transition-colors"
+          className="max-lg:tap-target-h w-full mb-1.5 px-2 py-1 text-[11px] bg-wr-surface2 border border-wr-border rounded text-wr-text placeholder:text-wr-hint outline-none focus:border-wr-blue/50 transition-colors"
         />
       )}
       <div className="max-h-[140px] overflow-y-auto space-y-0.5 pr-0.5">
@@ -192,7 +192,7 @@ function FilterChecklist({
             <button
               key={opt}
               onClick={() => onToggle(opt)}
-              className={`w-full flex items-center gap-2 px-2 py-1 rounded text-left text-[11px] transition-colors ${
+              className={`max-lg:tap-target-h w-full flex items-center gap-2 px-2 py-1 rounded text-left text-[11px] transition-colors ${
                 active
                   ? "bg-wr-blue/15 text-wr-blue"
                   : "text-wr-muted hover:bg-wr-surface2 hover:text-wr-text"
@@ -236,7 +236,13 @@ export default function Sidebar() {
  * filtros + stat cards). Sin wrapper visual; el consumer decide cómo
  * envolverlo (aside fijo en desktop, drawer en mobile).
  */
-export function SidebarContent({ scroll = true }: { scroll?: boolean } = {}) {
+export function SidebarContent({
+  scroll = true,
+  showHeader = true,
+}: {
+  scroll?: boolean;
+  showHeader?: boolean;
+} = {}) {
   const {
     filtros,
     setFiltro,
@@ -381,26 +387,28 @@ export function SidebarContent({ scroll = true }: { scroll?: boolean } = {}) {
     >
 
       {/* ── Header ── */}
-      <div className="px-4 py-3 border-b border-wr-border bg-wr-surface">
-        <div className="flex items-center justify-between">
-          <p className="text-[10px] font-semibold text-wr-hint uppercase tracking-widest">
-            Filtros
+      {showHeader && (
+        <div className="px-4 py-3 border-b border-wr-border bg-wr-surface">
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] font-semibold text-wr-hint uppercase tracking-widest">
+              Filtros
+            </p>
+            {activeChips.length > 0 && (
+              <button
+                onClick={resetFiltros}
+                className="text-[10px] text-wr-hint hover:text-wr-amber transition-colors"
+              >
+                Limpiar todo
+              </button>
+            )}
+          </div>
+          <p className="text-wr-text text-sm font-medium mt-0.5">
+            {empresasGeoJSON
+              ? `${visiblesCount} de ${stats.total} empresa${stats.total !== 1 ? "s" : ""}`
+              : "Cargando…"}
           </p>
-          {activeChips.length > 0 && (
-            <button
-              onClick={resetFiltros}
-              className="text-[10px] text-wr-hint hover:text-wr-amber transition-colors"
-            >
-              Limpiar todo
-            </button>
-          )}
         </div>
-        <p className="text-wr-text text-sm font-medium mt-0.5">
-          {empresasGeoJSON
-            ? `${visiblesCount} de ${stats.total} empresa${stats.total !== 1 ? "s" : ""}`
-            : "Cargando…"}
-        </p>
-      </div>
+      )}
 
       {/* ── Scrollable body ── */}
       <div className={`bg-wr-surface ${scroll ? "flex-1 overflow-y-auto" : ""}`}>
