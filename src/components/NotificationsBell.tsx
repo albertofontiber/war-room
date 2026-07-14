@@ -43,7 +43,8 @@ function timeAgo(iso: string): string {
  */
 export default function NotificationsBell({
   endpoint = "/api/notificaciones",
-}: { endpoint?: string } = {}) {
+  compact = false,
+}: { endpoint?: string; compact?: boolean } = {}) {
   const router = useRouter();
   const [items, setItems] = useState<Notificacion[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -127,9 +128,9 @@ export default function NotificationsBell({
         ref={buttonRef}
         onClick={() => setOpen((v) => !v)}
         title="Notificaciones"
-        className="tap-target relative rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors"
+        className={`${compact ? "h-9 w-9 lg:tap-target" : "tap-target"} relative flex items-center justify-center rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors`}
       >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
           <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
           <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
         </svg>
