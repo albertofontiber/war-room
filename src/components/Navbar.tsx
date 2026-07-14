@@ -123,12 +123,12 @@ export default function Navbar() {
   const activeFilterCount = getFiltrosActivos().length;
 
   return (
-    <header className="h-11 flex-shrink-0 flex items-center px-3 lg:px-4 gap-2 lg:gap-3 border-b border-wr-border bg-wr-surface">
+    <header className="h-12 lg:h-11 flex-shrink-0 flex items-center px-3 lg:px-4 gap-2 lg:gap-3 border-b border-wr-border bg-wr-surface">
       {/* Hamburger (solo <lg): abre el drawer con navegación + filtros. */}
       <button
         onClick={toggleSidebarMobile}
         aria-label="Abrir menú"
-        className="lg:hidden tap-target flex items-center justify-center -ml-2 text-wr-muted hover:text-wr-text"
+        className="lg:hidden h-9 w-9 flex-shrink-0 flex items-center justify-center -ml-1 rounded-md text-wr-muted hover:bg-wr-surface2 hover:text-wr-text transition-colors"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="4" y1="6" x2="20" y2="6" />
@@ -142,12 +142,12 @@ export default function Navbar() {
       <Link
         href="/"
         title="Volver al inicio"
-        className="flex items-center gap-2 mr-2 group"
+        className="flex shrink-0 items-center gap-2 mr-1 group"
       >
         <span className="hidden lg:inline text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2.5 py-1 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
           Fontiber War Room
         </span>
-        <span className="lg:hidden text-xs font-semibold tracking-[0.1em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2 py-1 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
+        <span className="lg:hidden h-8 flex items-center text-xs font-semibold tracking-[0.1em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
           WR
         </span>
       </Link>
@@ -155,7 +155,7 @@ export default function Navbar() {
       {/* Search: ocupa todo el espacio disponible hasta max-w-3xl. Sin separador
          flex-1 detrás (rompía el max-width al competir por el espacio); en su
          lugar, ml-auto en el primer elemento del cluster derecho. */}
-      <div className="flex-1 max-w-3xl relative">
+      <div className="flex-1 min-w-0 max-w-3xl relative">
         <div className="relative">
           <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 text-wr-hint" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
@@ -168,7 +168,7 @@ export default function Navbar() {
             onFocus={() => inputValue.trim() && setDropdownOpen(true)}
             onKeyDown={handleKeyDown}
             placeholder={isDesktop ? "Buscar empresa o CIF…" : "Buscar…"}
-            className="w-full bg-wr-surface2 border border-wr-border rounded-md pl-8 pr-8 py-1.5 text-xs text-wr-text placeholder:text-wr-hint focus:outline-none focus:border-wr-blue transition-colors"
+            className="w-full h-9 bg-wr-surface2 border border-wr-border rounded-md pl-8 pr-8 py-0 text-xs text-wr-text placeholder:text-wr-hint focus:outline-none focus:border-wr-blue transition-colors"
           />
           {inputValue && (
             <button
@@ -207,7 +207,7 @@ export default function Navbar() {
       <button
         onClick={() => setFiltersMobileOpen(true)}
         aria-label={`Abrir filtros${activeFilterCount ? ` (${activeFilterCount} activos)` : ""}`}
-        className={`lg:hidden tap-target relative flex items-center justify-center rounded-md border transition-colors ${
+        className={`lg:hidden h-9 w-9 flex-shrink-0 relative flex items-center justify-center rounded-md border transition-colors ${
           activeFilterCount
             ? "border-wr-blue/40 bg-wr-blue/15 text-wr-blue"
             : "border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted"
@@ -328,7 +328,7 @@ export default function Navbar() {
       </button>
 
       {/* Notificaciones */}
-      <NotificationsBell />
+      <NotificationsBell compact />
 
       {/* Admin: gestión de finders — solo lg+ (en mobile vive en el drawer). */}
       <button
@@ -358,7 +358,7 @@ export default function Navbar() {
       <button
         onClick={() => signOut({ callbackUrl: "/login" })}
         title={`${session?.user?.name} — Cerrar sesión`}
-        className="tap-target rounded-full bg-wr-blue/20 border border-wr-blue/30 text-wr-blue text-xs font-semibold flex items-center justify-center hover:bg-wr-blue/30 transition-colors"
+        className="h-9 w-9 lg:tap-target flex-shrink-0 rounded-full bg-wr-blue/20 border border-wr-blue/30 text-wr-blue text-xs font-semibold flex items-center justify-center hover:bg-wr-blue/30 transition-colors"
       >
         {initials}
       </button>
