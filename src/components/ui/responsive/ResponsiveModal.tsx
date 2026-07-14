@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { useMobileViewportRecovery } from "@/lib/use-mobile-viewport-recovery";
 
 interface ResponsiveModalProps {
   open: boolean;
@@ -38,8 +39,14 @@ export function ResponsiveModal({
   showCloseButton = false,
   children,
 }: ResponsiveModalProps) {
+  const recoverMobileViewport = useMobileViewportRecovery();
+  const handleOpenChange = React.useCallback((nextOpen: boolean) => {
+    if (!nextOpen && open) recoverMobileViewport();
+    onOpenChange(nextOpen);
+  }, [onOpenChange, open, recoverMobileViewport]);
+
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent
         side="right"
         showCloseButton={showCloseButton}

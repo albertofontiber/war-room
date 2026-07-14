@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DEAL_STAGES, DEAL_STAGE_LABEL } from "@/lib/crm";
 import { dispatchDataChanged } from "@/lib/data-events";
+import { useMobileViewportRecovery } from "@/lib/use-mobile-viewport-recovery";
 import type { DealStage } from "@/types";
 
 type User = { id: string; name: string; email: string };
@@ -42,6 +43,12 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
   const [ebitda, setEbitda] = useState("");
   const [empleados, setEmpleados] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const recoverMobileViewport = useMobileViewportRecovery();
+
+  const closeModal = useCallback(() => {
+    recoverMobileViewport();
+    onClose();
+  }, [onClose, recoverMobileViewport]);
 
   useEffect(() => {
     if (!open) return;
@@ -104,7 +111,7 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
         source: "AddLeadModal/create",
       });
       onCreated(json.empresaId);
-      onClose();
+      closeModal();
     } catch (err) {
       setError(String(err));
     } finally {
@@ -114,19 +121,19 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 px-3 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-sm"
+      onClick={closeModal}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-[560px] max-w-[96vw] max-h-[92vh] overflow-auto bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
+        className="w-full max-w-[560px] max-h-full overflow-y-auto overscroll-contain bg-wr-surface border border-wr-border rounded-lg shadow-2xl"
       >
         <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-wr-border">
           <div>
             <h2 className="text-sm font-semibold text-wr-text">Añadir lead sin identificar</h2>
             <p className="text-[10px] text-wr-hint mt-0.5">Para targets confidenciales cuya identidad aún no se ha desvelado.</p>
           </div>
-          <button onClick={onClose} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
+          <button onClick={closeModal} className="text-wr-muted hover:text-wr-text text-lg leading-none">×</button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-3 sm:p-5 space-y-3 text-xs">
@@ -224,7 +231,7 @@ export default function AddLeadModal({ open, onClose, onCreated, ccaaOptions, pr
 
           <div className="flex justify-end gap-2 pt-2 border-t border-wr-border">
             <button
-              type="button" onClick={onClose} disabled={submitting}
+              type="button" onClick={closeModal} disabled={submitting}
               className="text-xs px-3 py-2 sm:py-1.5 bg-wr-surface2 border border-wr-border rounded text-wr-muted hover:text-wr-text"
             >
               Cancelar

@@ -1,7 +1,9 @@
 "use client";
 
+import { useCallback } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useNavegacion } from "@/lib/navegacion";
+import { useMobileViewportRecovery } from "@/lib/use-mobile-viewport-recovery";
 import { Separator } from "@/components/ui/separator";
 import { BadgesRow } from "./panel-empresa/BadgesRow";
 import { ContactosSection } from "./panel-empresa/ContactosSection";
@@ -26,17 +28,22 @@ import type { PanelEmpresaProps } from "./panel-empresa/types";
 export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {}) {
   const { modoPresentacion } = useWarRoomStore();
   const { cerrarPanel } = useNavegacion();
+  const recoverMobileViewport = useMobileViewportRecovery();
   const { empresa, setEmpresa, loading, toggling, handleStageChange, togglePerimetro } =
     useEmpresaDetalle(onEmpresaChanged);
+  const closePanel = useCallback(() => {
+    recoverMobileViewport();
+    cerrarPanel();
+  }, [cerrarPanel, recoverMobileViewport]);
 
-  if (loading || !empresa) return <PanelSkeleton onClose={cerrarPanel} />;
+  if (loading || !empresa) return <PanelSkeleton onClose={closePanel} />;
 
   return (
     <aside className="w-full h-full min-h-0 bg-wr-surface border-l border-wr-border flex flex-col animate-slide-in-right">
       <PanelHeader
         empresa={empresa}
         modoPresentacion={modoPresentacion}
-        onClose={cerrarPanel}
+        onClose={closePanel}
       />
 
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
