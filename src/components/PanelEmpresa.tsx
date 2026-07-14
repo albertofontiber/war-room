@@ -39,7 +39,7 @@ export default function PanelEmpresa({ onEmpresaChanged }: PanelEmpresaProps = {
         onClose={cerrarPanel}
       />
 
-      <div className="flex-1 min-h-0 overflow-y-auto">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
         {/*
           Orden aprobado (2026-05-12):
           1. Header

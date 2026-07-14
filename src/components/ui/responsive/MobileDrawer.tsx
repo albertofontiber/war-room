@@ -36,7 +36,7 @@ export function MobileDrawer({
       <SheetContent
         side={side}
         className={cn(
-          "bg-wr-surface border-wr-border p-0 w-[280px] sm:max-w-[320px]",
+          "bg-wr-surface border-wr-border p-0 w-[280px] sm:max-w-[320px] data-[side=left]:h-[100dvh] data-[side=right]:h-[100dvh] pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]",
           className,
         )}
       >
@@ -45,7 +45,7 @@ export function MobileDrawer({
             <SheetTitle className="text-wr-text">{title}</SheetTitle>
           </SheetHeader>
         )}
-        <div className="flex-1 min-h-0 overflow-y-auto">{children}</div>
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">{children}</div>
       </SheetContent>
     </Sheet>
   );

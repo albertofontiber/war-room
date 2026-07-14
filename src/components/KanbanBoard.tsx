@@ -103,7 +103,17 @@ function sortCards(cards: KanbanCard[], option: SortOption): KanbanCard[] {
   return copy;
 }
 
-function Card({ card, onClick, blur = false }: { card: KanbanCard; onClick?: () => void; blur?: boolean }) {
+function Card({
+  card,
+  onClick,
+  onMove,
+  blur = false,
+}: {
+  card: KanbanCard;
+  onClick?: () => void;
+  onMove?: () => void;
+  blur?: boolean;
+}) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `empresa-${card.id}`,
     data: { empresaId: card.id },
@@ -210,6 +220,22 @@ function Card({ card, onClick, blur = false }: { card: KanbanCard; onClick?: () 
           )}
         </div>
       </div>
+
+      {onMove && (
+        <div className="mt-2 pt-2 border-t border-wr-border/50 flex justify-end">
+          <button
+            type="button"
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation();
+              onMove();
+            }}
+            className="tap-target-h rounded-md border border-wr-blue/40 px-3 text-[11px] font-medium text-wr-blue transition-colors hover:bg-wr-blue/10"
+          >
+            Mover a etapa
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -218,6 +244,7 @@ function Column({
   stage,
   cards,
   onCardClick,
+  onCardMove,
   collapsed = false,
   onToggleCollapse,
   blur = false,
@@ -225,6 +252,7 @@ function Column({
   stage: DealStage;
   cards: KanbanCard[];
   onCardClick?: (id: number) => void;
+  onCardMove?: (card: KanbanCard, currentStage: DealStage) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   blur?: boolean;
@@ -300,7 +328,13 @@ function Column({
             </div>
           ) : (
             cards.map((c) => (
-              <Card key={c.id} card={c} blur={blur} onClick={() => onCardClick?.(c.id)} />
+              <Card
+                key={c.id}
+                card={c}
+                blur={blur}
+                onClick={() => onCardClick?.(c.id)}
+                onMove={onCardMove ? () => onCardMove(c, stage) : undefined}
+              />
             ))
           )}
         </div>
@@ -324,6 +358,11 @@ export default function KanbanBoard({ grouped, onStageChange, onCardClick, sort 
     nombre: string;
     fromStage: DealStage;
     toStage: DealStage;
+  } | null>(null);
+  const [movePicker, setMovePicker] = useState<{
+    empresaId: number;
+    nombre: string;
+    fromStage: DealStage;
   } | null>(null);
   // Ratón: arrastra al superar 6px (preciso). Táctil: pulsación mantenida de
   // 200ms inicia el arrastre; un swipe (mover >8px antes) deja scrollear la
@@ -386,6 +425,16 @@ export default function KanbanBoard({ grouped, onStageChange, onCardClick, sort 
     setPendingMove(null);
   }
 
+  function chooseMoveStage(toStage: DealStage) {
+    if (!movePicker || movePicker.fromStage === toStage) return;
+    setPendingMove({ ...movePicker, toStage });
+    setMovePicker(null);
+  }
+
+  function openMovePicker(card: KanbanCard, fromStage: DealStage) {
+    setMovePicker({ empresaId: card.id, nombre: card.nombre, fromStage });
+  }
+
   const activeCard = activeId
     ? Object.values(grouped)
         .flat()
@@ -397,7 +446,18 @@ export default function KanbanBoard({ grouped, onStageChange, onCardClick, sort 
       <DndContext sensors={sensors} onDragStart={handleStart} onDragEnd={handleEnd}>
         <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto p-2 sm:gap-3 sm:snap-none sm:p-4 h-full">
           {FUNNEL_STAGES.map((s) => (
-            <Column key={s} stage={s} cards={sortedGrouped[s] ?? []} onCardClick={onCardClick} blur={modoPresentacion} />
+            <Column
+              key={s}
+              stage={s}
+              cards={sortedGrouped[s] ?? []}
+              onCardClick={onCardClick}
+              onCardMove={
+                isDesktop
+                  ? undefined
+                  : openMovePicker
+              }
+              blur={modoPresentacion}
+            />
           ))}
           {SIDE_STAGES.map((s) => (
             <Column
@@ -405,6 +465,11 @@ export default function KanbanBoard({ grouped, onStageChange, onCardClick, sort 
               stage={s}
               cards={sortedGrouped[s] ?? []}
               onCardClick={onCardClick}
+              onCardMove={
+                isDesktop
+                  ? undefined
+                  : openMovePicker
+              }
               collapsed={sideCollapsed[s]}
               onToggleCollapse={() =>
                 setSideCollapsed((prev) => ({ ...prev, [s]: !prev[s] }))
@@ -417,6 +482,51 @@ export default function KanbanBoard({ grouped, onStageChange, onCardClick, sort 
           {activeCard ? <Card card={activeCard} blur={modoPresentacion} /> : null}
         </DragOverlay>
       </DndContext>
+
+      <BottomSheet
+        open={movePicker != null}
+        onOpenChange={(open) => {
+          if (!open) setMovePicker(null);
+        }}
+        title="Mover a etapa"
+        footer={
+          <button
+            type="button"
+            onClick={() => setMovePicker(null)}
+            className="tap-target-h w-full rounded-lg border border-wr-border px-3 text-sm text-wr-muted transition-colors hover:border-wr-muted hover:text-wr-text"
+          >
+            Cancelar
+          </button>
+        }
+      >
+        {movePicker && (
+          <div className="space-y-2">
+            <p className="text-sm text-wr-muted">
+              Elige la nueva etapa para <span className="font-medium text-wr-text">{movePicker.nombre}</span>.
+            </p>
+            <div className="space-y-2">
+              {DEAL_STAGES.map((stage) => {
+                const isCurrentStage = stage === movePicker.fromStage;
+                return (
+                  <button
+                    key={stage}
+                    type="button"
+                    disabled={isCurrentStage}
+                    onClick={() => chooseMoveStage(stage)}
+                    className="tap-target-h w-full rounded-lg border border-wr-border px-3 text-left text-sm transition-colors hover:border-wr-blue/60 hover:bg-wr-blue/10 disabled:cursor-default disabled:opacity-55"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: DEAL_STAGE_COLOR[stage] }} />
+                      <span className="flex-1 text-wr-text">{DEAL_STAGE_LABEL[stage]}</span>
+                      {isCurrentStage && <span className="text-xs text-wr-hint">Actual</span>}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </BottomSheet>
 
       <BottomSheet
         open={pendingMove != null}

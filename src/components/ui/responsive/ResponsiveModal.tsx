@@ -50,13 +50,15 @@ export function ResponsiveModal({
           // y la variante data- se imprime después en el CSS, por eso ganaba.
           // Usamos la misma variante para que la deduplicación funcione.
           // Mobile/tablet: fullscreen. lg+: ancho fijo definido por consumer.
-          "data-[side=right]:w-screen sm:max-w-none",
+          "data-[side=right]:w-screen data-[side=right]:h-[100dvh] sm:max-w-none",
           "lg:data-[side=right]:w-[var(--rm-desktop-w)] lg:sm:max-w-[var(--rm-desktop-w)]",
           className,
         )}
         style={{ ["--rm-desktop-w" as string]: `${desktopWidth}px` }}
       >
-        {children}
+        <div className="flex flex-1 min-h-0 flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+          {children}
+        </div>
       </SheetContent>
     </Sheet>
   );

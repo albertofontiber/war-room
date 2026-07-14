@@ -86,9 +86,8 @@ export default function TablaEmpresas() {
 
   // La tabla muestra `logoUrl, empleados, web, tareasPendientesCount,
   // variacionPct` — campos exclusivos de `/api/empresas` (full). El store
-  // suele tener ya el full porque Navbar lo pre-fetchea en idle, pero si
-  // el usuario abre la tabla muy rápido o la red está saturada, lo
-  // disparamos aquí (idempotente).
+  // lo carga únicamente cuando se abre la tabla (idempotente), sin gastar
+  // red móvil cuando el usuario solo consulta el mapa.
   useEffect(() => {
     if (!empresasFullLoaded && !empresasFullLoading) {
       void hydrateEmpresasFull();

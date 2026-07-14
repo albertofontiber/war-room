@@ -32,7 +32,9 @@ export function BottomSheet({
   footer,
   children,
 }: BottomSheetProps) {
-  const maxHeight = `${Math.round(maxHeightVh * 100)}vh`;
+  // `dvh` sigue la altura visible cuando Safari iOS muestra/oculta su barra
+  // de navegador o abre el teclado, evitando que el footer quede fuera de vista.
+  const maxHeight = `${Math.round(maxHeightVh * 100)}dvh`;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -55,10 +57,17 @@ export function BottomSheet({
           </SheetHeader>
         )}
 
-        <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3">{children}</div>
+        <div
+          className={cn(
+            "flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-3",
+            !footer && "pb-[max(0.75rem,env(safe-area-inset-bottom))]",
+          )}
+        >
+          {children}
+        </div>
 
         {footer && (
-          <div className="flex-shrink-0 border-t border-wr-border p-3 bg-wr-surface">
+          <div className="flex-shrink-0 border-t border-wr-border bg-wr-surface px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             {footer}
           </div>
         )}
