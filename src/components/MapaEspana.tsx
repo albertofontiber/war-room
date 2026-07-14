@@ -84,6 +84,31 @@ export default function MapaEspana() {
 
   useEffect(() => { setMounted(true); }, []);
 
+  // Mapbox conserva el tamaño de su canvas hasta que recibe `resize()`. En
+  // iOS el teclado del chat cambia el visual viewport sin garantizar un resize
+  // global, así que escuchamos también sus eventos para no dejar el mapa con
+  // dimensiones antiguas al volver al War Room.
+  useEffect(() => {
+    let frame: number | null = null;
+    const resize = () => {
+      if (frame !== null) window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        frame = null;
+        mapRef.current?.getMap().resize();
+      });
+    };
+    const visualViewport = window.visualViewport;
+    window.addEventListener("resize", resize);
+    visualViewport?.addEventListener("resize", resize);
+    visualViewport?.addEventListener("scroll", resize);
+    return () => {
+      window.removeEventListener("resize", resize);
+      visualViewport?.removeEventListener("resize", resize);
+      visualViewport?.removeEventListener("scroll", resize);
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   // Resize map when panel opens/closes so it fills the available width
   useEffect(() => {
     const t = setTimeout(() => { mapRef.current?.getMap().resize(); }, 50);
