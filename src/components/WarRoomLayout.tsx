@@ -70,7 +70,7 @@ export default function WarRoomLayout() {
 
   return (
     // Pantalla completa sin scroll externo
-    <div className="h-[100dvh] w-full flex overflow-hidden bg-wr-bg">
+    <div className="fixed inset-x-0 top-0 h-[100dvh] w-full flex overflow-hidden bg-wr-bg">
       {/* ── Sidebar izquierdo 260px (solo desktop ≥lg) ── */}
       <div className="hidden lg:flex">
         <Sidebar />
