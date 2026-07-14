@@ -9,6 +9,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { processBormeDate } from "@/lib/borme";
+import { CRON_JOBS, runCron } from "@/lib/cron-runs";
 import { log } from "@/lib/logger";
 
 // Vercel allows up to 300s for cron jobs on Pro plan
@@ -41,8 +42,25 @@ export async function GET(req: NextRequest) {
 
   // ── Process ───────────────────────────────────────────────────────────────
   try {
-    const result = await processBormeDate(dateStr);
+    const execution = await runCron({
+      job: CRON_JOBS.borme,
+      source: "vercel",
+      run: () => processBormeDate(dateStr),
+      status: (result) => (result.errors.length > 0 ? "WARNING" : "SUCCESS"),
+      summary: (result) => ({
+        date: dateStr,
+        alertasCreadas: result.alertasCreadas,
+        empresasEncontradas: result.empresasEncontradas,
+        pdfsProcesados: result.pdfsProcesados,
+        entradasExtraidas: result.entradasExtraidas,
+        errors: result.errors.length,
+      }),
+    });
+    const result = execution.value;
     log.info("cron/borme", "Done", {
+      runId: execution.runId,
+      status: execution.status,
+      durationMs: execution.durationMs,
       alertasCreadas: result.alertasCreadas,
       empresasEncontradas: result.empresasEncontradas,
       pdfsProcesados: result.pdfsProcesados,
@@ -51,7 +69,15 @@ export async function GET(req: NextRequest) {
     if (result.errors.length > 0) {
       log.warn("cron/borme", `Errors (${result.errors.length})`, { errors: result.errors });
     }
-    return NextResponse.json({ ok: true, ...result });
+    return NextResponse.json({
+      ok: true,
+      ...result,
+      execution: {
+        id: execution.runId,
+        status: execution.status,
+        durationMs: execution.durationMs,
+      },
+    });
   } catch (err) {
     log.error("cron/borme", err, { dateStr });
     return NextResponse.json(

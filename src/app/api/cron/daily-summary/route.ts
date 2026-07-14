@@ -5,6 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { CRON_JOBS, runCron } from "@/lib/cron-runs";
 import { sendDailySummary } from "@/lib/email-daily-summary";
 import { log } from "@/lib/logger";
 
@@ -22,9 +23,27 @@ export async function GET(req: NextRequest) {
   try {
     const to = req.nextUrl.searchParams.get("to") ?? undefined;
     const force = req.nextUrl.searchParams.get("force") === "true";
-    const result = await sendDailySummary({ force, to });
-    log.info("cron/daily-summary", "ejecutado", result);
-    return NextResponse.json({ ok: true, ...result });
+    const execution = await runCron({
+      job: CRON_JOBS.dailySummary,
+      source: "vercel",
+      run: () => sendDailySummary({ force, to }),
+      summary: (result) => ({ sent: result.sent }),
+    });
+    log.info("cron/daily-summary", "ejecutado", {
+      ...execution.value,
+      runId: execution.runId,
+      status: execution.status,
+      durationMs: execution.durationMs,
+    });
+    return NextResponse.json({
+      ok: true,
+      ...execution.value,
+      execution: {
+        id: execution.runId,
+        status: execution.status,
+        durationMs: execution.durationMs,
+      },
+    });
   } catch (err) {
     log.error("cron/daily-summary", err);
     return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });

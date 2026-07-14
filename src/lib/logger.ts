@@ -20,12 +20,21 @@
  */
 
 type LogContext = Record<string, unknown>;
+type LogLevel = "info" | "warn" | "error";
 
-function format(level: string, scope: string, msg: string, ctx?: LogContext): string {
-  const tag = `[${level.toUpperCase()}][${scope}]`;
-  return ctx && Object.keys(ctx).length > 0
-    ? `${tag} ${msg} ${JSON.stringify(ctx)}`
-    : `${tag} ${msg}`;
+/**
+ * Un objeto JSON por línea permite filtrar en Vercel por `scope`, `level` o
+ * campos concretos sin tener que parsear mensajes concatenados. El contexto
+ * se anida para que nunca pueda sobrescribir los campos de control.
+ */
+function format(level: LogLevel, scope: string, message: string, ctx?: LogContext): string {
+  return JSON.stringify({
+    level,
+    scope,
+    message,
+    timestamp: new Date().toISOString(),
+    ...(ctx && Object.keys(ctx).length > 0 ? { context: ctx } : {}),
+  });
 }
 
 export const log = {
@@ -38,10 +47,10 @@ export const log = {
   },
 
   error(scope: string, err: unknown, ctx?: LogContext): void {
-    const msg = err instanceof Error ? err.message : String(err);
-    console.error(format("error", scope, msg, ctx));
-    if (err instanceof Error && err.stack) {
-      console.error(err.stack);
-    }
+    const message = err instanceof Error ? err.message : String(err);
+    const errorContext = err instanceof Error
+      ? { ...ctx, errorName: err.name, stack: err.stack }
+      : ctx;
+    console.error(format("error", scope, message, errorContext));
   },
 };

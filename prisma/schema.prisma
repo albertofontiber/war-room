@@ -528,6 +528,16 @@ enum ProposalStatus {
   REJECTED
 }
 
+// Estado normalizado de una ejecución automática. Las ejecuciones con
+// advertencias terminaron, pero requieren revisión (por ejemplo, una cuenta
+// de Graph no pudo procesarse); las fallidas no llegaron a completar el job.
+enum CronRunStatus {
+  RUNNING
+  SUCCESS
+  WARNING
+  FAILED
+}
+
 model FinderAccessLog {
   id         Int       @id @default(autoincrement())
   finderId   String?
@@ -652,4 +662,24 @@ model AuditLog {
   @@index([entityType, entityId, createdAt])
   @@index([actorType, actorId, createdAt])
   @@index([createdAt])
+}
+
+// Historial operativo de crons. No se guardan cuerpos de emails, tokens,
+// destinatarios ni textos de errores de proveedores: `summary` contiene solo
+// contadores seguros para que el equipo pueda detectar fallos y backlogs desde
+// la aplicación, sin depender de la retención limitada de Vercel Logs.
+model CronRun {
+  id          String        @id @default(cuid())
+  job          String
+  source       String        // "vercel" | "github-actions" | "manual"
+  status       CronRunStatus @default(RUNNING)
+  startedAt     DateTime      @default(now())
+  completedAt   DateTime?
+  durationMs    Int?
+  summary       Json?
+  errorCode     String?
+  createdAt     DateTime      @default(now())
+
+  @@index([job, startedAt])
+  @@index([status, startedAt])
 }

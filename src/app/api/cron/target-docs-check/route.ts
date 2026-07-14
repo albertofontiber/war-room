@@ -25,6 +25,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { matchEmpresasLinks } from "@/lib/empresa-link-matcher";
 import { createEmpresaLinks } from "@/lib/empresa-link-builder";
+import {
+  CRON_JOBS,
+  completeCronRun,
+  failCronRun,
+  startCronRun,
+} from "@/lib/cron-runs";
 import { notifyAdmins } from "@/lib/notifications";
 import { log } from "@/lib/logger";
 
@@ -62,6 +68,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const tracker = await startCronRun({
+    job: CRON_JOBS.targetDocsCheck,
+    source: "vercel",
+  });
+
   try {
     const empresasSinUrls = await prisma.empresa.findMany({
       where: {
@@ -81,7 +92,22 @@ export async function GET(req: NextRequest) {
     log.info("cron/target-docs-check", `${empresasSinUrls.length} empresas sin URLs`);
 
     if (empresasSinUrls.length === 0) {
-      return NextResponse.json({ ok: true, total: 0, matched: 0, created: 0, errors: 0, skipped: 0 });
+      const durationMs = await completeCronRun(tracker, "SUCCESS", {
+        total: 0,
+        matched: 0,
+        created: 0,
+        errors: 0,
+        skipped: 0,
+      });
+      return NextResponse.json({
+        ok: true,
+        total: 0,
+        matched: 0,
+        created: 0,
+        errors: 0,
+        skipped: 0,
+        execution: { id: tracker.runId, status: "SUCCESS", durationMs },
+      });
     }
 
     // Pasada 1 — matcher (todos los stages con docs)
@@ -160,6 +186,14 @@ export async function GET(req: NextRequest) {
       });
     }
 
+    const status = errors > 0 ? "WARNING" : "SUCCESS";
+    const durationMs = await completeCronRun(tracker, status, {
+      total: empresasSinUrls.length,
+      matched,
+      created,
+      errors,
+      skipped,
+    });
     return NextResponse.json({
       ok: true,
       total: empresasSinUrls.length,
@@ -169,8 +203,10 @@ export async function GET(req: NextRequest) {
       skipped,
       errorDetails,
       skippedNames,
+      execution: { id: tracker.runId, status, durationMs },
     });
   } catch (err) {
+    await failCronRun(tracker, err);
     log.error("cron/target-docs-check", err);
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : String(err) },
