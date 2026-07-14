@@ -210,18 +210,6 @@ export const useWarRoomStore = create<WarRoomState>()(
           set({ empresasLoading: false });
         }
 
-        // Pre-fetch del full en idle time. La tabla y el tooltip se enriquecen
-        // cuando llega; entretanto la UI muestra los campos lite y trata los
-        // opcionales como undefined (con fallbacks visuales). Si la pestaña
-        // está oculta o la red está saturada, requestIdleCallback espera.
-        if (typeof window !== "undefined") {
-          const ric =
-            (window as Window & {
-              requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
-            }).requestIdleCallback ??
-            ((cb: () => void) => window.setTimeout(cb, 1500));
-          ric(() => void get().hydrateEmpresasFull(), { timeout: 5000 });
-        }
       },
 
       hydrateEmpresasFull: async () => {
