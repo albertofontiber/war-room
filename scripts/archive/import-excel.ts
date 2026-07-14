@@ -18,9 +18,9 @@
  *   - Empresa ya existe + mismo sector → no cambia
  */
 
-import * as XLSX from "xlsx";
 import { PrismaClient } from "@prisma/client";
 import path from "path";
+import { readWorkbook } from "../lib/excel";
 import { normalizeCCAA, normalizeProvincia, normalizeLocalidad } from "./lib/normalize-geo.js";
 
 const prisma = new PrismaClient();
@@ -316,12 +316,13 @@ async function main() {
   console.log(`🏷️   Sector por defecto para empresas nuevas: ${sectorFlag}\n`);
 
   // ── Leer Excel ──────────────────────────────────────────────────────────
-  const wb = XLSX.readFile(absPath, { cellDates: false });
-  const sheetName = wb.SheetNames[0];
+  const workbook = await readWorkbook(absPath);
+  const firstSheet = workbook[0];
+  if (!firstSheet) throw new Error("El Excel no contiene ninguna pestaña.");
+  const sheetName = firstSheet.sheet;
   console.log(`📄  Pestaña: "${sheetName}"`);
 
-  const ws = wb.Sheets[sheetName];
-  const rawRows = XLSX.utils.sheet_to_json<unknown[]>(ws, { header: 1, defval: null });
+  const rawRows = firstSheet.data;
 
   const headerRowIdx = rawRows.findIndex(
     (row) => Array.isArray(row) && row.some((cell) => String(cell ?? "").toUpperCase().includes("CIF"))

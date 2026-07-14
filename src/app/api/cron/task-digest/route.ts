@@ -9,6 +9,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { CRON_JOBS, runCron } from "@/lib/cron-runs";
 import { sendTaskDigest } from "@/lib/email-task-digest";
 import { log } from "@/lib/logger";
 
@@ -26,9 +27,32 @@ export async function GET(req: NextRequest) {
   try {
     const to = req.nextUrl.searchParams.get("to") ?? undefined;
     const force = req.nextUrl.searchParams.get("force") === "true";
-    const result = await sendTaskDigest({ to, force });
-    log.info("cron/task-digest", "ejecutado", result);
-    return NextResponse.json({ ok: true, ...result });
+    const execution = await runCron({
+      job: CRON_JOBS.taskDigest,
+      source: "vercel",
+      run: () => sendTaskDigest({ to, force }),
+      status: (result) => (result.errors.length > 0 ? "WARNING" : "SUCCESS"),
+      summary: (result) => ({
+        sent: result.sent,
+        skipped: result.skipped,
+        errors: result.errors.length,
+      }),
+    });
+    log.info("cron/task-digest", "ejecutado", {
+      ...execution.value,
+      runId: execution.runId,
+      status: execution.status,
+      durationMs: execution.durationMs,
+    });
+    return NextResponse.json({
+      ok: true,
+      ...execution.value,
+      execution: {
+        id: execution.runId,
+        status: execution.status,
+        durationMs: execution.durationMs,
+      },
+    });
   } catch (err) {
     log.error("cron/task-digest", err);
     return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });

@@ -25,10 +25,8 @@ export const dynamic = "force-dynamic";
  * NO incluye: CIF, financieros, grupo, owner interno, BORME, CrmLog,
  * notas internas de admins, ni nada privado.
  */
-export async function GET(
-  _req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   let finder;
   try {
     finder = await requireCurrentFinder();

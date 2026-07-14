@@ -15,10 +15,8 @@ export const dynamic = "force-dynamic";
  * Body: { finderId: string | null }
  * Asigna (o desasigna) un finder a la empresa.
  */
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     // Solo admins. Antes solo verificaba que hubiera sesión.
     const session = await getServerSession(authOptions);

@@ -36,10 +36,8 @@ async function loadOwnNota(
   return { notaId: nota.id };
 }
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   let finder;
   try {
     finder = await requireCurrentFinder();
@@ -102,10 +100,8 @@ export async function PATCH(
   return NextResponse.json(nota);
 }
 
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   let finder;
   try {
     finder = await requireCurrentFinder();

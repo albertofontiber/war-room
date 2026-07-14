@@ -73,6 +73,10 @@ export default function WarRoomMobileMenu() {
     router.push("/finders");
   }, [router]);
 
+  const goToMonitoring = useCallback(() => {
+    router.push("/monitoring");
+  }, [router]);
+
   return (
     <MobileDrawer open={sidebarMobileOpen} onOpenChange={setSidebarMobileOpen} side="left">
       <div className="flex flex-col min-h-full">
@@ -112,6 +116,8 @@ export default function WarRoomMobileMenu() {
           <div className="pt-2 mt-2 border-t border-wr-border">
             <NavButton onClick={goToFinders}>Gestión de finders</NavButton>
           </div>
+
+          <NavButton onClick={goToMonitoring}>Operación</NavButton>
 
           <div className="pt-2 mt-2 border-t border-wr-border space-y-2">
             <NavSectionLabel>Tamaño en mapa</NavSectionLabel>

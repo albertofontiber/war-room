@@ -15,10 +15,8 @@ export const dynamic = "force-dynamic";
  * Body: { contenido: string }
  * Solo admins (kind="admin"). Compartido Alberto/Gabriel.
  */
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     // Defensa en profundidad: exige kind="admin" explícito. Antes solo se
     // verificaba `getCurrentUser()` (bloquea finders por accidente porque
@@ -85,10 +83,8 @@ export async function PATCH(
  * DELETE /api/notas/[id]
  * Solo admins (kind="admin").
  */
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.kind !== "admin") {

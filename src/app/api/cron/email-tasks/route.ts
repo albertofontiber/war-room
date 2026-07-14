@@ -14,6 +14,12 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import {
+  CRON_JOBS,
+  completeCronRun,
+  failCronRun,
+  startCronRun,
+} from "@/lib/cron-runs";
 import { ingestUpn, type IngestStats } from "@/lib/email-task-matcher";
 import { log } from "@/lib/logger";
 
@@ -27,10 +33,22 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const tracker = await startCronRun({
+    job: CRON_JOBS.emailTasks,
+    source: "github-actions",
+  });
+
+  try {
+
   const upnsRaw = process.env.EMAIL_TASK_OWNER_UPNS;
   if (!upnsRaw) {
+    const durationMs = await completeCronRun(tracker, "WARNING", { configured: false });
     return NextResponse.json(
-      { ok: false, reason: "EMAIL_TASK_OWNER_UPNS not configured" },
+      {
+        ok: false,
+        reason: "EMAIL_TASK_OWNER_UPNS not configured",
+        execution: { id: tracker.runId, status: "WARNING", durationMs },
+      },
       { status: 200 }
     );
   }
@@ -70,7 +88,31 @@ export async function GET(req: NextRequest) {
 
   const totalCreated = results.reduce((acc, r) => acc + r.tareasCreated, 0);
   const totalErrors = results.reduce((acc, r) => acc + r.errors, 0);
-  log.info("cron/email-tasks", "ejecutado", { totalCreated, totalErrors, results });
+  const status = totalErrors > 0 ? "WARNING" : "SUCCESS";
+  const durationMs = await completeCronRun(tracker, status, {
+    configured: true,
+    accounts: results.length,
+    tareasCreated: totalCreated,
+    errors: totalErrors,
+  });
+  log.info("cron/email-tasks", "ejecutado", {
+    totalCreated,
+    totalErrors,
+    accounts: results.length,
+    runId: tracker.runId,
+    status,
+    durationMs,
+  });
 
-  return NextResponse.json({ ok: true, totalCreated, totalErrors, results });
+  return NextResponse.json({
+    ok: true,
+    totalCreated,
+    totalErrors,
+    results,
+    execution: { id: tracker.runId, status, durationMs },
+  });
+  } catch (err) {
+    await failCronRun(tracker, err);
+    return NextResponse.json({ ok: false, error: "Cron execution failed" }, { status: 500 });
+  }
 }

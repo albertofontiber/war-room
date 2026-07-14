@@ -6,6 +6,7 @@
  * Linked from the daily summary email.
  */
 
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { fmtM as _fmtM } from "@/lib/format";
 import { BORME_TIPO, BORME_TIPO_ORDER, BORME_DETAIL_TIPOS } from "@/lib/borme-constants";
@@ -25,11 +26,12 @@ function fmtDate(d: Date): string {
   return d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-export default async function DailyPage({
-  params,
-}: {
-  params: { fecha: string };
-}) {
+export default async function DailyPage(
+  props: {
+    params: Promise<{ fecha: string }>;
+  }
+) {
+  const params = await props.params;
   // Parse fecha param
   const match = params.fecha.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) {
@@ -181,7 +183,6 @@ export default async function DailyPage({
           </a>
         </div>
       </div>
-
       <div className="max-w-3xl mx-auto px-6 py-8 space-y-8">
 
         {/* Date header */}
@@ -472,9 +473,9 @@ export default async function DailyPage({
         <div className="border-t border-wr-border pt-6 text-center">
           <p className="text-xs text-wr-hint">
             Fontiber Industrial Partners ·{" "}
-            <a href="/" className="text-wr-blue hover:underline">
+            <Link href="/" className="text-wr-blue hover:underline">
               warroom.fontiber.com
-            </a>
+            </Link>
           </p>
         </div>
       </div>

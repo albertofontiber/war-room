@@ -24,10 +24,8 @@ export const dynamic = "force-dynamic";
  * Notifica a los admins por campanita in-app (sin email — el digest diario
  * agrupa estas acciones).
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   let finder;
   try {
     finder = await requireCurrentFinder();

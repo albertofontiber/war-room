@@ -323,6 +323,17 @@ export default function Navbar() {
 
       {/* Avatar usuario */}
       <button
+        onClick={() => router.push("/monitoring")}
+        title="Operación"
+        className="hidden lg:block p-1.5 rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 3v18h18" />
+          <path d="m7 16 4-5 3 3 5-7" />
+        </svg>
+      </button>
+
+      <button
         onClick={() => signOut({ callbackUrl: "/login" })}
         title={`${session?.user?.name} — Cerrar sesión`}
         className="w-7 h-7 rounded-full bg-wr-blue/20 border border-wr-blue/30 text-wr-blue text-xs font-semibold flex items-center justify-center hover:bg-wr-blue/30 transition-colors"

@@ -30,7 +30,7 @@
  *   FILE=ruta npx tsx scripts/import-contactos-excel.ts (custom path)
  */
 
-import * as XLSX from "xlsx";
+import { readWorkbook, sheetDataToRecords } from "./lib/excel";
 import { prisma } from "../src/lib/prisma";
 import { normalizePersona } from "../src/lib/normalize";
 
@@ -324,20 +324,17 @@ async function main() {
   );
   console.log(`📄 Leyendo: ${FILE}\n`);
 
-  const wb = XLSX.readFile(FILE);
+  const workbook = await readWorkbook(FILE);
   const sheetName = "Contactos Targets PCI";
-  const sheet = wb.Sheets[sheetName];
+  const sheet = workbook.find((candidate) => candidate.sheet === sheetName);
   if (!sheet) {
     throw new Error(
-      `No se encontró la hoja "${sheetName}". Hojas disponibles: ${wb.SheetNames.join(", ")}`
+      `No se encontró la hoja "${sheetName}". Hojas disponibles: ${workbook.map((candidate) => candidate.sheet).join(", ")}`
     );
   }
 
   // Convertir a JSON con headers en la primera fila
-  const raw: Record<string, unknown>[] = XLSX.utils.sheet_to_json(sheet, {
-    defval: null,
-    raw: false,
-  });
+  const raw = sheetDataToRecords(sheet.data, { emptyValue: null });
 
   // Mapear columnas (los nombres pueden variar ligeramente; matcheamos por substring)
   const rows: ExcelRow[] = raw.flatMap((r) => {

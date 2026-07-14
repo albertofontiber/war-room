@@ -51,6 +51,10 @@ function makeReq(body: unknown) {
   return { json: async () => body } as unknown as Parameters<typeof PATCH>[0];
 }
 
+function routeContext(id: string) {
+  return { params: Promise.resolve({ id }) };
+}
+
 const finder = { id: "finder-1", name: "Pepe", email: "p@x.com", active: true };
 const NOW = new Date("2026-05-01T12:00:00.000Z").getTime();
 
@@ -78,23 +82,23 @@ describe("PATCH /api/portal/notas/[id]", () => {
 
   it("401 si no hay finder en sesión", async () => {
     requireFinderMock.mockRejectedValue(new Error("Unauthorized"));
-    const res = await PATCH(makeReq({ contenido: "x" }), { params: { id: "1" } });
+    const res = await PATCH(makeReq({ contenido: "x" }), routeContext("1"));
     expect(res.status).toBe(401);
   });
 
   it("400 si el body es inválido (contenido vacío)", async () => {
-    const res = await PATCH(makeReq({ contenido: "" }), { params: { id: "1" } });
+    const res = await PATCH(makeReq({ contenido: "" }), routeContext("1"));
     expect(res.status).toBe(400);
   });
 
   it("400 si el id no es numérico", async () => {
-    const res = await PATCH(makeReq({ contenido: "x" }), { params: { id: "abc" } });
+    const res = await PATCH(makeReq({ contenido: "x" }), routeContext("abc"));
     expect(res.status).toBe(400);
   });
 
   it("404 si la nota no existe o no es del finder (sin leak de existencia)", async () => {
     notaFindFirst.mockResolvedValue(null);
-    const res = await PATCH(makeReq({ contenido: "x" }), { params: { id: "1" } });
+    const res = await PATCH(makeReq({ contenido: "x" }), routeContext("1"));
     expect(res.status).toBe(404);
     // La query filtra por autorFinderId = sesión → no leak de notas de otros.
     expect(notaFindFirst).toHaveBeenCalledWith({
@@ -108,7 +112,7 @@ describe("PATCH /api/portal/notas/[id]", () => {
       id: 1,
       createdAt: new Date(NOW - 25 * 60 * 60 * 1000),
     });
-    const res = await PATCH(makeReq({ contenido: "x" }), { params: { id: "1" } });
+    const res = await PATCH(makeReq({ contenido: "x" }), routeContext("1"));
     expect(res.status).toBe(403);
     const json = await res.json();
     expect(json.error).toContain("24h");
@@ -129,7 +133,7 @@ describe("PATCH /api/portal/notas/[id]", () => {
     });
     const res = await PATCH(
       makeReq({ contenido: "nuevo" }),
-      { params: { id: "1" } }
+      routeContext("1")
     );
     expect(res.status).toBe(200);
     expect(notaUpdate).toHaveBeenCalledWith({
@@ -166,7 +170,7 @@ describe("PATCH /api/portal/notas/[id]", () => {
     });
     const res = await PATCH(
       makeReq({ contenido: "igual" }),
-      { params: { id: "1" } }
+      routeContext("1")
     );
     expect(res.status).toBe(200);
     await new Promise((r) => setImmediate(r));
@@ -196,7 +200,7 @@ describe("DELETE /api/portal/notas/[id]", () => {
     requireFinderMock.mockRejectedValue(new Error("Unauthorized"));
     const res = await DELETE(
       {} as unknown as Parameters<typeof DELETE>[0],
-      { params: { id: "1" } }
+      routeContext("1")
     );
     expect(res.status).toBe(401);
   });
@@ -205,7 +209,7 @@ describe("DELETE /api/portal/notas/[id]", () => {
     notaFindFirst.mockResolvedValue(null);
     const res = await DELETE(
       {} as unknown as Parameters<typeof DELETE>[0],
-      { params: { id: "1" } }
+      routeContext("1")
     );
     expect(res.status).toBe(404);
     expect(notaDelete).not.toHaveBeenCalled();
@@ -218,7 +222,7 @@ describe("DELETE /api/portal/notas/[id]", () => {
     });
     const res = await DELETE(
       {} as unknown as Parameters<typeof DELETE>[0],
-      { params: { id: "1" } }
+      routeContext("1")
     );
     expect(res.status).toBe(403);
     expect(notaDelete).not.toHaveBeenCalled();
@@ -236,7 +240,7 @@ describe("DELETE /api/portal/notas/[id]", () => {
     notaDelete.mockResolvedValue(undefined);
     const res = await DELETE(
       {} as unknown as Parameters<typeof DELETE>[0],
-      { params: { id: "1" } }
+      routeContext("1")
     );
     expect(res.status).toBe(200);
     expect(notaDelete).toHaveBeenCalledWith({ where: { id: 1 } });

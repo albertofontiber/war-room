@@ -24,10 +24,8 @@ export const dynamic = "force-dynamic";
  * La lógica de dominio (upsert + CrmLog + side-effects) vive en
  * `src/lib/crm-stage.ts` — compartida con el tool `cambiar_etapa` del chat IA.
  */
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     // Solo admins. Antes solo verificaba que hubiera sesión con email.
     const session = await getServerSession(authOptions);

@@ -3,11 +3,12 @@ import PortalTargetClient from "@/components/portal/PortalTargetClient";
 
 export const dynamic = "force-dynamic";
 
-export default async function PortalTargetPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function PortalTargetPage(
+  props: {
+    params: Promise<{ id: string }>;
+  }
+) {
+  const params = await props.params;
   const finder = await requireFinderPageOrRedirect();
 
   return (

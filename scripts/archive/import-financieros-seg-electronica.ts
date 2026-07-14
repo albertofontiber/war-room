@@ -19,8 +19,8 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import * as XLSX from "xlsx";
 import { prisma } from "../src/lib/prisma";
+import { readWorkbook, sheetDataToRecords } from "../lib/excel";
 
 const EXCEL_PATH = path.join(
   __dirname,
@@ -122,9 +122,9 @@ async function main() {
   console.log(`   Excel: ${path.basename(EXCEL_PATH)}\n`);
 
   // Load Excel
-  const wb = XLSX.readFile(EXCEL_PATH);
-  const ws = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval: null }) as ExcelRow[];
+  const [firstSheet] = await readWorkbook(EXCEL_PATH);
+  if (!firstSheet) throw new Error("El Excel no contiene ninguna pestaña.");
+  const rows = sheetDataToRecords(firstSheet.data, { emptyValue: null }) as ExcelRow[];
   console.log(`   Filas en Excel: ${rows.length}`);
 
   // Load all companies (just CIF + id + current lat/lng + fields to check)

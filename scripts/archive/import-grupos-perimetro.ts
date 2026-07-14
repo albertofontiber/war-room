@@ -6,16 +6,16 @@
 
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
-import * as XLSX from "xlsx";
 import path from "path";
+import { readWorkbook, sheetDataToRecords } from "../lib/excel";
 
 const prisma = new PrismaClient();
 const FILES_DIR = path.join(process.cwd(), "files");
 
-function readExcel(filename: string): Record<string, string>[] {
-  const wb = XLSX.readFile(path.join(FILES_DIR, filename));
-  const ws = wb.Sheets[wb.SheetNames[0]];
-  return XLSX.utils.sheet_to_json(ws, { defval: "" }) as Record<string, string>[];
+async function readExcel(filename: string): Promise<Record<string, string>[]> {
+  const [firstSheet] = await readWorkbook(path.join(FILES_DIR, filename));
+  if (!firstSheet) throw new Error(`El Excel "${filename}" no contiene ninguna pestaña.`);
+  return sheetDataToRecords(firstSheet.data, { emptyValue: "" }) as Record<string, string>[];
 }
 
 function normalizeCif(raw: string): string {
@@ -25,7 +25,7 @@ function normalizeCif(raw: string): string {
 async function main() {
   // ── 1. GRUPOS ──────────────────────────────────────────────────────────────
   console.log("\n=== GRUPOS ===");
-  const gruposRows = readExcel("20260329 Grupos.xlsx");
+  const gruposRows = await readExcel("20260329 Grupos.xlsx");
 
   // Detect real groups (group name appears for >1 company)
   const groupCounts: Record<string, number> = {};
@@ -83,7 +83,7 @@ async function main() {
 
   // ── 2. PERÍMETRO ───────────────────────────────────────────────────────────
   console.log("\n=== PERÍMETRO ===");
-  const perimetroRows = readExcel("20260329 Perimetro.xlsx");
+  const perimetroRows = await readExcel("20260329 Perimetro.xlsx");
 
   const cifIn: string[] = [];
   const cifOut: string[] = [];

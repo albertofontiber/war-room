@@ -9,10 +9,8 @@ import { isValidDealStage } from "@/lib/crm";
 import { log } from "@/lib/logger";
 import type { DealStage } from "@/types";
 
-export async function GET(
-  _req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     // Defense in depth: el middleware ya bloquea finders en host portal,

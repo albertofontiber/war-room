@@ -25,10 +25,8 @@ export const maxDuration = 60;
  *     entra a `primera_reunion` por primera vez.
  *   - Cron semanal /api/cron/target-docs-check como fallback.
  */
-export async function POST(
-  _req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function POST(_req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.kind !== "admin") {

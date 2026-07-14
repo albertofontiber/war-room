@@ -52,6 +52,10 @@ function makeReq(body: unknown) {
   return { json: async () => body } as unknown as Parameters<typeof POST>[0];
 }
 
+function routeContext(id: string) {
+  return { params: Promise.resolve({ id }) };
+}
+
 function resetTxMocks() {
   Object.values(tx).forEach((model) => {
     Object.values(model as Record<string, unknown>).forEach((fn) => {
@@ -78,29 +82,29 @@ describe("POST /api/leads/[id]/link", () => {
 
   it("401 si no hay usuario en sesión", async () => {
     requireUserMock.mockRejectedValue(new Error("Unauthorized"));
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "1" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("1"));
     expect(res.status).toBe(401);
   });
 
   it("400 si el id del lead no es numérico", async () => {
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "abc" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("abc"));
     expect(res.status).toBe(400);
   });
 
   it("400 si el body es inválido (falta targetEmpresaId)", async () => {
-    const res = await POST(makeReq({}), { params: { id: "1" } });
+    const res = await POST(makeReq({}), routeContext("1"));
     expect(res.status).toBe(400);
   });
 
   it("400 si lead === target (no se puede vincular consigo mismo)", async () => {
-    const res = await POST(makeReq({ targetEmpresaId: 5 }), { params: { id: "5" } });
+    const res = await POST(makeReq({ targetEmpresaId: 5 }), routeContext("5"));
     expect(res.status).toBe(400);
     expect(txMock).not.toHaveBeenCalled();
   });
 
   it("404 si el lead no existe", async () => {
     tx.empresa.findUnique.mockResolvedValueOnce(null);
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "1" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("1"));
     expect(res.status).toBe(404);
   });
 
@@ -110,7 +114,7 @@ describe("POST /api/leads/[id]/link", () => {
       esAnonima: false,
       crmEstado: null,
     });
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "1" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("1"));
     expect(res.status).toBe(400);
   });
 
@@ -118,7 +122,7 @@ describe("POST /api/leads/[id]/link", () => {
     tx.empresa.findUnique
       .mockResolvedValueOnce({ id: 1, esAnonima: true, nombre: "Asher", crmEstado: null })
       .mockResolvedValueOnce(null);
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "1" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("1"));
     expect(res.status).toBe(404);
   });
 
@@ -126,7 +130,7 @@ describe("POST /api/leads/[id]/link", () => {
     tx.empresa.findUnique
       .mockResolvedValueOnce({ id: 1, esAnonima: true, nombre: "Asher", crmEstado: null })
       .mockResolvedValueOnce({ id: 100, esAnonima: true, crmEstado: null });
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "1" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("1"));
     expect(res.status).toBe(400);
   });
 
@@ -152,7 +156,7 @@ describe("POST /api/leads/[id]/link", () => {
       // segundo findMany = financieros del lead
       .mockResolvedValueOnce([]);
 
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "1" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("1"));
     expect(res.status).toBe(200);
 
     expect(tx.nota.updateMany).toHaveBeenCalledWith({
@@ -207,7 +211,7 @@ describe("POST /api/leads/[id]/link", () => {
       });
     tx.financiero.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
 
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "1" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("1"));
     expect(res.status).toBe(200);
 
     expect(tx.crmEstado.delete).toHaveBeenCalledWith({ where: { empresaId: 100 } });
@@ -241,7 +245,7 @@ describe("POST /api/leads/[id]/link", () => {
       });
     tx.financiero.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
 
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "1" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("1"));
     expect(res.status).toBe(200);
 
     expect(tx.crmEstado.delete).not.toHaveBeenCalled();
@@ -279,7 +283,7 @@ describe("POST /api/leads/[id]/link", () => {
         { id: 12, anio: 2023 },
       ]);
 
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "1" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("1"));
     expect(res.status).toBe(200);
 
     expect(tx.financiero.delete).toHaveBeenCalledWith({ where: { id: 11 } });
@@ -307,7 +311,7 @@ describe("POST /api/leads/[id]/link", () => {
       });
     tx.financiero.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
 
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "1" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("1"));
     expect(res.status).toBe(200);
 
     expect(tx.empresa.update).toHaveBeenCalledWith({
@@ -334,7 +338,7 @@ describe("POST /api/leads/[id]/link", () => {
       });
     tx.financiero.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
 
-    const res = await POST(makeReq({ targetEmpresaId: 100 }), { params: { id: "1" } });
+    const res = await POST(makeReq({ targetEmpresaId: 100 }), routeContext("1"));
     expect(res.status).toBe(200);
 
     expect(tx.empresa.update).not.toHaveBeenCalledWith(

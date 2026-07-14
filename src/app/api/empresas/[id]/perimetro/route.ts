@@ -9,10 +9,8 @@ import { auditLog } from "@/lib/audit-log";
 import { getCurrentUser } from "@/lib/user-from-session";
 import { log } from "@/lib/logger";
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     // Solo admins. Antes solo verificaba que hubiera sesión.
     const session = await getServerSession(authOptions);

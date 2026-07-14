@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
@@ -20,6 +22,8 @@ export default function RootLayout({
     <html lang="es" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="antialiased bg-wr-bg text-wr-text">
         <SessionProvider>{children}</SessionProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

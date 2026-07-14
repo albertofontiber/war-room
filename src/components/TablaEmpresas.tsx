@@ -7,7 +7,7 @@ import { isInFilter } from "@/lib/filtros";
 import { fmt, fmtM, fmtPct } from "@/lib/format";
 import { DEAL_STAGE_LABEL, DEAL_STAGE_TEXT_CLASS } from "@/lib/crm";
 import type { DealStage } from "@/types";
-// `xlsx` (~25 KB gzip) se importa dinámicamente sólo cuando el usuario
+// El escritor de Excel se importa dinámicamente sólo cuando el usuario
 // pulsa "Exportar a Excel" — la mayoría de visitas a la tabla nunca lo
 // usan, así que mantenerlo fuera del chunk inicial mejora TTI.
 
@@ -146,41 +146,49 @@ export default function TablaEmpresas() {
     });
   }, []);
 
-  // Export to Excel — mismo orden que la tabla. `xlsx` se carga dinámico
+  // Export to Excel — mismo orden que la tabla. El escritor se carga dinámico
   // dentro del callback para no engordar el chunk inicial de la tabla.
   const handleExport = useCallback(async () => {
-    const data = rows.map((r) => {
-      const row: Record<string, unknown> = {
-        Empresa: r.nombre,
-        CIF: r.cif ?? "",
-        Grupo: r.grupoNombre ?? "",
-        Ciudad: r.localidad ?? "",
-        Provincia: r.provincia,
-        Sector: SECTOR_LABEL[r.sector as string] ?? r.sector,
-        CRM: DEAL_STAGE_LABEL[r.dealStage as DealStage] ?? r.dealStage ?? "—",
-        Web: r.web ?? "",
-      };
-      if (!modoPresentacion) {
-        row["Ingresos (€)"] = r.ingresos ?? null;
-        row["GM%"] =
-          r.margenBrutoPct !== null && r.margenBrutoPct !== undefined
-            ? Number((r.margenBrutoPct as number).toFixed(1))
-            : null;
-        row["EBITDA%"] =
-          r.ebitdaPct !== null && r.ebitdaPct !== undefined
-            ? Number((r.ebitdaPct as number).toFixed(1))
-            : null;
-      }
-      row["Empleados"] = r.empleados ?? null;
-      return row;
-    });
+    const headers = [
+      "Empresa",
+      "CIF",
+      "Grupo",
+      "Ciudad",
+      "Provincia",
+      "Sector",
+      "CRM",
+      "Web",
+      ...(!modoPresentacion ? ["Ingresos (€)", "GM%", "EBITDA%"] : []),
+      "Empleados",
+    ];
+    const sheetData = [
+      headers,
+      ...rows.map((r) => [
+        r.nombre,
+        r.cif ?? "",
+        r.grupoNombre ?? "",
+        r.localidad ?? "",
+        r.provincia,
+        SECTOR_LABEL[r.sector as string] ?? r.sector,
+        DEAL_STAGE_LABEL[r.dealStage as DealStage] ?? r.dealStage ?? "—",
+        r.web ?? "",
+        ...(!modoPresentacion
+          ? [
+              r.ingresos ?? null,
+              r.margenBrutoPct != null
+                ? Number((r.margenBrutoPct as number).toFixed(1))
+                : null,
+              r.ebitdaPct != null
+                ? Number((r.ebitdaPct as number).toFixed(1))
+                : null,
+            ]
+          : []),
+        r.empleados ?? null,
+      ]),
+    ];
 
-    const XLSX = await import("xlsx");
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Empresas");
-    XLSX.writeFile(
-      wb,
+    const { default: writeXlsxFile } = await import("write-excel-file/browser");
+    await writeXlsxFile(sheetData, { sheet: "Empresas" }).toFile(
       `fontiber-war-room-${new Date().toISOString().slice(0, 10)}.xlsx`
     );
   }, [rows, modoPresentacion]);
