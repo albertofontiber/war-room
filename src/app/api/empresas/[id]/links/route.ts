@@ -19,10 +19,8 @@ export const dynamic = "force-dynamic";
  *
  * Solo admins. Audit log captura cambios para trazabilidad.
  */
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.kind !== "admin") {

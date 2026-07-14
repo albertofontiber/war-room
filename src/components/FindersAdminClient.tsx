@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { fmtDate } from "@/lib/format";
 import { dispatchDataChanged, subscribeDataChanged } from "@/lib/data-events";
 
@@ -336,10 +337,10 @@ export default function FindersAdminClient() {
             >
               + Nuevo finder
             </button>
-            <a href="/finders/proposals" className="text-xs text-wr-blue hover:underline">
+            <Link href="/finders/proposals" className="text-xs text-wr-blue hover:underline">
               Propuestas →
-            </a>
-            <a href="/" className="text-xs text-wr-blue hover:underline">← War Room</a>
+            </Link>
+            <Link href="/" className="text-xs text-wr-blue hover:underline">← War Room</Link>
           </div>
         </header>
 

@@ -52,7 +52,7 @@ function markerFromIconId(id: string): ClusterMarker | null {
 }
 
 export function useClusterPieImages(
-  mapRef: React.RefObject<MapRef>,
+  mapRef: React.RefObject<MapRef | null>,
   clusterMarkers: ClusterMarker[],
 ) {
   // IDs de icons que hemos registrado nosotros y siguen vivos.

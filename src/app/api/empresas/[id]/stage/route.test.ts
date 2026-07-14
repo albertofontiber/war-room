@@ -52,6 +52,10 @@ function makeReq(body: unknown) {
   return { json: async () => body } as unknown as Parameters<typeof PATCH>[0];
 }
 
+function routeContext(id: string) {
+  return { params: Promise.resolve({ id }) };
+}
+
 const adminSession = {
   kind: "admin",
   user: { email: "alberto@fontiber.com" },
@@ -78,29 +82,29 @@ describe("PATCH /api/empresas/[id]/stage", () => {
 
   it("401 si no hay sesión", async () => {
     sessionMock.mockResolvedValue(null);
-    const res = await PATCH(makeReq({ dealStage: "contactado" }), { params: { id: "1" } });
+    const res = await PATCH(makeReq({ dealStage: "contactado" }), routeContext("1"));
     expect(res.status).toBe(401);
   });
 
   it("401 si la sesión no es admin (finder no puede mover stages)", async () => {
     sessionMock.mockResolvedValue({ kind: "finder", finderId: "f1" });
-    const res = await PATCH(makeReq({ dealStage: "contactado" }), { params: { id: "1" } });
+    const res = await PATCH(makeReq({ dealStage: "contactado" }), routeContext("1"));
     expect(res.status).toBe(401);
   });
 
   it("400 si el id no es numérico", async () => {
-    const res = await PATCH(makeReq({ dealStage: "contactado" }), { params: { id: "abc" } });
+    const res = await PATCH(makeReq({ dealStage: "contactado" }), routeContext("abc"));
     expect(res.status).toBe(400);
   });
 
   it("400 si el body es inválido (zod)", async () => {
-    const res = await PATCH(makeReq({ dealStage: "stage_inventado" }), { params: { id: "1" } });
+    const res = await PATCH(makeReq({ dealStage: "stage_inventado" }), routeContext("1"));
     expect(res.status).toBe(400);
   });
 
   it("404 si la empresa no existe", async () => {
     empresaFindUnique.mockResolvedValue(null);
-    const res = await PATCH(makeReq({ dealStage: "contactado" }), { params: { id: "1" } });
+    const res = await PATCH(makeReq({ dealStage: "contactado" }), routeContext("1"));
     expect(res.status).toBe(404);
   });
 
@@ -109,7 +113,7 @@ describe("PATCH /api/empresas/[id]/stage", () => {
       id: 5,
       crmEstado: { dealStage: "analisis" },
     });
-    const res = await PATCH(makeReq({ dealStage: null, note: "Pausa" }), { params: { id: "5" } });
+    const res = await PATCH(makeReq({ dealStage: null, note: "Pausa" }), routeContext("5"));
     expect(res.status).toBe(200);
     expect(crmEstadoDelete).toHaveBeenCalledWith({ where: { empresaId: 5 } });
     expect(crmLogCreate).toHaveBeenCalledTimes(1);
@@ -126,7 +130,7 @@ describe("PATCH /api/empresas/[id]/stage", () => {
 
   it("dealStage=null sin CrmEstado previo: NO intenta borrar pero loguea anyway", async () => {
     empresaFindUnique.mockResolvedValue({ id: 5, crmEstado: null });
-    const res = await PATCH(makeReq({ dealStage: null }), { params: { id: "5" } });
+    const res = await PATCH(makeReq({ dealStage: null }), routeContext("5"));
     expect(res.status).toBe(200);
     expect(crmEstadoDelete).not.toHaveBeenCalled();
     expect(crmLogCreate).toHaveBeenCalledTimes(1);
@@ -138,7 +142,7 @@ describe("PATCH /api/empresas/[id]/stage", () => {
 
   it("nuevo deal (no había CrmEstado previo): upsert + log new_deal", async () => {
     empresaFindUnique.mockResolvedValue({ id: 7, crmEstado: null });
-    const res = await PATCH(makeReq({ dealStage: "contactado" }), { params: { id: "7" } });
+    const res = await PATCH(makeReq({ dealStage: "contactado" }), routeContext("7"));
     expect(res.status).toBe(200);
     expect(crmEstadoUpsert).toHaveBeenCalledTimes(1);
     const upsertArgs = crmEstadoUpsert.mock.calls[0][0];
@@ -160,7 +164,7 @@ describe("PATCH /api/empresas/[id]/stage", () => {
       id: 9,
       crmEstado: { dealStage: "contactado" },
     });
-    const res = await PATCH(makeReq({ dealStage: "analisis" }), { params: { id: "9" } });
+    const res = await PATCH(makeReq({ dealStage: "analisis" }), routeContext("9"));
     expect(res.status).toBe(200);
     const upsertArgs = crmEstadoUpsert.mock.calls[0][0];
     expect(upsertArgs.update.dealStage).toBe("analisis");
@@ -177,7 +181,7 @@ describe("PATCH /api/empresas/[id]/stage", () => {
       id: 11,
       crmEstado: { dealStage: "analisis" },
     });
-    const res = await PATCH(makeReq({ dealStage: "analisis" }), { params: { id: "11" } });
+    const res = await PATCH(makeReq({ dealStage: "analisis" }), routeContext("11"));
     expect(res.status).toBe(200);
     const upsertArgs = crmEstadoUpsert.mock.calls[0][0];
     expect(upsertArgs.update).toEqual({ dealStage: "analisis" });
@@ -206,7 +210,7 @@ describe("PATCH /api/empresas/[id]/stage", () => {
 
     const res = await PATCH(
       makeReq({ dealStage: "primera_reunion" }),
-      { params: { id: "13" } }
+      routeContext("13")
     );
     expect(res.status).toBe(200);
 
@@ -236,7 +240,7 @@ describe("PATCH /api/empresas/[id]/stage", () => {
 
     const res = await PATCH(
       makeReq({ dealStage: "primera_reunion" }),
-      { params: { id: "14" } }
+      routeContext("14")
     );
     expect(res.status).toBe(200);
     await new Promise((r) => setImmediate(r));
@@ -259,7 +263,7 @@ describe("PATCH /api/empresas/[id]/stage", () => {
 
     const res = await PATCH(
       makeReq({ dealStage: "primera_reunion" }),
-      { params: { id: "15" } }
+      routeContext("15")
     );
     expect(res.status).toBe(200);
     await new Promise((r) => setImmediate(r));

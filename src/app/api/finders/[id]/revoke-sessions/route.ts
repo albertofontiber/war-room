@@ -21,10 +21,8 @@ export const dynamic = "force-dynamic";
  *
  * Solo admins.
  */
-export async function POST(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session || session.kind !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

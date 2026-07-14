@@ -18,10 +18,8 @@ import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   let finder;
   try {
     finder = await requireCurrentFinder();

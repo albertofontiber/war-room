@@ -15,10 +15,8 @@ export const dynamic = "force-dynamic";
  * target tenía uno se descarta. Si el target no tenía finderSourceId y el lead
  * sí, lo hereda. Deja un CrmLog en el target marcando el merge y borra el lead.
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   let user;
   try {
     user = await requireCurrentUser();

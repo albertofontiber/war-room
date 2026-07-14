@@ -13,8 +13,8 @@
 
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
-import * as XLSX from "xlsx";
 import path from "path";
+import { readWorkbook, sheetDataToRecords } from "../lib/excel";
 
 const prisma = new PrismaClient();
 const FILE = path.join(process.cwd(), "files", "seguridad_electrónica.xlsx");
@@ -60,9 +60,9 @@ function normalizeCif(raw: unknown): string {
 }
 
 async function main() {
-  const wb = XLSX.readFile(FILE);
-  const ws = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval: "" }) as Record<string, unknown>[];
+  const [firstSheet] = await readWorkbook(FILE);
+  if (!firstSheet) throw new Error("El Excel no contiene ninguna pestaña.");
+  const rows = sheetDataToRecords(firstSheet.data, { emptyValue: "" });
 
   console.log(`Filas en Excel: ${rows.length}`);
 

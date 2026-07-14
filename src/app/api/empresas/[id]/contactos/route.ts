@@ -14,10 +14,8 @@ export const dynamic = "force-dynamic";
  * Lista de contactos de la empresa, ordenados por nombre.
  * Solo admins (kind="admin").
  */
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.kind !== "admin") {
@@ -46,10 +44,8 @@ export async function GET(
  * Crea un contacto. El email se normaliza a lowercase en el zod schema para
  * que el matcher del shared inbox sea case-insensitive sin lookups extra.
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.kind !== "admin") {

@@ -183,9 +183,10 @@ export default function ChatIA() {
     if (!vv) return;
     const isMobile = window.innerWidth < 640;
     if (!isMobile) return;
+    const container = containerRef.current;
 
     const apply = () => {
-      const el = containerRef.current;
+      const el = container;
       if (!el) return;
       el.style.height = `${vv.height}px`;
       el.style.top = `${vv.offsetTop}px`;
@@ -198,7 +199,7 @@ export default function ChatIA() {
     return () => {
       vv.removeEventListener("resize", apply);
       vv.removeEventListener("scroll", apply);
-      const el = containerRef.current;
+      const el = container;
       if (el) {
         el.style.height = "";
         el.style.top = "";

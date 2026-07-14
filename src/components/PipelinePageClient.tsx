@@ -7,7 +7,7 @@ import KanbanBoard, { type KanbanCard, type SortOption, SORT_LABEL } from "@/com
 import PanelEmpresa from "@/components/PanelEmpresa";
 // ChatIA y AddLeadModal son lazy: no se necesitan en el primer paint del
 // Kanban y el ChatIA carga `react-markdown` + ai-sdk hooks (~80 KB gzip).
-// `xlsx` (~25 KB gzip) se importa dinámicamente dentro del callback de
+// El escritor de Excel se importa dinámicamente dentro del callback de
 // export para no engordar el chunk inicial.
 const ChatIA = dynamic(() => import("@/components/ChatIA"), { ssr: false });
 const AddLeadModal = dynamic(() => import("@/components/AddLeadModal"), { ssr: false });
@@ -197,33 +197,35 @@ export default function PipelinePageClient() {
   );
 
   const handleExport = useCallback(async () => {
-    const rows = allCards.map((c) => ({
-      Empresa: c.nombre,
-      CIF: c.cif,
-      Stage: c.dealStage ? DEAL_STAGE_LABEL[c.dealStage] : "Sin CRM",
-      Grupo: c.grupoNombre ?? "",
-      CCAA: c.ccaa ?? "",
-      Provincia: c.provincia ?? "",
-      Sector: c.sector ?? "",
-      Web: c.web ?? "",
-      Owner: c.ownerName ?? "",
-      Finder: c.finderName ?? "",
-      "Ingresos (€)": c.ingresos ?? "",
-      "GM (%)":
+    const sheetData = [
+      [
+        "Empresa", "CIF", "Stage", "Grupo", "CCAA", "Provincia", "Sector",
+        "Web", "Owner", "Finder", "Ingresos (€)", "GM (%)", "EBITDA (€)",
+        "Días en stage", "Días sin actividad", "Tareas pendientes", "Última actividad",
+      ],
+      ...allCards.map((c) => [
+        c.nombre,
+        c.cif,
+        c.dealStage ? DEAL_STAGE_LABEL[c.dealStage] : "Sin CRM",
+        c.grupoNombre ?? "",
+        c.ccaa ?? "",
+        c.provincia ?? "",
+        c.sector ?? "",
+        c.web ?? "",
+        c.ownerName ?? "",
+        c.finderName ?? "",
+        c.ingresos ?? "",
         c.margenBrutoPct != null ? Number(c.margenBrutoPct.toFixed(1)) : "",
-      "EBITDA (€)": c.ebitda ?? "",
-      "Días en stage": c.diasEnStage ?? "",
-      "Días sin actividad": c.diasSinActividad ?? "",
-      "Tareas pendientes": c.tareasPendientes,
-      "Última actividad":
+        c.ebitda ?? "",
+        c.diasEnStage ?? "",
+        c.diasSinActividad ?? "",
+        c.tareasPendientes,
         c.ultimaActividad?.fecha?.split("T")[0] ?? "",
-    }));
-    const XLSX = await import("xlsx");
-    const ws = XLSX.utils.json_to_sheet(rows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Pipeline");
+      ]),
+    ];
+    const { default: writeXlsxFile } = await import("write-excel-file/browser");
     const stamp = new Date().toISOString().split("T")[0];
-    XLSX.writeFile(wb, `pipeline_${stamp}.xlsx`);
+    await writeXlsxFile(sheetData, { sheet: "Pipeline" }).toFile(`pipeline_${stamp}.xlsx`);
   }, [allCards]);
 
   return (

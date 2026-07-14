@@ -28,10 +28,8 @@ export const dynamic = "force-dynamic";
  *
  * DELETE: solo el autor finder y solo si la tarea NO está completada.
  */
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   let finder;
   try {
     finder = await requireCurrentFinder();
@@ -226,10 +224,8 @@ export async function PATCH(
   return NextResponse.json(updated);
 }
 
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   let finder;
   try {
     finder = await requireCurrentFinder();

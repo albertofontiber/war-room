@@ -18,10 +18,8 @@ export const dynamic = "force-dynamic";
  * Si `completada` pasa a true, marca `completadaAt = ahora`.
  * Si pasa a false, limpia `completadaAt`.
  */
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.kind !== "admin") {
@@ -147,10 +145,8 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.kind !== "admin") {

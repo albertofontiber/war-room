@@ -15,10 +15,8 @@ export const dynamic = "force-dynamic";
  * Listado de tareas de la empresa. Por defecto oculta las completadas,
  * que se devuelven al final si se pide incluirCompletadas=true.
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -59,10 +57,8 @@ export async function GET(
  * POST /api/empresas/[id]/tareas
  * Body: { titulo, descripcion?, fechaLimite?, asignadoId? }
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

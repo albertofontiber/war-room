@@ -9,10 +9,8 @@ import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     // Solo admins. Antes este endpoint solo llamaba `getCurrentUser()` (que
     // devuelve null silente sin sesión) y nunca verificaba el resultado, así

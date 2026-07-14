@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { fmtDate } from "@/lib/format";
 import { dispatchDataChanged } from "@/lib/data-events";
 
@@ -97,8 +98,8 @@ export default function ProposalsAdminClient() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <a href="/finders" className="text-xs text-wr-blue hover:underline">← Finders</a>
-            <a href="/" className="text-xs text-wr-blue hover:underline">War Room</a>
+            <Link href="/finders" className="text-xs text-wr-blue hover:underline">← Finders</Link>
+            <Link href="/" className="text-xs text-wr-blue hover:underline">War Room</Link>
           </div>
         </header>
 
