@@ -128,7 +128,7 @@ export default function NotificationsBell({
         ref={buttonRef}
         onClick={() => setOpen((v) => !v)}
         title="Notificaciones"
-        className={`${compact ? "h-9 w-9 lg:tap-target" : "tap-target"} relative flex items-center justify-center rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors`}
+        className={`${compact ? "h-9 w-9 max-lg:tap-target" : "tap-target"} relative flex items-center justify-center rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors`}
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
           <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
