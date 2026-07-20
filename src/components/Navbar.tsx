@@ -358,7 +358,7 @@ export default function Navbar() {
       <button
         onClick={() => signOut({ callbackUrl: "/login" })}
         title={`${session?.user?.name} — Cerrar sesión`}
-        className="h-9 w-9 lg:tap-target flex-shrink-0 rounded-full bg-wr-blue/20 border border-wr-blue/30 text-wr-blue text-xs font-semibold flex items-center justify-center hover:bg-wr-blue/30 transition-colors"
+        className="h-9 w-9 max-lg:tap-target flex-shrink-0 rounded-full bg-wr-blue/20 border border-wr-blue/30 text-wr-blue text-xs font-semibold flex items-center justify-center hover:bg-wr-blue/30 transition-colors"
       >
         {initials}
       </button>
