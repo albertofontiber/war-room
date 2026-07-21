@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
-import { fmtM } from "@/lib/format";
+import { fmt, fmtCompactMoney, fmtM } from "@/lib/format";
+import { getSelectionStats } from "@/lib/filtros";
 import { FILTROS_DEFAULT } from "@/types";
 import type { DealStage, Sector } from "@/types";
 
@@ -125,13 +126,20 @@ function StatCard({
   value,
   label,
   colorClass,
+  className = "",
+  title,
 }: {
-  value: number;
+  value: number | string;
   label: string;
   colorClass: string;
+  className?: string;
+  title?: string;
 }) {
   return (
-    <div className="bg-wr-surface2 rounded-lg p-3 border border-wr-border">
+    <div
+      className={`bg-wr-surface2 rounded-lg p-3 border border-wr-border ${className}`}
+      title={title}
+    >
       <div className={`text-2xl font-bold leading-none ${colorClass}`}>{value}</div>
       <div className="text-wr-muted text-[10px] mt-1 leading-tight">{label}</div>
     </div>
@@ -249,7 +257,7 @@ export function SidebarContent({
     toggleFiltroArray,
     resetFiltros,
     empresasGeoJSON,
-    getVisiblesCount,
+    searchQuery,
     getAvailableCCAA,
     getAvailableProvincias,
     getAvailableGrupos,
@@ -261,22 +269,24 @@ export function SidebarContent({
 
   // ── Stats derivados del GeoJSON (sin filtro) ──────────────────────────
   const stats = useMemo(() => {
-    if (!empresasGeoJSON) return { total: 0, enPipeline: 0, enPerimetro: 0, bormeAlertas: 0 };
-    const PIPELINE = new Set(["contactado", "primera_reunion", "analisis", "LOI enviada", "execution"]);
-    let enPipeline = 0, enPerimetro = 0, bormeAlertas = 0;
+    if (!empresasGeoJSON) return { total: 0, enPerimetro: 0, bormeAlertas: 0 };
+    let enPerimetro = 0, bormeAlertas = 0;
     for (const f of empresasGeoJSON) {
       const p = f.properties;
-      if (PIPELINE.has(p.dealStage as string)) enPipeline++;
       if (p.enPerimetro) enPerimetro++;
       if (p.hasBormeReciente) bormeAlertas++;
     }
-    return { total: empresasGeoJSON.length, enPipeline, enPerimetro, bormeAlertas };
+    return { total: empresasGeoJSON.length, enPerimetro, bormeAlertas };
   }, [empresasGeoJSON]);
 
   // El fetch de /api/empresas vive en Navbar (hydrateEmpresas, race-safe).
   // Sidebar consume `empresasGeoJSON` del store sin hacer fetch propio.
 
-  const visiblesCount = getVisiblesCount();
+  const selectionStats = useMemo(
+    () => getSelectionStats(empresasGeoJSON, filtros, searchQuery),
+    [empresasGeoJSON, filtros, searchQuery],
+  );
+  const visiblesCount = selectionStats.count;
 
 
   // ── Chips para filtros activos ────────────────────────────────────────
@@ -609,16 +619,6 @@ export function SidebarContent({
                 colorClass="text-wr-text"
               />
               <StatCard
-                value={visiblesCount}
-                label="En selección"
-                colorClass="text-wr-blue"
-              />
-              <StatCard
-                value={stats.enPipeline}
-                label="En pipeline activo"
-                colorClass="text-wr-blue"
-              />
-              <StatCard
                 value={stats.enPerimetro}
                 label="En perímetro"
                 colorClass="text-wr-green"
@@ -627,6 +627,18 @@ export function SidebarContent({
                 value={stats.bormeAlertas}
                 label="Alertas BORME"
                 colorClass="text-wr-amber"
+                className="col-span-2"
+              />
+              <StatCard
+                value={visiblesCount}
+                label="En selección"
+                colorClass="text-wr-blue"
+              />
+              <StatCard
+                value={fmtCompactMoney(selectionStats.totalIngresos)}
+                label="Ingresos selección"
+                colorClass="text-wr-blue"
+                title={`Suma de los últimos ingresos disponibles de las empresas en selección: ${fmt(selectionStats.totalIngresos)} €`}
               />
             </div>
           </div>

@@ -8,6 +8,15 @@ import type { EmpresaFeatureProperties } from "@/store/useWarRoomStore";
  */
 export type RawProps = EmpresaFeatureProperties;
 
+export interface EmpresaFiltrable {
+  properties: RawProps;
+}
+
+export interface SelectionStats {
+  count: number;
+  totalIngresos: number;
+}
+
 export function isInFilter(
   p: RawProps,
   f: FiltrosActivos,
@@ -70,4 +79,32 @@ export function isInFilter(
     if (!nombre.includes(q) && !cif.includes(q)) return false;
   }
   return true;
+}
+
+/**
+ * Resume el mismo conjunto de empresas que muestran el mapa y la tabla.
+ * Los ingresos sin dato no alteran la suma, pero la empresa sí cuenta en la
+ * selección si cumple los filtros activos.
+ */
+export function getSelectionStats(
+  empresas: readonly EmpresaFiltrable[] | null,
+  filtros: FiltrosActivos,
+  search: string,
+): SelectionStats {
+  if (!empresas) return { count: 0, totalIngresos: 0 };
+
+  let count = 0;
+  let totalIngresos = 0;
+
+  for (const empresa of empresas) {
+    const properties = empresa.properties;
+    if (!isInFilter(properties, filtros, search)) continue;
+
+    count++;
+    if (properties.ingresos !== null && Number.isFinite(properties.ingresos)) {
+      totalIngresos += properties.ingresos;
+    }
+  }
+
+  return { count, totalIngresos };
 }
