@@ -103,6 +103,7 @@ export async function GET() {
             sector: empresa.sector,
             dealStage: empresa.crmEstado?.dealStage ?? null,
             // Financieros para filtros y sizeMetric del mapa
+            anioFinanciero: latestFin?.anio ?? null,
             ingresos,
             ebitda,
             margenBrutoPct,

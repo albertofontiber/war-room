@@ -126,6 +126,7 @@ export interface EmpresaResumen {
   score: number | null;
   grupo: { id: number; nombre: string } | null;
   // últimos financieros (año más reciente)
+  anioFinanciero: number | null;
   ingresos: number | null;
   margenBruto: number | null;
   margenBrutoPct: number | null;

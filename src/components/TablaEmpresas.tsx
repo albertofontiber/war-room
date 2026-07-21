@@ -7,6 +7,12 @@ import { isInFilter } from "@/lib/filtros";
 import { fmt, fmtM, fmtPct } from "@/lib/format";
 import { DEAL_STAGE_LABEL, DEAL_STAGE_TEXT_CLASS } from "@/lib/crm";
 import type { DealStage } from "@/types";
+import {
+  buildFinancialHistorySheet,
+  excelHeaderCell,
+  type FinancieroExportRecord,
+} from "@/lib/empresa-excel-export";
+import type { SheetData } from "write-excel-file/browser";
 // El escritor de Excel se importa dinámicamente sólo cuando el usuario
 // pulsa "Exportar a Excel" — la mayoría de visitas a la tabla nunca lo
 // usan, así que mantenerlo fuera del chunk inicial mejora TTI.
@@ -97,6 +103,8 @@ export default function TablaEmpresas() {
   const [sortKey, setSortKey] = useState<SortKey>("nombre");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [usarVistaMapas, setUsarVistaMapas] = useState(true);
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
 
   // Filtered + sorted rows
   const rows = useMemo(() => {
@@ -145,52 +153,134 @@ export default function TablaEmpresas() {
     });
   }, []);
 
-  // Export to Excel — mismo orden que la tabla. El escritor se carga dinámico
-  // dentro del callback para no engordar el chunk inicial de la tabla.
+  // Export to Excel — la primera pestaña conserva el mismo orden/filtros que
+  // Tabla. El histórico se pide bajo demanda únicamente para esas empresas,
+  // evitando cargar ~19k registros cada vez que se abre la vista.
   const handleExport = useCallback(async () => {
-    const headers = [
-      "Empresa",
-      "CIF",
-      "Grupo",
-      "Ciudad",
-      "Provincia",
-      "Sector",
-      "CRM",
-      "Web",
-      ...(!modoPresentacion ? ["Ingresos (€)", "GM%", "EBITDA%"] : []),
-      "Empleados",
-    ];
-    const sheetData = [
-      headers,
-      ...rows.map((r) => [
-        r.nombre,
-        r.cif ?? "",
-        r.grupoNombre ?? "",
-        r.localidad ?? "",
-        r.provincia,
-        SECTOR_LABEL[r.sector as string] ?? r.sector,
-        DEAL_STAGE_LABEL[r.dealStage as DealStage] ?? r.dealStage ?? "—",
-        r.web ?? "",
-        ...(!modoPresentacion
-          ? [
-              r.ingresos ?? null,
-              r.margenBrutoPct != null
-                ? Number((r.margenBrutoPct as number).toFixed(1))
-                : null,
-              r.ebitdaPct != null
-                ? Number((r.ebitdaPct as number).toFixed(1))
-                : null,
-            ]
-          : []),
-        r.empleados ?? null,
-      ]),
-    ];
+    if (exporting) return;
+    setExporting(true);
+    setExportError(null);
 
-    const { default: writeXlsxFile } = await import("write-excel-file/browser");
-    await writeXlsxFile(sheetData, { sheet: "Empresas" }).toFile(
-      `fontiber-war-room-${new Date().toISOString().slice(0, 10)}.xlsx`
-    );
-  }, [rows, modoPresentacion]);
+    try {
+      const response = await fetch("/api/empresas/export-history", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ empresaIds: rows.map((row) => row.id) }),
+      });
+      if (!response.ok) throw new Error(`API ${response.status}`);
+
+      const payload = (await response.json()) as {
+        records?: FinancieroExportRecord[];
+      };
+      const historyRecords = Array.isArray(payload.records)
+        ? payload.records
+        : [];
+
+      const headers = [
+        "Empresa",
+        "CIF",
+        "Grupo",
+        "Ciudad",
+        "Provincia",
+        "Sector",
+        "CRM",
+        "Web",
+        ...(!modoPresentacion
+          ? ["Año del último dato", "Ingresos (€)", "GM%", "EBITDA%"]
+          : []),
+        "Empleados",
+      ];
+      const summaryData: SheetData = [
+        headers.map((header) => excelHeaderCell(header)),
+        ...rows.map((row) => [
+          row.nombre,
+          row.cif ?? "",
+          row.grupoNombre ?? "",
+          row.localidad ?? "",
+          row.provincia,
+          SECTOR_LABEL[row.sector as string] ?? row.sector,
+          DEAL_STAGE_LABEL[row.dealStage as DealStage] ?? row.dealStage ?? "—",
+          row.web ?? "",
+          ...(!modoPresentacion
+            ? [
+                row.anioFinanciero ?? null,
+                row.ingresos ?? null,
+                row.margenBrutoPct != null
+                  ? Number(row.margenBrutoPct.toFixed(1))
+                  : null,
+                row.ebitdaPct != null
+                  ? Number(row.ebitdaPct.toFixed(1))
+                  : null,
+              ]
+            : []),
+          row.empleados ?? null,
+        ]),
+      ];
+
+      const history = buildFinancialHistorySheet(
+        rows.map((row) => ({
+          id: row.id,
+          nombre: row.nombre,
+          cif: row.cif,
+        })),
+        historyRecords
+      );
+
+      const summaryWidths = headers.map((header) => ({
+        width:
+          header === "Empresa"
+            ? 38
+            : header === "Web"
+              ? 28
+              : header === "Grupo" || header === "Ciudad"
+                ? 22
+                : header === "Provincia" || header === "Sector"
+                  ? 18
+                  : 15,
+      }));
+      const historyWidths = [
+        { width: 38 },
+        { width: 14 },
+        { width: 22 },
+        ...history.years.map(() => ({ width: 16 })),
+      ];
+
+      const { default: writeXlsxFile } = await import(
+        "write-excel-file/browser"
+      );
+      await writeXlsxFile(
+        [
+          {
+            data: summaryData,
+            sheet: "Empresas",
+            columns: summaryWidths,
+            stickyRowsCount: 1,
+            showGridLines: false,
+            orientation: "landscape",
+            zoomScale: 0.9,
+          },
+          {
+            data: history.data,
+            sheet: "Histórico financiero",
+            columns: historyWidths,
+            stickyRowsCount: 1,
+            stickyColumnsCount: 3,
+            showGridLines: false,
+            orientation: "landscape",
+            zoomScale: 0.9,
+          },
+        ],
+        { fontFamily: "Calibri", fontSize: 10 }
+      ).toFile(
+        `fontiber-war-room-${new Date().toISOString().slice(0, 10)}.xlsx`
+      );
+    } catch (error) {
+      console.error("[TablaEmpresas/export]", error);
+      setExportError("No se ha podido generar el Excel. Reintenta.");
+    } finally {
+      setExporting(false);
+    }
+  }, [rows, modoPresentacion, exporting]);
 
   // Sort indicator
   function SortIcon({ col }: { col: SortKey }) {
@@ -261,18 +351,28 @@ export default function TablaEmpresas() {
             </button>
           )}
         </div>
-        <button
-          onClick={handleExport}
-          className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-md bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors flex-shrink-0"
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          <span className="hidden sm:inline">Exportar Excel</span>
-          <span className="sm:hidden">Excel</span>
-        </button>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {exportError && (
+            <span className="hidden sm:inline text-[10px] text-wr-red" role="alert">
+              {exportError}
+            </span>
+          )}
+          <button
+            onClick={handleExport}
+            disabled={exporting}
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-md bg-wr-surface2 border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted disabled:opacity-50 disabled:cursor-wait transition-colors flex-shrink-0"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            <span className="hidden sm:inline">
+              {exporting ? "Generando…" : "Exportar Excel"}
+            </span>
+            <span className="sm:hidden">{exporting ? "…" : "Excel"}</span>
+          </button>
+        </div>
       </div>
 
       {/* Cards layout — solo en <md (tablet vertical y mobile).
