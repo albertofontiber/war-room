@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isInFilter, type RawProps } from "./filtros";
+import { getSelectionStats, isInFilter, type RawProps } from "./filtros";
 import { FILTROS_DEFAULT } from "@/types";
 import type { FiltrosActivos } from "@/types";
 
@@ -68,5 +68,26 @@ describe("isInFilter — filtro crmStage con sentinel sin_crm", () => {
     expect(isInFilter(makeProps({ dealStage: null }), f, "")).toBe(false);
     expect(isInFilter(makeProps({ dealStage: "identificado" }), f, "")).toBe(false);
     expect(isInFilter(makeProps({ dealStage: "contactado" }), f, "")).toBe(true);
+  });
+});
+
+describe("getSelectionStats", () => {
+  it("cuenta y suma únicamente las empresas que cumplen filtros y búsqueda", () => {
+    const empresas = [
+      { properties: makeProps({ id: 1, nombre: "ALFA SL", ingresos: 1_500_000, enPerimetro: true }) },
+      { properties: makeProps({ id: 2, nombre: "BETA SL", ingresos: 2_000_000, enPerimetro: false }) },
+      { properties: makeProps({ id: 3, nombre: "ALFA NORTE SL", ingresos: null, enPerimetro: true }) },
+    ];
+
+    expect(
+      getSelectionStats(empresas, makeFiltros({ enPerimetro: true }), "alfa"),
+    ).toEqual({ count: 2, totalIngresos: 1_500_000 });
+  });
+
+  it("devuelve ceros mientras las empresas todavía no están cargadas", () => {
+    expect(getSelectionStats(null, makeFiltros(), "")).toEqual({
+      count: 0,
+      totalIngresos: 0,
+    });
   });
 });

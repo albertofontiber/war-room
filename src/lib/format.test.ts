@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fmt, fmtM, fmtPct, fmtDate, fmtFechaShort, fmtMillions } from "./format";
+import { fmt, fmtCompactMoney, fmtM, fmtPct, fmtDate, fmtFechaShort, fmtMillions } from "./format";
 
 describe("fmt", () => {
   it("formatea números (devuelve string con dígitos)", () => {
@@ -43,6 +43,22 @@ describe("fmtM", () => {
     expect(fmtM(null)).toBe("n.a.");
     expect(fmtM(undefined)).toBe("n.a.");
     expect(fmtM(null, "—")).toBe("—");
+  });
+});
+
+describe("fmtCompactMoney", () => {
+  it("mantiene legibles los totales de miles de millones", () => {
+    expect(fmtCompactMoney(12_500_000_000)).toBe("12,5B€");
+  });
+
+  it("formatea millones, miles y unidades", () => {
+    expect(fmtCompactMoney(2_500_000)).toBe("2,5M€");
+    expect(fmtCompactMoney(15_000)).toBe("15K€");
+    expect(fmtCompactMoney(500)).toBe("500€");
+  });
+
+  it("admite un fallback para valores ausentes", () => {
+    expect(fmtCompactMoney(null, "—")).toBe("—");
   });
 });
 

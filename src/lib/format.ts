@@ -22,6 +22,23 @@ export function fmtM(
   return `${n.toLocaleString("es-ES")}€`;
 }
 
+/** Compact monetary format for small KPI cards (for example, "12,5B€"). */
+export function fmtCompactMoney(
+  n: number | null | undefined,
+  fallback = "n.a.",
+): string {
+  if (n === null || n === undefined) return fallback;
+
+  const abs = Math.abs(n);
+  const formatScaled = (value: number) =>
+    value.toLocaleString("es-ES", { maximumFractionDigits: 1 });
+
+  if (abs >= 1_000_000_000) return `${formatScaled(n / 1_000_000_000)}B€`;
+  if (abs >= 1_000_000) return `${formatScaled(n / 1_000_000)}M€`;
+  if (abs >= 1_000) return `${formatScaled(n / 1_000)}K€`;
+  return `${n.toLocaleString("es-ES")}€`;
+}
+
 /** Format a percentage with one decimal. */
 export function fmtPct(
   n: number | null | undefined,
