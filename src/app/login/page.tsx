@@ -8,7 +8,7 @@ import { PasswordToggle } from "@/components/PasswordToggle";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -20,7 +20,7 @@ export default function LoginPage() {
     setLoading(true);
 
     const res = await signIn("admin-credentials", {
-      username,
+      email,
       password,
       redirect: false,
     });
@@ -31,7 +31,7 @@ export default function LoginPage() {
       router.push("/");
       router.refresh();
     } else {
-      setError("Usuario o contraseña incorrectos.");
+      setError("Email o contraseña incorrectos.");
     }
   }
 
@@ -77,28 +77,28 @@ export default function LoginPage() {
         {/* Card */}
         <div className="bg-wr-surface border border-wr-border rounded-xl p-8 shadow-2xl">
           <h1 className="text-wr-text text-xl font-semibold mb-1">
-            Acceso restringido
+            Acceso al War Room
           </h1>
           <p className="text-wr-muted text-sm mb-6">
-            Introduce tus credenciales para continuar.
+            Introduce tu email y contraseña para continuar.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label
-                htmlFor="username"
+                htmlFor="email"
                 className="block text-wr-muted text-xs font-medium mb-1.5 uppercase tracking-wider"
               >
-                Usuario
+                Email
               </label>
               <input
-                id="username"
-                type="text"
-                autoComplete="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                id="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="tap-target-h w-full bg-wr-surface2 border border-wr-border rounded-lg px-3.5 py-2.5 text-wr-text text-sm placeholder:text-wr-hint focus:outline-none focus:border-wr-blue focus:ring-1 focus:ring-wr-blue transition-colors"
-                placeholder="alberto / gabriel"
+                placeholder="tu@email.com"
                 required
               />
             </div>
@@ -165,7 +165,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-wr-hint text-xs mt-6">
-          Acceso exclusivo · Fontiber Industrial Partners
+          ¿Problemas de acceso? Contacta con Fontiber.
         </p>
       </div>
     </div>

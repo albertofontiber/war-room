@@ -303,7 +303,7 @@ describe("authorize (admin-credentials)", () => {
   beforeEach(() => {
     bcryptCompare.mockReset();
     logWarnMock.mockReset();
-    vi.stubEnv("ADMIN_USER_1", "alberto");
+    vi.stubEnv("ADMIN_EMAIL_1", "alberto@fontiber.com");
     vi.stubEnv("ADMIN_PASS_HASH_1", "$2a$10$hash-alberto");
     userFindUnique.mockResolvedValue({
       id: "u-alberto",
@@ -323,7 +323,7 @@ describe("authorize (admin-credentials)", () => {
     bcryptCompare.mockResolvedValueOnce(true);
     const authorize = getAdminAuthorize();
     const user = (await authorize(
-      { username: "alberto", password: "correcta" },
+      { email: " ALBERTO@FONTIBER.COM ", password: "correcta" },
       REQ
     )) as { kind: string; name: string } | null;
     expect(user).toMatchObject({
@@ -351,29 +351,52 @@ describe("authorize (admin-credentials)", () => {
     bcryptCompare.mockResolvedValueOnce(true);
 
     const authorize = getAdminAuthorize();
-    await authorize({ username: " ALBERTO ", password: "nueva" }, REQ);
+    await authorize(
+      { email: " ALBERTO@FONTIBER.COM ", password: "nueva" },
+      REQ
+    );
 
     expect(bcryptCompare).toHaveBeenCalledWith("nueva", "$2a$10$hash-reset");
   });
 
-  it("password errónea: null + log.warn con username e ip", async () => {
+  it("password errónea: null + log.warn con email e ip", async () => {
     bcryptCompare.mockResolvedValueOnce(false);
     const authorize = getAdminAuthorize();
-    const user = await authorize({ username: "alberto", password: "mala" }, REQ);
+    const user = await authorize(
+      { email: "alberto@fontiber.com", password: "mala" },
+      REQ
+    );
     expect(user).toBeNull();
     expect(logWarnMock).toHaveBeenCalledWith(
       "auth/admin",
       "login_failure",
-      expect.objectContaining({ username: "alberto", ip: "203.0.113.5" })
+      expect.objectContaining({
+        email: "alberto@fontiber.com",
+        ip: "203.0.113.5",
+      })
     );
   });
 
-  it("username desconocido: null + log.warn (sin filtrar si existe o no)", async () => {
+  it("email desconocido: null + log.warn (sin filtrar si existe o no)", async () => {
     const authorize = getAdminAuthorize();
-    const user = await authorize({ username: "intruso", password: "x" }, REQ);
+    const user = await authorize(
+      { email: "intruso@fontiber.com", password: "x" },
+      REQ
+    );
     expect(user).toBeNull();
     expect(bcryptCompare).not.toHaveBeenCalled();
     expect(logWarnMock).toHaveBeenCalled();
+  });
+
+  it("ya no acepta el alias corto como identificador", async () => {
+    const authorize = getAdminAuthorize();
+    const user = await authorize(
+      { email: "alberto", password: "correcta" },
+      REQ
+    );
+    expect(user).toBeNull();
+    expect(userFindUnique).not.toHaveBeenCalled();
+    expect(bcryptCompare).not.toHaveBeenCalled();
   });
 
   it("usuario desactivado en BD: rechaza aunque la credencial de entorno coincida", async () => {
@@ -387,7 +410,7 @@ describe("authorize (admin-credentials)", () => {
     });
     const authorize = getAdminAuthorize();
     const user = await authorize(
-      { username: "alberto", password: "correcta" },
+      { email: "alberto@fontiber.com", password: "correcta" },
       REQ
     );
     expect(user).toBeNull();
