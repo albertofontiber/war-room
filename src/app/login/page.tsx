@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { PasswordToggle } from "@/components/PasswordToggle";
@@ -154,6 +155,13 @@ export default function LoginPage() {
               )}
             </button>
           </form>
+
+          <Link
+            href="/forgot-password"
+            className="block text-center text-wr-blue hover:underline text-xs mt-5"
+          >
+            ¿Olvidaste tu contraseña?
+          </Link>
         </div>
 
         <p className="text-center text-wr-hint text-xs mt-6">

@@ -155,6 +155,11 @@ export const PortalResetPasswordSchema = z.object({
   password: z.string().min(10, "La contraseña debe tener al menos 10 caracteres"),
 });
 
+// Mismo contrato y mismas garantías para el war room admin. Se exportan con
+// nombres propios para que cada endpoint deje claro qué superficie protege.
+export const AdminForgotPasswordSchema = PortalForgotPasswordSchema;
+export const AdminResetPasswordSchema = PortalResetPasswordSchema;
+
 export const FinderCreateSchema = z.object({
   email: z.string().trim().toLowerCase().email("Email inválido"),
   name: nonEmptyString.max(100),

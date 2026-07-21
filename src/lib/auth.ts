@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { logFinderAction } from "@/lib/finder-access-log";
 import { log } from "@/lib/logger";
+import { findAdminCredentialByUsername } from "@/lib/admin-credentials";
 
 /**
  * Extrae IP del cliente y user-agent de los headers de la request de login.
@@ -30,10 +31,10 @@ function extractRequestMetadata(headers: IncomingHttpHeaders | undefined): {
 }
 
 /**
- * Verifica la contraseña de un admin. Dos modos, por env var:
+ * Verifica la contraseña de un admin. Dos formatos posibles:
  *
- * - `ADMIN_PASS_HASH_n` (preferido): hash bcrypt — la contraseña real no vive
- *   en ninguna env. Generar con `npx tsx scripts/hash-admin-password.ts`.
+ * - hash bcrypt (User.passwordHash tras reset o `ADMIN_PASS_HASH_n`): la
+ *   contraseña real no se persiste.
  * - `ADMIN_PASS_n` (legacy): texto plano. Se compara en tiempo constante
  *   (digest sha256 + timingSafeEqual) en vez de `===`.
  *
@@ -57,8 +58,9 @@ export async function adminPasswordMatches(
 /**
  * Auth unificado con dos providers separados:
  *
- * - `admin-credentials` (user/pass via ENV) para Alberto y Gabriel. Entra al
- *   war room completo. La sesión lleva `kind: "admin"` y el nombre.
+ * - `admin-credentials` para Alberto y Gabriel. Arranca con user/pass vía ENV
+ *   y, después de un reset, prioriza User.passwordHash. Entra al war room
+ *   completo. La sesión lleva `kind: "admin"` y el nombre.
  *
  * - `finder-credentials` (email/pass via bcrypt contra la tabla Finder) para
  *   los finders externos. La sesión lleva `kind: "finder"` y `finderId` para
@@ -105,26 +107,29 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.username || !credentials?.password) return null;
 
         const { ip, userAgent } = extractRequestMetadata(req?.headers);
-        const users = [
-          {
-            id: "1",
-            name: process.env.ADMIN_USER_1 ?? "alberto",
-            password: process.env.ADMIN_PASS_1,
-            passwordHash: process.env.ADMIN_PASS_HASH_1,
-          },
-          {
-            id: "2",
-            name: process.env.ADMIN_USER_2 ?? "gabriel",
-            password: process.env.ADMIN_PASS_2,
-            passwordHash: process.env.ADMIN_PASS_HASH_2,
-          },
-        ];
-
-        const user = users.find((u) => u.name === credentials.username);
-        const ok = user
-          ? await adminPasswordMatches(credentials.password, user)
-          : false;
-        if (!user || !ok) {
+        const config = findAdminCredentialByUsername(credentials.username);
+        const user = config
+          ? await prisma.user.findUnique({
+              where: { email: config.email },
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                active: true,
+                passwordHash: true,
+              },
+            })
+          : null;
+        const ok =
+          config && user?.active && user.role === "admin"
+            ? await adminPasswordMatches(credentials.password, {
+                password: config.password,
+                // Un reset self-service en BD sustituye al hash de entorno.
+                passwordHash: user.passwordHash ?? config.passwordHash,
+              })
+            : false;
+        if (!config || !user || !ok) {
           // Los admins no tienen tabla de access log (los finders sí);
           // registramos en el logger estructurado → visible en Vercel logs.
           log.warn("auth/admin", "login_failure", {
@@ -139,7 +144,7 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user.id,
           name: user.name,
-          email: `${user.name}@fontiber.com`,
+          email: user.email,
           kind: "admin" as const,
           finderId: null,
         };

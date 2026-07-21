@@ -17,12 +17,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const finderFindUnique = vi.fn();
+const userFindUnique = vi.fn();
 const bcryptCompare = vi.fn();
 const logFinderActionMock = vi.fn();
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     finder: { findUnique: (...a: unknown[]) => finderFindUnique(...a) },
+    user: { findUnique: (...a: unknown[]) => userFindUnique(...a) },
   },
 }));
 
@@ -75,6 +77,7 @@ const REQ = {
 
 beforeEach(() => {
   finderFindUnique.mockReset();
+  userFindUnique.mockReset();
   bcryptCompare.mockReset();
   logFinderActionMock.mockReset();
 });
@@ -302,6 +305,14 @@ describe("authorize (admin-credentials)", () => {
     logWarnMock.mockReset();
     vi.stubEnv("ADMIN_USER_1", "alberto");
     vi.stubEnv("ADMIN_PASS_HASH_1", "$2a$10$hash-alberto");
+    userFindUnique.mockResolvedValue({
+      id: "u-alberto",
+      name: "Alberto",
+      email: "alberto@fontiber.com",
+      role: "admin",
+      active: true,
+      passwordHash: null,
+    });
   });
 
   afterEach(() => {
@@ -315,8 +326,34 @@ describe("authorize (admin-credentials)", () => {
       { username: "alberto", password: "correcta" },
       REQ
     )) as { kind: string; name: string } | null;
-    expect(user).toMatchObject({ kind: "admin", name: "alberto" });
+    expect(user).toMatchObject({
+      id: "u-alberto",
+      kind: "admin",
+      name: "Alberto",
+      email: "alberto@fontiber.com",
+    });
+    expect(userFindUnique).toHaveBeenCalledWith({
+      where: { email: "alberto@fontiber.com" },
+      select: expect.objectContaining({ passwordHash: true }),
+    });
     expect(logWarnMock).not.toHaveBeenCalled();
+  });
+
+  it("el hash guardado tras un reset gana al hash de entorno", async () => {
+    userFindUnique.mockResolvedValueOnce({
+      id: "u-alberto",
+      name: "Alberto",
+      email: "alberto@fontiber.com",
+      role: "admin",
+      active: true,
+      passwordHash: "$2a$10$hash-reset",
+    });
+    bcryptCompare.mockResolvedValueOnce(true);
+
+    const authorize = getAdminAuthorize();
+    await authorize({ username: " ALBERTO ", password: "nueva" }, REQ);
+
+    expect(bcryptCompare).toHaveBeenCalledWith("nueva", "$2a$10$hash-reset");
   });
 
   it("password errónea: null + log.warn con username e ip", async () => {
@@ -337,5 +374,23 @@ describe("authorize (admin-credentials)", () => {
     expect(user).toBeNull();
     expect(bcryptCompare).not.toHaveBeenCalled();
     expect(logWarnMock).toHaveBeenCalled();
+  });
+
+  it("usuario desactivado en BD: rechaza aunque la credencial de entorno coincida", async () => {
+    userFindUnique.mockResolvedValueOnce({
+      id: "u-alberto",
+      name: "Alberto",
+      email: "alberto@fontiber.com",
+      role: "admin",
+      active: false,
+      passwordHash: null,
+    });
+    const authorize = getAdminAuthorize();
+    const user = await authorize(
+      { username: "alberto", password: "correcta" },
+      REQ
+    );
+    expect(user).toBeNull();
+    expect(bcryptCompare).not.toHaveBeenCalled();
   });
 });

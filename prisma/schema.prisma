@@ -316,13 +316,18 @@ model CrmLog {
 // ─────────────────────────────────────────────────────────────
 
 model User {
-  id         String   @id @default(cuid())
-  email      String   @unique
-  name       String
-  role       String   @default("admin") // "admin" | "finder" (reservado MVP 1.5)
-  active     Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  role          String    @default("admin") // "admin" | "finder" (reservado MVP 1.5)
+  active        Boolean   @default(true)
+  // Cuando existe, este hash sustituye a la credencial legacy de entorno.
+  // Permite que Alberto/Gabriel cambien su password mediante un link de reset
+  // sin guardar nunca la contraseña en texto plano.
+  passwordHash  String?
+  passwordSetAt DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   // Relaciones
   notas           Nota[]            @relation("NotaAutor")
@@ -334,6 +339,23 @@ model User {
   menciones       Mencion[]         @relation("UserMencion")
   empresaSeenAts  EmpresaSeenAt[]   @relation("EmpresaSeenAtUser")
   chatThread      ChatThread?
+  passwordResets  AdminPasswordResetToken[]
+}
+
+// Self-service reset de password para los usuarios admin del war room. El
+// token raw solo viaja por email; en BD se conserva su sha256. Un token caduca
+// a las 24h, solo puede usarse una vez y pedir otro invalida los anteriores.
+model AdminPasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, usedAt])
+  @@index([expiresAt])
 }
 
 // Historial del chat IA — un hilo activo por admin. Antes la conversación
@@ -652,7 +674,7 @@ model AuditLog {
   actorType   String   // "admin" | "finder" | "system"
   actorId     String?
   action      String   // "create" | "update" | "delete"
-  entityType  String   // "empresa" | "tarea" | "nota" | "finder"
+  entityType  String   // "empresa" | "tarea" | "nota" | "finder" | "user"
   entityId    String?  // string para soportar tanto Int (Tarea/Nota/Empresa) como String (Finder/User)
   before      Json?
   after       Json?

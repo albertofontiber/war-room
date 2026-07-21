@@ -22,7 +22,13 @@ import { log } from "@/lib/logger";
 
 export type AuditActorType = "admin" | "finder" | "system";
 export type AuditAction = "create" | "update" | "delete";
-export type AuditEntityType = "empresa" | "tarea" | "nota" | "finder" | "contacto";
+export type AuditEntityType =
+  | "empresa"
+  | "tarea"
+  | "nota"
+  | "finder"
+  | "contacto"
+  | "user";
 
 export interface AuditLogInput {
   actorType: AuditActorType;
