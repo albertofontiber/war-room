@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { logFinderAction } from "@/lib/finder-access-log";
 import { log } from "@/lib/logger";
-import { findAdminCredentialByUsername } from "@/lib/admin-credentials";
+import { findAdminCredentialByEmail } from "@/lib/admin-credentials";
 
 /**
  * Extrae IP del cliente y user-agent de los headers de la request de login.
@@ -58,7 +58,8 @@ export async function adminPasswordMatches(
 /**
  * Auth unificado con dos providers separados:
  *
- * - `admin-credentials` para Alberto y Gabriel. Arranca con user/pass vía ENV
+ * - `admin-credentials` para los administradores configurados. Arranca con
+ *   email/pass vía ENV
  *   y, después de un reset, prioriza User.passwordHash. Entra al war room
  *   completo. La sesión lleva `kind: "admin"` y el nombre.
  *
@@ -100,14 +101,15 @@ export const authOptions: NextAuthOptions = {
       id: "admin-credentials",
       name: "Admin",
       credentials: {
-        username: { label: "Usuario", type: "text" },
+        email: { label: "Email", type: "email" },
         password: { label: "Contraseña", type: "password" },
       },
       async authorize(credentials, req) {
-        if (!credentials?.username || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.password) return null;
 
         const { ip, userAgent } = extractRequestMetadata(req?.headers);
-        const config = findAdminCredentialByUsername(credentials.username);
+        const email = credentials.email.trim().toLowerCase();
+        const config = findAdminCredentialByEmail(email);
         const user = config
           ? await prisma.user.findUnique({
               where: { email: config.email },
@@ -133,14 +135,14 @@ export const authOptions: NextAuthOptions = {
           // Los admins no tienen tabla de access log (los finders sí);
           // registramos en el logger estructurado → visible en Vercel logs.
           log.warn("auth/admin", "login_failure", {
-            username: credentials.username,
+            email,
             ip,
             userAgent,
           });
           return null;
         }
 
-        log.info("auth/admin", "login_success", { username: user.name, ip });
+        log.info("auth/admin", "login_success", { email: user.email, ip });
         return {
           id: user.id,
           name: user.name,

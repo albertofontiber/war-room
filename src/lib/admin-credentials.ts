@@ -1,44 +1,60 @@
 export type AdminCredentialConfig = {
-  username: string;
   email: string;
   password?: string;
   passwordHash?: string;
 };
 
+function configuredAdminEmail(
+  explicitEmail: string | undefined,
+  legacyUsername: string | undefined,
+  fallbackUsername: string
+): string {
+  const identifier =
+    explicitEmail?.trim() || legacyUsername?.trim() || fallbackUsername;
+  const normalized = identifier.toLowerCase();
+  return normalized.includes("@")
+    ? normalized
+    : `${normalized}@fontiber.com`;
+}
+
 /**
  * Fuente única para las dos identidades que pueden entrar al war room.
  *
- * Las variables de entorno siguen siendo el arranque/fallback. Si un admin
- * usa el flujo de recuperación, User.passwordHash pasa a tener prioridad y la
- * contraseña antigua de entorno deja de funcionar para esa cuenta.
+ * `ADMIN_EMAIL_n` es el identificador de acceso. `ADMIN_USER_n` se acepta
+ * únicamente como configuración legacy para no exigir cambios inmediatos en
+ * los despliegues existentes. Si un admin usa el flujo de recuperación,
+ * User.passwordHash pasa a tener prioridad y la contraseña antigua de entorno
+ * deja de funcionar para esa cuenta.
  */
 export function getAdminCredentialConfigs(): AdminCredentialConfig[] {
   return [
     {
-      username: process.env.ADMIN_USER_1 ?? "alberto",
-      email: `${process.env.ADMIN_USER_1 ?? "alberto"}@fontiber.com`,
+      email: configuredAdminEmail(
+        process.env.ADMIN_EMAIL_1,
+        process.env.ADMIN_USER_1,
+        "alberto"
+      ),
       password: process.env.ADMIN_PASS_1,
       passwordHash: process.env.ADMIN_PASS_HASH_1,
     },
     {
-      username: process.env.ADMIN_USER_2 ?? "gabriel",
-      email: `${process.env.ADMIN_USER_2 ?? "gabriel"}@fontiber.com`,
+      email: configuredAdminEmail(
+        process.env.ADMIN_EMAIL_2,
+        process.env.ADMIN_USER_2,
+        "gabriel"
+      ),
       password: process.env.ADMIN_PASS_2,
       passwordHash: process.env.ADMIN_PASS_HASH_2,
     },
-  ].map((config) => ({
-    ...config,
-    username: config.username.trim().toLowerCase(),
-    email: config.email.trim().toLowerCase(),
-  }));
+  ];
 }
 
-export function findAdminCredentialByUsername(
-  username: string
+export function findAdminCredentialByEmail(
+  email: string
 ): AdminCredentialConfig | undefined {
-  const normalized = username.trim().toLowerCase();
+  const normalized = email.trim().toLowerCase();
   return getAdminCredentialConfigs().find(
-    (config) => config.username === normalized
+    (config) => config.email === normalized
   );
 }
 
