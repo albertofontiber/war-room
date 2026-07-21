@@ -15,6 +15,10 @@ import { log } from "@/lib/logger";
 // (`warroom@fontiber.com`). Mismo dominio verificado en Resend, aliases
 // distintos para que el destinatario lo identifique a primera vista.
 const FROM = process.env.PORTAL_EMAIL_FROM ?? "portal@fontiber.com";
+const ADMIN_FROM =
+  process.env.ADMIN_EMAIL_FROM ??
+  process.env.SUMMARY_EMAIL_FROM ??
+  "warroom@fontiber.com";
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ?? "https://warroom.fontiber.com";
 
@@ -38,9 +42,13 @@ export async function sendPasswordResetEmail(
     input.rawToken
   )}`;
   const html = renderEmail({
-    finderName: input.finderName,
+    recipientName: input.finderName,
     link,
     expiresAt: input.expiresAt,
+    productLabel: "FONTIBER · PORTAL FINDERS",
+    accountLabel: "cuenta del portal",
+    footerHref: `${BASE_URL}/portal`,
+    footerLabel: "portal.fontiber.com",
   });
 
   try {
@@ -57,10 +65,57 @@ export async function sendPasswordResetEmail(
   }
 }
 
+export type SendAdminPasswordResetEmailInput = {
+  to: string;
+  adminName: string;
+  rawToken: string;
+  expiresAt: Date;
+};
+
+export async function sendAdminPasswordResetEmail(
+  input: SendAdminPasswordResetEmailInput
+): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    log.warn("lib/email-password-reset", "RESEND_API_KEY not set, skipping email");
+    return;
+  }
+
+  const link = `${BASE_URL}/reset-password?token=${encodeURIComponent(
+    input.rawToken
+  )}`;
+  const html = renderEmail({
+    recipientName: input.adminName,
+    link,
+    expiresAt: input.expiresAt,
+    productLabel: "FONTIBER · WAR ROOM",
+    accountLabel: "cuenta del war room",
+    footerHref: BASE_URL,
+    footerLabel: "warroom.fontiber.com",
+  });
+
+  try {
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
+      from: `Fontiber War Room <${ADMIN_FROM}>`,
+      to: input.to,
+      subject: "Restablece tu contraseña — Fontiber War Room",
+      html,
+    });
+    if (error) log.error("lib/email-password-reset", "Resend error", { error });
+  } catch (err) {
+    log.error("lib/email-password-reset", err);
+  }
+}
+
 function renderEmail(opts: {
-  finderName: string;
+  recipientName: string;
   link: string;
   expiresAt: Date;
+  productLabel: string;
+  accountLabel: string;
+  footerHref: string;
+  footerLabel: string;
 }): string {
   const escape = (s: string) =>
     s
@@ -78,16 +133,16 @@ function renderEmail(opts: {
     <tr><td align="center">
       <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb">
         <tr><td style="padding:20px 28px 12px;border-bottom:1px solid #e5e7eb">
-          <div style="font-size:11px;font-weight:800;color:#111827;letter-spacing:2px;text-transform:uppercase">FONTIBER · PORTAL FINDERS</div>
+          <div style="font-size:11px;font-weight:800;color:#111827;letter-spacing:2px;text-transform:uppercase">${escape(opts.productLabel)}</div>
         </td></tr>
         <tr><td style="padding:24px 28px">
           <h1 style="margin:0 0 12px;font-size:18px;color:#111827;font-weight:600">Restablecer contraseña</h1>
           <p style="margin:0 0 16px;font-size:14px;color:#374151;line-height:1.5">
-            Hola ${escape(opts.finderName)},
+            Hola ${escape(opts.recipientName)},
           </p>
           <p style="margin:0 0 16px;font-size:14px;color:#374151;line-height:1.5">
             Hemos recibido una solicitud para restablecer la contraseña de tu
-            cuenta del portal. Si fuiste tú, pulsa el botón de abajo para
+            ${escape(opts.accountLabel)}. Si fuiste tú, pulsa el botón de abajo para
             elegir una nueva. El enlace caduca en aproximadamente
             ${horas} hora${horas === 1 ? "" : "s"}.
           </p>
@@ -102,7 +157,7 @@ function renderEmail(opts: {
           </a>
         </td></tr>
         <tr><td style="padding:14px 28px;border-top:1px solid #e5e7eb;background:#f9fafb;font-size:10px;color:#9ca3af">
-          <a href="${escape(BASE_URL)}/portal" style="color:#3b82f6;text-decoration:none;font-weight:600">portal.fontiber.com</a>
+          <a href="${escape(opts.footerHref)}" style="color:#3b82f6;text-decoration:none;font-weight:600">${escape(opts.footerLabel)}</a>
           &nbsp;&middot;&nbsp;Fontiber Industrial Partners
         </td></tr>
       </table>

@@ -582,10 +582,16 @@ erDiagram
 
 | Provider | Quién | Credenciales | Sesión |
 |---|---|---|---|
-| `admin-credentials` | Alberto, Gabriel | env vars `ADMIN_USER_*` + `ADMIN_PASS_*` | `kind: "admin"` |
+| `admin-credentials` | Alberto, Gabriel | usuario configurado + bcrypt (`User.passwordHash` tras reset; env como arranque) | `kind: "admin"` |
 | `finder-credentials` | Finders externos | email + bcrypt hash en tabla `Finder` | `kind: "finder"`, `finderId: <id>` |
 
 Ambos viven en el mismo `NextAuthOptions`. El `jwt` callback guarda `kind` y `finderId` en el token; el `session` callback los pone disponibles en `useSession()`.
+
+Alberto y Gabriel pueden pedir un enlace desde `/forgot-password`. El endpoint
+responde siempre de forma genérica (anti-enumeración), guarda únicamente el
+sha256 de un token de un solo uso durante 24 horas y envía el token raw por
+email. Al completarlo, `User.passwordHash` pasa a tener prioridad sobre la
+credencial legacy de entorno, que deja de funcionar para esa cuenta.
 
 ### Middleware (`src/middleware.ts`)
 
