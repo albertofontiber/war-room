@@ -130,6 +130,13 @@ export const EmpresaLinksPatchSchema = z
   })
   .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
 
+// Export histórico de la pestaña Tabla. Los IDs vienen de las filas ya
+// filtradas en el cliente; el límite queda holgado para todo el universo y
+// evita bodies públicos de tamaño arbitrario.
+export const EmpresaHistoryExportSchema = z.object({
+  empresaIds: z.array(z.number().int().positive()).max(10_000),
+});
+
 // ─── Leads anónimos ───────────────────────────────────────────────────────────
 // Empresa sin identificar (confidencial). Nombre = alias acordado, CIF se
 // auto-genera. Sector/provincia/CCAA/financieros son opcionales pero útiles.

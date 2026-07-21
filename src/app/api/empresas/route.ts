@@ -103,6 +103,7 @@ export async function GET() {
             sector: empresa.sector,
             dealStage,
             // Financieros (último año disponible)
+            anioFinanciero: latestFin?.anio ?? null,
             ingresos,
             margenBruto,
             margenBrutoPct,

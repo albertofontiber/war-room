@@ -31,6 +31,7 @@ export interface EmpresaFeatureProperties {
   sector: Sector | null;
   dealStage: DealStage | null;
   // Financieros que usan filtros + sizeMetric del mapa
+  anioFinanciero: number | null;
   ingresos: number | null;
   ebitda: number | null;
   margenBrutoPct: number | null;
