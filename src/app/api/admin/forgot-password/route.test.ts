@@ -103,4 +103,37 @@ describe("POST /api/admin/forgot-password", () => {
     );
     expect(createData.expiresAt.getTime()).toBeGreaterThan(Date.now());
   });
+
+  it("espera a que el proveedor de email termine antes de responder", async () => {
+    userFindUnique.mockResolvedValue({
+      id: "u1",
+      name: "Alberto",
+      email: "alberto@fontiber.com",
+      role: "admin",
+      active: true,
+    });
+
+    let finishSend!: () => void;
+    sendEmail.mockReturnValue(
+      new Promise<void>((resolve) => {
+        finishSend = resolve;
+      })
+    );
+
+    const pendingResponse = POST(
+      makeReq({ email: "alberto@fontiber.com" })
+    );
+    await vi.waitFor(() => expect(sendEmail).toHaveBeenCalledTimes(1));
+
+    let responseFinished = false;
+    void pendingResponse.then(() => {
+      responseFinished = true;
+    });
+    await Promise.resolve();
+    expect(responseFinished).toBe(false);
+
+    finishSend();
+    expect((await pendingResponse).status).toBe(200);
+    expect(responseFinished).toBe(true);
+  });
 });
