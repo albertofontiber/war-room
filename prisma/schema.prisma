@@ -41,7 +41,8 @@ model Empresa {
   linkedin         String?
   logoUrl          String?
   descripcion      String?
-  cepreven         String?       // null = n/a, "asociada", "calificada"
+  cepreven         String?       // null = n/a, "asociada", "calificada" ("calificada" es rango superior y sustituye a "asociada")
+  ceprevenAreas    String?       // JSON array de códigos de área ("EAA-RO", "DAI"…); solo si cepreven = "calificada"
   aerme            Boolean       @default(false)
   ambitoGeo        String?       // "E" = estatal | "A" = autonómico — solo seg. electrónica
   // Perímetro y scoring
