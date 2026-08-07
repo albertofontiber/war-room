@@ -3,12 +3,7 @@ import { DEAL_STAGE_LABEL, DEAL_STAGE_PILL_CLASS } from "@/lib/crm";
 import type { EmpresaDetalle } from "@/types";
 import { SECTOR_LABEL } from "./constants";
 import { CeprevenBadge } from "./CeprevenBadge";
-
-/** Habilitación de la empresa de seguridad: estatal o de una comunidad. */
-const AMBITO_LABEL: Record<string, string> = {
-  E: "Habilitación estatal",
-  A: "Habilitación autonómica",
-};
+import { HabilitacionesBadge } from "./HabilitacionesBadge";
 
 export function BadgesRow({ empresa }: { empresa: EmpresaDetalle }) {
   const dealStage = empresa.crmEstado?.dealStage;
@@ -38,14 +33,10 @@ export function BadgesRow({ empresa }: { empresa: EmpresaDetalle }) {
           areas={empresa.ceprevenAreas}
         />
       )}
-      {empresa.ambitoGeo && AMBITO_LABEL[empresa.ambitoGeo] && (
-        <Badge
-          variant="outline"
-          className="text-[10px] bg-wr-blue/10 text-wr-blue border-wr-blue/30"
-        >
-          {AMBITO_LABEL[empresa.ambitoGeo]}
-        </Badge>
-      )}
+      {/* Se pinta siempre que haya habilitaciones registradas. En la práctica
+          son las de seguridad electrónica y mixtas, pero alguna de PCI también
+          consta en el registro y no tiene sentido ocultárselo. */}
+      <HabilitacionesBadge habilitaciones={empresa.habilitaciones} />
       {empresa.aerme && (
         <Badge
           variant="outline"

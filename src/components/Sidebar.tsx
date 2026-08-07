@@ -336,7 +336,12 @@ export function SidebarContent({
     });
     if (filtros.cepreven !== null) {
       chips.push({
-        label: `Cepreven: ${filtros.cepreven ? "sí" : "no"}`,
+        label:
+          filtros.cepreven === "ninguna"
+            ? "Sin Cepreven"
+            : filtros.cepreven === "cualquiera"
+              ? "Cepreven"
+              : `Cepreven: ${filtros.cepreven}`,
         remove: () => setFiltro("cepreven", null),
       });
     }
@@ -508,39 +513,6 @@ export function SidebarContent({
             searchable
           />
 
-          {/* ── Habilitaciones del Registro de Seguridad Privada ── */}
-          <div className="space-y-2">
-            <FilterChecklist
-              label="Habilitación"
-              options={HABILITACIONES.map((h) => h.etiqueta)}
-              selected={filtros.habilitaciones
-                .map((c) => ETIQUETA_HABILITACION[c])
-                .filter(Boolean)}
-              onToggle={(etiqueta) => {
-                const codigo = HABILITACIONES.find((h) => h.etiqueta === etiqueta)?.codigo;
-                if (codigo) toggleFiltroArray("habilitaciones", codigo);
-              }}
-              onClear={() => {
-                setFiltro("habilitaciones", []);
-                setFiltro("habilitacionAmbito", null);
-              }}
-            />
-            {/* El ámbito solo tiene sentido junto a alguna habilitación. */}
-            {filtros.habilitaciones.length > 0 && (
-              <div className="flex gap-1.5 flex-wrap">
-                {([null, "E", "A"] as const).map((a) => (
-                  <TogglePill
-                    key={a ?? "todas"}
-                    active={filtros.habilitacionAmbito === a}
-                    onClick={() => setFiltro("habilitacionAmbito", a)}
-                  >
-                    {a === null ? "Cualquier ámbito" : a === "E" ? "Estatal" : "Autonómica"}
-                  </TogglePill>
-                ))}
-              </div>
-            )}
-          </div>
-
           {/* ── Sector ── */}
           <div>
             <SectionLabel>Sector</SectionLabel>
@@ -612,6 +584,70 @@ export function SidebarContent({
                   color="blue"
                 >
                   {g.nombre}
+                </TogglePill>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Habilitaciones del Registro de Seguridad Privada ── */}
+          <div className="space-y-2">
+            <FilterChecklist
+              label="Habilitación"
+              options={HABILITACIONES.map((h) => h.etiqueta)}
+              selected={filtros.habilitaciones
+                .map((c) => ETIQUETA_HABILITACION[c])
+                .filter(Boolean)}
+              onToggle={(etiqueta) => {
+                const codigo = HABILITACIONES.find((h) => h.etiqueta === etiqueta)?.codigo;
+                if (codigo) toggleFiltroArray("habilitaciones", codigo);
+              }}
+              onClear={() => {
+                setFiltro("habilitaciones", []);
+                setFiltro("habilitacionAmbito", null);
+              }}
+            />
+            {/* El ámbito solo tiene sentido junto a alguna habilitación. */}
+            {filtros.habilitaciones.length > 0 && (
+              <div className="flex gap-1.5 flex-wrap">
+                {([null, "E", "A"] as const).map((a) => (
+                  <TogglePill
+                    key={a ?? "todas"}
+                    active={filtros.habilitacionAmbito === a}
+                    onClick={() => setFiltro("habilitacionAmbito", a)}
+                  >
+                    {a === null ? "Cualquier ámbito" : a === "E" ? "Estatal" : "Autonómica"}
+                  </TogglePill>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* ── Cepreven ── */}
+          <div>
+            <SectionLabel>Cepreven</SectionLabel>
+            <div className="flex gap-1.5 flex-wrap">
+              {(["calificada", "asociada"] as const).map((estado) => (
+                <TogglePill
+                  key={estado}
+                  active={filtros.cepreven === estado}
+                  onClick={() =>
+                    setFiltro("cepreven", filtros.cepreven === estado ? null : estado)
+                  }
+                  color={estado === "calificada" ? "blue" : "gray"}
+                >
+                  {estado === "calificada" ? "Calificada" : "Asociada"}
+                </TogglePill>
+              ))}
+              {(["cualquiera", "ninguna"] as const).map((estado) => (
+                <TogglePill
+                  key={estado}
+                  active={filtros.cepreven === estado}
+                  onClick={() =>
+                    setFiltro("cepreven", filtros.cepreven === estado ? null : estado)
+                  }
+                  color="gray"
+                >
+                  {estado === "cualquiera" ? "Cualquiera" : "Sin Cepreven"}
                 </TogglePill>
               ))}
             </div>

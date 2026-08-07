@@ -132,3 +132,46 @@ describe("isInFilter — filtro por habilitación de seguridad privada", () => {
     expect(isInFilter(conCRA, f, "")).toBe(false);
   });
 });
+
+describe("isInFilter — filtro por estado Cepreven", () => {
+  const calificada = makeProps({ cepreven: "calificada" });
+  const asociada = makeProps({ cepreven: "asociada" });
+  const ninguna = makeProps({ cepreven: null });
+
+  it("sin filtro, pasan las tres", () => {
+    const f = makeFiltros();
+    expect([calificada, asociada, ninguna].every((p) => isInFilter(p, f, ""))).toBe(true);
+  });
+
+  it("'calificada' no cuela a las meramente asociadas", () => {
+    // Es el filtro que pidió Alberto: calificada es un rango superior.
+    const f = makeFiltros({ cepreven: "calificada" });
+    expect(isInFilter(calificada, f, "")).toBe(true);
+    expect(isInFilter(asociada, f, "")).toBe(false);
+    expect(isInFilter(ninguna, f, "")).toBe(false);
+  });
+
+  it("'asociada' no incluye a las calificadas", () => {
+    const f = makeFiltros({ cepreven: "asociada" });
+    expect(isInFilter(asociada, f, "")).toBe(true);
+    expect(isInFilter(calificada, f, "")).toBe(false);
+  });
+
+  it("'cualquiera' acepta ambos estados", () => {
+    const f = makeFiltros({ cepreven: "cualquiera" });
+    expect(isInFilter(calificada, f, "")).toBe(true);
+    expect(isInFilter(asociada, f, "")).toBe(true);
+    expect(isInFilter(ninguna, f, "")).toBe(false);
+  });
+
+  it("'ninguna' deja solo a las que no constan", () => {
+    const f = makeFiltros({ cepreven: "ninguna" });
+    expect(isInFilter(ninguna, f, "")).toBe(true);
+    expect(isInFilter(calificada, f, "")).toBe(false);
+  });
+
+  it("trata la cadena vacía como 'no consta'", () => {
+    const f = makeFiltros({ cepreven: "ninguna" });
+    expect(isInFilter(makeProps({ cepreven: "" }), f, "")).toBe(true);
+  });
+});

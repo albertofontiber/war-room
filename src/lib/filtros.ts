@@ -48,8 +48,14 @@ export function isInFilter(
     }
   }
   if (f.cepreven !== null) {
-    const hasCep = p.cepreven != null && p.cepreven !== "";
-    if (hasCep !== f.cepreven) return false;
+    const estado = p.cepreven != null && p.cepreven !== "" ? p.cepreven : null;
+    if (f.cepreven === "cualquiera") {
+      if (estado === null) return false;
+    } else if (f.cepreven === "ninguna") {
+      if (estado !== null) return false;
+    } else if (estado !== f.cepreven) {
+      return false;
+    }
   }
   if (f.aerme !== null && p.aerme !== f.aerme) return false;
   if (f.habilitaciones.length) {

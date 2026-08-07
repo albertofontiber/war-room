@@ -71,7 +71,8 @@ export interface EmpresaDetalle {
   cepreven: string | null;  // null | "asociada" | "calificada"
   ceprevenAreas: string[];  // códigos de área; vacío salvo si cepreven = "calificada"
   aerme: boolean;
-  ambitoGeo: string | null; // "E" = estatal | "A" = autonómico — solo seg. electrónica
+  ambitoGeo: string | null; // "E" | "A" — ámbito de la habilitación de instalación
+  habilitaciones: unknown;  // { "INS": "A", "CA": "E" … } del Registro de Seguridad Privada
   enPerimetro: boolean;
   enPerimetroAt: string | null;
   esAnonima: boolean;
@@ -159,7 +160,9 @@ export interface FiltrosActivos {
   empleadosMax: number;
   servicios: string[];
   enPerimetro: boolean | null; // null = todos, true = solo en perímetro, false = solo fuera
-  cepreven: boolean | null;
+  // "calificada" es rango superior a "asociada". "cualquiera" = tiene alguna
+  // de las dos; "ninguna" = no consta en Cepreven; null = sin filtrar.
+  cepreven: "calificada" | "asociada" | "cualquiera" | "ninguna" | null;
   aerme: boolean | null;
   // Códigos del Registro de Seguridad Privada ("INS", "CA"…). Se exigen TODAS
   // las seleccionadas: son atributos acumulables, y al marcar varias lo que se
