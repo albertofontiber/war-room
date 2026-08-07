@@ -51,23 +51,37 @@ export function CeprevenBadge({
             no hay nada que pulsar, solo información. El `tabIndex` es
             imprescindible: sin él el <span> no recibe foco y las áreas serían
             inalcanzables sin ratón. */}
+        {/* `inline-flex`: siendo un <span> normal, el distintivo se apoyaría en
+            la línea base del texto y quedaría más bajo que el resto de la fila. */}
         <TooltipTrigger
-          render={<span tabIndex={0} className="cursor-help outline-none focus-visible:ring-1 focus-visible:ring-wr-blue rounded" />}
+          render={
+            <span
+              tabIndex={0}
+              className="inline-flex rounded outline-none focus-visible:ring-1 focus-visible:ring-wr-blue cursor-help"
+            />
+          }
         >
           {distintivo}
         </TooltipTrigger>
         <TooltipContent side="top" className="max-w-xs items-start">
-          <div className="space-y-1.5 py-0.5">
-            <div className="font-medium">
+          <div className="space-y-2 py-0.5">
+            <div className="font-medium text-wr-text">
               Calificación Cepreven · {areas.length}{" "}
               {areas.length === 1 ? "área" : "áreas"}
             </div>
             {grupos.map(({ familia, areas: delGrupo }) => (
               <div key={familia}>
-                <div className="opacity-60">{FAMILIA_LABEL[familia]}</div>
-                <ul className="list-disc pl-3.5">
+                {/* Mismo tratamiento que `SectionLabel`, el rótulo de sección
+                    que usa el resto de la ficha. */}
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-wr-muted">
+                  {FAMILIA_LABEL[familia]}
+                </div>
+                <ul className="mt-1 space-y-0.5">
                   {delGrupo.map((a) => (
-                    <li key={a.codigo}>{a.etiqueta}</li>
+                    <li key={a.codigo} className="flex gap-1.5">
+                      <span className="text-wr-green leading-none">·</span>
+                      <span>{a.etiqueta}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
