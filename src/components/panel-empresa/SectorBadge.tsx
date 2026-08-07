@@ -12,27 +12,36 @@ import {
   listaHabilitaciones,
   parseHabilitaciones,
 } from "@/lib/policia/habilitaciones";
+import { SECTOR_LABEL } from "./constants";
 
 /**
- * Distintivo de habilitaciones del Registro de Seguridad Privada.
+ * Distintivo de sector, con las habilitaciones de seguridad privada al pasar
+ * el ratón.
  *
- * El ámbito es de cada habilitación, no de la empresa: se puede instalar con
- * licencia autonómica y tener la central de alarmas con licencia estatal. Por
- * eso el distintivo resume ("estatal", "autonómica" o "mixta") y el detalle
- * —qué habilitaciones y con qué alcance cada una— va al pasar el ratón, igual
- * que en el de Cepreven.
+ * El detalle cuelga de este distintivo y no de uno propio porque un
+ * "Autonómica" suelto en la fila no dice de qué es autonómica. El sector ya
+ * identifica la actividad, así que es su sitio natural: el mismo patrón que
+ * el distintivo de Cepreven, que resume y deja el desglose en el hover.
  */
-export function HabilitacionesBadge({ habilitaciones }: { habilitaciones: unknown }) {
+export function SectorBadge({
+  sector,
+  habilitaciones,
+}: {
+  sector: string;
+  habilitaciones: unknown;
+}) {
   const lista = listaHabilitaciones(parseHabilitaciones(habilitaciones));
-  if (!lista.length) return null;
 
-  const estatales = lista.filter((h) => h.ambito === "E").length;
-  const resumen =
-    estatales === lista.length
-      ? "Estatal"
-      : estatales === 0
-        ? "Autonómica"
-        : "Ámbito mixto";
+  const distintivo = (
+    <Badge
+      variant="outline"
+      className="text-[10px] bg-wr-surface2 text-wr-muted border-wr-border"
+    >
+      {SECTOR_LABEL[sector] ?? sector}
+    </Badge>
+  );
+
+  if (!lista.length) return distintivo;
 
   return (
     <TooltipProvider>
@@ -45,12 +54,7 @@ export function HabilitacionesBadge({ habilitaciones }: { habilitaciones: unknow
             />
           }
         >
-          <Badge
-            variant="outline"
-            className="text-[10px] bg-wr-blue/10 text-wr-blue border-wr-blue/30"
-          >
-            {resumen}
-          </Badge>
+          {distintivo}
         </TooltipTrigger>
         <TooltipContent side="top" className="max-w-xs items-start">
           <div className="space-y-2 py-0.5">
