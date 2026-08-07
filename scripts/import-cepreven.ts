@@ -22,7 +22,12 @@ import { PrismaClient } from "@prisma/client";
 import fs from "node:fs";
 import { parseListadoCepreven } from "../src/lib/cepreven/parse-listado";
 import { fetchAsociados } from "../src/lib/cepreven/parse-asociados";
-import { cruza, type EmpresaBase } from "../src/lib/cepreven/match";
+import {
+  escriturasSeguras,
+  planificaSync,
+  type EmpresaEstado,
+  type Escritura,
+} from "../src/lib/cepreven/sync";
 
 const prisma = new PrismaClient();
 
@@ -70,104 +75,63 @@ async function cargaPdf(): Promise<Buffer> {
 async function main() {
   log(APPLY ? "== APLICANDO CAMBIOS ==" : "== SIMULACIÓN (usa --apply para escribir) ==");
 
-  const empresas: EmpresaBase[] = await prisma.empresa.findMany({
-    select: { id: true, cif: true, nombre: true },
+  const empresas: EmpresaEstado[] = await prisma.empresa.findMany({
+    select: { id: true, cif: true, nombre: true, cepreven: true, ceprevenAreas: true },
   });
   log(`Empresas en la base: ${empresas.length}\n`);
 
-  // ── Calificadas ────────────────────────────────────────────────────────
   const listado = await parseListadoCepreven(await cargaPdf());
   log(`Calificadas en el PDF: ${listado.empresas.length} en ${listado.areasVistas.length} áreas`);
 
-  const califCruce = cruza(listado.empresas, empresas, (e) => e.nombre);
-  log(`  casadas: ${califCruce.casados.length} | sin casar: ${califCruce.sinCasar.length}`);
-  for (const e of califCruce.sinCasar) log(`    sin casar: ${e.nombre}`);
+  const asociadas = await fetchAsociados();
+  const deSector = asociadas.filter((e) => !e.institucional);
+  log(`Asociadas en la web: ${deSector.length} (sin contar miembros institucionales)\n`);
 
-  // Una empresa puede figurar dos veces con grafías distintas (el PDF trae
-  // "AIR FEU, S.L." y "AIRFEU, S.L."): se acumulan sus áreas.
-  const areasPorEmpresa = new Map<number, Set<string>>();
-  for (const { origen, empresa } of califCruce.casados) {
-    const set = areasPorEmpresa.get(empresa.id) ?? new Set<string>();
-    for (const a of origen.areas) set.add(a);
-    areasPorEmpresa.set(empresa.id, set);
-  }
-  log(`  empresas distintas: ${areasPorEmpresa.size}\n`);
+  // El plan lo calcula la misma función que usa el cron semanal.
+  const plan = planificaSync(empresas, listado.empresas, asociadas);
 
-  // ── Asociadas ──────────────────────────────────────────────────────────
-  const asociadas = (await fetchAsociados()).filter((e) => !e.institucional);
-  log(`Asociadas en la web: ${asociadas.length} (sin contar miembros institucionales)`);
+  log(`Sin casar — calificadas (${plan.sinCasar.calificadas.length}):`);
+  plan.sinCasar.calificadas.forEach((n) => log(`  ${n}`));
+  log(`Sin casar — asociadas: ${plan.sinCasar.asociadas.length}\n`);
 
-  const asocCruce = cruza(asociadas, empresas, (e) => e.nombre);
-  log(`  casadas: ${asocCruce.casados.length} | sin casar: ${asocCruce.sinCasar.length}\n`);
+  const detalle = (e: Escritura) => {
+    if (!e.ceprevenAreas) return "";
+    const n = (JSON.parse(e.ceprevenAreas) as string[]).length;
+    return ` [${n} ${n === 1 ? "área" : "áreas"}]`;
+  };
 
-  // ── Estado objetivo ────────────────────────────────────────────────────
-  const objetivo = new Map<number, { cepreven: string; areas: string[] | null }>();
-  for (const { empresa } of asocCruce.casados) {
-    objetivo.set(empresa.id, { cepreven: "asociada", areas: null });
-  }
-  // Se aplica después para que "calificada" pise a "asociada".
-  for (const [id, areas] of areasPorEmpresa) {
-    objetivo.set(id, { cepreven: "calificada", areas: [...areas].sort() });
-  }
+  log(`ALTAS (${plan.altas.length}):`);
+  plan.altas
+    .map((e) => `  ${e.nombre} -> ${e.cepreven}${detalle(e)}`)
+    .sort()
+    .forEach((l) => log(l));
 
-  const actuales = await prisma.empresa.findMany({
-    where: { OR: [{ cepreven: { not: null } }, { id: { in: [...objetivo.keys()] } }] },
-    select: { id: true, nombre: true, cepreven: true, ceprevenAreas: true },
-  });
+  log(`\nCAMBIOS (${plan.cambios.length}):`);
+  plan.cambios
+    .map((e) => `  ${e.nombre} -> ${e.cepreven}${detalle(e)}`)
+    .sort()
+    .forEach((l) => log(l));
 
-  const altas: string[] = [];
-  const cambios: string[] = [];
-  const bajas: string[] = [];
-  // Pasar de "calificada" a "asociada" casi siempre significa que el cruce ha
-  // fallado, no que la empresa haya perdido la calificación. Se aparta para
-  // mirarlo antes de escribir.
-  const degradaciones: string[] = [];
-  const escrituras: { id: number; cepreven: string | null; ceprevenAreas: string | null }[] = [];
-
-  for (const emp of actuales) {
-    const quiere = objetivo.get(emp.id);
-    const areasActuales = emp.ceprevenAreas ?? null;
-    const areasNuevas = quiere?.areas ? JSON.stringify(quiere.areas) : null;
-
-    if (!quiere) {
-      // No se escribe salvo que se pida con --con-bajas. Una empresa deja de
-      // aparecer en el cruce por dos motivos muy distintos: porque ha salido
-      // del listado, o porque su nombre en la base no casa con el de la
-      // fuente. Lo segundo es frecuente (abreviaturas, erratas) y borrar el
-      // estado por eso es una pérdida de dato silenciosa.
-      if (emp.cepreven) {
-        bajas.push(`  ${emp.nombre} (era ${emp.cepreven})`);
-        if (CON_BAJAS) escrituras.push({ id: emp.id, cepreven: null, ceprevenAreas: null });
-      }
-      continue;
-    }
-
-    if (emp.cepreven === quiere.cepreven && areasActuales === areasNuevas) continue;
-
-    const detalle = quiere.areas ? ` [${quiere.areas.length} áreas]` : "";
-    if (emp.cepreven === "calificada" && quiere.cepreven === "asociada") {
-      degradaciones.push(`  ${emp.nombre}: calificada -> asociada`);
-      continue; // no se escribe
-    }
-    if (!emp.cepreven) altas.push(`  ${emp.nombre} -> ${quiere.cepreven}${detalle}`);
-    else cambios.push(`  ${emp.nombre}: ${emp.cepreven} -> ${quiere.cepreven}${detalle}`);
-
-    escrituras.push({ id: emp.id, cepreven: quiere.cepreven, ceprevenAreas: areasNuevas });
-  }
-
-  log(`ALTAS (${altas.length}):`);
-  altas.sort().forEach((l) => log(l));
-  log(`\nCAMBIOS (${cambios.length}):`);
-  cambios.sort().forEach((l) => log(l));
   log(
-    `\nBAJAS — ya no figuran en los listados (${bajas.length})${
+    `\nBAJAS — ya no figuran en los listados (${plan.bajas.length})${
       CON_BAJAS ? "" : " · NO se aplican; usa --con-bajas tras revisarlas"
     }:`
   );
-  bajas.sort().forEach((l) => log(l));
-  log(`\nDEGRADACIONES NO APLICADAS — revisar el cruce (${degradaciones.length}):`);
-  degradaciones.sort().forEach((l) => log(l));
+  plan.bajas
+    .map((e) => `  ${e.nombre}`)
+    .sort()
+    .forEach((l) => log(l));
 
+  log(`\nDEGRADACIONES NO APLICADAS — revisar el cruce (${plan.degradaciones.length}):`);
+  plan.degradaciones
+    .map((e) => `  ${e.nombre}: calificada -> asociada`)
+    .sort()
+    .forEach((l) => log(l));
+
+  const escrituras = [
+    ...escriturasSeguras(plan),
+    ...(CON_BAJAS ? plan.bajas : []),
+  ];
   log(`\nTotal de escrituras: ${escrituras.length}`);
 
   if (!APPLY) {
