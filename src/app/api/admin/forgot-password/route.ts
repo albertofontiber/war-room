@@ -44,7 +44,9 @@ export async function POST(req: NextRequest) {
     data: { userId: user.id, tokenHash, expiresAt },
   });
 
-  void sendAdminPasswordResetEmail({
+  // La función no debe terminar antes que la petición a Resend: en Vercel el
+  // trabajo fire-and-forget puede interrumpirse al devolver la respuesta.
+  await sendAdminPasswordResetEmail({
     to: user.email,
     adminName: user.name,
     rawToken,
