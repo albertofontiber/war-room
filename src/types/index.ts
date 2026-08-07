@@ -69,7 +69,9 @@ export interface EmpresaDetalle {
   logoUrl: string | null;
   descripcion: string | null;
   cepreven: string | null;  // null | "asociada" | "calificada"
+  ceprevenAreas: string[];  // códigos de área; vacío salvo si cepreven = "calificada"
   aerme: boolean;
+  ambitoGeo: string | null; // "E" = estatal | "A" = autonómico — solo seg. electrónica
   enPerimetro: boolean;
   enPerimetroAt: string | null;
   esAnonima: boolean;

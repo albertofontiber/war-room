@@ -44,19 +44,19 @@ export const AREAS_CEPREVEN: readonly AreaCepreven[] = [
   { codigo: "PAS-ESTR", etiqueta: "Pasiva: protección de estructuras", familia: "instalador", tituloPdf: "PROTECCIÓN DE ESTRUCTURAS" },
 
   // ─── Ingenierías ─────────────────────────────────────────────────────────
-  { codigo: "ING-AGUA", etiqueta: "Ingeniería: extinción por agua", familia: "ingenieria", tituloPdf: "SISTEMAS DE EXTINCIÓN POR AGUA" },
-  { codigo: "ING-GAS", etiqueta: "Ingeniería: extinción por gas", familia: "ingenieria", tituloPdf: "SISTEMAS DE EXTINCIÓN POR GAS" },
-  { codigo: "ING-DAI", etiqueta: "Ingeniería: detección automática", familia: "ingenieria", tituloPdf: "DETECCIÓN AUTOMÁTICA DE INCENDIOS" },
-  { codigo: "ING-SCH", etiqueta: "Ingeniería: control de humos", familia: "ingenieria", tituloPdf: "SISTEMAS DE CONTROL DE HUMOS" },
+  { codigo: "ING-AGUA", etiqueta: "Extinción por agua", familia: "ingenieria", tituloPdf: "SISTEMAS DE EXTINCIÓN POR AGUA" },
+  { codigo: "ING-GAS", etiqueta: "Extinción por gas", familia: "ingenieria", tituloPdf: "SISTEMAS DE EXTINCIÓN POR GAS" },
+  { codigo: "ING-DAI", etiqueta: "Detección automática", familia: "ingenieria", tituloPdf: "DETECCIÓN AUTOMÁTICA DE INCENDIOS" },
+  { codigo: "ING-SCH", etiqueta: "Control de humos", familia: "ingenieria", tituloPdf: "SISTEMAS DE CONTROL DE HUMOS" },
 
   // ─── Mantenedoras ────────────────────────────────────────────────────────
-  { codigo: "MANT-DAI", etiqueta: "Mantenimiento: detección automática", familia: "mantenimiento", tituloPdf: "DETECCIÓN AUTOMÁTICA DE INCENDIOS" },
-  { codigo: "MANT-EAA", etiqueta: "Mantenimiento: extinción por agua", familia: "mantenimiento", tituloPdf: "SISTEMAS DE EXTINCIÓN POR AGUA" },
-  { codigo: "MANT-EAG", etiqueta: "Mantenimiento: extinción por gas", familia: "mantenimiento", tituloPdf: "SISTEMAS DE EXTINCIÓN POR GAS" },
-  { codigo: "MANT-SCH", etiqueta: "Mantenimiento: control de humos", familia: "mantenimiento", tituloPdf: "SISTEMAS DE CONTROL DE HUMOS" },
-  { codigo: "MANT-EAP", etiqueta: "Mantenimiento: extinción por polvo", familia: "mantenimiento", tituloPdf: "SISTEMAS DE EXTINCIÓN POR POLVO" },
-  { codigo: "MANT-EAAer", etiqueta: "Mantenimiento: extinción por aerosoles", familia: "mantenimiento", tituloPdf: "SISTEMAS DE EXTINCIÓN POR AEROSOLES" },
-  { codigo: "MANT-MMP", etiqueta: "Mantenimiento: medios manuales de PCI", familia: "mantenimiento", tituloPdf: "MEDIOS MANUALES DE PROTECCIÓN CONTRA INCENDIOS" },
+  { codigo: "MANT-DAI", etiqueta: "Detección automática", familia: "mantenimiento", tituloPdf: "DETECCIÓN AUTOMÁTICA DE INCENDIOS" },
+  { codigo: "MANT-EAA", etiqueta: "Extinción por agua", familia: "mantenimiento", tituloPdf: "SISTEMAS DE EXTINCIÓN POR AGUA" },
+  { codigo: "MANT-EAG", etiqueta: "Extinción por gas", familia: "mantenimiento", tituloPdf: "SISTEMAS DE EXTINCIÓN POR GAS" },
+  { codigo: "MANT-SCH", etiqueta: "Control de humos", familia: "mantenimiento", tituloPdf: "SISTEMAS DE CONTROL DE HUMOS" },
+  { codigo: "MANT-EAP", etiqueta: "Extinción por polvo", familia: "mantenimiento", tituloPdf: "SISTEMAS DE EXTINCIÓN POR POLVO" },
+  { codigo: "MANT-EAAer", etiqueta: "Extinción por aerosoles", familia: "mantenimiento", tituloPdf: "SISTEMAS DE EXTINCIÓN POR AEROSOLES" },
+  { codigo: "MANT-MMP", etiqueta: "Medios manuales de PCI", familia: "mantenimiento", tituloPdf: "MEDIOS MANUALES DE PROTECCIÓN CONTRA INCENDIOS" },
 ] as const;
 
 export const ETIQUETA_AREA: Record<string, string> = Object.fromEntries(
