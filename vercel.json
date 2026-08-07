@@ -17,6 +17,10 @@
     {
       "path": "/api/cron/target-docs-check",
       "schedule": "30 7 * * 1"
+    },
+    {
+      "path": "/api/cron/cepreven",
+      "schedule": "0 8 * * 1"
     }
   ]
 }

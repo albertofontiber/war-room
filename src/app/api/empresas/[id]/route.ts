@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 export const dynamic = "force-dynamic";
 import { authOptions } from "@/lib/auth";
 import { calcTendencia, enrichFinancieros } from "@/lib/tendencia";
+import { esAreaValida } from "@/lib/cepreven/areas";
 import { isValidDealStage } from "@/lib/crm";
 import { log } from "@/lib/logger";
 import type { DealStage } from "@/types";
@@ -77,6 +78,16 @@ export async function GET(_req: Request, props: { params: Promise<{ id: string }
     servicios = [];
   }
 
+  // Áreas de calificación Cepreven. Se filtran contra el catálogo para que un
+  // código retirado en una edición futura del listado no llegue a la ficha.
+  let ceprevenAreas: string[] = [];
+  try {
+    const crudas = empresa.ceprevenAreas ? JSON.parse(empresa.ceprevenAreas) : [];
+    if (Array.isArray(crudas)) ceprevenAreas = crudas.filter(esAreaValida);
+  } catch {
+    ceprevenAreas = [];
+  }
+
   const financierosEnriquecidos = enrichFinancieros(empresa.financieros);
   const tendenciaIngresos = calcTendencia(empresa.financieros, "ingresos");
   const tendenciaMargenBruto = calcTendencia(empresa.financieros, "margenBruto");
@@ -137,7 +148,9 @@ export async function GET(_req: Request, props: { params: Promise<{ id: string }
       logoUrl: empresa.logoUrl,
       descripcion: empresa.descripcion,
       cepreven: empresa.cepreven,
+      ceprevenAreas,
       aerme: empresa.aerme,
+      ambitoGeo: empresa.ambitoGeo,
       enPerimetro: empresa.enPerimetro,
       enPerimetroAt: empresa.enPerimetroAt,
       esAnonima: empresa.esAnonima,

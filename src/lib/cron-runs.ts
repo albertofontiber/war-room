@@ -20,6 +20,7 @@ export const CRON_JOBS = {
   targetDocsCheck: "target-docs-check",
   emailTasks: "email-tasks",
   calendarTasks: "calendar-tasks",
+  cepreven: "cepreven",
 } as const;
 
 export type CronJob = (typeof CRON_JOBS)[keyof typeof CRON_JOBS];

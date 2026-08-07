@@ -2,6 +2,13 @@ import { Badge } from "@/components/ui/badge";
 import { DEAL_STAGE_LABEL, DEAL_STAGE_PILL_CLASS } from "@/lib/crm";
 import type { EmpresaDetalle } from "@/types";
 import { SECTOR_LABEL } from "./constants";
+import { CeprevenBadge } from "./CeprevenBadge";
+
+/** Habilitación de la empresa de seguridad: estatal o de una comunidad. */
+const AMBITO_LABEL: Record<string, string> = {
+  E: "Habilitación estatal",
+  A: "Habilitación autonómica",
+};
 
 export function BadgesRow({ empresa }: { empresa: EmpresaDetalle }) {
   const dealStage = empresa.crmEstado?.dealStage;
@@ -26,11 +33,17 @@ export function BadgesRow({ empresa }: { empresa: EmpresaDetalle }) {
         </Badge>
       )}
       {empresa.cepreven && (
+        <CeprevenBadge
+          estado={empresa.cepreven}
+          areas={empresa.ceprevenAreas}
+        />
+      )}
+      {empresa.ambitoGeo && AMBITO_LABEL[empresa.ambitoGeo] && (
         <Badge
           variant="outline"
-          className={`text-[10px] border ${empresa.cepreven === "calificada" ? "bg-green-500/10 text-green-400 border-green-500/30" : "bg-wr-amber/10 text-wr-amber border-wr-amber/30"}`}
+          className="text-[10px] bg-wr-blue/10 text-wr-blue border-wr-blue/30"
         >
-          Cepreven {empresa.cepreven === "calificada" ? "✓" : ""}
+          {AMBITO_LABEL[empresa.ambitoGeo]}
         </Badge>
       )}
       {empresa.aerme && (
