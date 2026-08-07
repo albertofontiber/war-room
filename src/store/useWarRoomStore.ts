@@ -40,6 +40,9 @@ export interface EmpresaFeatureProperties {
   enPerimetro: boolean;
   cepreven: string | null;
   aerme: boolean;
+  // Registro de Seguridad Privada: { "INS": "A", "CA": "E" … }. Solo lleva las
+  // habilitaciones concedidas, así que suele ser un objeto de una o dos claves.
+  habilitaciones: Record<string, string> | null;
   hasBormeReciente: boolean;
   grupoId: number | null;
   grupoNombre: string | null;
@@ -137,7 +140,10 @@ interface WarRoomState {
 
   setFiltro: <K extends keyof FiltrosActivos>(key: K, value: FiltrosActivos[K]) => void;
   toggleFiltroArray: <T extends string | number>(
-    key: keyof Pick<FiltrosActivos, "ccaa" | "provincia" | "sector" | "grupoId" | "crmStage" | "servicios">,
+    key: keyof Pick<
+      FiltrosActivos,
+      "ccaa" | "provincia" | "sector" | "grupoId" | "crmStage" | "servicios" | "habilitaciones"
+    >,
     value: T
   ) => void;
   resetFiltros: () => void;

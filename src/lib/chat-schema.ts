@@ -42,7 +42,24 @@ CREATE TABLE "Empresa" (
   descripcion TEXT,
   cepreven TEXT,  -- NULL = no asociada, 'asociada' = miembro CEPREVEN, 'calificada' = certificada por CEPREVEN
   aerme BOOLEAN DEFAULT false,     -- asociada a AERME
-  "ambitoGeo" TEXT,      -- "E" = estatal | "A" = autonómico (solo seg. electrónica)
+  "ambitoGeo" TEXT,      -- "E" = estatal | "A" = autonómico. Es el ámbito de la habilitación de INSTALACIÓN; equivale a habilitaciones->>'INS'
+  -- Habilitaciones del Registro de Seguridad Privada (Policía Nacional + registros
+  -- catalán y vasco). JSONB con SOLO las habilitaciones concedidas, y el ámbito de
+  -- CADA una: "E" = estatal, "A" = autonómico. Una empresa puede instalar con
+  -- licencia autonómica y tener la central de alarmas con licencia estatal.
+  -- Claves: VJ = vigilancia y seguridad, PP = protección de personas,
+  -- INS = instalación y mantenimiento, DF = depósito de fondos,
+  -- TF = transporte de fondos, CA = central receptora de alarmas,
+  -- DE = depósito de explosivos, TE = transporte de objetos valiosos.
+  -- Ejemplo de valor: {"INS":"A","CA":"E"}
+  -- Para filtrar (hay índice GIN, úsalos así):
+  --   con central receptora de alarmas ....... habilitaciones ? 'CA'
+  --   con CRA de ámbito estatal .............. habilitaciones @> '{"CA":"E"}'
+  --   instaladoras que además vigilan ........ habilitaciones ?& array['INS','VJ']
+  --   con cualquiera de las dos .............. habilitaciones ?| array['CA','VJ']
+  --   nº de habilitaciones de una empresa .... jsonb_object_keys / jsonb_array_length
+  habilitaciones JSONB,
+  "registroFuente" TEXT, -- "policia" | "catalunya" | "euskadi": de qué registro salieron
   "enPerimetro" BOOLEAN DEFAULT true,  -- true = empresa de interés para M&A
   "anioConstitucion" INT,
   "esAnonima" BOOLEAN DEFAULT false,   -- true = "lead anónimo" del Pipeline (identidad confidencial; CIF pattern "LEAD-{id}"). Filtrados fuera del mapa, tabla, BORME y stats.

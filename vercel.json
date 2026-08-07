@@ -21,6 +21,10 @@
     {
       "path": "/api/cron/cepreven",
       "schedule": "0 8 * * 1"
+    },
+    {
+      "path": "/api/cron/habilitaciones",
+      "schedule": "30 8 1 * *"
     }
   ]
 }

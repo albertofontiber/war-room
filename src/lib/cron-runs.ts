@@ -21,6 +21,7 @@ export const CRON_JOBS = {
   emailTasks: "email-tasks",
   calendarTasks: "calendar-tasks",
   cepreven: "cepreven",
+  habilitaciones: "habilitaciones",
 } as const;
 
 export type CronJob = (typeof CRON_JOBS)[keyof typeof CRON_JOBS];

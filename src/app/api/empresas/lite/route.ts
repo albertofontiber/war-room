@@ -53,6 +53,7 @@ export async function GET() {
         enPerimetro: true,
         cepreven: true,
         aerme: true,
+        habilitaciones: true,
         grupoId: true,
         grupo: { select: { nombre: true } },
         financieros: {
@@ -111,6 +112,7 @@ export async function GET() {
             enPerimetro: empresa.enPerimetro,
             cepreven: empresa.cepreven,
             aerme: empresa.aerme,
+            habilitaciones: empresa.habilitaciones,
             hasBormeReciente: empresa.bormeAlertas.length > 0,
             grupoId: empresa.grupoId,
             grupoNombre: empresa.grupo?.nombre ?? null,

@@ -44,7 +44,9 @@ model Empresa {
   cepreven         String?       // null = n/a, "asociada", "calificada" ("calificada" es rango superior y sustituye a "asociada")
   ceprevenAreas    String?       // JSON array de códigos de área ("EAA-RO", "DAI"…); solo si cepreven = "calificada"
   aerme            Boolean       @default(false)
-  ambitoGeo        String?       // "E" = estatal | "A" = autonómico — solo seg. electrónica
+  ambitoGeo        String?       // "E" = estatal | "A" = autonómico — ámbito de la habilitación de instalación (INS). Se mantiene sincronizado con habilitaciones->>'INS'
+  habilitaciones   Json?         // Registro de Seguridad Privada: { "INS": "A", "CA": "E" … }. Ámbito POR habilitación. jsonb para poder filtrar en SQL
+  registroFuente   String?       // "policia" | "catalunya" | "euskadi" — de qué registro salieron las habilitaciones
   // Perímetro y scoring
   enPerimetro      Boolean       @default(true)
   enPerimetroAt    DateTime?
@@ -90,6 +92,9 @@ model Empresa {
   @@index([fuente])
   @@index([finderSourceId])
   @@index([esAnonima])
+  // GIN para poder filtrar por habilitación (`habilitaciones ? 'CA'`,
+  // `@> '{"CA":"E"}'`) sin recorrer la tabla entera.
+  @@index([habilitaciones(ops: JsonbOps)], type: Gin)
 }
 
 // Contactos M&A (no confundir con PersonaCargo, que es BORME — administradores
