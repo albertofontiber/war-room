@@ -92,6 +92,9 @@ model Empresa {
   @@index([fuente])
   @@index([finderSourceId])
   @@index([esAnonima])
+  // GIN para poder filtrar por habilitación (`habilitaciones ? 'CA'`,
+  // `@> '{"CA":"E"}'`) sin recorrer la tabla entera.
+  @@index([habilitaciones(ops: JsonbOps)], type: Gin)
 }
 
 // Contactos M&A (no confundir con PersonaCargo, que es BORME — administradores
