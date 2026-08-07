@@ -32,7 +32,7 @@ export interface EmpresaBase {
   id: number;
   cif: string | null;
   nombre: string;
-  sector: string;
+  sector: string | null;
   habilitaciones: unknown;
   ambitoGeo: string | null;
 }

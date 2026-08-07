@@ -7,6 +7,10 @@ import { fmt, fmtCompactMoney, fmtM } from "@/lib/format";
 import { getSelectionStats } from "@/lib/filtros";
 import { FILTROS_DEFAULT } from "@/types";
 import type { DealStage, Sector } from "@/types";
+import {
+  ETIQUETA_HABILITACION,
+  HABILITACIONES,
+} from "@/lib/policia/habilitaciones";
 
 // ─── Range slider de dos thumbs ───────────────────────────────────────────
 
@@ -342,6 +346,18 @@ export function SidebarContent({
         remove: () => setFiltro("aerme", null),
       });
     }
+    for (const codigo of filtros.habilitaciones) {
+      const ambito =
+        filtros.habilitacionAmbito === "E"
+          ? " estatal"
+          : filtros.habilitacionAmbito === "A"
+            ? " autonómica"
+            : "";
+      chips.push({
+        label: `${ETIQUETA_HABILITACION[codigo] ?? codigo}${ambito}`,
+        remove: () => toggleFiltroArray("habilitaciones", codigo),
+      });
+    }
     if (
       filtros.ingresosMin > FILTROS_DEFAULT.ingresosMin ||
       filtros.ingresosMax < FILTROS_DEFAULT.ingresosMax
@@ -491,6 +507,39 @@ export function SidebarContent({
             onClear={() => setFiltro("provincia", [])}
             searchable
           />
+
+          {/* ── Habilitaciones del Registro de Seguridad Privada ── */}
+          <div className="space-y-2">
+            <FilterChecklist
+              label="Habilitación"
+              options={HABILITACIONES.map((h) => h.etiqueta)}
+              selected={filtros.habilitaciones
+                .map((c) => ETIQUETA_HABILITACION[c])
+                .filter(Boolean)}
+              onToggle={(etiqueta) => {
+                const codigo = HABILITACIONES.find((h) => h.etiqueta === etiqueta)?.codigo;
+                if (codigo) toggleFiltroArray("habilitaciones", codigo);
+              }}
+              onClear={() => {
+                setFiltro("habilitaciones", []);
+                setFiltro("habilitacionAmbito", null);
+              }}
+            />
+            {/* El ámbito solo tiene sentido junto a alguna habilitación. */}
+            {filtros.habilitaciones.length > 0 && (
+              <div className="flex gap-1.5 flex-wrap">
+                {([null, "E", "A"] as const).map((a) => (
+                  <TogglePill
+                    key={a ?? "todas"}
+                    active={filtros.habilitacionAmbito === a}
+                    onClick={() => setFiltro("habilitacionAmbito", a)}
+                  >
+                    {a === null ? "Cualquier ámbito" : a === "E" ? "Estatal" : "Autonómica"}
+                  </TogglePill>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* ── Sector ── */}
           <div>

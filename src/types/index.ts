@@ -161,6 +161,12 @@ export interface FiltrosActivos {
   enPerimetro: boolean | null; // null = todos, true = solo en perímetro, false = solo fuera
   cepreven: boolean | null;
   aerme: boolean | null;
+  // Códigos del Registro de Seguridad Privada ("INS", "CA"…). Se exigen TODAS
+  // las seleccionadas: son atributos acumulables, y al marcar varias lo que se
+  // busca es acotar ("con central de alarmas Y vigilancia"), no ampliar.
+  habilitaciones: string[];
+  // Ámbito exigido a esas habilitaciones. null = da igual estatal o autonómico.
+  habilitacionAmbito: "E" | "A" | null;
 }
 
 export const FILTROS_DEFAULT: FiltrosActivos = {
@@ -181,4 +187,6 @@ export const FILTROS_DEFAULT: FiltrosActivos = {
   enPerimetro: null,       // null = todos (sin filtro por perímetro)
   cepreven: null,
   aerme: null,
+  habilitaciones: [],
+  habilitacionAmbito: null,
 };

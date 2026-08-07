@@ -52,6 +52,16 @@ export function isInFilter(
     if (hasCep !== f.cepreven) return false;
   }
   if (f.aerme !== null && p.aerme !== f.aerme) return false;
+  if (f.habilitaciones.length) {
+    const suyas = p.habilitaciones;
+    if (!suyas) return false;
+    // Se exigen TODAS las marcadas, y con el ámbito pedido si se ha fijado uno.
+    for (const codigo of f.habilitaciones) {
+      const ambito = suyas[codigo];
+      if (!ambito) return false;
+      if (f.habilitacionAmbito !== null && ambito !== f.habilitacionAmbito) return false;
+    }
+  }
   if (p.ingresos === null) {
     if (f.ingresosMin > 0) return false;
   } else {

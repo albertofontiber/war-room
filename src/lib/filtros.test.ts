@@ -91,3 +91,44 @@ describe("getSelectionStats", () => {
     });
   });
 });
+
+describe("isInFilter — filtro por habilitación de seguridad privada", () => {
+  const conCRA = makeProps({ habilitaciones: { INS: "A", CA: "E" } });
+  const soloInstala = makeProps({ habilitaciones: { INS: "A" } });
+  const sinRegistro = makeProps({ habilitaciones: null });
+
+  it("sin filtro, no excluye a nadie", () => {
+    expect(isInFilter(sinRegistro, makeFiltros(), "")).toBe(true);
+  });
+
+  it("filtra por una habilitación concreta", () => {
+    const f = makeFiltros({ habilitaciones: ["CA"] });
+    expect(isInFilter(conCRA, f, "")).toBe(true);
+    expect(isInFilter(soloInstala, f, "")).toBe(false);
+  });
+
+  it("deja fuera a las empresas sin datos de registro", () => {
+    const f = makeFiltros({ habilitaciones: ["INS"] });
+    expect(isInFilter(sinRegistro, f, "")).toBe(false);
+  });
+
+  it("con varias marcadas, exige TODAS", () => {
+    // Son atributos acumulables: marcar dos es acotar, no ampliar.
+    const f = makeFiltros({ habilitaciones: ["INS", "CA"] });
+    expect(isInFilter(conCRA, f, "")).toBe(true);
+    expect(isInFilter(soloInstala, f, "")).toBe(false);
+  });
+
+  it("acota por ámbito cuando se pide uno", () => {
+    expect(isInFilter(conCRA, makeFiltros({ habilitaciones: ["CA"], habilitacionAmbito: "E" }), "")).toBe(true);
+    expect(isInFilter(conCRA, makeFiltros({ habilitaciones: ["CA"], habilitacionAmbito: "A" }), "")).toBe(false);
+    // La instalación de esta empresa sí es autonómica.
+    expect(isInFilter(conCRA, makeFiltros({ habilitaciones: ["INS"], habilitacionAmbito: "A" }), "")).toBe(true);
+  });
+
+  it("el ámbito se aplica a todas las habilitaciones marcadas", () => {
+    // INS es autonómica y CA estatal: no puede cumplir "ambas estatales".
+    const f = makeFiltros({ habilitaciones: ["INS", "CA"], habilitacionAmbito: "E" });
+    expect(isInFilter(conCRA, f, "")).toBe(false);
+  });
+});
