@@ -1,9 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { DEAL_STAGE_LABEL, DEAL_STAGE_PILL_CLASS } from "@/lib/crm";
 import type { EmpresaDetalle } from "@/types";
-import { SECTOR_LABEL } from "./constants";
 import { CeprevenBadge } from "./CeprevenBadge";
-import { HabilitacionesBadge } from "./HabilitacionesBadge";
+import { SectorBadge } from "./SectorBadge";
 
 export function BadgesRow({ empresa }: { empresa: EmpresaDetalle }) {
   const dealStage = empresa.crmEstado?.dealStage;
@@ -13,12 +12,13 @@ export function BadgesRow({ empresa }: { empresa: EmpresaDetalle }) {
 
   return (
     <div className="flex flex-wrap gap-1.5">
-      <Badge
-        variant="outline"
-        className="text-[10px] bg-wr-surface2 text-wr-muted border-wr-border"
-      >
-        {SECTOR_LABEL[empresa.sector] ?? empresa.sector}
-      </Badge>
+      {/* Lleva colgadas las habilitaciones de seguridad privada: el sector ya
+          identifica la actividad, y un "Autonómica" suelto en la fila no
+          diría de qué. */}
+      <SectorBadge
+        sector={empresa.sector}
+        habilitaciones={empresa.habilitaciones}
+      />
       {dealStage && (
         <Badge
           variant="outline"
@@ -33,10 +33,6 @@ export function BadgesRow({ empresa }: { empresa: EmpresaDetalle }) {
           areas={empresa.ceprevenAreas}
         />
       )}
-      {/* Se pinta siempre que haya habilitaciones registradas. En la práctica
-          son las de seguridad electrónica y mixtas, pero alguna de PCI también
-          consta en el registro y no tiene sentido ocultárselo. */}
-      <HabilitacionesBadge habilitaciones={empresa.habilitaciones} />
       {empresa.aerme && (
         <Badge
           variant="outline"
