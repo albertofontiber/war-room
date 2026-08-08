@@ -60,6 +60,24 @@ CREATE TABLE "Empresa" (
   --   nº de habilitaciones de una empresa .... jsonb_object_keys / jsonb_array_length
   habilitaciones JSONB,
   "registroFuente" TEXT, -- "policia" | "catalunya" | "euskadi": de qué registro salieron
+  -- Categorías del RIPCI (RD 513/2017), del Registro Integrado Industrial.
+  -- JSONB con DOS listas de etiquetas, según la empresa instale o mantenga:
+  --   {"instalacion": ["Detección y alarma de incendios", …],
+  --    "mantenimiento": ["Extintores de incendios", …]}
+  -- Ojo: "Extintores de incendios" SOLO existe como categoría de mantenimiento.
+  -- Categorías: Detección y alarma de incendios · Abastecimiento de agua ·
+  -- Hidrantes exteriores · Bocas de incendio equipadas · Columna seca ·
+  -- Rociadores automáticos y agua pulverizada · Agua nebulizada · Espuma física ·
+  -- Extinción por polvo · Agentes extintores gaseosos · Aerosoles condensados ·
+  -- Control de humos y de calor · Señalización luminiscente · Extintores de incendios
+  -- Para filtrar (hay índice GIN):
+  --   quién INSTALA rociadores ...... ripci->'instalacion' ? 'Rociadores automáticos y agua pulverizada'
+  --   quién MANTIENE extintores ..... ripci->'mantenimiento' ? 'Extintores de incendios'
+  --   instala cualquiera de dos ..... ripci->'instalacion' ?| array['Columna seca','Espuma física']
+  --   instala las dos ............... ripci->'instalacion' ?& array['Columna seca','Espuma física']
+  --   nº de categorías que instala .. jsonb_array_length(ripci->'instalacion')
+  ripci JSONB,
+  "ripciAlta" TIMESTAMP,  -- primera inscripción en el RIPCI nuevo
   "enPerimetro" BOOLEAN DEFAULT true,  -- true = empresa de interés para M&A
   "anioConstitucion" INT,
   "esAnonima" BOOLEAN DEFAULT false,   -- true = "lead anónimo" del Pipeline (identidad confidencial; CIF pattern "LEAD-{id}"). Filtrados fuera del mapa, tabla, BORME y stats.

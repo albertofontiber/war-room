@@ -175,3 +175,35 @@ describe("isInFilter — filtro por estado Cepreven", () => {
     expect(isInFilter(makeProps({ cepreven: "" }), f, "")).toBe(true);
   });
 });
+
+describe("isInFilter — filtro por categoría RIPCI", () => {
+  const instalaYMantiene = makeProps({
+    ripci: {
+      instalacion: ["Detección y alarma de incendios", "Columna seca"],
+      mantenimiento: ["Extintores de incendios"],
+    },
+  });
+  const sinRipci = makeProps({ ripci: null });
+
+  it("sin categorías marcadas no excluye a nadie", () => {
+    expect(isInFilter(sinRipci, makeFiltros(), "")).toBe(true);
+  });
+
+  it("filtra por una categoría", () => {
+    const f = makeFiltros({ ripciCategorias: ["Columna seca"] });
+    expect(isInFilter(instalaYMantiene, f, "")).toBe(true);
+    expect(isInFilter(sinRipci, f, "")).toBe(false);
+  });
+
+  it("distingue instalar de mantener", () => {
+    // Extintores solo lo mantiene; no existe como categoría de instalación.
+    const cat = ["Extintores de incendios"];
+    expect(isInFilter(instalaYMantiene, makeFiltros({ ripciCategorias: cat, ripciSeccion: "mantenimiento" }), "")).toBe(true);
+    expect(isInFilter(instalaYMantiene, makeFiltros({ ripciCategorias: cat, ripciSeccion: "instalacion" }), "")).toBe(false);
+  });
+
+  it("con varias marcadas las exige todas", () => {
+    const f = makeFiltros({ ripciCategorias: ["Columna seca", "Espuma física"] });
+    expect(isInFilter(instalaYMantiene, f, "")).toBe(false);
+  });
+});

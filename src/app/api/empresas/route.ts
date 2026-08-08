@@ -125,6 +125,7 @@ export async function GET() {
             cepreven: empresa.cepreven,
             aerme: empresa.aerme,
             habilitaciones: empresa.habilitaciones,
+            ripci: empresa.ripci,
             score: empresa.score,
             // Tendencia ingresos
             tendencia: tendenciaIngresos?.direccion ?? "flat",

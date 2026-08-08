@@ -54,6 +54,7 @@ export async function GET() {
         cepreven: true,
         aerme: true,
         habilitaciones: true,
+        ripci: true,
         grupoId: true,
         grupo: { select: { nombre: true } },
         financieros: {
@@ -113,6 +114,7 @@ export async function GET() {
             cepreven: empresa.cepreven,
             aerme: empresa.aerme,
             habilitaciones: empresa.habilitaciones,
+            ripci: empresa.ripci,
             hasBormeReciente: empresa.bormeAlertas.length > 0,
             grupoId: empresa.grupoId,
             grupoNombre: empresa.grupo?.nombre ?? null,

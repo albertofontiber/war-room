@@ -11,6 +11,7 @@ import {
   ETIQUETA_HABILITACION,
   HABILITACIONES,
 } from "@/lib/policia/habilitaciones";
+import { SECCION_LABEL, TODAS_CATEGORIAS } from "@/lib/ripci/categorias";
 
 // ─── Range slider de dos thumbs ───────────────────────────────────────────
 
@@ -351,6 +352,14 @@ export function SidebarContent({
         remove: () => setFiltro("aerme", null),
       });
     }
+    for (const cat of filtros.ripciCategorias) {
+      const donde =
+        filtros.ripciSeccion === null ? "" : ` (${SECCION_LABEL[filtros.ripciSeccion].toLowerCase()})`;
+      chips.push({
+        label: `RIPCI: ${cat}${donde}`,
+        remove: () => toggleFiltroArray("ripciCategorias", cat),
+      });
+    }
     for (const codigo of filtros.habilitaciones) {
       const ambito =
         filtros.habilitacionAmbito === "E"
@@ -651,6 +660,35 @@ export function SidebarContent({
                 </TogglePill>
               ))}
             </div>
+          </div>
+
+          {/* ── Categorías RIPCI (contra incendios) ── */}
+          <div className="space-y-2">
+            <FilterChecklist
+              label="Categoría RIPCI"
+              options={[...TODAS_CATEGORIAS]}
+              selected={filtros.ripciCategorias}
+              onToggle={(c) => toggleFiltroArray("ripciCategorias", c)}
+              onClear={() => {
+                setFiltro("ripciCategorias", []);
+                setFiltro("ripciSeccion", null);
+              }}
+              searchable
+            />
+            {/* La sección solo pinta si hay alguna categoría marcada. */}
+            {filtros.ripciCategorias.length > 0 && (
+              <div className="flex gap-1.5 flex-wrap">
+                {([null, "instalacion", "mantenimiento"] as const).map((s) => (
+                  <TogglePill
+                    key={s ?? "ambas"}
+                    active={filtros.ripciSeccion === s}
+                    onClick={() => setFiltro("ripciSeccion", s)}
+                  >
+                    {s === null ? "Instala o mantiene" : SECCION_LABEL[s]}
+                  </TogglePill>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ── Ingresos range slider ── */}
