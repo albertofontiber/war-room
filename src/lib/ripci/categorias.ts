@@ -46,6 +46,30 @@ export const SECCION_LABEL: Record<SeccionRipci, string> = {
   mantenimiento: "Mantenimiento",
 };
 
+/**
+ * Código de categoría -> etiqueta.
+ *
+ * El código sale del propio número de registro (`09-B-DC5-00704777`: la
+ * tercera pieza es sección + habilitación + categoría), que es más fiable que
+ * el texto de la tabla.
+ */
+export const CATEGORIA_POR_CODIGO: Record<string, string> = {
+  "0": "Detección y alarma de incendios",
+  "1": "Abastecimiento de agua",
+  "2": "Hidrantes exteriores",
+  "3": "Bocas de incendio equipadas",
+  "4": "Columna seca",
+  "5": "Rociadores automáticos y agua pulverizada",
+  "6": "Agua nebulizada",
+  "7": "Espuma física",
+  "8": "Extinción por polvo",
+  "9": "Agentes extintores gaseosos",
+  A: "Aerosoles condensados",
+  B: "Control de humos y de calor",
+  C: CATEGORIA_SOLO_MANTENIMIENTO,
+  D: "Señalización luminiscente",
+};
+
 const VALIDAS = new Set<string>(TODAS_CATEGORIAS);
 
 export interface Ripci {

@@ -22,6 +22,7 @@ export const CRON_JOBS = {
   calendarTasks: "calendar-tasks",
   cepreven: "cepreven",
   habilitaciones: "habilitaciones",
+  ripci: "ripci",
 } as const;
 
 export type CronJob = (typeof CRON_JOBS)[keyof typeof CRON_JOBS];
