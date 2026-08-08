@@ -226,7 +226,27 @@ flowchart TB
 
 > **Por qué importa:** combinado con el catálogo de `borme-senales.ts`, `PersonaCargo` permite ver el grafo de personas: si Juan Pérez es administrador en 3 empresas y Eurofesa es socio único en 2 de ellas, hay una pista fuerte de que la 3ª también está en órbita Eurofesa. Esta detección es semi-manual hoy; el grafo visual es un siguiente paso del roadmap.
 
-**(5) Registros oficiales por CCAA** — cada CCAA mantiene un registro propio de empresas de seguridad electrónica (Mossos en Cataluña, Ertzaintza en País Vasco, etc.). Cuando se publican actualizaciones, se incorporan al Excel master y se reimportan. Cataluña aportó +102 empresas, País Vasco +4. Pendientes: Andalucía, Madrid, Valencia.
+**(5) Registros oficiales del sector — automatizados desde agosto 2026** — tres registros públicos que dicen **para qué está habilitada** cada empresa. Ya no se incorporan a mano al Excel: los refresca el cron `/api/cron/registros` (día 1 de cada mes) y las novedades llegan en un solo aviso.
+
+| Registro | Qué aporta | Cómo se lee |
+|---|---|---|
+| **Cepreven** | Asociadas y calificadas + las áreas concretas de calificación | PDF del listado (el enlace se localiza en su página de descargas: el nº de edición cambia) + página HTML de asociadas |
+| **Seguridad privada** | Las 8 habilitaciones con su ámbito estatal/autonómico | PDF de la Policía Nacional + **API de datos abiertos de Cataluña** + PDF de la Ertzaintza |
+| **RIPCI** (RD 513/2017) | Categorías de contra incendios, separadas entre instalación y mantenimiento | Buscador público del Registro Integrado Industrial |
+
+> **Por qué tres y no uno:** Cataluña y el País Vasco tienen la competencia transferida, así que sus empresas con habilitación **solo autonómica no aparecen en el listado nacional**. Sin ellos el universo tiene un agujero regional.
+>
+> **El ámbito es de cada habilitación, no de la empresa.** Una empresa puede instalar con licencia autonómica y tener la central de alarmas con licencia estatal — 46 están en ese caso. Por eso `habilitaciones` es un JSONB `{"INS":"A","CA":"E"}` y no una columna con una letra.
+>
+> **Mantenimiento tiene una categoría RIPCI más que instalación:** la de *Extintores de incendios*, que no existe como habilitación de instalador. De ahí que `ripci` guarde las dos secciones por separado.
+>
+> ⚠️ **El CSV de datos abiertos del ministerio para el RIPCI es de marzo de 2021** y se queda corto en más de mil empresas. Parece la vía cómoda y no lo es: hay que ir al buscador.
+>
+> ⚠️ **El buscador reejecuta la consulta en cada salto de página**, así que el coste por página crece con el tamaño del resultado (~45 s con 3.800 filas; 5-7 s con unos cientos). El volcado inicial se hizo troceado por provincia (~2 h); el cron pide solo los últimos 45 días y tarda segundos.
+>
+> ⚠️ **Esa consulta por fecha devuelve solo las categorías inscritas dentro de la ventana**, no el estado completo de la empresa. Guardarla tal cual **borraría las categorías antiguas** — en el ensayo habría truncado 15 empresas. Por eso, de las que parecen haber cambiado, el cron vuelve a pedir la ficha entera por NIF antes de decidir.
+
+Aporte del primer cruce (agosto 2026): **578 altas** al universo, categorías RIPCI para ~4.900 empresas y habilitaciones de seguridad privada para ~1.200. Cataluña había aportado antes +102 empresas y País Vasco +4 por la vía manual.
 
 **(6) Manual desde la app** — dos rutas:
    - **Leads anónimos**: Alberto/Gabriel pueden crear targets confidenciales (CIF placeholder `LEAD-{id}`, nombre = alias acordado). No aparecen en mapa/tabla/BORME, solo en `/pipeline`. Cuando se desvela la identidad real, el endpoint `POST /api/leads/:id/link` mueve todas las relaciones (notas, tareas, actividades, CrmLog) a la empresa real y borra el lead.
