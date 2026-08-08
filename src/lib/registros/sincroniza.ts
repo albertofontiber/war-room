@@ -104,20 +104,24 @@ export async function sincronizaCepreven(): Promise<ResultadoRegistro> {
     })
   );
 
-  // Para Cepreven, "novedad" no es una empresa nueva en la base —no crea
-  // ninguna— sino una que pasa a estar calificada, que es la que interesa.
-  const nuevas = [...plan.altas, ...plan.cambios]
-    .filter((e) => e.cepreven === "calificada")
-    .map((e) => {
-      const areas: string[] = e.ceprevenAreas ? JSON.parse(e.ceprevenAreas) : [];
-      return {
-        nombre: e.nombre,
-        cif: "",
-        detalle: areas.length
-          ? `calificada en ${areas.length}: ${areas.map((a) => ETIQUETA_AREA[a] ?? a).join(", ")}`
-          : "calificada",
-      };
-    });
+  // Para Cepreven, "novedad" no es una empresa nueva en la base —este sync no
+  // crea ninguna— sino una que estrena estado. Calificada y asociada van
+  // separadas: son cosas distintas y la calificación es la que pesa, porque
+  // implica haber pasado la auditoría en áreas concretas.
+  const nuevas = [...plan.altas, ...plan.cambios].map((e) => {
+    const calificada = e.cepreven === "calificada";
+    const areas: string[] = e.ceprevenAreas ? JSON.parse(e.ceprevenAreas) : [];
+    return {
+      nombre: e.nombre,
+      cif: "",
+      grupo: calificada ? "Calificadas" : "Asociadas",
+      detalle: calificada
+        ? areas.length
+          ? `${areas.length} áreas: ${areas.map((a) => ETIQUETA_AREA[a] ?? a).join(", ")}`
+          : "sin áreas cargadas todavía"
+        : "miembro de la asociación, sin calificación",
+    };
+  });
 
   const avisos: string[] = [];
   if (plan.bajas.length) {
@@ -143,7 +147,8 @@ export async function sincronizaCepreven(): Promise<ResultadoRegistro> {
       calificadas: listado.empresas.length,
       asociadas: asociadas.length,
       aplicadas: escrituras.length,
-      nuevasCalificadas: nuevas.length,
+      nuevasCalificadas: nuevas.filter((n) => n.grupo === "Calificadas").length,
+      nuevasAsociadas: nuevas.filter((n) => n.grupo === "Asociadas").length,
       bajasSinAplicar: plan.bajas.length,
       degradacionesSinAplicar: plan.degradaciones.length,
     },

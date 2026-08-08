@@ -28,6 +28,7 @@ import {
   sincronizaRipci,
   sincronizaSeguridadPrivada,
 } from "@/lib/registros/sincroniza";
+import { componeAviso } from "@/lib/registros/aviso";
 import type { ResultadoRegistro } from "@/lib/registros/tipos";
 
 export const maxDuration = 300;
@@ -68,41 +69,14 @@ export async function GET(req: NextRequest) {
     const avisos = resultados.flatMap((r) => r.avisos);
     const ilegibles = resultados.filter((r) => r.ilegible);
 
-    // Un solo aviso con todo lo del mes. Las actualizaciones de rutina no
-    // entran: sin altas ni incidencias no hay nada que contar.
-    const hayNovedad = altas.length > 0 || avisos.length > 0 || ilegibles.length > 0 || fallos.length > 0;
-
-    if (hayNovedad) {
-      const partes: string[] = [];
-
-      if (altas.length) {
-        const porRegistro = new Map<string, typeof altas>();
-        for (const a of altas) porRegistro.set(a.registro, [...(porRegistro.get(a.registro) ?? []), a]);
-        for (const [registro, suyas] of porRegistro) {
-          partes.push(
-            `✅ ${registro} — ${suyas.length} ${suyas.length === 1 ? "empresa nueva" : "empresas nuevas"}:\n` +
-              suyas
-                .map((a) => `· ${a.nombre}${a.cif ? ` (${a.cif})` : ""} — ${a.detalle}`)
-                .join("\n")
-          );
-        }
-      }
-
-      for (const r of ilegibles) {
-        partes.push(`⚠️ ${r.registro}: ${r.ilegible} No se ha modificado ninguna empresa.`);
-      }
-      for (const aviso of avisos) partes.push(`⚠️ ${aviso}`);
-      for (const fallo of fallos) partes.push(`❌ Falló la sincronización de ${fallo}`);
-
-      const actualizadas = resultados.reduce((n, r) => n + r.actualizadas, 0);
-      if (actualizadas) partes.push(`(${actualizadas} fichas actualizadas sin más cambios)`);
-
+    // Un solo aviso con todo lo del mes. Sin altas ni incidencias no se
+    // molesta: las actualizaciones de rutina no son noticia.
+    const aviso = componeAviso(resultados, fallos);
+    if (aviso) {
       await notifyAdmins({
         tipo: "registros_cron",
-        titulo: altas.length
-          ? `🏭 ${altas.length} ${altas.length === 1 ? "empresa nueva" : "empresas nuevas"} en los registros del sector`
-          : "⚠️ Registros del sector: hay algo que revisar",
-        mensaje: partes.join("\n\n"),
+        titulo: aviso.titulo,
+        mensaje: aviso.mensaje,
         link: "/",
         email: true,
       });

@@ -11,6 +11,12 @@ export interface EmpresaNueva {
   cif: string;
   /** Qué le aporta: áreas de Cepreven, habilitaciones, categorías… */
   detalle: string;
+  /**
+   * Subgrupo dentro del registro, cuando la distinción importa. En Cepreven
+   * separa "Calificadas" de "Asociadas": son dos cosas distintas y la
+   * calificación es la que pesa.
+   */
+  grupo?: string;
 }
 
 export interface ResultadoRegistro {
