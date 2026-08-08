@@ -23,6 +23,7 @@ const JOB_LABELS: Record<string, string> = {
   "target-docs-check": "Documentación de targets",
   "email-tasks": "Correo → tareas",
   "calendar-tasks": "Calendario → tareas",
+  registros: "Registros del sector",
 };
 
 const STATUS_LABELS: Record<Status, string> = {

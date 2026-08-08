@@ -20,9 +20,9 @@ export const CRON_JOBS = {
   targetDocsCheck: "target-docs-check",
   emailTasks: "email-tasks",
   calendarTasks: "calendar-tasks",
-  cepreven: "cepreven",
-  habilitaciones: "habilitaciones",
-  ripci: "ripci",
+  // Los tres registros del sector (Cepreven, seguridad privada y RIPCI) van
+  // en un solo job para que las novedades lleguen en un único aviso.
+  registros: "registros",
 } as const;
 
 export type CronJob = (typeof CRON_JOBS)[keyof typeof CRON_JOBS];
