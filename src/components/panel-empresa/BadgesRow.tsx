@@ -18,6 +18,7 @@ export function BadgesRow({ empresa }: { empresa: EmpresaDetalle }) {
       <SectorBadge
         sector={empresa.sector}
         habilitaciones={empresa.habilitaciones}
+        ripci={empresa.ripci}
       />
       {dealStage && (
         <Badge

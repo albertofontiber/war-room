@@ -1,6 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "regions": ["lhr1"],
+  "regions": [
+    "lhr1"
+  ],
   "crons": [
     {
       "path": "/api/cron/borme",
@@ -19,12 +21,8 @@
       "schedule": "30 7 * * 1"
     },
     {
-      "path": "/api/cron/cepreven",
-      "schedule": "0 8 * * 1"
-    },
-    {
-      "path": "/api/cron/habilitaciones",
-      "schedule": "30 8 1 * *"
+      "path": "/api/cron/registros",
+      "schedule": "0 8 1 * *"
     }
   ]
 }

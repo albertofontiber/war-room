@@ -43,6 +43,8 @@ export interface EmpresaFeatureProperties {
   // Registro de Seguridad Privada: { "INS": "A", "CA": "E" … }. Solo lleva las
   // habilitaciones concedidas, así que suele ser un objeto de una o dos claves.
   habilitaciones: Record<string, string> | null;
+  // { instalacion: [...], mantenimiento: [...] } del RIPCI.
+  ripci: { instalacion?: string[]; mantenimiento?: string[] } | null;
   hasBormeReciente: boolean;
   grupoId: number | null;
   grupoNombre: string | null;
@@ -142,7 +144,7 @@ interface WarRoomState {
   toggleFiltroArray: <T extends string | number>(
     key: keyof Pick<
       FiltrosActivos,
-      "ccaa" | "provincia" | "sector" | "grupoId" | "crmStage" | "servicios" | "habilitaciones"
+      "ccaa" | "provincia" | "sector" | "grupoId" | "crmStage" | "servicios" | "habilitaciones" | "ripciCategorias"
     >,
     value: T
   ) => void;

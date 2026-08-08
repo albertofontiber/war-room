@@ -47,6 +47,8 @@ model Empresa {
   ambitoGeo        String?       // "E" = estatal | "A" = autonómico — ámbito de la habilitación de instalación (INS). Se mantiene sincronizado con habilitaciones->>'INS'
   habilitaciones   Json?         // Registro de Seguridad Privada: { "INS": "A", "CA": "E" … }. Ámbito POR habilitación. jsonb para poder filtrar en SQL
   registroFuente   String?       // "policia" | "catalunya" | "euskadi" — de qué registro salieron las habilitaciones
+  ripci            Json?         // RIPCI (RD 513/2017): { "instalacion": ["0","5"…], "mantenimiento": ["0","C"…] }. Códigos de categoría; mantenimiento tiene una más, la (C) Extintores
+  ripciAlta        DateTime?     // Primera inscripción en el RIPCI nuevo
   // Perímetro y scoring
   enPerimetro      Boolean       @default(true)
   enPerimetroAt    DateTime?
@@ -95,6 +97,7 @@ model Empresa {
   // GIN para poder filtrar por habilitación (`habilitaciones ? 'CA'`,
   // `@> '{"CA":"E"}'`) sin recorrer la tabla entera.
   @@index([habilitaciones(ops: JsonbOps)], type: Gin)
+  @@index([ripci(ops: JsonbOps)], type: Gin)
 }
 
 // Contactos M&A (no confundir con PersonaCargo, que es BORME — administradores

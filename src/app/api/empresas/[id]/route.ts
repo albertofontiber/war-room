@@ -152,6 +152,7 @@ export async function GET(_req: Request, props: { params: Promise<{ id: string }
       aerme: empresa.aerme,
       ambitoGeo: empresa.ambitoGeo,
       habilitaciones: empresa.habilitaciones,
+      ripci: empresa.ripci,
       enPerimetro: empresa.enPerimetro,
       enPerimetroAt: empresa.enPerimetroAt,
       esAnonima: empresa.esAnonima,

@@ -11,6 +11,11 @@ import {
   ETIQUETA_HABILITACION,
   HABILITACIONES,
 } from "@/lib/policia/habilitaciones";
+import {
+  CATEGORIA_SOLO_MANTENIMIENTO,
+  SECCION_LABEL,
+  TODAS_CATEGORIAS,
+} from "@/lib/ripci/categorias";
 
 // ─── Range slider de dos thumbs ───────────────────────────────────────────
 
@@ -91,18 +96,25 @@ function TogglePill({
   onClick,
   children,
   color = "blue",
+  disabled = false,
+  title,
 }: {
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
   color?: PillColor;
+  /** Se pinta apagada y no responde. Conviene explicar el motivo en `title`. */
+  disabled?: boolean;
+  title?: string;
 }) {
-  const base = "max-lg:tap-target-h px-2 py-1 rounded text-[11px] border transition-colors";
+  const base =
+    "max-lg:tap-target-h px-2 py-1 rounded text-[11px] border transition-colors " +
+    "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-wr-border";
   const inactive = "bg-wr-surface2 text-wr-muted border-wr-border hover:border-wr-muted";
 
   if (!active) {
     return (
-      <button onClick={onClick} className={`${base} ${inactive}`}>
+      <button onClick={onClick} disabled={disabled} title={title} className={`${base} ${inactive}`}>
         {children}
       </button>
     );
@@ -120,7 +132,7 @@ function TogglePill({
                           "bg-wr-blue/20 text-wr-blue border-wr-blue/40"; // blue (default)
 
   return (
-    <button onClick={onClick} className={`${base} ${activeClass}`}>
+    <button onClick={onClick} disabled={disabled} title={title} className={`${base} ${activeClass}`}>
       {children}
     </button>
   );
@@ -349,6 +361,14 @@ export function SidebarContent({
       chips.push({
         label: `Aerme: ${filtros.aerme ? "sí" : "no"}`,
         remove: () => setFiltro("aerme", null),
+      });
+    }
+    for (const cat of filtros.ripciCategorias) {
+      const donde =
+        filtros.ripciSeccion === null ? "" : ` (${SECCION_LABEL[filtros.ripciSeccion].toLowerCase()})`;
+      chips.push({
+        label: `RIPCI: ${cat}${donde}`,
+        remove: () => toggleFiltroArray("ripciCategorias", cat),
       });
     }
     for (const codigo of filtros.habilitaciones) {
@@ -592,7 +612,7 @@ export function SidebarContent({
           {/* ── Habilitaciones del Registro de Seguridad Privada ── */}
           <div className="space-y-2">
             <FilterChecklist
-              label="Habilitación"
+              label="Habilitación seguridad privada"
               options={HABILITACIONES.map((h) => h.etiqueta)}
               selected={filtros.habilitaciones
                 .map((c) => ETIQUETA_HABILITACION[c])
@@ -618,6 +638,55 @@ export function SidebarContent({
                     {a === null ? "Cualquier ámbito" : a === "E" ? "Estatal" : "Autonómica"}
                   </TogglePill>
                 ))}
+              </div>
+            )}
+          </div>
+
+          {/* ── Categorías RIPCI (contra incendios) ── */}
+          <div className="space-y-2">
+            <FilterChecklist
+              label="Categoría RIPCI"
+              options={[...TODAS_CATEGORIAS]}
+              selected={filtros.ripciCategorias}
+              onToggle={(c) => {
+                toggleFiltroArray("ripciCategorias", c);
+                // Al marcar extintores con "Instalación" puesta, el filtro no
+                // devolvería nada nunca: se afloja a "instala o mantiene".
+                if (c === CATEGORIA_SOLO_MANTENIMIENTO && filtros.ripciSeccion === "instalacion") {
+                  setFiltro("ripciSeccion", null);
+                }
+              }}
+              onClear={() => {
+                setFiltro("ripciCategorias", []);
+                setFiltro("ripciSeccion", null);
+              }}
+              searchable
+            />
+            {/* La sección solo pinta si hay alguna categoría marcada. */}
+            {filtros.ripciCategorias.length > 0 && (
+              <div className="flex gap-1.5 flex-wrap">
+                {([null, "instalacion", "mantenimiento"] as const).map((s) => {
+                  // Los extintores no existen como habilitación de instalador,
+                  // así que esa combinación no se puede pedir.
+                  const imposible =
+                    s === "instalacion" &&
+                    filtros.ripciCategorias.includes(CATEGORIA_SOLO_MANTENIMIENTO);
+                  return (
+                    <TogglePill
+                      key={s ?? "ambas"}
+                      active={filtros.ripciSeccion === s}
+                      onClick={() => setFiltro("ripciSeccion", s)}
+                      disabled={imposible}
+                      title={
+                        imposible
+                          ? `"${CATEGORIA_SOLO_MANTENIMIENTO}" solo existe como habilitación de mantenimiento`
+                          : undefined
+                      }
+                    >
+                      {s === null ? "Instala o mantiene" : SECCION_LABEL[s]}
+                    </TogglePill>
+                  );
+                })}
               </div>
             )}
           </div>

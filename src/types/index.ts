@@ -73,6 +73,7 @@ export interface EmpresaDetalle {
   aerme: boolean;
   ambitoGeo: string | null; // "E" | "A" — ámbito de la habilitación de instalación
   habilitaciones: unknown;  // { "INS": "A", "CA": "E" … } del Registro de Seguridad Privada
+  ripci: unknown;           // { instalacion: [...], mantenimiento: [...] } del RIPCI
   enPerimetro: boolean;
   enPerimetroAt: string | null;
   esAnonima: boolean;
@@ -170,6 +171,10 @@ export interface FiltrosActivos {
   habilitaciones: string[];
   // Ámbito exigido a esas habilitaciones. null = da igual estatal o autonómico.
   habilitacionAmbito: "E" | "A" | null;
+  // Categorías del RIPCI. Se exigen TODAS, igual que las habilitaciones.
+  ripciCategorias: string[];
+  // En qué sección deben estar. null = vale instalación o mantenimiento.
+  ripciSeccion: "instalacion" | "mantenimiento" | null;
 }
 
 export const FILTROS_DEFAULT: FiltrosActivos = {
@@ -192,4 +197,6 @@ export const FILTROS_DEFAULT: FiltrosActivos = {
   aerme: null,
   habilitaciones: [],
   habilitacionAmbito: null,
+  ripciCategorias: [],
+  ripciSeccion: null,
 };
