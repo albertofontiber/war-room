@@ -1,20 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { DEAL_STAGE_LABEL, DEAL_STAGE_PILL_CLASS } from "@/lib/crm";
 import { dispatchDataChanged } from "@/lib/data-events";
 import { useMobileViewportRecovery } from "@/lib/use-mobile-viewport-recovery";
-import type { DealStage } from "@/types";
-
-type SearchResult = {
-  id: number;
-  nombre: string;
-  cif: string;
-  provincia: string | null;
-  ccaa: string | null;
-  sector: string | null;
-  crmEstado: { dealStage: DealStage | null } | null;
-};
+import { EmpresaPicker, type EmpresaSearchResult } from "@/components/EmpresaPicker";
 
 type Props = {
   open: boolean;
@@ -25,10 +14,7 @@ type Props = {
 };
 
 export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLinked }: Props) {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [selected, setSelected] = useState<SearchResult | null>(null);
-  const [searching, setSearching] = useState(false);
+  const [selected, setSelected] = useState<EmpresaSearchResult | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const recoverMobileViewport = useMobileViewportRecovery();
@@ -38,32 +24,13 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
     onClose();
   }, [onClose, recoverMobileViewport]);
 
-  // Reset cuando se abre/cierra
+  // Reset al cerrar. La búsqueda vive dentro de EmpresaPicker, que se
+  // desmonta al elegir y al cerrar, así que se limpia sola.
   useEffect(() => {
     if (!open) {
-      setQuery(""); setResults([]); setSelected(null); setError(null);
+      setSelected(null); setError(null);
     }
   }, [open]);
-
-  // Debounced search
-  useEffect(() => {
-    if (!open) return;
-    if (selected) return; // no seguir buscando tras seleccionar
-    const q = query.trim();
-    if (q.length < 2) { setResults([]); return; }
-    setSearching(true);
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => {
-      fetch(`/api/empresas/search?q=${encodeURIComponent(q)}&excludeId=${leadId}`, {
-        signal: ctrl.signal,
-      })
-        .then((r) => r.json())
-        .then((data) => { if (Array.isArray(data)) setResults(data); })
-        .catch(() => {})
-        .finally(() => setSearching(false));
-    }, 200);
-    return () => { clearTimeout(timer); ctrl.abort(); };
-  }, [query, open, leadId, selected]);
 
   if (!open) return null;
 
@@ -130,54 +97,12 @@ export default function LinkLeadModal({ open, leadId, leadNombre, onClose, onLin
 
         <div className="p-3 sm:p-5 space-y-3 text-xs">
           {!selected ? (
-            <>
-              <label className="flex flex-col">
-                <span className="block text-[10px] font-semibold text-wr-muted uppercase tracking-wider mb-1">
-                  Buscar empresa por nombre o CIF
-                </span>
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  autoFocus
-                  placeholder="Ej. Eivar, B60401353…"
-                  className="w-full bg-wr-surface2 border border-wr-border rounded px-2 py-1.5 text-wr-text focus:outline-none focus:border-wr-blue"
-                />
-              </label>
-
-              {searching && <p className="text-[10px] text-wr-hint">Buscando…</p>}
-
-              {!searching && query.trim().length >= 2 && results.length === 0 && (
-                <p className="text-[10px] text-wr-hint italic">Sin resultados.</p>
-              )}
-
-              {results.length > 0 && (
-                <div className="border border-wr-border rounded divide-y divide-wr-border max-h-[320px] overflow-y-auto">
-                  {results.map((r) => {
-                    const stage = r.crmEstado?.dealStage;
-                    return (
-                      <button
-                        key={r.id}
-                        onClick={() => setSelected(r)}
-                        className="w-full text-left px-3 py-2 hover:bg-wr-surface2 transition-colors flex items-start justify-between gap-2"
-                      >
-                        <div className="min-w-0">
-                          <p className="text-wr-text truncate">{r.nombre}</p>
-                          <p className="text-[10px] text-wr-hint truncate">
-                            {r.cif}
-                            {r.provincia && <> · {r.provincia}</>}
-                          </p>
-                        </div>
-                        {stage && (
-                          <span className={`text-[9px] border rounded px-1.5 py-0.5 whitespace-nowrap ${DEAL_STAGE_PILL_CLASS[stage]}`}>
-                            {DEAL_STAGE_LABEL[stage]}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </>
+            <label className="flex flex-col">
+              <span className="block text-[10px] font-semibold text-wr-muted uppercase tracking-wider mb-1">
+                Buscar empresa por nombre o CIF
+              </span>
+              <EmpresaPicker onSelect={setSelected} excludeId={leadId} autoFocus />
+            </label>
           ) : (
             <div className="space-y-3">
               <div className="rounded border border-wr-border bg-wr-surface2/40 p-3">

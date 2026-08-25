@@ -45,7 +45,8 @@ src/
       empresas/[id]/notas/route.ts        # GET/POST — notas (incluye autorFinder)
       empresas/[id]/tareas/route.ts       # GET/POST — tareas (incluye autorFinder/asignadoFinder)
       empresas/[id]/historial/route.ts    # GET — timeline (incluye autorKind admin/finder)
-      empresas/search/route.ts            # GET — autocomplete admin (para vincular leads)
+      empresas/search/route.ts            # GET — autocomplete admin (leads + mover tareas de ficha)
+      tareas/[id]/route.ts                # PATCH/DELETE — editar, completar y mover de empresa
       empresas/[id]/stage/route.ts        # PATCH — cambiar dealStage
       empresas/[id]/finder/route.ts       # PATCH — asignar finder
       grupos/route.ts                     # GET — lista todos los grupos (autocomplete)
@@ -81,6 +82,7 @@ src/
     PipelinePageClient.tsx                # Kanban CRM admin + filtros + ChatIA + "+ Lead sin identificar"
     AddLeadModal.tsx                      # Modal para crear leads anónimos
     LinkLeadModal.tsx                     # Modal "vincular lead a empresa real" ⭐ (PR #10)
+    EmpresaPicker.tsx                     # Buscador de empresas por nombre/CIF (leads + mover tareas)
     MapaEspana.tsx                        # Mapa Mapbox (1130 líneas — candidato a refactor)
     Navbar.tsx                            # Barra superior + icono "admin" link a /finders
     Sidebar.tsx                           # Filtros + estadísticas (9 stages CRM + filtro Grupo)
@@ -189,6 +191,7 @@ vercel.json                               # Crons: BORME 20:00 L-V · Resumen 06
 - **Email resumen diario**: cron Ma-Sa 06:00 UTC → email con 5 cifras (totales + desglose M&A diferenciado) + link a /daily/[fecha] ✅
 - **Email task-digest por usuario**: cron L-V 07:00 UTC → tareas vencidas, hoy y próximos 7 días (1 email por usuario activo con tareas asignadas **o creadas por él y sin asignar**) ✅
 - **Badge de tareas pendientes**: visible en Kanban (ya existía), tooltip del mapa y filas de la tabla (`XT` en ámbar) ✅
+- **Mover una tarea de ficha**: en el formulario de edición, "Mover a otra empresa…" busca por nombre/CIF y traslada la tarea al guardar. Corrige haberla creado en la empresa equivocada o un match malo de los crones. La empresa destino no puede ser un lead anónimo, y si la tarea estaba asignada a un finder que no aporta ese target, se queda sin finder (el portal filtra por `finderSourceId`). Queda en `AuditLog` ✅
 - **Página /daily/[fecha]**: pública (sin login), resumen completo con diseño War Room ✅
 - **force-dynamic en todas las rutas API**: garantiza datos frescos, sin caché de Vercel ✅
 - **Leads anónimos** (PR #8-#10, abril 2026): crear y vincular targets confidenciales sin identidad revelada. `Empresa.esAnonima=true`, CIF placeholder `LEAD-{id}`, aparecen solo en `/pipeline`. Endpoint `POST /api/leads/:id/link` mueve notas/tareas/actividades/CrmLog/Financieros del lead a una empresa real y borra el lead. CrmEstado del lead prevalece sobre el del target. Hasta hoy los leads anónimos vienen de Deale (otro finder fuera del portal). ✅

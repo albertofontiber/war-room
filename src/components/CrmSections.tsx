@@ -11,6 +11,7 @@ import {
 } from "@/lib/data-events";
 import { MentionTextarea } from "@/components/MentionTextarea";
 import { MentionRender } from "@/components/MentionRender";
+import { EmpresaPicker, type EmpresaSearchResult } from "@/components/EmpresaPicker";
 
 const MENTION_ENDPOINT_ADMIN = "/api/menciones/candidatos";
 
@@ -563,6 +564,10 @@ export function TareasSection({
   const [editDescripcion, setEditDescripcion] = useState("");
   const [editFechaLimite, setEditFechaLimite] = useState("");
   const [editAsignadoId, setEditAsignadoId] = useState("");
+  // Mover la tarea a otra ficha. Es raro, así que va plegado tras un enlace:
+  // `moviendoEmpresa` abre el buscador, `editEmpresaDestino` guarda la elegida.
+  const [moviendoEmpresa, setMoviendoEmpresa] = useState(false);
+  const [editEmpresaDestino, setEditEmpresaDestino] = useState<EmpresaSearchResult | null>(null);
   const [open, setOpen] = useState(false);
 
   const load = useCallback(() => {
@@ -679,6 +684,13 @@ export function TareasSection({
         ? `${FINDER_PREFIX}${t.asignadoFinder.id}`
         : t.asignado?.id ?? ""
     );
+    cerrarMover();
+  }
+
+  /** Deja el bloque "mover a otra empresa" plegado y sin destino elegido. */
+  function cerrarMover() {
+    setMoviendoEmpresa(false);
+    setEditEmpresaDestino(null);
   }
 
   async function guardarEdit() {
@@ -686,6 +698,7 @@ export function TareasSection({
     setError(null);
     try {
       const { asignadoId: aId, asignadoFinderId: afId } = parseAsignado(editAsignadoId);
+      const destino = editEmpresaDestino;
       const res = await fetch(`/api/tareas/${editingId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -696,11 +709,13 @@ export function TareasSection({
           fechaLimite: editFechaLimite || null,
           asignadoId: aId,
           asignadoFinderId: afId,
+          ...(destino ? { empresaId: destino.id } : {}),
         }),
       });
       if (res.ok) {
         const id = editingId;
         setEditingId(null);
+        cerrarMover();
         dispatchDataChanged({
           resource: "tarea",
           resourceId: id ?? undefined,
@@ -708,6 +723,17 @@ export function TareasSection({
           parent: { resource: "empresa", id: empresaId },
           source: "TareasSection/guardarEdit",
         });
+        // Si se ha movido, la ficha destino también cambia: avisamos a la suya
+        // para que su lista no se quede sin la tarea recién llegada.
+        if (destino) {
+          dispatchDataChanged({
+            resource: "tarea",
+            resourceId: id ?? undefined,
+            action: "create",
+            parent: { resource: "empresa", id: destino.id },
+            source: "TareasSection/moverEmpresa",
+          });
+        }
         load();
       } else {
         const msg = await extractError(res);
@@ -936,9 +962,61 @@ export function TareasSection({
                     placeholder="Descripción (opcional, escribe @ para mencionar)…"
                     className="w-full bg-wr-bg border border-wr-border rounded-md px-2 py-1 text-xs text-wr-text placeholder:text-wr-hint focus:outline-none focus:border-wr-blue resize-none"
                   />
+
+                  {/* Mover a otra ficha. Plegado por defecto: se usa poco y no
+                      debe estorbar al caso normal de editar título o fecha. */}
+                  <div className="text-[10px]">
+                    {editEmpresaDestino ? (
+                      <div className="rounded border border-wr-amber/30 bg-wr-amber/5 px-2 py-1.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-wr-muted flex-shrink-0">Mover a</span>
+                          <span className="text-wr-text font-medium truncate">
+                            {editEmpresaDestino.nombre}
+                          </span>
+                          <button
+                            onClick={cerrarMover}
+                            className="ml-auto flex-shrink-0 text-wr-muted hover:text-wr-text"
+                          >
+                            Quitar
+                          </button>
+                        </div>
+                        {editAsignadoId.startsWith(FINDER_PREFIX) && (
+                          <p className="mt-1 text-wr-amber">
+                            Al moverla se quedará sin finder asignado: solo puede
+                            tener tareas de sus propios targets.
+                          </p>
+                        )}
+                        <p className="mt-1 text-wr-hint">Se aplica al guardar.</p>
+                      </div>
+                    ) : moviendoEmpresa ? (
+                      <div className="space-y-1">
+                        <EmpresaPicker
+                          onSelect={setEditEmpresaDestino}
+                          excludeId={empresaId}
+                          autoFocus
+                          placeholder="Empresa destino, por nombre o CIF…"
+                          maxHeightClass="max-h-40"
+                        />
+                        <button
+                          onClick={cerrarMover}
+                          className="text-wr-muted hover:text-wr-text"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setMoviendoEmpresa(true)}
+                        className="text-wr-muted hover:text-wr-blue"
+                      >
+                        Mover a otra empresa…
+                      </button>
+                    )}
+                  </div>
+
                   <div className="flex gap-1 justify-end text-[10px]">
                     <button
-                      onClick={() => setEditingId(null)}
+                      onClick={() => { setEditingId(null); cerrarMover(); }}
                       className="text-wr-muted hover:text-wr-text"
                     >
                       Cancelar
