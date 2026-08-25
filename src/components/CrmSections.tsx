@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSession } from "next-auth/react";
 import { fmtDate } from "@/lib/format";
 import { TAREA_TIPOS, TAREA_TIPO_LABEL, TAREA_TIPO_ICON } from "@/lib/crm";
 import type { TareaTipo } from "@/types";
@@ -550,7 +551,10 @@ export function TareasSection({
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [fechaLimite, setFechaLimite] = useState("");
-  const [asignadoId, setAsignadoId] = useState("");
+  // null = el usuario no ha tocado el selector → vale el default (él mismo).
+  // "" = eligió "Sin asignar" a propósito. Distinguirlos evita que un efecto
+  // le devuelva el default encima de una elección explícita.
+  const [asignadoId, setAsignadoId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -597,6 +601,17 @@ export function TareasSection({
       .catch(() => setUsers([]));
   }, [open]);
 
+  // Una tarea nueva se asigna por defecto a quien la crea. Sin esto nacía sin
+  // responsable y el digest diario no la mostraba nunca (el email solo lista
+  // tareas con responsable), así que vencía en silencio. La sesión no lleva el
+  // id del User, así que lo resolvemos por email — es único en la tabla.
+  const { data: session } = useSession();
+  const miUserId = useMemo(
+    () => users.find((u) => u.email === session?.user?.email)?.id ?? "",
+    [users, session?.user?.email]
+  );
+  const asignadoValue = asignadoId ?? miUserId;
+
   // Helper para parsear el valor del select unificado admin/finder.
   // "" = sin asignar; "f:<id>" = finder; "<id>" = admin user.
   const parseAsignado = (v: string): { asignadoId: string | null; asignadoFinderId: string | null } => {
@@ -610,7 +625,7 @@ export function TareasSection({
     setSaving(true);
     setError(null);
     try {
-      const { asignadoId: aId, asignadoFinderId: afId } = parseAsignado(asignadoId);
+      const { asignadoId: aId, asignadoFinderId: afId } = parseAsignado(asignadoValue);
       const res = await fetch(`/api/empresas/${empresaId}/tareas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -628,7 +643,7 @@ export function TareasSection({
         setTitulo("");
         setDescripcion("");
         setFechaLimite("");
-        setAsignadoId("");
+        setAsignadoId(null);
         setTipo("llamada");
         dispatchDataChanged({
           resource: "tarea",
@@ -807,11 +822,11 @@ export function TareasSection({
             className="bg-wr-bg border border-wr-border rounded-md px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue"
           />
           <select
-            value={asignadoId}
+            value={asignadoValue}
             onChange={(e) => setAsignadoId(e.target.value)}
             className="bg-wr-bg border border-wr-border rounded-md px-2 py-1.5 text-xs text-wr-text focus:outline-none focus:border-wr-blue cursor-pointer"
           >
-            <option value="">Asignar a…</option>
+            <option value="">Sin asignar</option>
             {users.map((u) => (
               <option key={u.id} value={u.id}>
                 {u.name}

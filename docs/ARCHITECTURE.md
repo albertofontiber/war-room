@@ -448,7 +448,7 @@ flowchart LR
 |---|---|---|
 | `/api/cron/borme` | L-V 20:00 UTC (22:00 CEST) | Descarga BORME del día, parsea, clasifica, escribe `BormeAlerta` + upsert `PersonaCargo` |
 | `/api/cron/daily-summary` | Ma-Sa 06:00 UTC (08:00 CEST) | Email a Alberto/Gabriel con 3 cifras + link a `/daily/YYYY-MM-DD` |
-| `/api/cron/task-digest` | L-V 07:00 UTC | Email por usuario con sus tareas vencidas / hoy / próximos 7 días |
+| `/api/cron/task-digest` | L-V 07:00 UTC | Email por usuario con sus tareas vencidas / hoy / próximos 7 días. "Suyas" = asignadas a él, o creadas por él y sin asignar (ver `lib/task-digest-buckets.ts`) |
 
 **Detalles operativos:**
 
