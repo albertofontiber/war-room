@@ -106,6 +106,7 @@ src/
     format.ts                             # fmt, fmtM, fmtPct, fmtDate, fmtMillions
     email-daily-summary.ts                # Email diario (Resend)
     email-task-digest.ts                  # Email task digest por usuario (Resend)
+    task-digest-buckets.ts                # Quién es el responsable de cada tarea + reparto por fecha (puro)
     validation.ts                         # Schemas zod: war room + portal + proposals
     finder-session.ts                     # requireCurrentFinder + canEditWithin24h ⭐ (PR #12)
     finder-access-log.ts                  # logFinderAction fire-and-forget ⭐ (PR #14)
@@ -186,7 +187,7 @@ vercel.json                               # Crons: BORME 20:00 L-V · Resumen 06
 - **Vista Grupos**: nueva pestaña en Navbar con tabla de grupos y sus empresas ✅
 - **Exportar tabla a Excel**: botón en toolbar de la vista Tabla ✅
 - **Email resumen diario**: cron Ma-Sa 06:00 UTC → email con 5 cifras (totales + desglose M&A diferenciado) + link a /daily/[fecha] ✅
-- **Email task-digest por usuario**: cron L-V 07:00 UTC → tareas vencidas, hoy y próximos 7 días (1 email por usuario activo con tareas asignadas) ✅
+- **Email task-digest por usuario**: cron L-V 07:00 UTC → tareas vencidas, hoy y próximos 7 días (1 email por usuario activo con tareas asignadas **o creadas por él y sin asignar**) ✅
 - **Badge de tareas pendientes**: visible en Kanban (ya existía), tooltip del mapa y filas de la tabla (`XT` en ámbar) ✅
 - **Página /daily/[fecha]**: pública (sin login), resumen completo con diseño War Room ✅
 - **force-dynamic en todas las rutas API**: garantiza datos frescos, sin caché de Vercel ✅
@@ -470,8 +471,13 @@ npx dotenv-cli -e .env.local -- npx tsx scripts/test-email.ts
 ### Email task-digest por usuario (`src/lib/email-task-digest.ts`)
 
 - **Cron**: L-V 07:00 UTC (~8 Madrid invierno / 9 verano) → `GET /api/cron/task-digest`
-- **Destinatarios**: un email por cada `User.active=true` que tenga `Tarea.asignadoId` con `completada=false`
-  - Usuario sin tareas pendientes no recibe email (no spam)
+- **Destinatarios**: un email por cada `User.active=true` con tareas `completada=false` a su cargo
+  - Usuario sin tareas pendientes y sin actividad de finders no recibe email (no spam)
+- **Qué tareas son "tuyas"** (`src/lib/task-digest-buckets.ts`, función pura y testeada):
+  1. `Tarea.asignadoId` = tú → tuya
+  2. `Tarea.asignadoFinderId` != null → **no** entra en el digest de admins; el finder la ve en su portal y recibe su propio email
+  3. Sin asignado ninguno → es de su **autor** (`autorId`), hasta que la delegue. Se pinta con el distintivo **"Sin asignar"** en la fila
+  - Antes el WHERE exigía `asignadoId != null`: una tarea creada sin asignar no salía en ningún email y vencía en silencio (detectado 2026-08-25). Las que crean los crones de email/calendar no tienen ni asignado ni autor, así que siguen fuera
 - **Contenido**: 4 bloques según `fechaLimite` comparado con "hoy 00:00":
   - Vencidas (<hoy) — rojo
   - Hoy — ámbar

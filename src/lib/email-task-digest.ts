@@ -5,6 +5,9 @@
  *       Hoy (fechaLimite entre hoy 00:00 y mañana 00:00)
  *       Próximos 7 días (fechaLimite entre mañana 00:00 y hoy+8 días 00:00)
  *       Sin fecha (las suyas, pendientes)
+ *     Cuentan las que tiene asignadas Y las que creó y no asignó a nadie
+ *     (marcadas "Sin asignar"); quién es el responsable de cada tarea lo
+ *     decide `task-digest-buckets.ts`.
  *   - CRM update — actividad de finders en las últimas 24h (compartido a todos los admins):
  *       Tareas nuevas (creadas por finder, pendientes)
  *       Completadas (por finder, sea autor o asignado)
@@ -17,26 +20,20 @@
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
 import { TAREA_TIPO_LABEL } from "@/lib/crm";
+import { agruparTareasPorUsuario, type TareaRow } from "@/lib/task-digest-buckets";
 import type { TareaTipo } from "@/types";
 
 const FROM     = process.env.SUMMARY_EMAIL_FROM ?? "warroom@fontiber.com";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://warroom.fontiber.com";
 
-type TareaRow = {
-  id: number;
-  titulo: string;
-  descripcion: string | null;
-  tipo: string;
-  fechaLimite: Date | null;
-  empresa: { id: number; nombre: string };
-};
-
-type Bucket = {
-  vencidas: TareaRow[];
-  hoy: TareaRow[];
-  proximos7: TareaRow[];
-  sinFecha: TareaRow[];
-};
+/**
+ * Distintivo para las tareas que no tiene asignadas nadie y que salen en el
+ * digest porque el destinatario es su autor. Va inline en la fila en lugar de
+ * abrir un bloque aparte: los bloques son la vista por fecha (qué hay que
+ * hacer y cuándo) y partirlos por propiedad la fragmentaría.
+ */
+const SIN_ASIGNAR_TAG =
+  `&nbsp;·&nbsp;<span style="display:inline-block;background:#fef3c7;color:#92400e;border-radius:3px;padding:1px 5px;font-size:10px;font-weight:600">Sin asignar</span>`;
 
 // Items del bloque "CRM update" — actividad de finders en las últimas 24h.
 type ActividadFinderRow = {
@@ -74,7 +71,7 @@ function renderBlock(title: string, color: string, tareas: TareaRow[]): string {
             <div style="font-weight:600">${escapeHtml(t.titulo)}</div>
             <div style="font-size:11px;color:#6b7280;margin-top:2px">
               <a href="${empresaUrl}" style="color:#3b82f6;text-decoration:none">${escapeHtml(t.empresa.nombre)}</a>
-              &nbsp;·&nbsp;${escapeHtml(tipoLabel(t.tipo))}
+              &nbsp;·&nbsp;${escapeHtml(tipoLabel(t.tipo))}${t.sinAsignar ? SIN_ASIGNAR_TAG : ""}
             </div>
           </td>
           <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12px;color:#6b7280;white-space:nowrap;text-align:right;vertical-align:top">
@@ -255,13 +252,14 @@ export async function sendTaskDigest(
 
   const now = new Date();
   const hoy0 = startOfDay(now);
-  const maniana0 = new Date(hoy0); maniana0.setDate(maniana0.getDate() + 1);
-  const enOcho0 = new Date(hoy0); enOcho0.setDate(enOcho0.getDate() + 8);
 
   // Cargamos en paralelo:
   //   - Lista de admins activos (todos reciben el digest aunque no tengan tareas
   //     asignadas, si hay actividad de finders que mostrar).
-  //   - Tareas pendientes asignadas a admins (para la sección "Tus tareas").
+  //   - Tareas pendientes que le tocan a algún admin (sección "Tus tareas"):
+  //     las asignadas a un admin, más las que no tienen asignado ninguno pero
+  //     sí autor — esas son de quien las creó. Las asignadas a un finder se
+  //     quedan fuera: van por su portal y su propio email.
   //   - Actividad del portal de finders en las últimas 24h (compartida en
   //     "CRM update" para todos los admins).
   const [adminsActivos, pendientes, finderActivity] = await Promise.all([
@@ -272,11 +270,15 @@ export async function sendTaskDigest(
     prisma.tarea.findMany({
       where: {
         completada: false,
-        asignadoId: { not: null },
+        OR: [
+          { asignadoId: { not: null } },
+          { asignadoId: null, asignadoFinderId: null, autorId: { not: null } },
+        ],
       },
       include: {
         empresa: { select: { id: true, nombre: true } },
         asignado: { select: { id: true, email: true, name: true, active: true } },
+        autor: { select: { id: true, email: true, name: true, active: true } },
       },
       orderBy: [{ fechaLimite: "asc" }],
     }),
@@ -288,50 +290,7 @@ export async function sendTaskDigest(
     finderActivity.completadas.length +
     finderActivity.notasNuevas.length;
 
-  // Agrupar por usuario. Inicializamos con TODOS los admins activos para que
-  // reciban email aunque no tengan tareas, si hay actividad de finders.
-  const porUsuario = new Map<string, { email: string; name: string; bucket: Bucket }>();
-  for (const a of adminsActivos) {
-    porUsuario.set(a.id, {
-      email: a.email,
-      name: a.name,
-      bucket: { vencidas: [], hoy: [], proximos7: [], sinFecha: [] },
-    });
-  }
-
-  for (const t of pendientes) {
-    const u = t.asignado;
-    if (!u || !u.active) continue;
-    let entry = porUsuario.get(u.id);
-    if (!entry) {
-      // Asignado a un usuario que NO es admin activo (caso raro, p.ej.
-      // user role distinto). Lo creamos al vuelo para no perder la tarea.
-      entry = {
-        email: u.email,
-        name: u.name,
-        bucket: { vencidas: [], hoy: [], proximos7: [], sinFecha: [] },
-      };
-      porUsuario.set(u.id, entry);
-    }
-    const row: TareaRow = {
-      id: t.id,
-      titulo: t.titulo,
-      descripcion: t.descripcion,
-      tipo: t.tipo,
-      fechaLimite: t.fechaLimite,
-      empresa: t.empresa,
-    };
-    if (!t.fechaLimite) {
-      entry.bucket.sinFecha.push(row);
-    } else if (t.fechaLimite < hoy0) {
-      entry.bucket.vencidas.push(row);
-    } else if (t.fechaLimite < maniana0) {
-      entry.bucket.hoy.push(row);
-    } else if (t.fechaLimite < enOcho0) {
-      entry.bucket.proximos7.push(row);
-    }
-    // Tareas con fechaLimite > hoy+7 no entran en el digest.
-  }
+  const porUsuario = agruparTareasPorUsuario(adminsActivos, pendientes, hoy0);
 
   const dateLabel = hoy0.toLocaleDateString("es-ES", {
     weekday: "long", day: "numeric", month: "long",
