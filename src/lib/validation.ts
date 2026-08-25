@@ -50,6 +50,10 @@ export const TareaUpdateSchema = z
     asignadoFinderId: z.string().nullable().optional(),
     completada: z.boolean().optional(),
     resultado: z.string().nullable().optional(),
+    // Mover la tarea a otra ficha. El endpoint valida que la empresa destino
+    // existe y no es un lead anónimo. Corrige el caso de haberla creado en la
+    // empresa equivocada, o un match malo de los crones de email/calendar.
+    empresaId: z.number().int().positive().optional(),
   })
   .refine((v) => Object.keys(v).length > 0, { message: "Empty body" });
 

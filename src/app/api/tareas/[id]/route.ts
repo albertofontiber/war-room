@@ -14,9 +14,16 @@ export const dynamic = "force-dynamic";
 
 /**
  * PATCH /api/tareas/[id]
- * Body parcial: { titulo?, descripcion?, fechaLimite?, asignadoId?, completada? }
+ * Body parcial: { titulo?, descripcion?, fechaLimite?, asignadoId?, completada?, empresaId? }
  * Si `completada` pasa a true, marca `completadaAt = ahora`.
  * Si pasa a false, limpia `completadaAt`.
+ *
+ * `empresaId` mueve la tarea a otra ficha (crearla en la empresa equivocada, o
+ * un match malo de los crones de email/calendar). La empresa destino tiene que
+ * existir y no ser un lead anónimo. Si la tarea estaba asignada a un finder y
+ * el destino no es un target suyo, se le quita la asignación: un finder solo
+ * puede tener tareas de las empresas que él aporta (`finderSourceId`), y el
+ * portal filtra por ahí.
  */
 export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -63,10 +70,44 @@ export async function PATCH(req: NextRequest, props: { params: Promise<{ id: str
       where: { id: tareaId },
       select: {
         tipo: true, titulo: true, descripcion: true, resultado: true,
-        fechaLimite: true, completada: true,
+        fechaLimite: true, completada: true, empresaId: true,
         asignadoId: true, asignadoFinderId: true,
       },
     });
+    if (!prev) {
+      return NextResponse.json({ error: "Tarea no encontrada" }, { status: 404 });
+    }
+
+    // Mover de ficha. Solo si el destino es distinto del origen — un PATCH que
+    // repite el empresaId actual no debe ensuciar la auditoría.
+    if (body.empresaId !== undefined && body.empresaId !== prev.empresaId) {
+      const destino = await prisma.empresa.findUnique({
+        where: { id: body.empresaId },
+        select: { id: true, esAnonima: true, finderSourceId: true },
+      });
+      if (!destino) {
+        return NextResponse.json({ error: "La empresa destino no existe" }, { status: 400 });
+      }
+      if (destino.esAnonima) {
+        return NextResponse.json(
+          { error: "No se puede mover una tarea a un lead anónimo" },
+          { status: 400 }
+        );
+      }
+      data.empresaId = destino.id;
+
+      // El finder asignado solo es válido si el destino es target suyo.
+      // Si no lo es, se queda sin asignar antes que colgando de una ficha a
+      // la que no tiene acceso. Queda en la auditoría vía diffFields.
+      const finderActual =
+        (data.asignadoFinderId as string | null | undefined) !== undefined
+          ? (data.asignadoFinderId as string | null)
+          : prev.asignadoFinderId;
+      if (finderActual && destino.finderSourceId !== finderActual) {
+        data.asignadoFinderId = null;
+      }
+    }
+
     const tarea = await prisma.tarea.update({
       where: { id: tareaId },
       data,
@@ -85,6 +126,7 @@ export async function PATCH(req: NextRequest, props: { params: Promise<{ id: str
         resultado: tarea.resultado,
         fechaLimite: tarea.fechaLimite,
         completada: tarea.completada,
+        empresaId: tarea.empresaId,
         asignadoId: tarea.asignadoId,
         asignadoFinderId: tarea.asignadoFinderId,
       });
