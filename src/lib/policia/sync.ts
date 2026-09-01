@@ -19,7 +19,10 @@
 
 import type { MapaHabilitaciones } from "./habilitaciones";
 
-export type Registro = "policia" | "catalunya" | "euskadi";
+/** Los tres registros que publican habilitaciones de seguridad privada. */
+export const REGISTROS = ["policia", "catalunya", "euskadi"] as const;
+
+export type Registro = (typeof REGISTROS)[number];
 
 /** Una empresa tal como la publica cualquiera de los tres registros. */
 export interface EmpresaRegistro {
@@ -35,6 +38,8 @@ export interface EmpresaBase {
   sector: string | null;
   habilitaciones: unknown;
   ambitoGeo: string | null;
+  /** De qué registro salieron sus habilitaciones, si consta. */
+  registroFuente?: string | null;
 }
 
 export interface Actualizacion {
@@ -108,6 +113,11 @@ function funde(a: MapaHabilitaciones, b: MapaHabilitaciones): MapaHabilitaciones
  * @param registros Empresas publicadas por cada registro. Si una empresa sale
  *   en varios se funden sus habilitaciones; la fuente que se anota es la del
  *   último registro que la menciona.
+ *
+ *   Se pasan SOLO los registros que se han podido leer en esta pasada. No es
+ *   lo mismo "el registro dice que esta empresa ya no está" que "no hemos
+ *   podido leer el registro": lo primero es una baja y lo segundo no es nada,
+ *   y de ahí depende `sinRespaldo`.
  */
 export function planificaHabilitaciones(
   empresas: readonly EmpresaBase[],
@@ -176,9 +186,20 @@ export function planificaHabilitaciones(
 
   // Empresas con habilitaciones guardadas que ya no aparecen en ningún
   // registro. No se tocan: igual que con Cepreven, se reportan para mirarlas.
+  //
+  // Solo se juzga a las empresas cuyo registro de origen se ha leído. Sin este
+  // filtro, un mes sin edición nueva del listado nacional —lo normal, salen
+  // dos o tres al año— daría por desaparecidas a las mil y pico empresas que
+  // vienen de ahí. De las que no consta origen solo se puede opinar cuando se
+  // han leído los tres registros.
+  const leidos = new Set(registros.map((r) => r.registro));
+  const todos = REGISTROS.every((r) => leidos.has(r));
+
   for (const e of empresas) {
     if (!e.cif || consolidado.has(e.cif.toUpperCase())) continue;
     if (Object.keys(leeGuardadas(e.habilitaciones)).length === 0) continue;
+    const juzgable = e.registroFuente ? leidos.has(e.registroFuente as Registro) : todos;
+    if (!juzgable) continue;
     plan.sinRespaldo.push({ id: e.id, nombre: e.nombre });
   }
 

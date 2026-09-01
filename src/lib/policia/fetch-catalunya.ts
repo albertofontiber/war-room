@@ -11,6 +11,7 @@
  * Fuente: https://analisi.transparenciacatalunya.cat/Seguretat/Empreses-de-seguretat-privada/7frg-7rdi
  */
 
+import { fetchConReintento } from "@/lib/registros/red";
 import type { MapaHabilitaciones } from "./habilitaciones";
 
 const API = "https://analisi.transparenciacatalunya.cat/resource/7frg-7rdi.json";
@@ -70,9 +71,7 @@ export function mapeaFila(fila: Record<string, unknown>): EmpresaCatalunya | nul
  * @param limite Tope de filas a pedir. El registro ronda las 200.
  */
 export async function fetchRegistroCatalunya(limite = 2000): Promise<EmpresaCatalunya[]> {
-  const res = await fetch(`${API}?$limit=${limite}`, {
-    headers: { "User-Agent": "war-room/1.0 (+contacto@fontiber.com)" },
-  });
+  const res = await fetchConReintento(`${API}?$limit=${limite}`);
   if (!res.ok) throw new Error(`HTTP ${res.status} al consultar el registro catalán`);
 
   const filas = (await res.json()) as Record<string, unknown>[];

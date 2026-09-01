@@ -67,15 +67,19 @@ async function main() {
   const empresas: EmpresaBase[] = await prisma.empresa.findMany({
     select: {
       id: true, cif: true, nombre: true, sector: true,
-      habilitaciones: true, ambitoGeo: true,
+      habilitaciones: true, ambitoGeo: true, registroFuente: true,
     },
   });
   log(`Empresas en la base: ${empresas.length}\n`);
 
   // El orden importa: los registros autonómicos son más específicos y pisan al
   // nacional si una empresa sale en los dos.
+  //
+  // Sin --pdf el nacional NO se pasa, en vez de pasarlo vacío: un registro que
+  // no se ha leído no dice nada, y darlo por leído daría por desaparecidas a
+  // todas las empresas que salieron de él.
   const plan = planificaHabilitaciones(empresas, [
-    { registro: "policia", empresas: nacional },
+    ...(pdfNacional ? [{ registro: "policia" as const, empresas: nacional }] : []),
     { registro: "catalunya", empresas: catalunya },
     { registro: "euskadi", empresas: euskadi },
   ]);

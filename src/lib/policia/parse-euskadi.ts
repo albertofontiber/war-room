@@ -21,6 +21,7 @@
  * Fuente: https://www.ertzaintza.euskadi.eus/lfr/web/ertzaintza/comunicacion-empresas
  */
 
+import { fetchConReintento } from "@/lib/registros/red";
 import { HABILITACIONES, type MapaHabilitaciones } from "./habilitaciones";
 
 /**
@@ -122,9 +123,7 @@ export function extraeEuskadi(frags: readonly Frag[]): EmpresaEuskadi[] {
 export async function parseRegistroEuskadi(pdf?: Buffer): Promise<EmpresaEuskadi[]> {
   let datos = pdf;
   if (!datos) {
-    const res = await fetch(URL_EUSKADI, {
-      headers: { "User-Agent": "war-room/1.0 (+contacto@fontiber.com)" },
-    });
+    const res = await fetchConReintento(URL_EUSKADI);
     if (!res.ok) throw new Error(`HTTP ${res.status} al descargar el registro vasco`);
     datos = Buffer.from(await res.arrayBuffer());
   }

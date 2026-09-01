@@ -245,6 +245,12 @@ flowchart TB
 > ⚠️ **El buscador reejecuta la consulta en cada salto de página**, así que el coste por página crece con el tamaño del resultado (~45 s con 3.800 filas; 5-7 s con unos cientos). El volcado inicial se hizo troceado por provincia (~2 h); el cron pide solo los últimos 45 días y tarda segundos.
 >
 > ⚠️ **Esa consulta por fecha devuelve solo las categorías inscritas dentro de la ventana**, no el estado completo de la empresa. Guardarla tal cual **borraría las categorías antiguas** — en el ensayo habría truncado 15 empresas. Por eso, de las que parecen haber cambiado, el cron vuelve a pedir la ficha entera por NIF antes de decidir.
+>
+> ⚠️ **Los tres registros de seguridad privada van cada uno por su cuenta.** Son webs de administraciones públicas: se caen, cambian la maquetación y responden despacio. Todas las descargas llevan reintento, y la pasada sigue adelante con los registros que respondan en vez de perderse el mes entero. (Cepreven es la excepción: necesita el PDF de calificadas **y** la página de asociadas para poder distinguir una baja de una ausencia, así que si falta uno no toca nada.) Que una fuente devuelva **cero** empresas NO cuenta como leída: es un cambio de formato, y darlo por bueno daría por desaparecidas a todas las empresas que salieron de ahí — el listado nacional respalda a 1.007 y solo se republica dos o tres veces al año.
+>
+> ⚠️ **El cron va con 300 s, que es el techo del plan Hobby** — subirlo lo rechaza el despliegue. El margen se gana quitando trabajo: los seis nombres candidatos de cada día se sondean en paralelo, lo que baja el caso peor de la ventana de 45 días de unos cuatro minutos a menos de uno. Lo que queda por encima son los 17 MB del PDF nacional los meses que hay edición nueva, y las consultas del RIPCI a 5-7 s cada una.
+>
+> 🔍 **Para comprobar una fuente sin esperar al mes que viene**: `GET /api/cron/registros/debug` con el `CRON_SECRET`. Sondea las cinco desde la propia función y devuelve estado, tiempo y motivo del fallo. Importa hacerlo desde ahí y no desde un portátil: estas webs no responden igual desde `lhr1` que desde una conexión española.
 
 Aporte del primer cruce (agosto 2026): **578 altas** al universo, categorías RIPCI para ~4.900 empresas y habilitaciones de seguridad privada para ~1.200. Cataluña había aportado antes +102 empresas y País Vasco +4 por la vía manual.
 

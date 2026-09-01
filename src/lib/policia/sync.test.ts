@@ -3,7 +3,7 @@ import { planificaHabilitaciones, type EmpresaBase } from "./sync";
 
 const base: EmpresaBase[] = [
   { id: 1, cif: "B11111111", nombre: "INSTALADORA SL", sector: "seguridad_electronica", habilitaciones: null, ambitoGeo: null },
-  { id: 2, cif: "B22222222", nombre: "YA AL DIA SL", sector: "seguridad_electronica", habilitaciones: { INS: "A" }, ambitoGeo: "A" },
+  { id: 2, cif: "B22222222", nombre: "YA AL DIA SL", sector: "seguridad_electronica", habilitaciones: { INS: "A" }, ambitoGeo: "A", registroFuente: "policia" },
   { id: 3, cif: "B33333333", nombre: "HETECSE SA", sector: "PCI", habilitaciones: null, ambitoGeo: null },
 ];
 
@@ -95,11 +95,41 @@ describe("planificaHabilitaciones", () => {
     expect(plan.actualizaciones[0].ambitoGeo).toBe("E");
   });
 
-  it("reporta sin tocarlas las que ya no figuran en ningún registro", () => {
+  it("reporta sin tocarlas las que ya no figuran en su registro", () => {
     const plan = planificaHabilitaciones(base, [{ registro: "policia", empresas: [] }]);
 
     expect(plan.sinRespaldo).toEqual([{ id: 2, nombre: "YA AL DIA SL" }]);
     expect(plan.actualizaciones).toEqual([]);
+  });
+
+  it("no da por desaparecida a una empresa cuyo registro no se ha leído", () => {
+    // El listado nacional solo se republica dos o tres veces al año: los meses
+    // que no hay edición nueva no se lee, y eso no dice nada de las mil y pico
+    // empresas que salieron de él.
+    const plan = planificaHabilitaciones(base, [{ registro: "catalunya", empresas: [] }]);
+
+    expect(plan.sinRespaldo).toEqual([]);
+  });
+
+  it("de las empresas sin registro de origen solo opina si ha leído los tres", () => {
+    const sinOrigen: EmpresaBase[] = [
+      { id: 9, cif: "B99999999", nombre: "VIEJA SL", sector: "PCI", habilitaciones: { INS: "A" }, ambitoGeo: "A" },
+    ];
+
+    expect(
+      planificaHabilitaciones(sinOrigen, [
+        { registro: "policia", empresas: [] },
+        { registro: "catalunya", empresas: [] },
+      ]).sinRespaldo
+    ).toEqual([]);
+
+    expect(
+      planificaHabilitaciones(sinOrigen, [
+        { registro: "policia", empresas: [] },
+        { registro: "catalunya", empresas: [] },
+        { registro: "euskadi", empresas: [] },
+      ]).sinRespaldo
+    ).toEqual([{ id: 9, nombre: "VIEJA SL" }]);
   });
 
   it("cruza solo por CIF, nunca por nombre", () => {

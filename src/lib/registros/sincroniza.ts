@@ -17,6 +17,7 @@ import type { ResultadoRegistro } from "./tipos";
 
 // ── Cepreven ───────────────────────────────────────────────────────────────
 import { parseListadoCepreven } from "@/lib/cepreven/parse-listado";
+import { descargaListadoCepreven } from "@/lib/cepreven/localiza-listado";
 import { fetchAsociados } from "@/lib/cepreven/parse-asociados";
 import { ETIQUETA_AREA } from "@/lib/cepreven/areas";
 import {
@@ -35,7 +36,9 @@ import {
   planificaHabilitaciones,
   type EmpresaBase as EmpresaSeguridad,
   type EmpresaRegistro,
+  type Registro,
 } from "@/lib/policia/sync";
+import { motivo } from "./red";
 
 // ── RIPCI ──────────────────────────────────────────────────────────────────
 import {
@@ -155,72 +158,96 @@ export async function sincronizaCepreven(): Promise<ResultadoRegistro> {
   };
 }
 
-/** Localiza y baja el PDF de calificadas vigente. */
-async function descargaListadoCepreven(): Promise<Buffer> {
-  const URL_DESCARGAS = "https://www.calificacioncepreven.com/Descarga-Documentos.html";
-  const AGENTE = "war-room/1.0 (+contacto@fontiber.com)";
-
-  const portada = await fetch(URL_DESCARGAS, { headers: { "User-Agent": AGENTE } });
-  if (!portada.ok) throw new Error(`HTTP ${portada.status} al abrir la página de descargas`);
-
-  const html = await portada.text();
-  const enlace = [...html.matchAll(/href="([^"]*Listado[^"]*\.pdf)"/gi)].map((m) => m[1])[0];
-  if (!enlace) throw new Error("No se encontró el enlace al listado de calificación");
-
-  const url = new URL(enlace.replace(/ /g, "%20"), URL_DESCARGAS).toString();
-  const res = await fetch(url, { headers: { "User-Agent": AGENTE } });
-  if (!res.ok) throw new Error(`HTTP ${res.status} al descargar ${url}`);
-  return Buffer.from(await res.arrayBuffer());
-}
-
 // ───────────────────────────────────────────────────────────────────────────
 
+/** Lectura de una fuente: o trae datos, o trae el motivo por el que no. */
+type Lectura<T> = { ok: true; valor: T } | { ok: false; motivo: string };
+
+async function intenta<T>(fn: () => Promise<T>): Promise<Lectura<T>> {
+  try {
+    return { ok: true, valor: await fn() };
+  } catch (err) {
+    return { ok: false, motivo: motivo(err) };
+  }
+}
+
+/**
+ * Última edición del listado nacional, si hay alguna nueva.
+ *
+ * Devolver null es lo normal: la Policía publica dos o tres ediciones al año,
+ * así que la mayoría de los meses no hay nada nuevo que leer. Eso no es un
+ * fallo y no debe tratarse como tal.
+ */
+async function leeListadoNacional(): Promise<{ edicion: string; empresas: EmpresaRegistro[] } | null> {
+  const hallado = await localizaListado(new Date());
+  if (!hallado) return null;
+  return {
+    edicion: hallado.fecha.toISOString().slice(0, 10),
+    empresas: await parseListadoPolicia(await descargaListado(hallado.url)),
+  };
+}
+
 export async function sincronizaSeguridadPrivada(): Promise<ResultadoRegistro> {
-  const [catalunya, euskadi] = await Promise.all([
-    fetchRegistroCatalunya(),
-    parseRegistroEuskadi(),
+  // Los tres registros, cada uno por su cuenta. Que se caiga uno no puede
+  // tirar a los otros dos: es la misma regla que aplica el cron entre los tres
+  // registros del sector, y aquí dentro —donde "seguridad privada" son en
+  // realidad tres fuentes— hacía falta igual.
+  const [nac, cat, eus] = await Promise.all([
+    intenta(leeListadoNacional),
+    intenta(fetchRegistroCatalunya),
+    intenta(() => parseRegistroEuskadi()),
   ]);
 
-  let nacional: EmpresaRegistro[] = [];
-  let edicion: string | null = null;
-  const hallado = await localizaListado(new Date());
-  if (hallado) {
-    edicion = hallado.fecha.toISOString().slice(0, 10);
-    nacional = await parseListadoPolicia(await descargaListado(hallado.url));
+  const fuentes: { registro: Registro; empresas: readonly EmpresaRegistro[] }[] = [];
+  const problemas: string[] = [];
+
+  /**
+   * Da una fuente por leída solo si ha devuelto empresas. Cero no es "ya no
+   * queda ninguna", es un cambio de formato — y darlo por bueno marcaría como
+   * desaparecidas a todas las empresas que salieron de ahí.
+   */
+  function anota(registro: Registro, etiqueta: string, lectura: Lectura<readonly EmpresaRegistro[]>) {
+    if (!lectura.ok) {
+      problemas.push(`no se pudo leer ${etiqueta}: ${lectura.motivo}`);
+      return;
+    }
+    if (lectura.valor.length === 0) {
+      problemas.push(`${etiqueta} devolvió cero empresas; probablemente haya cambiado el formato`);
+      return;
+    }
+    fuentes.push({ registro, empresas: lectura.valor });
   }
+
+  // El orden importa: los autonómicos son más específicos y pisan al nacional
+  // cuando una empresa sale en los dos.
+  let edicion: string | null = null;
+  if (!nac.ok) {
+    problemas.push(`no se pudo leer el listado nacional: ${nac.motivo}`);
+  } else if (nac.valor) {
+    edicion = nac.valor.edicion;
+    anota("policia", `el listado nacional del ${edicion}`, { ok: true, valor: nac.valor.empresas });
+  }
+  anota("catalunya", "el registro catalán", cat);
+  anota("euskadi", "el registro vasco", eus);
 
   log.info(
     "registros/seguridad-privada",
-    `nacional ${nacional.length} · catalunya ${catalunya.length} · euskadi ${euskadi.length}`
+    fuentes.map((f) => `${f.registro} ${f.empresas.length}`).join(" · ") +
+      (problemas.length ? ` · problemas: ${problemas.join("; ")}` : "")
   );
 
-  // Que la Policía no publique nada este mes es lo normal. Que fallen los dos
-  // de dirección fija, no: eso es cambio de formato.
-  if (catalunya.length === 0 && euskadi.length === 0) {
-    return {
-      registro: "Seguridad privada",
-      altas: [],
-      actualizadas: 0,
-      avisos: [],
-      resumen: { nacional: nacional.length, catalunya: 0, euskadi: 0 },
-      ilegible:
-        "Ni el registro catalán ni el vasco devolvieron empresas. Lo más " +
-        "probable es que hayan cambiado el formato de publicación.",
-    };
-  }
+  // Sin ninguna fuente legible no hay nada que sincronizar. Se lanza para que
+  // el cron lo reporte como fallo del registro, con el porqué de cada una.
+  if (fuentes.length === 0) throw new Error(problemas.join("; "));
 
   const empresas: EmpresaSeguridad[] = await prisma.empresa.findMany({
     select: {
       id: true, cif: true, nombre: true, sector: true,
-      habilitaciones: true, ambitoGeo: true,
+      habilitaciones: true, ambitoGeo: true, registroFuente: true,
     },
   });
 
-  const plan = planificaHabilitaciones(empresas, [
-    { registro: "policia", empresas: nacional },
-    { registro: "catalunya", empresas: catalunya },
-    { registro: "euskadi", empresas: euskadi },
-  ]);
+  const plan = planificaHabilitaciones(empresas, fuentes);
 
   await enTandas(plan.actualizaciones, (a) =>
     prisma.empresa.update({
@@ -249,12 +276,14 @@ export async function sincronizaSeguridadPrivada(): Promise<ResultadoRegistro> {
     })
   );
 
-  const avisos = plan.sinRespaldo.length
-    ? [
-        `Seguridad privada — ${plan.sinRespaldo.length} ya no figuran en ningún ` +
-          `registro (sin aplicar): ${plan.sinRespaldo.map((e) => e.nombre).join(", ")}`,
-      ]
-    : [];
+  const avisos: string[] = [];
+  if (plan.sinRespaldo.length) {
+    avisos.push(
+      `Seguridad privada — ${plan.sinRespaldo.length} ya no figuran en su ` +
+        `registro (sin aplicar): ${plan.sinRespaldo.map((e) => e.nombre).join(", ")}`
+    );
+  }
+  for (const problema of problemas) avisos.push(`Seguridad privada — ${problema}`);
 
   return {
     registro: "Seguridad privada",
@@ -267,14 +296,15 @@ export async function sincronizaSeguridadPrivada(): Promise<ResultadoRegistro> {
     })),
     actualizadas: plan.actualizaciones.length,
     avisos,
+    fuentesConProblema: problemas.length,
     resumen: {
       edicionNacional: edicion,
-      nacional: nacional.length,
-      catalunya: catalunya.length,
-      euskadi: euskadi.length,
+      ...Object.fromEntries(fuentes.map((f) => [f.registro, f.empresas.length])),
       altas: plan.altas.length,
       actualizaciones: plan.actualizaciones.length,
       sinRespaldo: plan.sinRespaldo.length,
+      fuentesLeidas: fuentes.length,
+      fuentesConProblema: problemas.length,
     },
   };
 }
@@ -354,9 +384,10 @@ export async function sincronizaRipci(): Promise<ResultadoRegistro> {
     altas: plan.altas.map((a) => ({
       nombre: a.titular,
       cif: a.nif,
+      zona: a.ccaa,
       detalle:
         `${a.instalacion.length} categorías de instalación y ` +
-        `${a.mantenimiento.length} de mantenimiento · ${a.ccaa}`,
+        `${a.mantenimiento.length} de mantenimiento`,
     })),
     actualizadas: plan.actualizaciones.length,
     avisos: [],

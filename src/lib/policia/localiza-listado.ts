@@ -19,15 +19,16 @@
  * reciente hacia atrás, y se para en la primera que responda.
  */
 
+import { AGENTE, fetchConReintento } from "@/lib/registros/red";
+
 const BASE = "https://www.policia.es/miscelanea/seguridad_privada/sector";
-const AGENTE = "war-room/1.0 (+contacto@fontiber.com)";
 
 /** Prefijos de nombre de fichero vistos, del más reciente al más antiguo. */
 const PREFIJOS = ["empresas_inscritas", "empresas_seguridad"];
 
-/** Días que se sondean a la vez. Con 6 candidatos cada uno, son 18 peticiones
- *  simultáneas: suficiente para no eternizarse y comedido para un servidor
- *  público. */
+/** Días que se sondean a la vez. Con 6 candidatos cada uno —y los seis van
+ *  también en paralelo—, son 18 peticiones simultáneas: suficiente para no
+ *  eternizarse y comedido para un servidor público. */
 const DIAS_POR_TANDA = 3;
 
 function dosDigitos(n: number): string {
@@ -80,12 +81,12 @@ export async function localizaListado(
   dias = 45,
   head: (url: string) => Promise<boolean> = sondaHttp
 ): Promise<ListadoLocalizado | null> {
-  // El servidor tarda ~3 s en contestar a cada HEAD, así que en serie una
-  // ventana de 45 días se iría a más de diez minutos y no cabría en el
-  // tiempo máximo de la función. Se sondea por tandas de días, en paralelo
-  // dentro de cada tanda, y se para en la primera tanda con acierto. El
-  // resultado es el mismo que en serie porque dentro de la tanda se elige
-  // siempre la fecha más reciente.
+  // El servidor tarda ~3 s en contestar a cada HEAD, así que una ventana de 45
+  // días sondeada en serie se iría a más de cuatro minutos y no cabría en el
+  // tiempo máximo de la función. Se sondea por tandas de días, con todos los
+  // candidatos de la tanda a la vez, y se para en la primera con acierto. El
+  // resultado es el mismo que en serie: dentro de la tanda gana siempre la
+  // fecha más reciente, y dentro de un día, el candidato mejor colocado.
   for (let inicio = 0; inicio < dias; inicio += DIAS_POR_TANDA) {
     const tanda = Array.from(
       { length: Math.min(DIAS_POR_TANDA, dias - inicio) },
@@ -94,11 +95,12 @@ export async function localizaListado(
 
     const hallazgos = await Promise.all(
       tanda.map(async (fecha) => {
-        for (const nombre of candidatos(fecha)) {
-          const url = `${BASE}/${encodeURIComponent(nombre)}`;
-          if (await head(url)) return { url, fecha };
-        }
-        return null;
+        const urls = candidatos(fecha).map((n) => `${BASE}/${encodeURIComponent(n)}`);
+        const responde = await Promise.all(urls.map((url) => head(url)));
+        // Vale el orden de `candidatos` —las grafías más recientes primero—,
+        // no el orden en que hayan ido contestando.
+        const i = responde.findIndex(Boolean);
+        return i === -1 ? null : { url: urls[i], fecha };
       })
     );
 
@@ -109,11 +111,17 @@ export async function localizaListado(
   return null;
 }
 
+/** Timeout del sondeo. Sin él, un socket colgado se come el presupuesto de
+ *  la función entera —son cientos de sondas por pasada— y de paso el tiempo
+ *  de los otros dos registros. */
+const TIMEOUT_SONDA_MS = 10_000;
+
 async function sondaHttp(url: string): Promise<boolean> {
   try {
     const res = await fetch(url, {
       method: "HEAD",
       headers: { "User-Agent": AGENTE },
+      signal: AbortSignal.timeout(TIMEOUT_SONDA_MS),
     });
     return res.ok;
   } catch {
@@ -124,7 +132,7 @@ async function sondaHttp(url: string): Promise<boolean> {
 
 /** Descarga el PDF de una edición localizada. */
 export async function descargaListado(url: string): Promise<Buffer> {
-  const res = await fetch(url, { headers: { "User-Agent": AGENTE } });
+  const res = await fetchConReintento(url);
   if (!res.ok) throw new Error(`HTTP ${res.status} al descargar ${url}`);
   return Buffer.from(await res.arrayBuffer());
 }
