@@ -33,14 +33,18 @@ import { motivo } from "@/lib/registros/red";
 import type { ResultadoRegistro } from "@/lib/registros/tipos";
 
 /**
- * Los 300 s de antes iban justos. El grueso se lo lleva localizar la edición
- * del listado nacional —hasta 45 días de nombres candidatos— y, los meses que
- * hay edición nueva, bajar y parsear sus 17 MB de PDF; a eso se le suman las
- * consultas del RIPCI, que el buscador sirve a 5-7 s cada una. Con la ventana
- * sondeada en paralelo el caso peor baja mucho, pero el margen no sobra: si el
- * cron se corta a la mitad, no hay reintento hasta el mes que viene.
+ * 300 s es el techo del plan Hobby: subirlo más lo rechaza el despliegue
+ * ("invalid_max_duration"), y para pasar de ahí hace falta Pro.
+ *
+ * El margen se ha ganado quitando trabajo, no pidiendo más tiempo: el grueso
+ * se lo llevaba localizar la edición del listado nacional —hasta 45 días de
+ * nombres candidatos, que ahora se sondean en paralelo y bajan de unos cuatro
+ * minutos a menos de uno—. Lo que queda por encima son, los meses que hay
+ * edición nueva, sus 17 MB de PDF, y las consultas del RIPCI, que su buscador
+ * sirve a 5-7 s cada una. Si el cron se corta a la mitad no hay reintento
+ * hasta el mes que viene, así que conviene no acercarse al techo.
  */
-export const maxDuration = 800;
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 
 const FUENTES = [
