@@ -24,6 +24,11 @@ export type NotifyAdminsInput = {
   tipo: string;
   titulo: string;
   mensaje: string;
+  /**
+   * Cuerpo del email en HTML, cuando el contenido pide más que un párrafo
+   * (tablas, sobre todo). La campanita usa siempre `mensaje`.
+   */
+  html?: string;
   link?: string | null;
   /** Si false, no envía email — solo persiste in-app. Default true. */
   email?: boolean;
@@ -89,6 +94,7 @@ export async function notifyAdmins(input: NotifyAdminsInput): Promise<void> {
   const html = renderEmail({
     titulo: input.titulo,
     mensaje: input.mensaje,
+    cuerpoHtml: input.html,
     link,
   });
 
@@ -217,9 +223,20 @@ export async function notifyFinder(input: NotifyFinderInput): Promise<void> {
   }
 }
 
-function renderEmail(opts: {
+/**
+ * Plantilla del correo.
+ *
+ * `cuerpoHtml` sustituye al párrafo de texto cuando el aviso trae maquetación
+ * propia. Sin él, el texto plano se pinta convirtiendo los saltos de línea en
+ * `<br>`: `white-space:pre-wrap` no vale, porque Outlook lo ignora y deja el
+ * mensaje entero pegado en un solo párrafo.
+ *
+ * Exportada para poder previsualizar el correo sin enviarlo.
+ */
+export function renderEmail(opts: {
   titulo: string;
   mensaje: string;
+  cuerpoHtml?: string;
   link: string;
 }): string {
   const escape = (s: string) =>
@@ -228,18 +245,26 @@ function renderEmail(opts: {
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
+
+  // Una tabla necesita más sitio que un párrafo, pero sin pasar de los 640px
+  // que aguanta bien Outlook.
+  const ancho = opts.cuerpoHtml ? 640 : 520;
+  const cuerpo =
+    opts.cuerpoHtml ??
+    `<p style="margin:0;font-size:14px;color:#374151;line-height:1.5">${escape(opts.mensaje).replace(/\n/g, "<br>")}</p>`;
+
   return `<!DOCTYPE html>
 <html lang="es"><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:32px 16px">
     <tr><td align="center">
-      <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb">
+      <table width="${ancho}" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb">
         <tr><td style="padding:20px 28px 12px;border-bottom:1px solid #e5e7eb">
           <div style="font-size:11px;font-weight:800;color:#111827;letter-spacing:2px;text-transform:uppercase">FONTIBER WAR ROOM</div>
         </td></tr>
         <tr><td style="padding:24px 28px">
           <h1 style="margin:0 0 12px;font-size:18px;color:#111827;font-weight:600">${escape(opts.titulo)}</h1>
-          <p style="margin:0;font-size:14px;color:#374151;line-height:1.5;white-space:pre-wrap">${escape(opts.mensaje)}</p>
+          ${cuerpo}
         </td></tr>
         <tr><td style="padding:0 28px 28px;text-align:center">
           <a href="${escape(opts.link)}" style="display:inline-block;background:#3b82f6;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:6px">

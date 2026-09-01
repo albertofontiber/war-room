@@ -64,6 +64,23 @@ describe("localizaListado", () => {
     expect(head.mock.calls.length).toBeLessThanOrEqual(18);
   });
 
+  it("dentro de un día manda el orden de los candidatos, no quién conteste antes", async () => {
+    // Los seis nombres de un día se prueban a la vez; si responden varios,
+    // gana el mejor colocado en `candidatos` y no el más rápido.
+    const head = vi.fn(async (url: string) => {
+      if (url.includes("empresas_seguridad_20_02_26.pdf")) return true;
+      if (url.includes("empresas_inscritas_20_02_2026.pdf")) {
+        await new Promise((r) => setTimeout(r, 20));
+        return true;
+      }
+      return false;
+    });
+
+    const hallado = await localizaListado(hoy, 3, head);
+
+    expect(hallado?.url).toContain("empresas_inscritas_20_02_2026.pdf");
+  });
+
   it("dentro de una tanda se queda con la fecha más reciente", async () => {
     // Dos ediciones dentro de la misma tanda de 3 días: gana la nueva.
     const head = vi.fn(

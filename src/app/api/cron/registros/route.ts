@@ -29,9 +29,18 @@ import {
   sincronizaSeguridadPrivada,
 } from "@/lib/registros/sincroniza";
 import { componeAviso } from "@/lib/registros/aviso";
+import { motivo } from "@/lib/registros/red";
 import type { ResultadoRegistro } from "@/lib/registros/tipos";
 
-export const maxDuration = 300;
+/**
+ * Los 300 s de antes iban justos. El grueso se lo lleva localizar la edición
+ * del listado nacional —hasta 45 días de nombres candidatos— y, los meses que
+ * hay edición nueva, bajar y parsear sus 17 MB de PDF; a eso se le suman las
+ * consultas del RIPCI, que el buscador sirve a 5-7 s cada una. Con la ventana
+ * sondeada en paralelo el caso peor baja mucho, pero el margen no sobra: si el
+ * cron se corta a la mitad, no hay reintento hasta el mes que viene.
+ */
+export const maxDuration = 800;
 export const dynamic = "force-dynamic";
 
 const FUENTES = [
@@ -59,8 +68,7 @@ export async function GET(req: NextRequest) {
       try {
         resultados.push(await fuente.sincroniza());
       } catch (err) {
-        const motivo = err instanceof Error ? err.message : String(err);
-        fallos.push(`${fuente.nombre}: ${motivo}`);
+        fallos.push(`${fuente.nombre}: ${motivo(err)}`);
         log.error("cron/registros", err, { fuente: fuente.nombre });
       }
     }
@@ -68,6 +76,9 @@ export async function GET(req: NextRequest) {
     const altas = resultados.flatMap((r) => r.altas.map((a) => ({ ...a, registro: r.registro })));
     const avisos = resultados.flatMap((r) => r.avisos);
     const ilegibles = resultados.filter((r) => r.ilegible);
+    // Un registro puede haber ido a medias: seguridad privada son tres
+    // fuentes y sigue adelante con las que respondan.
+    const aMedias = resultados.reduce((n, r) => n + (r.fuentesConProblema ?? 0), 0);
 
     // Un solo aviso con todo lo del mes. Sin altas ni incidencias no se
     // molesta: las actualizaciones de rutina no son noticia.
@@ -76,19 +87,22 @@ export async function GET(req: NextRequest) {
       await notifyAdmins({
         tipo: "registros_cron",
         titulo: aviso.titulo,
+        // La campanita se queda con el texto; el correo, con las tablas.
         mensaje: aviso.mensaje,
+        html: aviso.html,
         link: "/",
         email: true,
       });
     }
 
-    const status = ilegibles.length || fallos.length ? "WARNING" : "SUCCESS";
+    const status = ilegibles.length || fallos.length || aMedias ? "WARNING" : "SUCCESS";
     const durationMs = await completeCronRun(tracker, status, {
       altas: altas.length,
       actualizadas: resultados.reduce((n, r) => n + r.actualizadas, 0),
       avisos: avisos.length,
       fuentesIlegibles: ilegibles.length,
       fuentesFallidas: fallos.length,
+      fuentesAMedias: aMedias,
       ...Object.fromEntries(
         resultados.flatMap((r) =>
           Object.entries(r.resumen).map(([k, v]) => [`${r.registro.toLowerCase().replace(/\s+/g, "_")}_${k}`, v])
@@ -106,6 +120,7 @@ export async function GET(req: NextRequest) {
         altas: r.altas.length,
         actualizadas: r.actualizadas,
         ilegible: r.ilegible ?? null,
+        fuentesConProblema: r.fuentesConProblema ?? 0,
       })),
       execution: { id: tracker.runId, status, durationMs },
     });

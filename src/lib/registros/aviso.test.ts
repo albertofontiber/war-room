@@ -79,3 +79,67 @@ describe("componeAviso", () => {
     expect(aviso.mensaje).toContain("(12 fichas actualizadas sin más cambios)");
   });
 });
+
+describe("componeAviso · correo en tablas", () => {
+  it("saca una fila por empresa, con su zona en columna propia", () => {
+    const aviso = componeAviso([
+      registro({
+        altas: [
+          { nombre: "CARAILA 21 S.L", cif: "B42839415", zona: "ANDALUCÍA", detalle: "3 de instalación" },
+          { nombre: "SUBER CLIMATIZACION SL", cif: "B71537781", zona: "NAVARRA", detalle: "13 de instalación" },
+        ],
+      }),
+    ])!;
+
+    expect(aviso.html).toContain("<th");
+    expect(aviso.html).toContain("Zona");
+    expect(aviso.html).toContain("B42839415");
+    expect(aviso.html).toContain("NAVARRA");
+    expect((aviso.html.match(/<tr>/g) ?? []).length).toBe(3); // cabecera + 2
+  });
+
+  it("no pinta la columna del CIF cuando el registro no lo publica", () => {
+    // Cepreven da razón social pero no CIF: una columna de guiones no aporta.
+    const aviso = componeAviso([
+      registro({
+        registro: "Cepreven",
+        altas: [{ nombre: "AIR FEU, S.L.", cif: "", grupo: "Calificadas", detalle: "1 área: DAI" }],
+      }),
+    ])!;
+
+    expect(aviso.html).toContain("Cepreven · Calificadas — 1 empresa");
+    expect(aviso.html).not.toContain(">CIF<");
+    expect(aviso.html).not.toContain(">Zona<");
+  });
+
+  it("separa lo que hay que revisar de lo que no se pudo sincronizar", () => {
+    const aviso = componeAviso(
+      [registro({ avisos: ["RIPCI — 2 ya no figuran"] })],
+      ["Cepreven: HTTP 503"]
+    )!;
+
+    expect(aviso.html).toContain("Para revisar a mano");
+    expect(aviso.html).toContain("RIPCI — 2 ya no figuran");
+    expect(aviso.html).toContain("No se pudo sincronizar");
+    expect(aviso.html).toContain("Falló la sincronización de Cepreven: HTTP 503");
+  });
+
+  it("escapa las razones sociales antes de meterlas en el HTML", () => {
+    const aviso = componeAviso([
+      registro({ altas: [{ nombre: "A & B <SL>", cif: "B1", detalle: "x" }] }),
+    ])!;
+
+    expect(aviso.html).toContain("A &amp; B &lt;SL&gt;");
+    expect(aviso.html).not.toContain("<SL>");
+  });
+
+  it("mantiene la zona en el texto plano de la campanita", () => {
+    // La campanita no lleva tabla, así que la zona tiene que seguir dentro
+    // de la línea o se pierde.
+    const aviso = componeAviso([
+      registro({ altas: [{ nombre: "NUEVA SL", cif: "B1", zona: "MADRID", detalle: "13 categorías" }] }),
+    ])!;
+
+    expect(aviso.mensaje).toContain("· NUEVA SL (B1) — 13 categorías · MADRID");
+  });
+});

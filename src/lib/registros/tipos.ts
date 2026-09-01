@@ -12,6 +12,11 @@ export interface EmpresaNueva {
   /** Qué le aporta: áreas de Cepreven, habilitaciones, categorías… */
   detalle: string;
   /**
+   * Dónde está, cuando el registro lo publica. Va en su propia columna del
+   * aviso porque es lo primero por lo que se filtra al leerlo.
+   */
+  zona?: string;
+  /**
    * Subgrupo dentro del registro, cuando la distinción importa. En Cepreven
    * separa "Calificadas" de "Asociadas": son dos cosas distintas y la
    * calificación es la que pesa.
@@ -35,4 +40,10 @@ export interface ResultadoRegistro {
   resumen: Record<string, string | number | boolean | null>;
   /** Si la fuente vino ilegible; el cron no toca nada y avisa. */
   ilegible?: string;
+  /**
+   * Fuentes del registro que no se pudieron leer, cuando el registro son
+   * varias: "seguridad privada" son en realidad tres. Si falla una, el resto
+   * sigue adelante, pero la ejecución no puede darse por buena.
+   */
+  fuentesConProblema?: number;
 }
