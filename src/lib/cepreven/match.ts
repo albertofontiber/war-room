@@ -44,6 +44,9 @@ export const ALIAS: Record<string, string> = {
 
   // Diferencias de grafía que no son de forma jurídica.
   AIRFEU: "B96659438", // el PDF la lista dos veces, "AIR FEU" y "AIRFEU"
+  // Cepreven la escribe pegada y la base con espacio ("EXTI NORTE, S.L.").
+  // Es la misma: Errenteria está en Gipuzkoa, igual que la ficha.
+  EXTINORTE: "B20646717",
   "FUEGO DIEZ": "B98250319", // en la base, "Fuegodiez"
   "FIRE CONTROL PROTECT SYSTEMS": "B74393307", // en la base, "System" en singular
   "BIFAN IBERICA DE SEGURIDAD": "B73770521", // en la base, sin el "de"

@@ -40,6 +40,7 @@ describe("cruza", () => {
     { id: 3, cif: "B11111111", nombre: "SURIS SL" },
     { id: 4, cif: "B22222222", nombre: "DUPLICADA SL" },
     { id: 5, cif: "B33333333", nombre: "Duplicada, S.L." },
+    { id: 6, cif: "B20646717", nombre: "EXTI NORTE, S.L." },
   ];
 
   it("casa por nombre normalizado", () => {
@@ -53,6 +54,15 @@ describe("cruza", () => {
     const r = cruza([{ nombre: "CV INSTALACIONES, S.L." }], base, (e) => e.nombre);
     expect(r.casados[0].empresa.id).toBe(2);
     expect(r.casados[0].via).toBe("alias");
+  });
+
+  it("casa por alias cuando la única diferencia es un espacio", () => {
+    // Cepreven la escribe "EXTINORTE, S.L." y la base "EXTI NORTE, S.L.".
+    // Sin el alias el cruce la daba por salida de la asociación cada mes.
+    const r = cruza([{ nombre: "EXTINORTE, S.L." }], base, (e) => e.nombre);
+    expect(r.casados[0].empresa.id).toBe(6);
+    expect(r.casados[0].via).toBe("alias");
+    expect(r.sinCasar).toHaveLength(0);
   });
 
   it("deja sin casar lo que no encuentra, en vez de aproximar", () => {
