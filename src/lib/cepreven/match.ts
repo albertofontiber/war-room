@@ -10,11 +10,25 @@
  *   1. ALIAS explícito por CIF, para los casos que ningún algoritmo acierta.
  *   2. Nombre normalizado exacto (mayúsculas, sin acentos ni puntuación,
  *      sin forma jurídica).
+ *   3. El mismo nombre normalizado, además sin espacios. Dónde parte una
+ *      razón social en palabras es convención tipográfica, y las dos fuentes
+ *      no se ponen de acuerdo: "EXTINORTE" y "EXTI NORTE", "FUEGODIEZ" y
+ *      "FUEGO DIEZ", "Contraincendios" y "Contra Incendios".
  *
  * Deliberadamente NO hay una capa difusa que case por parecido: un falso
  * positivo aquí marca como calificada a una empresa que no lo está, y eso
- * es peor que dejarla sin marcar y revisarla a mano. Lo que no casa se
- * reporta para decidirlo una vez y, si procede, se añade a ALIAS.
+ * es peor que dejarla sin marcar y revisarla a mano. La capa 3 no es difusa
+ * —sigue siendo igualdad exacta, sobre una clave más estricta— y, como las
+ * otras dos, se calla ante un empate: si dos empresas de la base comparten
+ * clave, no casa ninguna y el caso se reporta.
+ *
+ * Medido contra los listados de septiembre de 2026 (303 entradas del listado
+ * contra 5.736 empresas): la capa 3 sube los cruces de 126 a 132, sin un
+ * solo empate. Se probó también `normalizePersona(_, true)` de
+ * `lib/normalize.ts`, la normalización general de empresas, y casa MENOS
+ * (120): no recorta las formas jurídicas encadenadas ni pega las siglas
+ * sueltas, que es de lo que van estos listados. Por eso este módulo mantiene
+ * la suya.
  */
 
 /**
@@ -43,8 +57,9 @@ export const ALIAS: Record<string, string> = {
   TESEIN: "B84385657", // en la base figura como "Teseín 388, S.L."
 
   // Diferencias de grafía que no son de forma jurídica.
-  AIRFEU: "B96659438", // el PDF la lista dos veces, "AIR FEU" y "AIRFEU"
-  "FUEGO DIEZ": "B98250319", // en la base, "Fuegodiez"
+  // (Las que solo cambian dónde caen los espacios ya no necesitan alias: las
+  // resuelve la capa 3. Al añadirla salieron de aquí "AIRFEU" y "FUEGO
+  // DIEZ", y no llegó a hacer falta una para "EXTINORTE".)
   "FIRE CONTROL PROTECT SYSTEMS": "B74393307", // en la base, "System" en singular
   "BIFAN IBERICA DE SEGURIDAD": "B73770521", // en la base, sin el "de"
   // La razón social guardada arrastra un "&amp;" sin decodificar.
@@ -94,6 +109,16 @@ export function normalizaNombre(nombre: string): string {
   return n;
 }
 
+/**
+ * Clave de la capa 3: el nombre normalizado sin espacios.
+ *
+ * Sirve para que "EXTI NORTE" y "EXTINORTE" sean la misma cosa. No relaja
+ * nada más: sigue habiendo que coincidir letra por letra.
+ */
+export function claveSinEspacios(nombre: string): string {
+  return normalizaNombre(nombre).replace(/ /g, "");
+}
+
 export interface EmpresaBase {
   id: number;
   cif: string | null;
@@ -103,7 +128,8 @@ export interface EmpresaBase {
 export interface Casado<T> {
   origen: T;
   empresa: EmpresaBase;
-  via: "alias" | "nombre";
+  /** Por dónde casó: alias a mano, nombre exacto, o nombre sin espacios. */
+  via: "alias" | "nombre" | "espacios";
 }
 
 export interface ResultadoCruce<T> {
@@ -126,12 +152,18 @@ export function cruza<T>(
 ): ResultadoCruce<T> {
   const porCif = new Map<string, EmpresaBase>();
   const porNombre = new Map<string, EmpresaBase[]>();
+  const porCompacto = new Map<string, EmpresaBase[]>();
 
   for (const e of empresas) {
     if (e.cif) porCif.set(e.cif.toUpperCase(), e);
     const clave = normalizaNombre(e.nombre);
     porNombre.set(clave, [...(porNombre.get(clave) ?? []), e]);
+    const compacto = claveSinEspacios(e.nombre);
+    porCompacto.set(compacto, [...(porCompacto.get(compacto) ?? []), e]);
   }
+
+  /** La única candidata, o nada: un empate se deja sin casar a propósito. */
+  const unica = (c: readonly EmpresaBase[]) => (c.length === 1 ? c[0] : null);
 
   const casados: Casado<T>[] = [];
   const sinCasar: T[] = [];
@@ -148,11 +180,18 @@ export function cruza<T>(
       }
     }
 
-    const candidatos = porNombre.get(clave) ?? [];
     // Un nombre normalizado ambiguo (dos empresas distintas con la misma
     // grafía) se deja sin casar a propósito: hay que mirarlo a mano.
-    if (candidatos.length === 1) {
-      casados.push({ origen: entrada, empresa: candidatos[0], via: "nombre" });
+    const porGrafia = unica(porNombre.get(clave) ?? []);
+    if (porGrafia) {
+      casados.push({ origen: entrada, empresa: porGrafia, via: "nombre" });
+      continue;
+    }
+
+    // Última capa: la misma igualdad, ignorando dónde caen los espacios.
+    const sinEspacios = unica(porCompacto.get(claveSinEspacios(nombreDe(entrada))) ?? []);
+    if (sinEspacios) {
+      casados.push({ origen: entrada, empresa: sinEspacios, via: "espacios" });
       continue;
     }
 
