@@ -1,5 +1,6 @@
 import { withAuth } from "next-auth/middleware";
 import { NextRequest, NextResponse } from "next/server";
+import { urlLogin, type Zona } from "@/lib/login-destino";
 
 /**
  * Middleware: dos zonas de servicio sobre el mismo deployment.
@@ -10,13 +11,26 @@ import { NextRequest, NextResponse } from "next/server";
  *
  * 2. Resto de hosts (warroom.fontiber.com, localhost, previews de Vercel)
  *    → War Room admin. Rutas normales `/`, `/pipeline`, `/finders`, etc.
- *    Solo sesiones kind=admin.
+ *    Solo sesiones kind=admin; sin sesión, las páginas van a `/login`.
+ *
+ * En las dos zonas el login recibe la página pedida en `?callbackUrl=` y
+ * vuelve a ella tras entrar (ver `src/lib/login-destino.ts`).
  *
  * El matcher excluye rutas públicas: /api/auth, /api/cron, assets estáticos,
  * /daily (página pública del email diario) y /login (página de admin).
  */
 
 const PORTAL_HOST = "portal.fontiber.com";
+
+// Páginas del War Room que se abren sin sesión. /login y /daily ni siquiera
+// pasan por aquí: las excluye el matcher.
+const WARROOM_PUBLIC_PAGES = new Set(["/forgot-password", "/reset-password"]);
+
+/** Login de la zona con la página pedida como destino, para volver tras entrar. */
+function loginUrl(req: NextRequest, zona: Zona): URL {
+  const { pathname, search } = req.nextUrl;
+  return new URL(urlLogin(zona, pathname + search), req.url);
+}
 
 function isPortalHost(req: NextRequest): boolean {
   // Las rutas /portal/* y /api/portal/* son intrínsecamente del portal —
@@ -54,10 +68,7 @@ export default withAuth(
         path === "/api/portal/reset-password";
       const isApiAuth = path.startsWith("/api/auth");
       if (!isApiAuth && (!token || token.kind !== "finder") && !isPortalPublic) {
-        const url = req.nextUrl.clone();
-        url.pathname = "/portal/login";
-        url.search = "";
-        return NextResponse.redirect(url);
+        return NextResponse.redirect(loginUrl(req, "portal"));
       }
       // Si ya es finder y pide `/` → rewrite a `/portal` dashboard.
       // Va ANTES de la defensa en profundidad: la raíz no encaja en
@@ -89,10 +100,22 @@ export default withAuth(
 
     // War room: bloquear sesiones finder.
     if (token?.kind === "finder") {
-      const url = req.nextUrl.clone();
-      url.pathname = "/login";
+      const url = loginUrl(req, "warroom");
       url.searchParams.set("wrongPortal", "1");
       return NextResponse.redirect(url);
+    }
+    // Sin sesión, las páginas van al login aquí, donde se conoce la URL pedida
+    // (cada página lo vuelve a comprobar como defensa en profundidad, pero ya
+    // sin saber adónde se iba). Quedan fuera las APIs, que responden 401 ellas
+    // mismas, y las rutas `/_…` (`/_next`, `/_vercel` de Analytics), que en App
+    // Router nunca son páginas.
+    if (
+      !token &&
+      !path.startsWith("/api/") &&
+      !path.startsWith("/_") &&
+      !WARROOM_PUBLIC_PAGES.has(path)
+    ) {
+      return NextResponse.redirect(loginUrl(req, "warroom"));
     }
     return NextResponse.next();
   },

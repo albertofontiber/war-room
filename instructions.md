@@ -795,7 +795,7 @@ bormePersonaToCargoKey("GUITARD MALDONADO ALVARO") → "ALVARO GUITARD MALDONADO
 - **Cron schedule (vercel.json)**: BORME a las 20:00 UTC (22:00 CEST) L-V. Email a las 06:00 UTC (08:00 CEST) Ma-Sa. Task digest a las 07:00 UTC L-V.
 - **BORME cron procesa HOY**: desde el 01/04/2026 el cron usa la fecha del día en curso. A las 22:00 CEST el BORME del día ya está publicado y completo.
 - **500 en endpoints cron — RESUELTO**: el endpoint `/api/cron/borme` devuelve **401** correctamente cuando se llama sin `Authorization: Bearer {CRON_SECRET}`. El CRON_SECRET solo está en Vercel (no en `.env.local`). Para sync manual usar los scripts locales.
-- **Middleware**: excluye `login`, `daily`, `api/auth`, `api/cron`.
+- **Middleware**: excluye `login`, `daily`, `api/auth`, `api/cron`. Sin sesión, el resto de páginas del War Room van a `/login?callbackUrl=…` salvo las de `WARROOM_PUBLIC_PAGES` (`/forgot-password`, `/reset-password`).
 - **Resend init**: `new Resend(apiKey)` debe estar DENTRO de la función, no a nivel módulo.
 - **reuseMaps + iconsReady**: con `reuseMaps` activo, `onLoad` no se dispara al remontar. Los iconos SDF se re-añaden en `handleIdle` con guard `map.hasImage()`.
 - **pdf-parse v2**: `new PDFParse({ data: buffer }).getText()` — NO es `pdfParse(buffer)` de v1.
@@ -886,7 +886,11 @@ La sesión es JWT (`strategy:"jwt"`, sin `maxAge` → 30 días por defecto, auto
 2. Path empieza por `/portal/*` o `/api/portal/*` (refuerzo, siempre portal aunque el host no coincida).
 3. `?portal=1` o header `x-test-portal: 1` en NODE_ENV !== production (testing local).
 
-En zona portal exige `session.kind === "finder"` → sino redirect a `/portal/login`. En zona war room bloquea sesiones finder → redirect `/login?wrongPortal=1`.
+En zona portal exige `session.kind === "finder"` → sino redirect a `/portal/login`. En zona war room bloquea sesiones finder → redirect `/login?wrongPortal=1`, y sin sesión manda las páginas a `/login` (las APIs responden 401 ellas mismas; las rutas `/_…` no se tocan).
+
+**Volver a la página pedida tras el login**: todos esos redirects llevan `?callbackUrl=<ruta+query>` (convención NextAuth), construido con `urlLogin()` de `src/lib/login-destino.ts`. Las páginas `/login` y `/portal/login` son server components que validan el destino con `destinoTrasLogin()` (solo rutas de su propia zona: nunca otro dominio, ni la otra zona, ni el login, ni una API) y se lo pasan al formulario (`LoginClient` / `PortalLoginClient`). Así un enlace directo (resumen diario, digest de tareas, avisos) sobrevive a una sesión caducada. Las páginas protegidas siguen comprobando la sesión por su cuenta (defensa en profundidad), pero ese redirect ya no lleva destino.
+
+Si añades una página **pública** nueva del War Room, añádela a `WARROOM_PUBLIC_PAGES` en el middleware; si no, sin sesión redirige al login.
 
 **Orden de chequeos dentro de zona portal con sesión finder** (importa — fix PR #118):
 1. Si `path === "/"` → rewrite a `/portal` (dashboard). Va **antes** del check de defensa en profundidad, sino la raíz cae en 404.
