@@ -2,13 +2,14 @@
  * /daily/[fecha] — Server-rendered daily summary page.
  * fecha format: YYYY-MM-DD (e.g. 2026-04-01)
  *
- * Auth-protected: redirects to /login if not signed in.
- * Linked from the daily summary email.
+ * Public on purpose (the middleware matcher excludes /daily) so the link in the
+ * daily summary email opens without a session.
  */
 
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { fmtM as _fmtM } from "@/lib/format";
+import { hrefVista } from "@/lib/navegacion-url";
 import { BORME_TIPO, BORME_TIPO_ORDER, BORME_DETAIL_TIPOS } from "@/lib/borme-constants";
 
 const TIPO_LABEL = Object.fromEntries(
@@ -176,7 +177,7 @@ export default async function DailyPage(
             <p className="text-xs text-wr-hint mt-0.5">Resumen diario · M&A Intelligence</p>
           </div>
           <a
-            href="/operaciones"
+            href={hrefVista("operaciones")}
             className="text-xs text-wr-blue hover:underline"
           >
             ← Ir al War Room
