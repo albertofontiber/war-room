@@ -4,8 +4,8 @@ import { useCallback, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { Vista } from "@/types";
 import type { SubVista } from "@/components/operaciones/types";
+import { VISTA_POR_DEFECTO, leerVista } from "@/lib/navegacion-url";
 
-const VISTAS_VALIDAS: Vista[] = ["mapa", "tabla", "operaciones", "grupos"];
 const OP_TABS_VALIDAS: SubVista[] = ["senales", "alertas_personas"];
 
 /**
@@ -16,7 +16,9 @@ const OP_TABS_VALIDAS: SubVista[] = ["senales", "alertas_personas"];
  * navegar (browser back/forward, refresh, share). Ephemeral UI (modales,
  * dropdowns, animaciones) sigue en estado local.
  *
- * Default vista = "mapa" (no se serializa para URLs limpias).
+ * Default vista = "mapa" (no se serializa para URLs limpias). Las vistas
+ * válidas y el enlace a cada una viven en `navegacion-url.ts`, que también
+ * usan las páginas de servidor.
  *
  * Antes de cambiar de vista dispara `wr:beforeVistaChange` (ver MapaEspana
  * que necesita interceptar el cambio síncronamente para `setTerrain(null)`
@@ -27,10 +29,7 @@ export function useNavegacion() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const vistaParam = searchParams.get("vista");
-  const vista: Vista = VISTAS_VALIDAS.includes(vistaParam as Vista)
-    ? (vistaParam as Vista)
-    : "mapa";
+  const vista = leerVista(searchParams);
 
   const empresaParam = searchParams.get("empresa");
   const empresaParsed = empresaParam ? parseInt(empresaParam, 10) : NaN;
@@ -73,7 +72,7 @@ export function useNavegacion() {
           );
         }
         // "mapa" es default: no serializar para URLs limpias `/`.
-        updateParams({ vista: v === "mapa" ? null : v });
+        updateParams({ vista: v === VISTA_POR_DEFECTO ? null : v });
       },
 
       seleccionarEmpresa: (id: number) => updateParams({ empresa: id }),

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useNavegacion } from "@/lib/navegacion";
+import { hrefVista } from "@/lib/navegacion-url";
 import { MobileDrawer } from "@/components/ui/responsive";
 import type { Vista } from "@/types";
 
@@ -53,11 +54,12 @@ export default function WarRoomMobileMenu() {
     }
   }, [vista, pathname, setSidebarMobileOpen]);
 
+  // Desde /pipeline, una sola navegación a la URL de la vista: `setVista(v)`
+  // seguido de `router.push("/")` hacía dos push y el segundo tiraba la vista.
   const goToVista = useCallback(
     (v: Vista) => {
       if (onPipelinePage) {
-        setVista(v);
-        router.push("/");
+        router.push(hrefVista(v));
       } else {
         setVista(v);
       }

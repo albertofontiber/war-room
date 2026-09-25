@@ -457,7 +457,7 @@ const CRM_COLOR = [
 - **Librería**: Resend — init **dentro** de la función (no a nivel módulo)
 - **Destinatario**: `SUMMARY_EMAIL_TO` (default: alberto@fontiber.com)
 - **Contenido**: 5 cifras en dos filas — fila 1: señales BORME + alertas personas. Fila 2 (desglose M&A): Fusión / Adquisición / Posible adq. (cada categoría coloreada y diferenciada, ya no agregada). Botón "Ver resumen completo →"
-- **Enlace**: `warroom.fontiber.com/daily/YYYY-MM-DD` (fecha = día anterior = día de los datos). Botón "← Ir al War Room" en la página → `/operaciones`
+- **Enlace**: `warroom.fontiber.com/daily/YYYY-MM-DD` (fecha = día anterior = día de los datos). Botón "← Ir al War Room" en la página → `/?vista=operaciones` (la vista es un parámetro de `/`, no una ruta; enlaces a vistas siempre con `hrefVista()` de `src/lib/navegacion-url.ts`)
 - **Lógica `posible_adquisicion`**: misma regla que `/api/borme/operaciones` — `tipoActo=nombramiento_grupo` + `grupoInferido != null` + empresa NO mapeada al grupo (`empresa.grupoId !== grupoInferido.id`). Si la empresa ya está en el grupo se cuenta como Nombramiento.
 
 ```typescript

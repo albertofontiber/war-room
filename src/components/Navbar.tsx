@@ -6,6 +6,7 @@ import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useNavegacion } from "@/lib/navegacion";
+import { hrefVista } from "@/lib/navegacion-url";
 import { useIsDesktop } from "@/lib/breakpoints";
 import type { Vista } from "@/types";
 import NotificationsBell from "@/components/NotificationsBell";
@@ -34,12 +35,13 @@ export default function Navbar() {
     void hydrateEmpresas();
   }, [hydrateEmpresas]);
 
-  // Cambio de vista homogéneo: si estamos en /pipeline, navega a "/" y setea la vista
-  // del War Room; si estamos en "/", cambia la vista sin navegar.
+  // Cambio de vista homogéneo: si estamos en /pipeline, navega directamente a la
+  // URL de la vista; si estamos en "/", cambia la vista sin navegar. (Antes hacía
+  // `setVista(v)` + `router.push("/")`: dos push seguidos, gana el segundo y la
+  // vista se perdía — siempre se aterrizaba en el mapa.)
   const goToVista = useCallback((v: Vista) => {
     if (onPipelinePage) {
-      setVista(v);
-      router.push("/");
+      router.push(hrefVista(v));
     } else {
       setVista(v);
     }
