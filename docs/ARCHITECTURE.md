@@ -630,6 +630,8 @@ Detecta zona portal por **tres vías** (cualquiera basta):
 **Reglas:**
 - En zona portal: si `session.kind !== "finder"` → redirect `/portal/login`.
 - En zona war room: si `session.kind === "finder"` → redirect `/login?wrongPortal=1`. (No queremos que un finder accidentalmente acabe en `/`.)
+- En zona war room sin sesión: las páginas → redirect `/login` (salvo las públicas de `WARROOM_PUBLIC_PAGES`); las APIs no, responden 401 ellas mismas.
+- Todos esos redirects llevan `?callbackUrl=<ruta+query>` (`urlLogin()` de `src/lib/login-destino.ts`) y el login vuelve ahí tras entrar, validado con `destinoTrasLogin()`: solo rutas de la propia zona, nunca otro dominio (open redirect).
 
 ### Las 4 reglas anti-leak del portal
 
