@@ -412,7 +412,7 @@ flowchart TB
 flowchart LR
     User[💬 Alberto<br><i>¿cuántas adquisiciones<br>en Cataluña este mes?</i>] --> Stream[POST /api/chat<br><i>Vercel AI SDK v6</i>]
     Stream --> Claude[Claude Sonnet 5<br><i>+ schema BD en system prompt</i>]
-    Claude -->|tool call| Tool[execute_sql<br><i>solo SELECT</i>]
+    Claude -->|tool call| Tool[execute_sql · buscar_texto<br>movimientos_grupo · …<br><i>solo lectura</i>]
     Tool -->|prisma.queryRawUnsafe| DB[(Postgres)]
     DB -->|rows| Tool
     Tool -->|JSON con BigInt fix| Claude
@@ -437,12 +437,20 @@ flowchart LR
 - Las preguntas son analíticas: _"empresas con EBITDA > 1M€ en Cataluña con BORME de adquisición en últimos 30 días"_. Un RAG estilo búsqueda semántica no puede contestar eso; SQL sí.
 - Claude entiende SQL y razona sobre joins. Pasarle el schema completo en el system prompt + un único tool `execute_sql` cubre el 95% de queries útiles.
 
+**Herramientas de búsqueda** (además de las que crean/modifican tareas, contactos y etapas — `src/lib/chat-tools/`):
+
+- `execute_sql` — SELECT o `WITH … SELECT`, una sola sentencia. Sin LIMIT explícito corta a 100 filas y avisa (`truncated`) para que el modelo no presente un listado cortado como total.
+- `buscar_empresa` — nombre legal, nombre comercial o CIF.
+- `buscar_texto` — texto libre en notas, tareas, emails (asunto y cuerpo), reuniones, notas de finders, BORME, fichas, contactos y comentarios de CRM. Sin tildes (la BD no tiene `unaccent`: `translate()` en SQL + `normalizarTexto` en JS con la misma tabla) y por inicio de palabra (`~ '\mtermino'`), para que "nda" no encuentre "segunda". Helpers puros en `src/lib/texto-busqueda.ts`.
+- `movimientos_grupo` — qué empresas ha incorporado un grupo en un periodo. La ficha no guarda la fecha de entrada al grupo: se reconstruye con la primera alerta BORME con `grupoInferidoId` (o la adquisición/fusión hasta 90 días antes). Lógica en `src/lib/grupo-movimientos.ts`.
+- `actividad_finders` / `resumen_actividad_finders` — portal de finders.
+
 **Salvaguardas:**
 
-1. **Solo SELECT** — el endpoint valida que la query no contiene `DROP|DELETE|UPDATE|INSERT|ALTER|TRUNCATE` antes de ejecutar.
-2. **`prisma.$queryRawUnsafe`** — necesaria porque la query se construye dinámicamente. La validación previa la hace segura.
-3. **BigInt serialization** — Prisma devuelve `COUNT(*)` como `BigInt`, que `JSON.stringify` no maneja por defecto. El endpoint usa un replacer custom.
-4. **Horizonte temporal explícito** — el system prompt instruye a Claude a preguntar al usuario por el rango de fechas cuando la query implica datos temporales (BORME, financieros, CRM) y el usuario no especifica. Evita queries sin filtro que escaneen toda la BD.
+1. **Guard de texto** (`src/lib/chat-sql-guard.ts`) — solo SELECT/WITH, una sentencia, sin keywords de escritura (también dentro de un CTE) ni referencias a credenciales (`passwordHash`, tokens de reset, vault) o funciones de servidor (`pg_read_file`, `pg_sleep`, `dblink`…).
+2. **Rol Postgres de solo lectura** (`src/lib/chat-db.ts`, `scripts/create-chat-readonly-role.ts`) — la barrera estructural. ⚠️ A 2026-10-14 el rol `warroom_chat_readonly` NO existe en la BD de producción, así que `execute_sql` usa la conexión normal y solo le protege el guard de texto.
+3. **BigInt serialization** — Prisma devuelve `COUNT(*)` como `BigInt`; replacer custom.
+4. **Horizonte temporal** — si el usuario no da periodo, el chat responde con todo el histórico diciendo qué rango cubre y ofrece acotar (antes preguntaba primero y bloqueaba la respuesta).
 
 **Montado en dos sitios:** `/` (war room admin) y `/pipeline` (con contexto CRM ampliado: User, Nota, Tarea, CrmEstado, CrmLog, Actividad, FinderSource, FinderNote, TargetProposal). El system prompt se pasa por `chat-schema.ts` con el DDL completo + reglas + ejemplos.
 

@@ -1,7 +1,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { getChatDb } from "@/lib/chat-db";
-import { addLimit, validateSQL } from "@/lib/chat-sql-guard";
+import { addLimit, DEFAULT_LIMIT, validateSQL } from "@/lib/chat-sql-guard";
 
 /**
  * SELECT read-only contra la BD. Dos capas: el guard de texto
@@ -10,7 +10,7 @@ import { addLimit, validateSQL } from "@/lib/chat-sql-guard";
 export function buildExecuteSqlTool() {
   return tool({
     description:
-      "Ejecuta una query SQL SELECT contra la base de datos PostgreSQL del War Room. Solo SELECT permitido.",
+      "Ejecuta una query SQL de lectura (SELECT o WITH … SELECT) contra la base de datos PostgreSQL del War Room. Una sola sentencia. Para contar, usa COUNT(*) en SQL — no cuentes filas devueltas: sin LIMIT explícito se cortan a 100.",
     inputSchema: z.object({
       query: z
         .string()
@@ -20,7 +20,10 @@ export function buildExecuteSqlTool() {
     }),
     execute: async ({ query }: { query: string }) => {
       if (!validateSQL(query)) {
-        return { error: "Solo se permiten queries SELECT." };
+        return {
+          error:
+            "Query rechazada: solo una sentencia de lectura (SELECT o WITH … SELECT), sin escrituras ni columnas de credenciales.",
+        };
       }
       const safeQuery = addLimit(query);
       try {
@@ -31,10 +34,18 @@ export function buildExecuteSqlTool() {
             typeof value === "bigint" ? Number(value) : value
           )
         );
+        const count = Array.isArray(rows) ? rows.length : 0;
         return {
           query: safeQuery,
           rows,
-          count: Array.isArray(rows) ? rows.length : 0,
+          count,
+          // Aviso para que el modelo no presente un listado cortado como total.
+          ...(!/\bLIMIT\b/i.test(query) && count === DEFAULT_LIMIT
+            ? {
+                truncated: true,
+                aviso: `Resultado cortado a ${DEFAULT_LIMIT} filas. Para totales usa COUNT(*).`,
+              }
+            : {}),
         };
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "Unknown error";
