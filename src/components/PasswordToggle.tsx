@@ -4,13 +4,16 @@
  *  Útil al elegir una nueva (un typo pasa desapercibido y obligaría a volver
  *  al email de reset) y también al introducirla en el login (passwords largas
  *  son fáciles de teclear mal sin feedback). Usado en login admin, login
- *  portal y reset-password. */
+ *  portal y reset-password. `tone="light"` es para las tarjetas blancas de
+ *  las pantallas de acceso del War Room (ver `auth/AuthShell`). */
 export function PasswordToggle({
   visible,
   onToggle,
+  tone = "dark",
 }: {
   visible: boolean;
   onToggle: () => void;
+  tone?: "dark" | "light";
 }) {
   return (
     <button
@@ -18,7 +21,11 @@ export function PasswordToggle({
       onClick={onToggle}
       aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
       title={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
-      className="tap-target absolute right-1 top-1/2 -translate-y-1/2 text-wr-hint hover:text-wr-text transition-colors"
+      className={`tap-target absolute right-1 top-1/2 -translate-y-1/2 transition-colors ${
+        tone === "light"
+          ? "text-neutral-400 hover:text-neutral-900"
+          : "text-wr-hint hover:text-wr-text"
+      }`}
     >
       {visible ? (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
