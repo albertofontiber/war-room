@@ -18,8 +18,40 @@ describe("validateSQL", () => {
     expect(validateSQL('INSERT INTO "Nota" VALUES (1)')).toBe(false);
     expect(validateSQL('UPDATE "Empresa" SET nombre = \'x\'')).toBe(false);
     expect(validateSQL('DELETE FROM "Tarea"')).toBe(false);
-    expect(validateSQL('WITH x AS (SELECT 1) SELECT * FROM x')).toBe(false); // CTE: falso negativo asumido
     expect(validateSQL("")).toBe(false);
+  });
+
+  it("acepta CTEs de lectura (WITH … SELECT)", () => {
+    expect(validateSQL('WITH x AS (SELECT 1) SELECT * FROM x')).toBe(true);
+    expect(
+      validateSQL(
+        'with altas as (select "empresaId", min(fecha) f from "BormeAlerta" group by 1) select count(*) from altas'
+      )
+    ).toBe(true);
+  });
+
+  it("rechaza CTEs que escriben", () => {
+    expect(validateSQL('WITH x AS (DELETE FROM "Tarea" RETURNING *) SELECT * FROM x')).toBe(false);
+    expect(validateSQL(`WITH x AS (UPDATE "Empresa" SET nombre = 'y' RETURNING id) SELECT 1`)).toBe(false);
+    expect(validateSQL('WITH x AS (INSERT INTO "Nota" DEFAULT VALUES RETURNING id) SELECT 1')).toBe(false);
+  });
+
+  it("rechaza más de una sentencia", () => {
+    expect(validateSQL("SELECT 1; SELECT 2")).toBe(false);
+  });
+
+  it("rechaza secretos y funciones de servidor", () => {
+    expect(validateSQL('SELECT "passwordHash" FROM "User"')).toBe(false);
+    expect(validateSQL('SELECT * FROM "AdminPasswordResetToken"')).toBe(false);
+    expect(validateSQL('SELECT * FROM "PasswordResetToken"')).toBe(false);
+    expect(validateSQL("SELECT * FROM vault.decrypted_secrets")).toBe(false);
+    expect(validateSQL("SELECT pg_read_file('/etc/passwd')")).toBe(false);
+    expect(validateSQL("SELECT pg_sleep(100)")).toBe(false);
+  });
+
+  it("nombres de empresa con palabras cortas no bloquean", () => {
+    expect(validateSQL(`SELECT id FROM "Empresa" WHERE nombre ILIKE '%do miño%'`)).toBe(true);
+    expect(validateSQL('SELECT id, email, name FROM "User"')).toBe(true);
   });
 
   it("rechaza keywords de escritura/DDL aunque vayan tras un SELECT", () => {

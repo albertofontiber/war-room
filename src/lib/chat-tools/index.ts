@@ -19,6 +19,8 @@ import {
   buildActividadFindersTool,
   buildResumenActividadFindersTool,
 } from "./finders";
+import { buildMovimientosGrupoTool } from "./grupos";
+import { buildBuscarTextoTool } from "./buscar-texto";
 import type { ChatToolContext } from "./types";
 
 export type { ChatToolContext } from "./types";
@@ -35,5 +37,7 @@ export function buildChatTools(ctx: ChatToolContext) {
     cambiar_etapa: buildCambiarEtapaTool(ctx),
     actividad_finders: buildActividadFindersTool(),
     resumen_actividad_finders: buildResumenActividadFindersTool(),
+    movimientos_grupo: buildMovimientosGrupoTool(),
+    buscar_texto: buildBuscarTextoTool(),
   };
 }
