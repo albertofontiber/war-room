@@ -4,6 +4,15 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PasswordToggle } from "@/components/PasswordToggle";
+import {
+  AuthNotice,
+  AuthShell,
+  authButton,
+  authCard,
+  authInput,
+  authLabel,
+  authLink,
+} from "@/components/auth/AuthShell";
 
 // Next 14 App Router exige Suspense alrededor de useSearchParams; sin él,
 // `next build` falla con "missing-suspense-with-csr-bailout" al intentar
@@ -60,7 +69,7 @@ function ResetPasswordForm() {
       setError(
         json?.error ??
           json?.issues?.[0]?.message ??
-          "No hemos podido restablecer la contraseña."
+          "No hemos podido guardar la contraseña."
       );
     } catch {
       setError("Error de red. Reintenta en unos segundos.");
@@ -70,159 +79,89 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="min-h-screen bg-wr-bg flex items-center justify-center px-4">
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage:
-            "linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(to right, #e2e8f0 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
-
-      <div className="relative w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="text-wr-blue">
-              <path
-                d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7L12 2z"
-                fill="#3b82f6"
-                opacity="0.15"
+    <AuthShell
+      brand="Finders"
+      title="Elige tu contraseña"
+      subtitle={!done && token ? "Mínimo 10 caracteres." : undefined}
+    >
+      {done ? (
+        <>
+          <AuthNotice>Contraseña guardada. Te llevamos al acceso…</AuthNotice>
+          <p className="text-center text-sm">
+            <Link href="/portal/login" className={authLink}>
+              Ir al acceso
+            </Link>
+          </p>
+        </>
+      ) : !token ? (
+        <div className="rounded-lg border border-neutral-200 bg-white p-5 text-center text-sm text-neutral-600">
+          <p>El enlace no es válido o ha caducado.</p>
+          <Link
+            href="/portal/forgot-password"
+            className="mt-3 inline-block font-medium text-neutral-900 underline"
+          >
+            Solicitar uno nuevo
+          </Link>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className={`space-y-3 ${authCard}`}>
+          <div>
+            <label htmlFor="password" className={authLabel}>
+              Contraseña
+            </label>
+            <div className="relative mt-1">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`${authInput} pr-12`}
+                required
+                minLength={10}
               />
-              <path
-                d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7L12 2z"
-                stroke="#3b82f6"
-                strokeWidth="1.5"
-                strokeLinejoin="round"
+              <PasswordToggle
+                tone="light"
+                visible={showPassword}
+                onToggle={() => setShowPassword((v) => !v)}
               />
-            </svg>
-            <span className="text-wr-text font-semibold text-lg tracking-wide">
-              FONTIBER INDUSTRIAL PARTNERS
-            </span>
+            </div>
           </div>
-          <p className="text-wr-hint text-xs tracking-[0.2em] uppercase">Portal Finders</p>
-        </div>
 
-        <div className="bg-wr-surface border border-wr-border rounded-xl p-8 shadow-2xl">
-          {done ? (
-            <>
-              <h1 className="text-wr-text text-xl font-semibold mb-2">
-                Contraseña actualizada
-              </h1>
-              <p className="text-wr-muted text-sm mb-6">
-                Te llevamos al login para que entres con la nueva contraseña…
-              </p>
-              <Link
-                href="/portal/login"
-                className="inline-block w-full text-center bg-wr-blue hover:bg-blue-500 text-white font-medium text-sm rounded-lg py-2.5 transition-colors"
-              >
-                Ir al login
-              </Link>
-            </>
-          ) : !token ? (
-            <>
-              <h1 className="text-wr-text text-xl font-semibold mb-2">
-                Enlace inválido
-              </h1>
-              <p className="text-wr-muted text-sm mb-6">
-                Este link no contiene un token de reset válido. Pide uno
-                nuevo desde la página de &quot;¿Olvidaste tu contraseña?&quot;.
-              </p>
-              <Link
-                href="/portal/forgot-password"
-                className="inline-block w-full text-center bg-wr-blue hover:bg-blue-500 text-white font-medium text-sm rounded-lg py-2.5 transition-colors"
-              >
-                Pedir nuevo email
-              </Link>
-            </>
-          ) : (
-            <>
-              <h1 className="text-wr-text text-xl font-semibold mb-1">
-                Nueva contraseña
-              </h1>
-              <p className="text-wr-muted text-sm mb-6">
-                Elige una contraseña de al menos 10 caracteres.
-              </p>
+          <div>
+            <label htmlFor="confirm" className={authLabel}>
+              Repite la contraseña
+            </label>
+            <div className="relative mt-1">
+              <input
+                id="confirm"
+                type={showConfirm ? "text" : "password"}
+                autoComplete="new-password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                className={`${authInput} pr-12`}
+                required
+                minLength={10}
+              />
+              <PasswordToggle
+                tone="light"
+                visible={showConfirm}
+                onToggle={() => setShowConfirm((v) => !v)}
+              />
+            </div>
+          </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-wr-muted text-xs font-medium mb-1.5 uppercase tracking-wider"
-                  >
-                    Contraseña
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="new-password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-wr-surface2 border border-wr-border rounded-lg px-3.5 py-2.5 pr-10 text-wr-text text-sm placeholder:text-wr-hint focus:outline-none focus:border-wr-blue focus:ring-1 focus:ring-wr-blue transition-colors"
-                      placeholder="••••••••••"
-                      required
-                      minLength={10}
-                    />
-                    <PasswordToggle
-                      visible={showPassword}
-                      onToggle={() => setShowPassword((v) => !v)}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="confirm"
-                    className="block text-wr-muted text-xs font-medium mb-1.5 uppercase tracking-wider"
-                  >
-                    Confirmar contraseña
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="confirm"
-                      type={showConfirm ? "text" : "password"}
-                      autoComplete="new-password"
-                      value={confirm}
-                      onChange={(e) => setConfirm(e.target.value)}
-                      className="w-full bg-wr-surface2 border border-wr-border rounded-lg px-3.5 py-2.5 pr-10 text-wr-text text-sm placeholder:text-wr-hint focus:outline-none focus:border-wr-blue focus:ring-1 focus:ring-wr-blue transition-colors"
-                      placeholder="••••••••••"
-                      required
-                      minLength={10}
-                    />
-                    <PasswordToggle
-                      visible={showConfirm}
-                      onToggle={() => setShowConfirm((v) => !v)}
-                    />
-                  </div>
-                </div>
-
-                {error && (
-                  <p className="text-wr-red text-sm flex items-center gap-1.5">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-                    </svg>
-                    {error}
-                  </p>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-wr-blue hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm rounded-lg py-2.5 transition-colors mt-2"
-                >
-                  {loading ? "Guardando…" : "Establecer contraseña"}
-                </button>
-              </form>
-            </>
+          {error && (
+            <p className="text-sm text-red-600" role="alert">
+              {error}
+            </p>
           )}
-        </div>
 
-        <p className="text-center text-wr-hint text-xs mt-6">
-          ¿Problemas de acceso? Contacta con Fontiber.
-        </p>
-      </div>
-    </div>
+          <button type="submit" disabled={loading} className={authButton}>
+            {loading ? "Guardando…" : "Guardar contraseña"}
+          </button>
+        </form>
+      )}
+    </AuthShell>
   );
 }
-

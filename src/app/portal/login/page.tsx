@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import PortalLoginClient from "@/components/portal/PortalLoginClient";
 import { destinoTrasLogin } from "@/lib/login-destino";
+
+export const metadata: Metadata = { title: "Acceso — Fontiber Finders" };
 
 /**
  * Login del portal de finders. El middleware manda aquí con `?callbackUrl=
