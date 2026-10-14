@@ -29,6 +29,15 @@ const config: Config = {
           muted:      "#94a3b8",
           hint:       "#4a5568",
         },
+        // Marca Fontiber ("Deep Blue + Copper", de fontiber.com). Solo la usan
+        // las pantallas de acceso, para verse igual que las del Data Room y
+        // el panel del chatbot; el resto del War Room sigue con `wr`.
+        fontiber: {
+          navy:        "#0c1932",
+          "navy-light": "#142850",
+          copper:      "#c75b39",
+          sand:        "#f5f3ef",
+        },
         // shadcn/ui CSS variable mappings
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -67,6 +76,8 @@ const config: Config = {
         // de letra entre móvil y escritorio.
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        // Playfair del logotipo; la variable la define `AuthShell`.
+        display: ["var(--font-display)", "Georgia", "serif"],
       },
       // CRM stage colors for markers
       keyframes: {
