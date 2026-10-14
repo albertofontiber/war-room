@@ -5,7 +5,7 @@
  *  al email de reset) y también al introducirla en el login (passwords largas
  *  son fáciles de teclear mal sin feedback). Usado en login admin, login
  *  portal y reset-password. `tone="light"` es para las tarjetas blancas de
- *  las pantallas de acceso del War Room (ver `auth/AuthShell`). */
+ *  las pantallas de acceso del War Room y del portal (ver `auth/AuthShell`). */
 export function PasswordToggle({
   visible,
   onToggle,

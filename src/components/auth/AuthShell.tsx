@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import { Playfair_Display } from "next/font/google";
 
 /**
- * Marco común de las pantallas de acceso del War Room (login, recuperar y
- * elegir contraseña). Copia el de dataroom.fontiber.com/login y el del panel
+ * Marco común de las pantallas de acceso del War Room y del portal de finders
+ * (login, recuperar y elegir contraseña). Copia el de dataroom.fontiber.com/login y el del panel
  * del chatbot: fondo navy, logotipo Playfair «Fontiber» + nombre en cobre y
  * tarjeta blanca. Como allí, es solo en claro: no hay variante oscura.
  *
@@ -28,10 +28,20 @@ export const authCard = "rounded-xl border border-neutral-200 bg-white p-6 shado
 /** Enlace bajo la tarjeta, sobre el navy. */
 export const authLink = "text-fontiber-sand/70 hover:text-white";
 
-export function BrandLogo({ className = "" }: { className?: string }) {
+/** Qué app es: el nombre que va en cobre tras «Fontiber». */
+export type AuthBrand = "War Room" | "Finders";
+
+export function BrandLogo({
+  brand = "War Room",
+  className = "",
+}: {
+  brand?: AuthBrand;
+  className?: string;
+}) {
   return (
     <span className={`font-display whitespace-nowrap tracking-tight ${className}`}>
-      Fontiber <span className="text-fontiber-copper">War&nbsp;Room</span>
+      Fontiber{" "}
+      <span className="text-fontiber-copper">{brand}</span>
     </span>
   );
 }
@@ -49,11 +59,13 @@ export function AuthNotice({ children }: { children: ReactNode }) {
 }
 
 export function AuthShell({
+  brand = "War Room",
   title,
   subtitle,
   footer,
   children,
 }: {
+  brand?: AuthBrand;
   /** Sin título, el logotipo es el `h1` (como en el login del Data Room). */
   title?: string;
   subtitle?: string;
@@ -68,14 +80,14 @@ export function AuthShell({
         <div className="mb-8 text-center">
           {title ? (
             <>
-              <BrandLogo className="text-2xl text-white" />
+              <BrandLogo brand={brand} className="text-2xl text-white" />
               <h1 className="mt-3 text-lg font-medium text-white">{title}</h1>
               {subtitle && <p className="mt-1 text-sm text-fontiber-sand/70">{subtitle}</p>}
             </>
           ) : (
             <>
               <h1 className="text-3xl text-white">
-                <BrandLogo />
+                <BrandLogo brand={brand} />
               </h1>
               {subtitle && <p className="mt-2 text-sm text-fontiber-sand/80">{subtitle}</p>}
             </>
