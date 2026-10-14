@@ -24,11 +24,17 @@ describe("invitationEmail", () => {
   });
 
   it("lleva la marca del war room, botón y enlace en claro", () => {
-    expect(email.subject).toBe("Tu acceso al War Room — Fontiber War Room");
-    expect(email.html).toContain("Fontiber War Room");
-    expect(email.html).toContain("Elegir mi contraseña");
+    expect(email.subject).toBe("Alberto te ha invitado al War Room — Fontiber War Room");
+    expect(email.html).toContain("Te han invitado al War Room");
+    expect(email.html).toContain("Crear mi cuenta");
     expect(email.html).toContain("reset-password?token=abc&amp;x=1");
     expect(email.html).toContain("7 días");
+  });
+
+  it("indica la dirección con la que entrará a partir de ahora", () => {
+    expect(email.html).toContain('href="https://warroom.fontiber.com/"');
+    expect(email.html).toContain(">warroom.fontiber.com/<");
+    expect(email.text).toContain("entrarás en https://warroom.fontiber.com/");
   });
 
   it("escapa los nombres en el HTML y los deja tal cual en el texto plano", () => {

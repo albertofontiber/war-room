@@ -82,16 +82,29 @@ export function invitationEmail(opts: {
   const caduca = caducidadTexto(opts.expiresAt);
   const name = escapeHtml(opts.name);
   const by = escapeHtml(opts.invitedBy);
+  // Dirección fija para entrar una vez creada la cuenta (el enlace del botón
+  // es de un solo uso).
+  const accessUrl = `${BASE_URL}/`;
   return {
-    subject: `Tu acceso al War Room — ${WAR_ROOM}`,
-    text: `Hola ${opts.name},\n\n${opts.invitedBy} te ha dado acceso al War Room de Fontiber. Elige tu contraseña aquí:\n${opts.url}\n\nEl enlace caduca en ${caduca} y solo se puede usar una vez. Después entrarás en ${BASE_URL} con este email y tu contraseña.\n\nSi no esperabas esta invitación, ignora este correo.`,
+    subject: `${opts.invitedBy} te ha invitado al War Room — ${WAR_ROOM}`,
+    text: `Hola ${opts.name},
+
+${opts.invitedBy} te ha invitado al War Room de Fontiber. Crea tu cuenta eligiendo una contraseña aquí:
+${opts.url}
+
+Este enlace caduca en ${caduca} y solo se puede usar una vez.
+
+A partir de ahora entrarás en ${accessUrl} con este email y tu contraseña.
+
+Si no esperabas esta invitación, ignora este correo.`,
     html: layout(
       WAR_ROOM,
       "Herramienta interna de Fontiber Industrial Partners.",
-      "Tienes acceso al War Room",
-      `<p ${P}>Hola ${name}, <strong>${by}</strong> te ha dado acceso al War Room de Fontiber. Elige tu contraseña para entrar:</p>
-       ${button(opts.url, "Elegir mi contraseña")}
-       <p ${SMALL}>El enlace caduca en ${caduca} y solo se puede usar una vez. Después entrarás con este email y tu contraseña. Si el botón no funciona, copia esta dirección:<br/>${fallbackLink(opts.url)}</p>`
+      "Te han invitado al War Room",
+      `<p ${P}>Hola ${name}, <strong>${by}</strong> te ha invitado al War Room de Fontiber. Crea tu cuenta eligiendo una contraseña:</p>
+       ${button(opts.url, "Crear mi cuenta")}
+       <p ${P}>A partir de ahora entrarás en <a href="${escapeHtml(accessUrl)}" style="color:#171717;font-weight:600">${escapeHtml(accessUrl.replace(/^https?:\/\//, ""))}</a> con este email y tu contraseña.</p>
+       <p ${SMALL}>El enlace de «Crear mi cuenta» caduca en ${caduca} y solo se puede usar una vez. Si el botón no funciona, copia esta dirección:<br/>${fallbackLink(opts.url)}</p>`
     ),
   };
 }
