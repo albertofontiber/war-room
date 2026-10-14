@@ -119,6 +119,25 @@ export default function Navbar() {
     }
   };
 
+  // Menú del avatar: se cierra al pulsar fuera o con Escape.
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!userMenuOpen) return;
+    const onPointer = (e: PointerEvent) => {
+      if (!userMenuRef.current?.contains(e.target as Node)) setUserMenuOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setUserMenuOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [userMenuOpen]);
+
   const initials = session?.user?.name
     ? session.user.name.slice(0, 2).toUpperCase()
     : "??";
@@ -369,13 +388,44 @@ export default function Navbar() {
         </svg>
       </button>
 
-      <button
-        onClick={() => signOut({ callbackUrl: "/login" })}
-        title={`${session?.user?.name} — Cerrar sesión`}
-        className="h-9 w-9 max-lg:tap-target flex-shrink-0 rounded-full bg-wr-blue/20 border border-wr-blue/30 text-wr-blue text-xs font-semibold flex items-center justify-center hover:bg-wr-blue/30 transition-colors"
-      >
-        {initials}
-      </button>
+      {/* Avatar: menú con Mi cuenta y Cerrar sesión. */}
+      <div ref={userMenuRef} className="relative flex-shrink-0">
+        <button
+          onClick={() => setUserMenuOpen((o) => !o)}
+          title={session?.user?.name ?? "Mi cuenta"}
+          aria-haspopup="menu"
+          aria-expanded={userMenuOpen}
+          className="h-9 w-9 max-lg:tap-target rounded-full bg-wr-blue/20 border border-wr-blue/30 text-wr-blue text-xs font-semibold flex items-center justify-center hover:bg-wr-blue/30 transition-colors"
+        >
+          {initials}
+        </button>
+        {userMenuOpen && (
+          <div
+            role="menu"
+            className="absolute right-0 top-full mt-1.5 z-50 w-48 rounded-md border border-wr-border bg-wr-surface shadow-2xl py-1 text-xs"
+          >
+            <div className="px-3 py-2 border-b border-wr-border">
+              <p className="font-medium text-wr-text truncate">{session?.user?.name}</p>
+              <p className="text-[10px] text-wr-hint truncate">{session?.user?.email}</p>
+            </div>
+            <Link
+              href="/cuenta"
+              role="menuitem"
+              onClick={() => setUserMenuOpen(false)}
+              className="block px-3 py-2 text-wr-muted hover:text-wr-text hover:bg-wr-surface2"
+            >
+              Mi cuenta
+            </Link>
+            <button
+              role="menuitem"
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="block w-full text-left px-3 py-2 text-wr-muted hover:text-wr-text hover:bg-wr-surface2"
+            >
+              Cerrar sesión
+            </button>
+          </div>
+        )}
+      </div>
     </header>
   );
 }

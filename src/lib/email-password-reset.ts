@@ -1,10 +1,14 @@
 /**
- * Email helper para el self-service reset de password del portal de finders.
+ * Emails de acceso: invitación al war room y recuperación de contraseña
+ * (war room y portal de finders).
  *
- * Diseño paralelo a `lib/notifications.ts` (admins) — misma plantilla visual,
- * misma estrategia fire-and-forget: si Resend falla, lo logueamos pero no
- * bloqueamos al endpoint. El finder verá la respuesta genérica del endpoint
- * (anti-enumeración) y, si no recibe email, puede contactar al admin.
+ * Mismo estilo que los emails del Data Room (`dataroom/src/lib/email-templates.ts`):
+ * tarjeta blanca sobria, marca en versalitas, botón negro y el enlace en claro
+ * por si el botón no funciona. Cada email lleva también versión en texto plano.
+ *
+ * Si Resend falla, lo logueamos pero no rompemos el endpoint: la recuperación
+ * responde siempre lo mismo (anti-enumeración) y la invitación enseña el enlace
+ * en pantalla para pasarlo a mano.
  */
 
 import { Resend } from "resend";
@@ -22,6 +26,124 @@ const ADMIN_FROM =
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ?? "https://warroom.fontiber.com";
 
+const WAR_ROOM = "Fontiber War Room";
+const PORTAL = "Fontiber Portal Finders";
+
+type Email = { subject: string; text: string; html: string };
+
+// ─── Plantillas ──────────────────────────────────────────────────────────────
+
+function escapeHtml(s: string): string {
+  return s.replace(
+    /[&<>"']/g,
+    (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!
+  );
+}
+
+/** "7 días", "24 horas", "1 hora": se lee mejor que contar siempre en horas. */
+export function caducidadTexto(expiresAt: Date, now = Date.now()): string {
+  const horas = Math.max(1, Math.round((expiresAt.getTime() - now) / 3_600_000));
+  if (horas >= 48) return `${Math.round(horas / 24)} días`;
+  return `${horas} hora${horas === 1 ? "" : "s"}`;
+}
+
+function layout(brand: string, footer: string, title: string, bodyHtml: string): string {
+  return `<!doctype html><html lang="es"><body style="margin:0;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#171717">
+  <div style="max-width:520px;margin:0 auto;padding:32px 16px">
+    <div style="background:#ffffff;border:1px solid #e5e5e5;border-radius:12px;padding:28px">
+      <div style="font-weight:700;font-size:12px;letter-spacing:.06em;color:#525252;text-transform:uppercase">${brand}</div>
+      <h1 style="font-size:18px;margin:12px 0 8px;color:#171717">${title}</h1>
+      ${bodyHtml}
+    </div>
+    <p style="font-size:12px;color:#a3a3a3;text-align:center;margin-top:16px;line-height:1.5">
+      ${footer}<br/>Si no esperabas este correo, ignóralo.
+    </p>
+  </div></body></html>`;
+}
+
+function button(url: string, label: string): string {
+  return `<p style="margin:20px 0"><a href="${escapeHtml(url)}" style="display:inline-block;background:#171717;color:#ffffff;text-decoration:none;padding:11px 20px;border-radius:8px;font-size:14px;font-weight:600">${label}</a></p>`;
+}
+
+function fallbackLink(url: string): string {
+  return `<span style="color:#525252;word-break:break-all">${escapeHtml(url)}</span>`;
+}
+
+const P = `style="font-size:14px;line-height:1.6;color:#404040"`;
+const SMALL = `style="font-size:12px;color:#737373;line-height:1.5"`;
+
+export function invitationEmail(opts: {
+  name: string;
+  invitedBy: string;
+  url: string;
+  expiresAt: Date;
+}): Email {
+  const caduca = caducidadTexto(opts.expiresAt);
+  const name = escapeHtml(opts.name);
+  const by = escapeHtml(opts.invitedBy);
+  return {
+    subject: `Tu acceso al War Room — ${WAR_ROOM}`,
+    text: `Hola ${opts.name},\n\n${opts.invitedBy} te ha dado acceso al War Room de Fontiber. Elige tu contraseña aquí:\n${opts.url}\n\nEl enlace caduca en ${caduca} y solo se puede usar una vez. Después entrarás en ${BASE_URL} con este email y tu contraseña.\n\nSi no esperabas esta invitación, ignora este correo.`,
+    html: layout(
+      WAR_ROOM,
+      "Herramienta interna de Fontiber Industrial Partners.",
+      "Tienes acceso al War Room",
+      `<p ${P}>Hola ${name}, <strong>${by}</strong> te ha dado acceso al War Room de Fontiber. Elige tu contraseña para entrar:</p>
+       ${button(opts.url, "Elegir mi contraseña")}
+       <p ${SMALL}>El enlace caduca en ${caduca} y solo se puede usar una vez. Después entrarás con este email y tu contraseña. Si el botón no funciona, copia esta dirección:<br/>${fallbackLink(opts.url)}</p>`
+    ),
+  };
+}
+
+export function passwordResetEmail(opts: {
+  zona: "warroom" | "portal";
+  name: string;
+  url: string;
+  expiresAt: Date;
+}): Email {
+  const brand = opts.zona === "portal" ? PORTAL : WAR_ROOM;
+  const caduca = caducidadTexto(opts.expiresAt);
+  const name = escapeHtml(opts.name);
+  return {
+    subject: `Restablece tu contraseña — ${brand}`,
+    text: `Hola ${opts.name},\n\nHas solicitado restablecer tu contraseña. Abre este enlace para fijar una nueva (caduca en ${caduca}):\n${opts.url}\n\nSi no lo solicitaste, ignora este correo: tu contraseña no cambia.`,
+    html: layout(
+      brand,
+      opts.zona === "portal"
+        ? "Portal de colaboradores de Fontiber Industrial Partners."
+        : "Herramienta interna de Fontiber Industrial Partners.",
+      "Restablece tu contraseña",
+      `<p ${P}>Hola ${name}, has solicitado restablecer tu contraseña. Pulsa para fijar una nueva:</p>
+       ${button(opts.url, "Restablecer contraseña")}
+       <p ${SMALL}>El enlace caduca en ${caduca}. Si no lo solicitaste, ignora este correo: tu contraseña no cambia. Si el botón no funciona, copia:<br/>${fallbackLink(opts.url)}</p>`
+    ),
+  };
+}
+
+// ─── Envío ───────────────────────────────────────────────────────────────────
+
+/** Envía con Resend. Devuelve si lo aceptó; nunca lanza. */
+async function send(from: string, to: string, email: Email): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    log.warn("lib/email-password-reset", "RESEND_API_KEY not set, skipping email");
+    return false;
+  }
+  try {
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({ from, to, ...email });
+    if (error) {
+      log.error("lib/email-password-reset", "Resend error", { error });
+      return false;
+    }
+    return true;
+  } catch (err) {
+    log.error("lib/email-password-reset", err);
+    return false;
+  }
+}
+
 export type SendPasswordResetEmailInput = {
   to: string;
   finderName: string;
@@ -32,37 +154,19 @@ export type SendPasswordResetEmailInput = {
 export async function sendPasswordResetEmail(
   input: SendPasswordResetEmailInput
 ): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    log.warn("lib/email-password-reset", "RESEND_API_KEY not set, skipping email");
-    return;
-  }
-
-  const link = `${BASE_URL}/portal/reset-password?token=${encodeURIComponent(
+  const url = `${BASE_URL}/portal/reset-password?token=${encodeURIComponent(
     input.rawToken
   )}`;
-  const html = renderEmail({
-    recipientName: input.finderName,
-    link,
-    expiresAt: input.expiresAt,
-    productLabel: "FONTIBER · PORTAL FINDERS",
-    accountLabel: "cuenta del portal",
-    footerHref: `${BASE_URL}/portal`,
-    footerLabel: "portal.fontiber.com",
-  });
-
-  try {
-    const resend = new Resend(apiKey);
-    const { error } = await resend.emails.send({
-      from: `Fontiber Portal <${FROM}>`,
-      to: input.to,
-      subject: "Restablece tu contraseña — Portal Fontiber",
-      html,
-    });
-    if (error) log.error("lib/email-password-reset", "Resend error", { error });
-  } catch (err) {
-    log.error("lib/email-password-reset", err);
-  }
+  await send(
+    `Fontiber Portal <${FROM}>`,
+    input.to,
+    passwordResetEmail({
+      zona: "portal",
+      name: input.finderName,
+      url,
+      expiresAt: input.expiresAt,
+    })
+  );
 }
 
 export type SendAdminPasswordResetEmailInput = {
@@ -75,67 +179,20 @@ export type SendAdminPasswordResetEmailInput = {
 export async function sendAdminPasswordResetEmail(
   input: SendAdminPasswordResetEmailInput
 ): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    log.warn("lib/email-password-reset", "RESEND_API_KEY not set, skipping email");
-    return;
-  }
-
-  const link = `${BASE_URL}/reset-password?token=${encodeURIComponent(
+  const url = `${BASE_URL}/reset-password?token=${encodeURIComponent(
     input.rawToken
   )}`;
-  const html = renderEmail({
-    recipientName: input.adminName,
-    link,
-    expiresAt: input.expiresAt,
-    productLabel: "FONTIBER · WAR ROOM",
-    accountLabel: "cuenta del war room",
-    footerHref: BASE_URL,
-    footerLabel: "warroom.fontiber.com",
-  });
-
-  try {
-    const resend = new Resend(apiKey);
-    const { error } = await resend.emails.send({
-      from: `Fontiber War Room <${ADMIN_FROM}>`,
-      to: input.to,
-      subject: "Restablece tu contraseña — Fontiber War Room",
-      html,
-    });
-    if (error) log.error("lib/email-password-reset", "Resend error", { error });
-  } catch (err) {
-    log.error("lib/email-password-reset", err);
-  }
+  await send(
+    `${WAR_ROOM} <${ADMIN_FROM}>`,
+    input.to,
+    passwordResetEmail({
+      zona: "warroom",
+      name: input.adminName,
+      url,
+      expiresAt: input.expiresAt,
+    })
+  );
 }
-
-function escape(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-/** Textos del cuerpo. Por defecto, los de recuperación de contraseña. */
-type EmailCopy = {
-  heading: string;
-  /** Párrafos en HTML ya escapado. */
-  bodyHtml: (accountLabel: string, horasTexto: string) => string[];
-  cta: string;
-};
-
-const RESET_COPY: EmailCopy = {
-  heading: "Restablecer contraseña",
-  bodyHtml: (accountLabel, horasTexto) => [
-    `Hemos recibido una solicitud para restablecer la contraseña de tu
-            ${accountLabel}. Si fuiste tú, pulsa el botón de abajo para
-            elegir una nueva. El enlace caduca en aproximadamente
-            ${horasTexto}.`,
-    `Si no fuiste tú, ignora este email — tu contraseña actual seguirá
-            siendo válida.`,
-  ],
-  cta: "Establecer nueva contraseña",
-};
 
 export type SendAdminInvitationEmailInput = {
   to: string;
@@ -145,18 +202,6 @@ export type SendAdminInvitationEmailInput = {
   expiresAt: Date;
 };
 
-const INVITATION_COPY = (invitedBy: string): EmailCopy => ({
-  heading: "Tienes acceso al War Room",
-  bodyHtml: (_accountLabel, horasTexto) => [
-    `${invitedBy} te ha dado acceso al War Room de Fontiber. Para entrar,
-            pulsa el botón de abajo y elige tu contraseña. El enlace caduca en
-            ${horasTexto}.`,
-    `Después podrás entrar siempre desde warroom.fontiber.com con este email
-            y la contraseña que elijas.`,
-  ],
-  cta: "Elegir mi contraseña",
-});
-
 /**
  * Invitación a un usuario nuevo del war room. Devuelve si Resend aceptó el
  * envío, para que la pantalla de usuarios avise de copiar el enlace a mano.
@@ -164,96 +209,14 @@ const INVITATION_COPY = (invitedBy: string): EmailCopy => ({
 export async function sendAdminInvitationEmail(
   input: SendAdminInvitationEmailInput
 ): Promise<boolean> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    log.warn("lib/email-password-reset", "RESEND_API_KEY not set, skipping email");
-    return false;
-  }
-
-  const html = renderEmail({
-    recipientName: input.adminName,
-    link: input.link,
-    expiresAt: input.expiresAt,
-    productLabel: "FONTIBER · WAR ROOM",
-    accountLabel: "cuenta del war room",
-    footerHref: BASE_URL,
-    footerLabel: "warroom.fontiber.com",
-    copy: INVITATION_COPY(escape(input.invitedBy)),
-  });
-
-  try {
-    const resend = new Resend(apiKey);
-    const { error } = await resend.emails.send({
-      from: `Fontiber War Room <${ADMIN_FROM}>`,
-      to: input.to,
-      subject: "Tu acceso al War Room de Fontiber",
-      html,
-    });
-    if (error) {
-      log.error("lib/email-password-reset", "Resend error", { error });
-      return false;
-    }
-    return true;
-  } catch (err) {
-    log.error("lib/email-password-reset", err);
-    return false;
-  }
-}
-
-function renderEmail(opts: {
-  recipientName: string;
-  link: string;
-  expiresAt: Date;
-  productLabel: string;
-  accountLabel: string;
-  footerHref: string;
-  footerLabel: string;
-  copy?: EmailCopy;
-}): string {
-  const copy = opts.copy ?? RESET_COPY;
-  const horas = Math.round(
-    (opts.expiresAt.getTime() - Date.now()) / (60 * 60 * 1000)
+  return send(
+    `${WAR_ROOM} <${ADMIN_FROM}>`,
+    input.to,
+    invitationEmail({
+      name: input.adminName,
+      invitedBy: input.invitedBy,
+      url: input.link,
+      expiresAt: input.expiresAt,
+    })
   );
-  // Por encima de 2 días se lee mejor en días ("7 días", no "168 horas").
-  const horasTexto =
-    horas >= 48
-      ? `${Math.round(horas / 24)} días`
-      : `${horas} hora${horas === 1 ? "" : "s"}`;
-  const paragraphs = copy.bodyHtml(escape(opts.accountLabel), horasTexto);
-  return `<!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"></head>
-<body style="margin:0;padding:0;background:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:32px 16px">
-    <tr><td align="center">
-      <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb">
-        <tr><td style="padding:20px 28px 12px;border-bottom:1px solid #e5e7eb">
-          <div style="font-size:11px;font-weight:800;color:#111827;letter-spacing:2px;text-transform:uppercase">${escape(opts.productLabel)}</div>
-        </td></tr>
-        <tr><td style="padding:24px 28px">
-          <h1 style="margin:0 0 12px;font-size:18px;color:#111827;font-weight:600">${escape(copy.heading)}</h1>
-          <p style="margin:0 0 16px;font-size:14px;color:#374151;line-height:1.5">
-            Hola ${escape(opts.recipientName)},
-          </p>
-          ${paragraphs
-            .map(
-              (p, i) =>
-                `<p style="margin:0${i === paragraphs.length - 1 ? "" : " 0 16px"};font-size:14px;color:#374151;line-height:1.5">
-            ${p}
-          </p>`
-            )
-            .join("\n          ")}
-        </td></tr>
-        <tr><td style="padding:0 28px 28px;text-align:center">
-          <a href="${escape(opts.link)}" style="display:inline-block;background:#3b82f6;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:6px">
-            ${escape(copy.cta)} &rarr;
-          </a>
-        </td></tr>
-        <tr><td style="padding:14px 28px;border-top:1px solid #e5e7eb;background:#f9fafb;font-size:10px;color:#9ca3af">
-          <a href="${escape(opts.footerHref)}" style="color:#3b82f6;text-decoration:none;font-weight:600">${escape(opts.footerLabel)}</a>
-          &nbsp;&middot;&nbsp;Fontiber Industrial Partners
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body></html>`;
 }
