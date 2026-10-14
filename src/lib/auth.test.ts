@@ -45,7 +45,7 @@ vi.mock("@/lib/logger", () => ({
   },
 }));
 
-import { adminPasswordMatches, authOptions } from "./auth";
+import { adminPasswordMatches, adminSessionActive, authOptions } from "./auth";
 
 type AuthorizeFn = (
   credentials: Record<string, string> | undefined,
@@ -378,6 +378,7 @@ describe("authorize (admin-credentials)", () => {
   });
 
   it("email desconocido: null + log.warn (sin filtrar si existe o no)", async () => {
+    userFindUnique.mockResolvedValueOnce(null);
     const authorize = getAdminAuthorize();
     const user = await authorize(
       { email: "intruso@fontiber.com", password: "x" },
@@ -399,6 +400,43 @@ describe("authorize (admin-credentials)", () => {
     expect(bcryptCompare).not.toHaveBeenCalled();
   });
 
+  it("usuario dado de alta desde la app (sin env): entra con su hash de BD", async () => {
+    userFindUnique.mockResolvedValueOnce({
+      id: "u-nuevo",
+      name: "Lucía",
+      email: "lucia@fontiber.com",
+      role: "admin",
+      active: true,
+      passwordHash: "$2a$10$hash-lucia",
+    });
+    bcryptCompare.mockResolvedValueOnce(true);
+    const authorize = getAdminAuthorize();
+    const user = await authorize(
+      { email: "lucia@fontiber.com", password: "suya" },
+      REQ
+    );
+    expect(user).toMatchObject({ id: "u-nuevo", kind: "admin" });
+    expect(bcryptCompare).toHaveBeenCalledWith("suya", "$2a$10$hash-lucia");
+  });
+
+  it("usuario invitado que aún no ha fijado contraseña: rechaza", async () => {
+    userFindUnique.mockResolvedValueOnce({
+      id: "u-nuevo",
+      name: "Lucía",
+      email: "lucia@fontiber.com",
+      role: "admin",
+      active: true,
+      passwordHash: null,
+    });
+    const authorize = getAdminAuthorize();
+    const user = await authorize(
+      { email: "lucia@fontiber.com", password: "cualquiera" },
+      REQ
+    );
+    expect(user).toBeNull();
+    expect(bcryptCompare).not.toHaveBeenCalled();
+  });
+
   it("usuario desactivado en BD: rechaza aunque la credencial de entorno coincida", async () => {
     userFindUnique.mockResolvedValueOnce({
       id: "u-alberto",
@@ -415,5 +453,14 @@ describe("authorize (admin-credentials)", () => {
     );
     expect(user).toBeNull();
     expect(bcryptCompare).not.toHaveBeenCalled();
+  });
+});
+
+describe("adminSessionActive", () => {
+  it("solo mantiene la sesión de un admin activo", () => {
+    expect(adminSessionActive({ active: true, role: "admin" })).toBe(true);
+    expect(adminSessionActive({ active: false, role: "admin" })).toBe(false);
+    expect(adminSessionActive({ active: true, role: "finder" })).toBe(false);
+    expect(adminSessionActive(null)).toBe(false);
   });
 });

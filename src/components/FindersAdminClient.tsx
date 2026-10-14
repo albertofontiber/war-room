@@ -340,6 +340,9 @@ export default function FindersAdminClient() {
             <Link href="/finders/proposals" className="text-xs text-wr-blue hover:underline">
               Propuestas →
             </Link>
+            <Link href="/usuarios" className="text-xs text-wr-blue hover:underline">
+              Usuarios →
+            </Link>
             <Link href="/" className="text-xs text-wr-blue hover:underline">← War Room</Link>
           </div>
         </header>

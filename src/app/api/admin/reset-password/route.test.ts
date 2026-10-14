@@ -6,7 +6,6 @@ const userUpdate = vi.fn();
 const transaction = vi.fn();
 const bcryptHash = vi.fn();
 const auditLog = vi.fn();
-const isConfiguredEmail = vi.fn();
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
@@ -27,9 +26,6 @@ vi.mock("@/lib/audit-log", () => ({
   auditLog: (...args: unknown[]) => auditLog(...args),
 }));
 
-vi.mock("@/lib/admin-credentials", () => ({
-  isConfiguredAdminEmail: (...args: unknown[]) => isConfiguredEmail(...args),
-}));
 
 import { POST } from "./route";
 
@@ -63,11 +59,9 @@ describe("POST /api/admin/reset-password", () => {
     transaction.mockReset();
     bcryptHash.mockReset();
     auditLog.mockReset();
-    isConfiguredEmail.mockReset();
     bcryptHash.mockResolvedValue("$2a$10$hash-nuevo");
     transaction.mockResolvedValue([{}, {}]);
     auditLog.mockResolvedValue(undefined);
-    isConfiguredEmail.mockReturnValue(true);
   });
 
   it("rechaza contraseña corta antes de consultar el token", async () => {
@@ -90,7 +84,7 @@ describe("POST /api/admin/reset-password", () => {
     expect(transaction).not.toHaveBeenCalled();
   });
 
-  it("rechaza una cuenta desactivada o que ya no esté configurada", async () => {
+  it("rechaza una cuenta desactivada", async () => {
     tokenFindUnique.mockResolvedValueOnce(
       validRecord({
         user: {
@@ -101,14 +95,6 @@ describe("POST /api/admin/reset-password", () => {
         },
       })
     );
-    expect(
-      (
-        await POST(makeReq({ token: RAW_TOKEN, password: "contraseña-nueva" }))
-      ).status
-    ).toBe(400);
-
-    tokenFindUnique.mockResolvedValueOnce(validRecord());
-    isConfiguredEmail.mockReturnValue(false);
     expect(
       (
         await POST(makeReq({ token: RAW_TOKEN, password: "contraseña-nueva" }))

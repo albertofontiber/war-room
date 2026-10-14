@@ -1,5 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, Session } from "next-auth";
 import type { IncomingHttpHeaders } from "http";
 import { createHash, timingSafeEqual } from "crypto";
 import bcrypt from "bcryptjs";
@@ -55,13 +55,23 @@ export async function adminPasswordMatches(
   return timingSafeEqual(a, b);
 }
 
+/** ¿Puede seguir dentro del war room este usuario? Exportado para tests. */
+export function adminSessionActive<T extends { active: boolean; role: string }>(
+  user: T | null | undefined
+): user is T {
+  return !!user && user.active && user.role === "admin";
+}
+
 /**
  * Auth unificado con dos providers separados:
  *
- * - `admin-credentials` para los administradores configurados. Arranca con
- *   email/pass vía ENV
- *   y, después de un reset, prioriza User.passwordHash. Entra al war room
- *   completo. La sesión lleva `kind: "admin"` y el nombre.
+ * - `admin-credentials` para los usuarios del war room (User con role admin y
+ *   active). La contraseña es User.passwordHash, que fija el propio usuario
+ *   desde el enlace de invitación o de recuperación; los dos admins originales
+ *   conservan además la credencial de entorno hasta que fijen una propia.
+ *   Entra al war room completo. La sesión lleva `kind: "admin"` y el nombre.
+ *   Cada `getServerSession` revalida contra la BD que el usuario siga activo
+ *   (ver callback `session`), así desactivarlo corta el acceso en caliente.
  *
  * - `finder-credentials` (email/pass via bcrypt contra la tabla Finder) para
  *   los finders externos. La sesión lleva `kind: "finder"` y `finderId` para
@@ -109,10 +119,11 @@ export const authOptions: NextAuthOptions = {
 
         const { ip, userAgent } = extractRequestMetadata(req?.headers);
         const email = credentials.email.trim().toLowerCase();
-        const config = findAdminCredentialByEmail(email);
-        const user = config
+        // La cuenta vive en BD (alta desde /usuarios). El alias corto legacy
+        // ("alberto") ya no identifica a nadie: sin "@" ni se consulta.
+        const user = email.includes("@")
           ? await prisma.user.findUnique({
-              where: { email: config.email },
+              where: { email },
               select: {
                 id: true,
                 name: true,
@@ -123,15 +134,18 @@ export const authOptions: NextAuthOptions = {
               },
             })
           : null;
+        // Los dos admins originales pueden seguir entrando con la credencial de
+        // entorno mientras no hayan fijado una propia (reset o invitación).
+        const config = findAdminCredentialByEmail(email);
         const ok =
-          config && user?.active && user.role === "admin"
+          adminSessionActive(user)
             ? await adminPasswordMatches(credentials.password, {
-                password: config.password,
-                // Un reset self-service en BD sustituye al hash de entorno.
-                passwordHash: user.passwordHash ?? config.passwordHash,
+                password: config?.password,
+                // Un hash en BD (reset o invitación) sustituye al de entorno.
+                passwordHash: user.passwordHash ?? config?.passwordHash,
               })
             : false;
-        if (!config || !user || !ok) {
+        if (!user || !ok) {
           // Los admins no tienen tabla de access log (los finders sí);
           // registramos en el logger estructurado → visible en Vercel logs.
           log.warn("auth/admin", "login_failure", {
@@ -235,6 +249,20 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      // Admin desactivado (o borrado) desde /usuarios: su JWT sigue siendo
+      // válido criptográficamente, así que se comprueba en BD en cada lectura.
+      // Una sesión vacía hace que `getServerSession` devuelva null y que
+      // `useSession` pase a unauthenticated. Los finders tienen su propio
+      // guard (`getCurrentFinder`).
+      if ((token.kind ?? "admin") === "admin") {
+        const user = token.email
+          ? await prisma.user.findUnique({
+              where: { email: token.email },
+              select: { active: true, role: true },
+            })
+          : null;
+        if (!adminSessionActive(user)) return {} as Session;
+      }
       if (session.user) session.user.name = token.name as string;
       session.kind = (token.kind as "admin" | "finder" | undefined) ?? "admin";
       session.finderId = (token.finderId as string | null | undefined) ?? null;

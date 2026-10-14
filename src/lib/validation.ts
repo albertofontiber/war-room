@@ -171,6 +171,17 @@ export const PortalResetPasswordSchema = z.object({
 export const AdminForgotPasswordSchema = PortalForgotPasswordSchema;
 export const AdminResetPasswordSchema = PortalResetPasswordSchema;
 
+// ─── Usuarios del war room (/usuarios) ───────────────────────────────────────
+// Sin contraseña: el invitado la elige desde el enlace que le llega por email.
+export const AdminUserCreateSchema = z.object({
+  email: z.string().trim().toLowerCase().email("Email inválido"),
+  name: nonEmptyString.max(100),
+});
+
+export const AdminUserUpdateSchema = z.object({
+  active: z.boolean(),
+});
+
 export const FinderCreateSchema = z.object({
   email: z.string().trim().toLowerCase().email("Email inválido"),
   name: nonEmptyString.max(100),
