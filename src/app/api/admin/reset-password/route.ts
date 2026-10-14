@@ -4,7 +4,6 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { AdminResetPasswordSchema, zodError } from "@/lib/validation";
 import { auditLog } from "@/lib/audit-log";
-import { isConfiguredAdminEmail } from "@/lib/admin-credentials";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +36,6 @@ export async function POST(req: NextRequest) {
   if (record.usedAt) return invalid;
   if (record.expiresAt.getTime() < Date.now()) return invalid;
   if (!record.user.active || record.user.role !== "admin") return invalid;
-  if (!isConfiguredAdminEmail(record.user.email)) return invalid;
 
   const hash = await bcrypt.hash(password, 10);
   const now = new Date();

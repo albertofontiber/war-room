@@ -75,6 +75,10 @@ export default function WarRoomMobileMenu() {
     router.push("/finders");
   }, [router]);
 
+  const goToUsuarios = useCallback(() => {
+    router.push("/usuarios");
+  }, [router]);
+
   const goToMonitoring = useCallback(() => {
     router.push("/monitoring");
   }, [router]);
@@ -120,6 +124,7 @@ export default function WarRoomMobileMenu() {
 
           <div className="pt-2 mt-2 border-t border-wr-border">
             <NavButton onClick={goToFinders}>Gestión de finders</NavButton>
+            <NavButton onClick={goToUsuarios}>Usuarios del war room</NavButton>
           </div>
 
           <NavButton onClick={goToMonitoring}>Operación</NavButton>

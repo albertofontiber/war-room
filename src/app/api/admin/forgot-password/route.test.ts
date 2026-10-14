@@ -5,7 +5,6 @@ const userFindUnique = vi.fn();
 const tokenUpdateMany = vi.fn();
 const tokenCreate = vi.fn();
 const sendEmail = vi.fn();
-const isConfiguredEmail = vi.fn();
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
@@ -21,10 +20,6 @@ vi.mock("@/lib/email-password-reset", () => ({
   sendAdminPasswordResetEmail: (...args: unknown[]) => sendEmail(...args),
 }));
 
-vi.mock("@/lib/admin-credentials", () => ({
-  isConfiguredAdminEmail: (...args: unknown[]) => isConfiguredEmail(...args),
-}));
-
 import { POST } from "./route";
 
 function makeReq(body: unknown) {
@@ -37,8 +32,6 @@ describe("POST /api/admin/forgot-password", () => {
     tokenUpdateMany.mockReset();
     tokenCreate.mockReset();
     sendEmail.mockReset();
-    isConfiguredEmail.mockReset();
-    isConfiguredEmail.mockReturnValue(true);
     tokenUpdateMany.mockResolvedValue({ count: 0 });
     tokenCreate.mockResolvedValue({ id: "token-1" });
     sendEmail.mockResolvedValue(undefined);
@@ -50,11 +43,17 @@ describe("POST /api/admin/forgot-password", () => {
     expect(userFindUnique).not.toHaveBeenCalled();
   });
 
-  it("no revela ni consulta emails que no pertenecen al login admin", async () => {
-    isConfiguredEmail.mockReturnValue(false);
+  it("no emite token para un usuario que no es admin", async () => {
+    userFindUnique.mockResolvedValueOnce({
+      id: "u9",
+      name: "Otro",
+      email: "otro@fontiber.com",
+      role: "finder",
+      active: true,
+    });
     const response = await POST(makeReq({ email: "otro@fontiber.com" }));
     expect(response.status).toBe(200);
-    expect(userFindUnique).not.toHaveBeenCalled();
+    expect(tokenCreate).not.toHaveBeenCalled();
     expect(sendEmail).not.toHaveBeenCalled();
   });
 

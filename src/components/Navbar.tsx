@@ -345,6 +345,18 @@ export default function Navbar() {
         </svg>
       </button>
 
+      {/* Admin: usuarios del war room — solo lg+ (en mobile vive en el drawer). */}
+      <button
+        onClick={() => router.push("/usuarios")}
+        title="Usuarios del war room"
+        className="hidden lg:block p-1.5 rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="7.5" cy="15.5" r="5.5" />
+          <path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3" />
+        </svg>
+      </button>
+
       {/* Avatar usuario */}
       <button
         onClick={() => router.push("/monitoring")}

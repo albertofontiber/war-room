@@ -18,7 +18,9 @@ function configuredAdminEmail(
 }
 
 /**
- * Fuente única para las dos identidades que pueden entrar al war room.
+ * Credenciales de entorno de los dos admins originales (Alberto y Gabriel).
+ * El resto de usuarios del war room solo existen en BD (alta desde /usuarios)
+ * y entran con el User.passwordHash que fijan desde su invitación.
  *
  * `ADMIN_EMAIL_n` es el identificador de acceso. `ADMIN_USER_n` se acepta
  * únicamente como configuración legacy para no exigir cambios inmediatos en
@@ -54,13 +56,6 @@ export function findAdminCredentialByEmail(
 ): AdminCredentialConfig | undefined {
   const normalized = email.trim().toLowerCase();
   return getAdminCredentialConfigs().find(
-    (config) => config.email === normalized
-  );
-}
-
-export function isConfiguredAdminEmail(email: string): boolean {
-  const normalized = email.trim().toLowerCase();
-  return getAdminCredentialConfigs().some(
     (config) => config.email === normalized
   );
 }

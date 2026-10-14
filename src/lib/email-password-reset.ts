@@ -108,6 +108,98 @@ export async function sendAdminPasswordResetEmail(
   }
 }
 
+function escape(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/** Textos del cuerpo. Por defecto, los de recuperación de contraseña. */
+type EmailCopy = {
+  heading: string;
+  /** Párrafos en HTML ya escapado. */
+  bodyHtml: (accountLabel: string, horasTexto: string) => string[];
+  cta: string;
+};
+
+const RESET_COPY: EmailCopy = {
+  heading: "Restablecer contraseña",
+  bodyHtml: (accountLabel, horasTexto) => [
+    `Hemos recibido una solicitud para restablecer la contraseña de tu
+            ${accountLabel}. Si fuiste tú, pulsa el botón de abajo para
+            elegir una nueva. El enlace caduca en aproximadamente
+            ${horasTexto}.`,
+    `Si no fuiste tú, ignora este email — tu contraseña actual seguirá
+            siendo válida.`,
+  ],
+  cta: "Establecer nueva contraseña",
+};
+
+export type SendAdminInvitationEmailInput = {
+  to: string;
+  adminName: string;
+  invitedBy: string;
+  link: string;
+  expiresAt: Date;
+};
+
+const INVITATION_COPY = (invitedBy: string): EmailCopy => ({
+  heading: "Tienes acceso al War Room",
+  bodyHtml: (_accountLabel, horasTexto) => [
+    `${invitedBy} te ha dado acceso al War Room de Fontiber. Para entrar,
+            pulsa el botón de abajo y elige tu contraseña. El enlace caduca en
+            ${horasTexto}.`,
+    `Después podrás entrar siempre desde warroom.fontiber.com con este email
+            y la contraseña que elijas.`,
+  ],
+  cta: "Elegir mi contraseña",
+});
+
+/**
+ * Invitación a un usuario nuevo del war room. Devuelve si Resend aceptó el
+ * envío, para que la pantalla de usuarios avise de copiar el enlace a mano.
+ */
+export async function sendAdminInvitationEmail(
+  input: SendAdminInvitationEmailInput
+): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    log.warn("lib/email-password-reset", "RESEND_API_KEY not set, skipping email");
+    return false;
+  }
+
+  const html = renderEmail({
+    recipientName: input.adminName,
+    link: input.link,
+    expiresAt: input.expiresAt,
+    productLabel: "FONTIBER · WAR ROOM",
+    accountLabel: "cuenta del war room",
+    footerHref: BASE_URL,
+    footerLabel: "warroom.fontiber.com",
+    copy: INVITATION_COPY(escape(input.invitedBy)),
+  });
+
+  try {
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
+      from: `Fontiber War Room <${ADMIN_FROM}>`,
+      to: input.to,
+      subject: "Tu acceso al War Room de Fontiber",
+      html,
+    });
+    if (error) {
+      log.error("lib/email-password-reset", "Resend error", { error });
+      return false;
+    }
+    return true;
+  } catch (err) {
+    log.error("lib/email-password-reset", err);
+    return false;
+  }
+}
+
 function renderEmail(opts: {
   recipientName: string;
   link: string;
@@ -116,16 +208,18 @@ function renderEmail(opts: {
   accountLabel: string;
   footerHref: string;
   footerLabel: string;
+  copy?: EmailCopy;
 }): string {
-  const escape = (s: string) =>
-    s
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+  const copy = opts.copy ?? RESET_COPY;
   const horas = Math.round(
     (opts.expiresAt.getTime() - Date.now()) / (60 * 60 * 1000)
   );
+  // Por encima de 2 días se lee mejor en días ("7 días", no "168 horas").
+  const horasTexto =
+    horas >= 48
+      ? `${Math.round(horas / 24)} días`
+      : `${horas} hora${horas === 1 ? "" : "s"}`;
+  const paragraphs = copy.bodyHtml(escape(opts.accountLabel), horasTexto);
   return `<!DOCTYPE html>
 <html lang="es"><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
@@ -136,24 +230,22 @@ function renderEmail(opts: {
           <div style="font-size:11px;font-weight:800;color:#111827;letter-spacing:2px;text-transform:uppercase">${escape(opts.productLabel)}</div>
         </td></tr>
         <tr><td style="padding:24px 28px">
-          <h1 style="margin:0 0 12px;font-size:18px;color:#111827;font-weight:600">Restablecer contraseña</h1>
+          <h1 style="margin:0 0 12px;font-size:18px;color:#111827;font-weight:600">${escape(copy.heading)}</h1>
           <p style="margin:0 0 16px;font-size:14px;color:#374151;line-height:1.5">
             Hola ${escape(opts.recipientName)},
           </p>
-          <p style="margin:0 0 16px;font-size:14px;color:#374151;line-height:1.5">
-            Hemos recibido una solicitud para restablecer la contraseña de tu
-            ${escape(opts.accountLabel)}. Si fuiste tú, pulsa el botón de abajo para
-            elegir una nueva. El enlace caduca en aproximadamente
-            ${horas} hora${horas === 1 ? "" : "s"}.
-          </p>
-          <p style="margin:0;font-size:14px;color:#374151;line-height:1.5">
-            Si no fuiste tú, ignora este email — tu contraseña actual seguirá
-            siendo válida.
-          </p>
+          ${paragraphs
+            .map(
+              (p, i) =>
+                `<p style="margin:0${i === paragraphs.length - 1 ? "" : " 0 16px"};font-size:14px;color:#374151;line-height:1.5">
+            ${p}
+          </p>`
+            )
+            .join("\n          ")}
         </td></tr>
         <tr><td style="padding:0 28px 28px;text-align:center">
           <a href="${escape(opts.link)}" style="display:inline-block;background:#3b82f6;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:6px">
-            Establecer nueva contraseña &rarr;
+            ${escape(copy.cta)} &rarr;
           </a>
         </td></tr>
         <tr><td style="padding:14px 28px;border-top:1px solid #e5e7eb;background:#f9fafb;font-size:10px;color:#9ca3af">
