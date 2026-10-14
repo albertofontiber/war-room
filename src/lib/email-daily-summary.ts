@@ -3,6 +3,8 @@
  * with stats + a link to the full summary page at /daily/[fecha].
  *
  * Called from /api/cron/daily-summary.
+ * Destinatarios: usuarios activos del war room con "Email diario" activado en
+ * Mi cuenta (`User.emailDiario`). El cron acepta `?to=` para pruebas.
  * The full styled summary lives at warroom.fontiber.com/daily/YYYY-MM-DD.
  */
 
@@ -10,9 +12,18 @@ import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
 import { log } from "@/lib/logger";
 
-const TO       = process.env.SUMMARY_EMAIL_TO   ?? "alberto@fontiber.com,gabriel@fontiber.com";
 const FROM     = process.env.SUMMARY_EMAIL_FROM ?? "warroom@fontiber.com";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://warroom.fontiber.com";
+
+/** Usuarios activos del war room que quieren el email diario (Mi cuenta). */
+export async function dailySummaryRecipients(): Promise<string[]> {
+  const users = await prisma.user.findMany({
+    where: { role: "admin", active: true, emailDiario: true },
+    select: { email: true },
+    orderBy: { email: "asc" },
+  });
+  return users.map((u) => u.email);
+}
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 export async function sendDailySummary(
@@ -21,6 +32,11 @@ export async function sendDailySummary(
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return { sent: false, reason: "RESEND_API_KEY not set" };
   const resend = new Resend(apiKey);
+
+  const to = options?.to
+    ? options.to.split(",").map((s) => s.trim())
+    : await dailySummaryRecipients();
+  if (to.length === 0) return { sent: false, reason: "sin destinatarios" };
 
   // By default query from yesterday midnight — the cron runs at 08:00 (06:00 UTC)
   // the morning after BORME has updated (previous evening).
@@ -194,7 +210,7 @@ export async function sendDailySummary(
   // ── Send ───────────────────────────────────────────────────────────────────
   const { error } = await resend.emails.send({
     from: `War Room <${FROM}>`,
-    to: (options?.to ?? TO).split(",").map((s) => s.trim()),
+    to,
     subject: `⚡ War Room — ${dateCapitalized}`,
     html,
   });

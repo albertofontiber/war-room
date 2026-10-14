@@ -182,6 +182,16 @@ export const AdminUserUpdateSchema = z.object({
   active: z.boolean(),
 });
 
+// ─── Mi cuenta (/cuenta) ─────────────────────────────────────────────────────
+export const CuentaPasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Escribe tu contraseña actual"),
+  newPassword: z.string().min(10, "La contraseña debe tener al menos 10 caracteres"),
+});
+
+export const CuentaPreferenciasSchema = z.object({
+  emailDiario: z.boolean(),
+});
+
 export const FinderCreateSchema = z.object({
   email: z.string().trim().toLowerCase().email("Email inválido"),
   name: nonEmptyString.max(100),

@@ -335,6 +335,8 @@ model User {
   // sin guardar nunca la contraseña en texto plano.
   passwordHash  String?
   passwordSetAt DateTime?
+  // "Mi cuenta": recibir el email diario (BORME + perímetro).
+  emailDiario   Boolean   @default(true)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
