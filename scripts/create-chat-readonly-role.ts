@@ -3,12 +3,23 @@
  * `execute_sql` del chat IA (ver src/lib/chat-db.ts).
  *
  * Qué hace:
- *   1. CREATE ROLE warroom_chat_readonly (LOGIN, password aleatoria) si no existe.
+ *   1. CREATE ROLE warroom_chat_readonly (LOGIN, BYPASSRLS, password aleatoria)
+ *      si no existe.
  *   2. statement_timeout = 10s a nivel de rol (corta SELECTs desbocados).
  *   3. GRANT SELECT sobre todas las tablas de public + default privileges
  *      para que las tablas futuras (prisma db push) hereden el SELECT.
- *   4. Verifica conectando CON el rol: SELECT funciona, INSERT falla.
- *   5. Escribe CHAT_READONLY_DATABASE_URL en .env.local (no imprime la password).
+ *   4. Quita lo sensible: sin acceso a las tablas de tokens de reset ni a
+ *      ChatThread, y en User/Finder todas las columnas menos passwordHash.
+ *   5. Verifica conectando CON el rol: ve empresas, INSERT falla y
+ *      passwordHash no se puede leer.
+ *   6. Escribe CHAT_READONLY_DATABASE_URL en .env.local (no imprime la password).
+ *
+ * Por qué BYPASSRLS: en Supabase todas las tablas de public tienen RLS
+ * activado y SIN políticas (cierra la API pública de PostgREST). La app no lo
+ * nota porque conecta como dueña de las tablas, pero un rol nuevo vería 0
+ * filas en todo — el chat contestaría "0 empresas" sin error. BYPASSRLS no
+ * da permisos de escritura: lo que puede hacer el rol lo siguen marcando los
+ * GRANT (solo SELECT).
  *
  * Uso:  npx tsx scripts/create-chat-readonly-role.ts          (dry-run)
  *       APPLY=1 npx tsx scripts/create-chat-readonly-role.ts  (aplica)
@@ -28,6 +39,13 @@ import { PrismaClient } from "@prisma/client";
 
 const ROLE = "warroom_chat_readonly";
 const TIMEOUT = "10s";
+// Tablas que el chat no necesita y que no deben poder salir por él.
+const TABLAS_SIN_ACCESO = ["PasswordResetToken", "AdminPasswordResetToken", "ChatThread"];
+// Tablas legibles salvo estas columnas (GRANT por columna).
+const COLUMNAS_OCULTAS: Record<string, string[]> = {
+  User: ["passwordHash"],
+  Finder: ["passwordHash"],
+};
 
 function readEnvVar(name: string): string | null {
   // Igual que Next: .env.local pisa a .env
@@ -80,9 +98,9 @@ async function main() {
       DO $$
       BEGIN
         IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '${ROLE}') THEN
-          CREATE ROLE ${ROLE} LOGIN PASSWORD $pw$${password}$pw$;
+          CREATE ROLE ${ROLE} LOGIN BYPASSRLS PASSWORD $pw$${password}$pw$;
         ELSE
-          ALTER ROLE ${ROLE} WITH LOGIN PASSWORD $pw$${password}$pw$;
+          ALTER ROLE ${ROLE} WITH LOGIN BYPASSRLS PASSWORD $pw$${password}$pw$;
         END IF;
       END $$;
     `);
@@ -97,7 +115,22 @@ async function main() {
     await admin.$executeRawUnsafe(
       `ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO ${ROLE}`
     );
-    console.log("✓ Rol creado/actualizado + GRANTs aplicados");
+    for (const tabla of TABLAS_SIN_ACCESO) {
+      await admin.$executeRawUnsafe(`REVOKE ALL ON "${tabla}" FROM ${ROLE}`);
+    }
+    for (const [tabla, ocultas] of Object.entries(COLUMNAS_OCULTAS)) {
+      const cols = await admin.$queryRawUnsafe<{ column_name: string }[]>(
+        `SELECT column_name FROM information_schema.columns
+         WHERE table_schema = 'public' AND table_name = $1 ORDER BY ordinal_position`,
+        tabla
+      );
+      const visibles = cols.map((c) => c.column_name).filter((c) => !ocultas.includes(c));
+      await admin.$executeRawUnsafe(`REVOKE ALL ON "${tabla}" FROM ${ROLE}`);
+      await admin.$executeRawUnsafe(
+        `GRANT SELECT (${visibles.map((c) => `"${c}"`).join(", ")}) ON "${tabla}" TO ${ROLE}`
+      );
+    }
+    console.log("✓ Rol creado/actualizado + GRANTs aplicados (sin tokens, ChatThread ni passwordHash)");
   } finally {
     await admin.$disconnect();
   }
@@ -109,7 +142,25 @@ async function main() {
   try {
     const rows =
       await ro.$queryRawUnsafe<{ n: bigint }[]>(`SELECT count(*) AS n FROM "Empresa"`);
-    console.log(`✓ SELECT ok (${Number(rows[0].n)} empresas visibles)`);
+    const visibles = Number(rows[0].n);
+    if (visibles === 0) {
+      throw new Error(
+        "El rol ve 0 empresas: el RLS le está filtrando. ¿Se aplicó BYPASSRLS?"
+      );
+    }
+    console.log(`✓ SELECT ok (${visibles} empresas visibles)`);
+
+    let hashBlocked = false;
+    try {
+      await ro.$queryRawUnsafe(`SELECT "passwordHash" FROM "User" LIMIT 1`);
+    } catch (err) {
+      hashBlocked = /permission denied/i.test(String(err));
+    }
+    if (!hashBlocked) {
+      throw new Error("¡El rol puede leer User.passwordHash! Revisa los GRANT por columna.");
+    }
+    const users = await ro.$queryRawUnsafe<{ n: bigint }[]>(`SELECT count(id) AS n FROM "User"`);
+    console.log(`✓ passwordHash bloqueado; resto de User legible (${Number(users[0].n)} usuarios)`);
 
     let writeBlocked = false;
     try {
@@ -145,7 +196,7 @@ async function main() {
   }
   writeFileSync(envPath, content);
   console.log(
-    "✓ CHAT_READONLY_DATABASE_URL escrita en .env.local — cópiala a Vercel (Production) y redeploy"
+    "✓ CHAT_READONLY_DATABASE_URL escrita en .env.local — cópiala a Vercel (Production y Preview) y redeploy"
   );
 }
 

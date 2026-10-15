@@ -448,7 +448,7 @@ flowchart LR
 **Salvaguardas:**
 
 1. **Guard de texto** (`src/lib/chat-sql-guard.ts`) — solo SELECT/WITH, una sentencia, sin keywords de escritura (también dentro de un CTE) ni referencias a credenciales (`passwordHash`, tokens de reset, vault) o funciones de servidor (`pg_read_file`, `pg_sleep`, `dblink`…).
-2. **Rol Postgres de solo lectura** (`src/lib/chat-db.ts`, `scripts/create-chat-readonly-role.ts`) — la barrera estructural. ⚠️ A 2026-10-14 el rol `warroom_chat_readonly` NO existe en la BD de producción, así que `execute_sql` usa la conexión normal y solo le protege el guard de texto.
+2. **Rol Postgres de solo lectura** (`src/lib/chat-db.ts`, `scripts/create-chat-readonly-role.ts`) — la barrera estructural. Activo en producción desde 2026-10-15. Solo SELECT, `statement_timeout` 10 s y `BYPASSRLS`: todas las tablas de public tienen RLS sin políticas (cierra la API de PostgREST), y sin ese atributo el rol vería 0 filas sin error. Sin acceso a tokens de reset ni `ChatThread`; en `User`/`Finder`, todo menos `passwordHash` (GRANT por columna: una columna nueva en esas tablas hay que re-ejecutar el script para que el chat la vea).
 3. **BigInt serialization** — Prisma devuelve `COUNT(*)` como `BigInt`; replacer custom.
 4. **Horizonte temporal** — si el usuario no da periodo, el chat responde con todo el histórico diciendo qué rango cubre y ofrece acotar (antes preguntaba primero y bloqueaba la respuesta).
 
