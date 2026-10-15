@@ -54,4 +54,13 @@ describe("passwordResetEmail", () => {
     expect(portal.subject).toContain("Fontiber Portal Finders");
     expect(portal.html).toContain("Restablecer contraseña");
   });
+
+  it("pone en la cabecera el logotipo de la app, como el login", () => {
+    const expiresAt = new Date(Date.now() + 24 * 3_600_000);
+    const war = passwordResetEmail({ zona: "warroom", name: "A", url: "https://x", expiresAt });
+    const portal = passwordResetEmail({ zona: "portal", name: "A", url: "https://x", expiresAt });
+    expect(war.html).toContain('Fontiber <span style="color:#c75b39">War Room</span>');
+    expect(portal.html).toContain('Fontiber <span style="color:#c75b39">Finders</span>');
+    expect(war.html).toContain('bgcolor="#0c1932"');
+  });
 });
