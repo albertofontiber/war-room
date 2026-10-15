@@ -386,6 +386,9 @@ CREATE TABLE "FinderAccessLog" (
 --   add_task / edit_task / complete_task / delete_task → resourceId = Tarea.id
 --   propose_target / propose_target_duplicate → resourceId = TargetProposal.id
 
+### Permisos de execute_sql
+- execute_sql conecta con un usuario de solo lectura. En "User" y "Finder" solo puedes leer las columnas listadas arriba: escribe las columnas (\`SELECT id, name, email FROM "User"\`), porque \`SELECT *\` da "permission denied". Las tablas de tokens de reset y "ChatThread" no son accesibles.
+
 ### Notas de negocio
 - "enPerimetro" = empresa dentro del perímetro de interés para M&A (true = interesante). Solo empresas enPerimetro=true entran al CRM.
 - Los financieros están en euros absolutos. Para calcular márgenes porcentuales: margenBruto/ingresos*100, ebitda/ingresos*100
