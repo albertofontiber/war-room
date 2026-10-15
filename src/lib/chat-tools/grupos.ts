@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { extractAdquirente } from "@/lib/borme-adquirente";
 import { clasificarMovimientos } from "@/lib/grupo-movimientos";
+import { aliasDeGrupo, grupoPorAlias } from "@/lib/borme-senales";
 
 /**
  * movimientos_grupo — qué empresas ha incorporado un grupo en un periodo.
@@ -35,11 +36,13 @@ export function buildMovimientosGrupoTool() {
           hasta: hastaDate.toISOString().slice(0, 10),
         };
 
+        // "atlon" → "Attlon": las grafías alternativas resuelven al grupo real.
+        const nombreBuscado = grupoPorAlias(grupo) ?? grupo;
         const candidatos = await prisma.grupo.findMany({
-          where: { nombre: { contains: grupo, mode: "insensitive" } },
-          select: { id: true, nombre: true, tipo: true },
+          where: { nombre: { contains: nombreBuscado, mode: "insensitive" } },
+          select: { id: true, nombre: true, tipo: true, notas: true },
         });
-        const exacto = candidatos.find((g) => g.nombre.toLowerCase() === grupo.toLowerCase());
+        const exacto = candidatos.find((g) => g.nombre.toLowerCase() === nombreBuscado.toLowerCase());
         if (!exacto && candidatos.length > 1) {
           return {
             ambiguo: true,
@@ -95,10 +98,13 @@ export function buildMovimientosGrupoTool() {
 
         // Compradores que no son un Grupo registrado (o vehículos del grupo
         // con otro nombre): actos de adquisición/fusión que los mencionan.
+        // Se busca por lo que escribió el usuario, el nombre del grupo y sus
+        // alias (el BORME a veces escribe "ATLON" por "ATTLON").
+        const terminos = [...new Set([grupo, ...(g ? [g.nombre, ...aliasDeGrupo(g.nombre)] : [])])];
         const menciones = await prisma.bormeAlerta.findMany({
           where: {
             tipoActo: { in: ["adquisicion", "fusion"] },
-            descripcion: { contains: grupo, mode: "insensitive" },
+            OR: terminos.map((t) => ({ descripcion: { contains: t, mode: "insensitive" as const } })),
             fecha: { ...(desdeDate ? { gte: desdeDate } : {}), lte: hastaDate },
           },
           orderBy: { fecha: "asc" },
@@ -140,7 +146,7 @@ export function buildMovimientosGrupoTool() {
           ...(resultado ?? {}),
           mencionesEnActosDeCompra: mencionesNuevas,
           metodo:
-            "fechaEntrada = primera alerta BORME que vincula la empresa al grupo, o la adquisición/fusión que la precede en menos de 90 días (no hay campo 'fecha de entrada' en la ficha). enGrupoActualmente=false = el BORME la vincula pero la ficha no la tiene asignada al grupo: posible falso positivo, dilo. miembrosSinSenal = miembros con fecha de entrada desconocida.",
+            "Si grupo.notas trae contexto (vehículos del grupo, empresas del mismo fondo que NO son del grupo), úsalo al interpretar. fechaEntrada = primera alerta BORME que vincula la empresa al grupo, o la adquisición/fusión que la precede en menos de 90 días (no hay campo 'fecha de entrada' en la ficha). enGrupoActualmente=false = el BORME la vincula pero la ficha no la tiene asignada al grupo: posible falso positivo, dilo. miembrosSinSenal = miembros con fecha de entrada desconocida.",
         };
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "Unknown";

@@ -46,9 +46,23 @@ export function looksLikeCompanyName(candidate: string): boolean {
  * Cada match pasa por `looksLikeCompanyName` para evitar capturar etiquetas
  * BORME adyacentes (Ceses, Dimisiones, Nombramientos, etc.).
  */
+/**
+ * Compacta las formas jurídicas con puntos ("S.L.", "S.A.U.") a su forma sin
+ * puntos interiores ("SL.", "SAU."). Las regex de abajo cortan el nombre en
+ * el primer `.`, así que "VESTA PROTECT GROUP S.L." se quedaba en
+ * "VESTA PROTECT GROUP S". Se conserva UN punto final porque en el BORME el
+ * de "S.L." hace a la vez de fin de frase ("Socio único: X S.L. Ceses: …").
+ */
+export function compactarFormasJuridicas(texto: string): string {
+  return texto.replace(
+    /\bS\s?\.\s?([LA])\s?\.(?:\s?([LU])\s?\.)?/g,
+    (_m, a: string, b: string | undefined) => `S${a}${b ?? ""}.`
+  );
+}
+
 export function extractAdquirente(descripcion: string | null): string | null {
   if (!descripcion) return null;
-  const d = descripcion;
+  const d = compactarFormasJuridicas(descripcion);
 
   // 1. "Socio único: NOMBRE SA." / "Socio Unico. NOMBRE"
   // Aceptamos "Único" con y sin tilde porque el BORME a veces lo escribe sin
