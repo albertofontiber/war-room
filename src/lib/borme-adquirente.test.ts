@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { extractAdquirente, looksLikeCompanyName } from "./borme-adquirente";
+import { compactarFormasJuridicas, extractAdquirente, looksLikeCompanyName } from "./borme-adquirente";
 
 describe("looksLikeCompanyName", () => {
   it("rechaza strings demasiado cortos", () => {
@@ -105,5 +105,27 @@ describe("extractAdquirente", () => {
       extractAdquirente("Depósito de cuentas anuales del ejercicio 2024.")
     ).toBeNull();
     expect(extractAdquirente("Cambio de domicilio social.")).toBeNull();
+  });
+
+  it("no corta el nombre en los puntos de S.L. / S.A. / S.L.U.", () => {
+    expect(
+      extractAdquirente(
+        "Declaración de unipersonalidad. Socio único: VESTA PROTECT GROUP S.L. Ceses/Dimisiones. Consejero: X."
+      )
+    ).toBe("VESTA PROTECT GROUP SL");
+    expect(extractAdquirente("Socio único: EUROFESA S.A.U. Nombramientos.")).toBe("EUROFESA SAU");
+    expect(extractAdquirente("Sociedad absorbente: GRUPO FIRE S. L.; Sociedades absorbidas: Y.")).toBe(
+      "GRUPO FIRE SL"
+    );
+  });
+});
+
+describe("compactarFormasJuridicas", () => {
+  it("quita los puntos interiores y deja uno final", () => {
+    expect(compactarFormasJuridicas("X S.L. Y S.A.U. Z S.L.L.")).toBe("X SL. Y SAU. Z SLL.");
+  });
+
+  it("no toca siglas que no son formas jurídicas", () => {
+    expect(compactarFormasJuridicas("Art. 1º. S.COOP. D.N.I.")).toBe("Art. 1º. S.COOP. D.N.I.");
   });
 });

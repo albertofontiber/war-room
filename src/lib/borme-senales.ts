@@ -18,6 +18,9 @@ export interface GrupoSenales {
   keywordsDenominacion: string[];
   /** Substrings en "socio único / unipersonal" que identifican al grupo como adquirente */
   keywordsSocioUnico: string[];
+  /** Otras grafías del nombre del grupo (errores del BORME, marcas). Las usa
+   *  el chat (movimientos_grupo) para buscar compras y resolver el grupo. */
+  alias?: string[];
 }
 
 /**
@@ -76,7 +79,11 @@ export const GRUPOS_SENALES: GrupoSenales[] = [
       "URBON GARCIA FUENTES INIGO",
     ],
     keywordsDenominacion: ["ATTLON"],
-    keywordsSocioUnico: ["ATTLON TECHNOLOGIES", "ATTLON"],
+    // "ATLON" con una T es una errata del propio BORME (p. ej. la compra de
+    // Alarmas, Asistencia y Seguridad, oct 2026). Solo con TECHNOLOGIES:
+    // "ATLON" suelto casaría dentro de palabras como PENTATLON.
+    keywordsSocioUnico: ["ATTLON TECHNOLOGIES", "ATTLON", "ATLON TECHNOLOGIES"],
+    alias: ["Atlon"],
   },
   {
     // Sin acento grave en "Fabrega" para coincidir EXACTO con `Grupo.nombre`
@@ -105,6 +112,18 @@ export const GRUPOS_SENALES: GrupoSenales[] = [
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Alias conocidos de un grupo (sin incluir su nombre), por nombre exacto. */
+export function aliasDeGrupo(grupoNombre: string): string[] {
+  const n = norm(grupoNombre);
+  return GRUPOS_SENALES.find((g) => norm(g.grupoNombre) === n)?.alias ?? [];
+}
+
+/** Nombre del grupo cuyo alias coincide con `texto` (p. ej. "atlon" → "Attlon"). */
+export function grupoPorAlias(texto: string): string | null {
+  const n = norm(texto);
+  return GRUPOS_SENALES.find((g) => (g.alias ?? []).some((a) => norm(a) === n))?.grupoNombre ?? null;
+}
 
 /**
  * Normaliza texto para búsqueda en PDFs BORME: mayúsculas, sin diacríticos,
