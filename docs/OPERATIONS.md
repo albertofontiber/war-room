@@ -1,89 +1,89 @@
 # Operación y despliegues seguros
 
-Este documento describe cómo operar automatizaciones y cambios de esquema sin
-interrumpir el War Room.
+Revisado: **2026-10-23**. Estado de datos y migraciones comprobadas en [Estado actual](PROJECT_STATUS.md). Los comandos de escritura se ejecutan contra el entorno elegido y con el plan de migración/importación revisado.
 
 ## Panel de Operación
 
-La ruta interna `/monitoring` muestra las últimas 50 ejecuciones de BORME,
-resúmenes, tareas, documentación, correo y calendario. Registra solo
-contadores operativos (duración, registros creados, errores); nunca correos,
-tokens, cuerpos de mensajes ni errores crudos de proveedores.
+`/monitoring` muestra las últimas 50 ejecuciones de BORME, resúmenes, tareas, documentación, correo, calendario y registros. `CronRun` guarda duración, estado y contadores; no cuerpos de mensajes, tokens ni errores crudos de proveedores.
 
-- `Correcto`: ejecución completada sin incidencias.
-- `Revisar`: terminó, pero una cuenta, dato o presupuesto de tiempo requiere
-  atención.
-- `Fallido`: el proceso no pudo completarse. Se crea una notificación in-app y
-  se envía un email a los administradores; el detalle técnico está en Vercel
-  Logs.
-- `En curso`: ejecución iniciada que no ha sido cerrada. Si permanece así más
-  de 10 minutos para correo/calendario o 10 horas para BORME, investigar el
-  despliegue y la plataforma que la disparó.
+- **Correcto:** terminó sin incidencias.
+- **Revisar:** terminó con alguna cuenta, fuente o presupuesto de tiempo que requiere atención.
+- **Fallido:** no pudo completarse; se genera aviso operativo a admins.
+- **En curso:** se inició sin cierre. Si se prolonga, contrastar la duración habitual y el límite de ejecución del proceso con los logs del orquestador; el estado por sí solo no prueba que siga ejecutándose.
+
+Los logs estructurados (`src/lib/logger.ts`) dan el detalle técnico en Vercel. Web Analytics y Speed Insights ya están incorporados. Configurar un proveedor externo adicional de retención o alertas requiere elegir y autorizar ese proveedor.
+
+## Automatizaciones vigentes
+
+Horarios en **UTC**, definidos en `vercel.json` y `.github/workflows/`. En Europe/Madrid sumar una hora en invierno y dos en verano. GitHub Actions no garantiza puntualidad; la frecuencia declarada no acredita una ejecución real.
+
+| Proceso | Orquestador | Programación UTC | Endpoint |
+|---|---|---|---|
+| BORME del día en curso | Vercel | L–V 20:00 | `/api/cron/borme` |
+| Resumen diario | Vercel | Ma–Sa 06:00 | `/api/cron/daily-summary` |
+| Digest de tareas | Vercel | L–V 07:00 | `/api/cron/task-digest` |
+| Vincular/crear documentación | Vercel | Lunes 07:30 | `/api/cron/target-docs-check` |
+| Cepreven, seguridad privada y RIPCI | Vercel | Día 1 de cada mes 08:00 | `/api/cron/registros` |
+| Correo de contactos: entrada y salida | GitHub Actions | Cada 15 minutos | `/api/cron/email-tasks` |
+| Calendario | GitHub Actions | Cada 30 minutos | `/api/cron/calendar-tasks` |
+
+Todos exigen bearer `CRON_SECRET` y fallan cerrados si falta la variable. Correo y calendario deduplican por cursores e identificadores de origen. Sus workflows permiten backfill manual con ventana explícita; revisar el alcance antes de dispararlo.
+
+El resumen diario se dirige a usuarios activos con `emailDiario=true`. `SUMMARY_EMAIL_TO` ya no gobierna esa selección. El digest incluye tareas sin asignar cuyo autor sea admin, y puede incluir actividad de finders. No reintroducir Pipedrive ni un cron semanal independiente de Cepreven: ambos modelos de operación quedaron sustituidos.
 
 ## Migraciones Prisma
 
-Desde ahora el esquema se versiona en `prisma/migrations/`. No se debe usar
-`prisma db push` para cambios de producción: puede introducir diferencias que
-no quedan revisadas ni reproducibles.
+El esquema está versionado en `prisma/migrations/`. No usar `prisma db push` en producción: introduciría diferencias sin historial revisable ni reproducible.
 
-### Primera adopción en producción
+### Estado de adopción
 
-La base de datos existente fue creada antes de adoptar migraciones, por lo que
-ya contiene el esquema de la migración `20260714093000_baseline`. Tras hacer
-una copia de seguridad en Supabase y confirmar que el despliegue de código está
-en `READY`, ejecutar desde una terminal con las variables de **producción**:
+La línea base `20260714093000_baseline` y las migraciones posteriores hasta `20261023120000_empresa_estado` constan aplicadas en el corte de datos. La adopción de migraciones y de `CronRun` ya está resuelta.
+
+Solo si se incorpora otra base **preexistente** que ya contiene exactamente el esquema de la línea base, verificar su equivalencia y respaldo antes de registrar:
 
 ```powershell
 npx prisma migrate resolve --applied 20260714093000_baseline
 npx prisma migrate deploy
 ```
 
-El primer comando solo registra la línea base: no modifica tablas ni datos. El
-segundo aplica las migraciones posteriores, incluida `CronRun`.
-
-Después, comprobar:
+`resolve` registra la línea base sin recrear tablas. No ejecutarlo en una base vacía: en ese caso `prisma migrate deploy` debe aplicar también la línea base. No repetir `resolve` en cada despliegue.
 
 ```powershell
 npx prisma migrate status
 ```
 
-El resultado esperado es que no haya migraciones pendientes. Después de que la
-migración `CronRun` esté aplicada, una ejecución programada nueva aparecerá en
-`/monitoring`.
+El resultado esperado es que no haya migraciones pendientes.
 
 ### Cambios futuros
 
-1. Cambiar `prisma/schema.prisma`.
-2. Crear una migración nueva desde una base local o de desarrollo vacía.
-3. Revisar el SQL de la migración.
-4. Abrir un pull request: la verificación aplica todas las migraciones en un
-   PostgreSQL temporal, compara el resultado con el esquema, ejecuta pruebas,
-   typecheck y build.
-5. Tras desplegar el código, aplicar `npx prisma migrate deploy` con las
-   variables de producción.
+1. Cambiar `prisma/schema.prisma` y generar una migración desde una base de desarrollo.
+2. Revisar SQL, compatibilidad con la versión desplegada y recuperación del estado previo.
+3. La CI debe aplicar todas las migraciones en PostgreSQL temporal, comparar el resultado con el esquema y ejecutar tests, typecheck y build.
+4. Planificar el orden de esquema y código. Una migración aditiva que añade columnas leídas por la app debe aplicarse **antes** de promover ese código. Para cambios destructivos, separar expansión, transición y retirada; no borrar una columna todavía utilizada por alguna versión desplegada.
+5. Aplicar `npx prisma migrate deploy` en el punto previsto, comprobar estado y verificar el flujo afectado después del despliegue.
 
-### Seguridad de acceso a datos (RLS)
+### Seguridad de acceso a datos
 
-War Room usa Prisma en el servidor; los roles de la Data API de Supabase
-(`anon`, `authenticated` y `service_role`) no tienen permisos sobre las tablas
-del esquema `public`. La migración
-`20260714140000_rls_data_api_lockdown` activa RLS y elimina esos permisos en
-las tablas existentes, además de retirar los privilegios por defecto para los
-objetos creados por `postgres`.
+La app utiliza Prisma en servidor. RLS y la retirada de permisos de `anon`, `authenticated` y `service_role` cierran la Data API sobre las tablas del esquema `public`. No confundir esa barrera con la autorización propia de las rutas de la app.
 
-Al crear una nueva tabla en `public`, la misma migración debe incluir
-explícitamente `ALTER TABLE ... ENABLE ROW LEVEL SECURITY`. Solo si se decide
-exponer una funcionalidad mediante la Data API se otorgarán los privilegios
-mínimos y se añadirán políticas RLS revisadas en esa misma migración. Tras
-cualquier cambio de este tipo, comprobar el Security Advisor de Supabase.
+Una tabla nueva en `public` debe activar RLS explícitamente en su migración. Solo si se decide exponer una función por la Data API se conceden privilegios mínimos y políticas revisadas en esa misma entrega. Revisar también los privilegios por defecto y el Security Advisor después de cambios de acceso.
 
-## Observabilidad
+## Importación SABI
 
-- Los logs ya se emiten como JSON estructurado con `level`, `scope`,
-  `timestamp` y `context`, para filtrarlos en Vercel.
-- Vercel Web Analytics y Speed Insights están incluidos en la aplicación. Sus
-  paneles se consultan en el proyecto de Vercel y no requieren secretos
-  adicionales.
-- Los errores de crons generan una alerta operativa. Para retención larga de
-  errores de aplicación o alertas a un canal externo, configurar un Log Drain o
-  Sentry requiere elegir y autorizar el proveedor externo antes de activarlo.
+La importación de octubre está integrada en #190 y sus datos se comprobaron en el corte del estado actual. No es una tarea pendiente ni debe repetirse automáticamente en cada despliegue.
+
+Para otra extracción compatible, revisar hoja, fecha y definiciones financieras. Simulación por defecto:
+
+```powershell
+node --env-file=.env.local --import tsx scripts/import-sabi-financieros.ts "ruta/extraccion.xlsx" --fecha 2026-10-23 --informe "logs/sabi-simulacion.csv"
+```
+
+El comando no escribe en la base; el informe CSV sí se guarda localmente. Revisar CIF sin match, duplicados, estados, cuentas nuevas/actualizadas, empleados y borrados propuestos. La escritura exige añadir `--apply` y utiliza una transacción única. Aplicar antes la migración requerida y disponer de una copia recuperable del estado previo.
+
+Los nulos no pisan cifras previas, los años íntegramente a cero no se cargan y solo se actualizan cuentas de activas o en concurso. La retirada de cuentas `informa_2026` restantes es una regla específica de homogeneización de esa fuente: revisar su efecto antes de reutilizar el importador para otro lote.
+
+## Configuración del chat
+
+`CHAT_READONLY_DATABASE_URL` debe apuntar al rol de lectura del chat en cada entorno. No registrar la URL en logs. El rol y sus exclusiones están definidos en `scripts/create-chat-readonly-role.ts`; su creación ya se realizó (#187).
+
+Después de añadir columnas a `User` o `Finder`, revisar los grants por columna sin conceder acceso a hashes. La existencia del rol no prueba que un entorno nuevo tenga configurada su URL. El código conserva fallback a la conexión normal si falta la variable, por lo que hay que comprobar esta configuración explícitamente.

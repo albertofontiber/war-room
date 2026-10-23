@@ -1,6 +1,6 @@
 # Responsive design — guía y decisiones
 
-Estado: completo (Tech Debt #14). 6 PRs (#64-#69) entre 2026-05-03 y 2026-05-03 que adaptan War Room admin + Portal finders a mobile/tablet/desktop. El uso real revelará los siguientes ajustes.
+Revisado: **2026-10-23**. La adaptación responsive base (#64–#69) y los ajustes posteriores de uso real están entregados. Esta guía describe convenciones vigentes; las propuestas futuras se mantienen en [Roadmap](ROADMAP.md).
 
 ## PRs aplicados
 
@@ -54,11 +54,14 @@ El War Room usa abundantemente `text-[10px]` y `text-[11px]` por densidad inform
 ```css
 /* globals.css */
 @media (max-width: 639px) {
-  input, textarea, select { font-size: 16px; }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="date"]):not([type="range"]):not([type="color"]):not([type="file"]),
+  textarea { font-size: 16px !important; }
 }
 ```
 
-Esto evita el zoom-in automático de iOS Safari al focusear cualquier input. **No** sube el font-size del texto plano (sigue text-[10px]/[11px]) — solo inputs.
+Consultar el selector exacto en `globals.css`. La regla evita el zoom de iOS al abrir el teclado en campos de texto. `select` e `input[type=date]` conservan su tamaño denso porque abren selector nativo. Checkbox, radio, range, color y file también quedan excluidos. No ampliar la regla a todos los inputs ni al texto plano.
+
+La tipografía utiliza las variables de `next/font` (`--font-sans`, `--font-mono`); los nombres literales en Tailwind no corresponden a las familias generadas. Corregido en #138–#139.
 
 **Excepción:** componentes con `<style jsx>` definen `.input` propio que escapa la regla global. Hay que duplicar el `font-size: 16px` dentro del `<style jsx>`. PRs #67 y #68 lo hicieron en `PortalProposeClient` y `AddLeadModal`.
 
@@ -67,7 +70,7 @@ Esto evita el zoom-in automático de iOS Safari al focusear cualquier input. **N
 1. **Vista por defecto en mobile**: mantenemos "mapa" (igual que desktop). Auto-cambiar a "tabla" machacaría user choice en cada reload (store es in-memory). Si en uso real molesta, persistir con localStorage.
 2. **PanelEmpresa en mobile**: `<ResponsiveModal>` (no ruta nueva). Preserva la URL del mapa/tabla con contexto. Si aparecen problemas (share/refresh), revaloramos pasar a `/empresas/[id]`.
 3. **Drawer mobile = navegación + filtros juntos**: en lugar de drawer-nav + bottom-sheet-filtros separados, los unificamos en una columna scroll para reducir fricción. Documentado en `WarRoomMobileMenu.tsx`. Si los filtros estorban a la nav, mover filtros a `<BottomSheet>`.
-4. **OperacionesBorme**: scroll horizontal en mobile en lugar de 3 layouts de cards distintos para señales/personas/actividad. Trade-off pragmático.
+4. **OperacionesBorme**: tablas con scroll horizontal en móvil para Señales M&A y Alertas personas; la actividad se integró en Señales.
 5. **MapTooltip**: hover-only, no aplica en mobile táctil. Sin cambios.
 6. **Tablas admin (Finders)**: `overflow-x-auto` + `min-w` en lugar de cards. Caso de uso interno de baja frecuencia mobile, no merece refactor.
 
@@ -75,10 +78,14 @@ Esto evita el zoom-in automático de iOS Safari al focusear cualquier input. **N
 
 - **Nuevo breakpoint custom:** evitar. Si imprescindible, añadirlo en `tailwind.config.ts` `theme.screens` Y en `BREAKPOINTS` de `breakpoints.ts` simultáneamente.
 - **Nuevo primitive:** crear en `src/components/ui/responsive/` y reexportar en `index.ts`. Documentarlo aquí.
-- **Validación visual:** sin Playwright instalado por ahora. Verificar en Chrome DevTools con devices: iPhone 12 Pro (390×844), Pixel 5 (393×851), iPad Mini (768×1024), iPad Pro (1024×1366), Desktop 1440.
+- **Validación visual:** comprobar móvil estrecho, tablet, desktop y apertura/cierre de teclado. La CI no configura una suite de navegador; los tests unitarios y el build no sustituyen esa comprobación.
 
-## Items conocidos (low priority)
+## Ajustes posteriores ya entregados
 
-- **Mapbox terrain crash al unmount**: bug pre-existente en mapbox-gl al cambiar de vista mapa→otra. Solo molesta en dev overlay, prod loggea. Spawn task creado.
-- **Zoom inicial mapa**: feedback Alberto, una línea en store. Spawn task creado.
-- **MapTooltip overflow** en bordes del mapa en mobile: hover-only, low impact.
+- Zoom inicial: #70.
+- Ajustes móviles detectados tras la primera adaptación: #71.
+- Desactivar terrain antes del desmontaje de Mapbox: #72.
+- Fuentes consistentes y anti-zoom acotado: #138–#139.
+- Recuperación del viewport tras el chat y protección de transiciones: #158–#159.
+
+El antiguo aviso de overflow de tooltip no tenía reproducción vigente ni ticket enlazado. Se retira del backlog activo; si se reproduce, registrar viewport, pasos y captura antes de abrir una incidencia nueva.
