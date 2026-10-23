@@ -1,0 +1,1366 @@
+{
+  "fechaRevision": "2026-10-23",
+  "alcance": "Seguimiento de dominios candidatos: un dominio no equivale necesariamente a una sociedad.",
+  "metodo": "156 dominios rastreados desde la primera tanda, Tecnifuego, AISLA y webs del universo actual; revisión adicional de identidad y servicios. No es un barrido exhaustivo de España ni de todas las asociaciones.",
+  "resumen": {
+    "dominiosRastreados": 156,
+    "dominiosEnSeguimiento": 157,
+    "estados": {
+      "pendiente_revision": 72,
+      "enriquecida": 50,
+      "identidad_ambigua": 5,
+      "pendiente_identidad": 7,
+      "alta_aplicada": 19,
+      "fuera_alcance": 4
+    }
+  },
+  "candidatos": [
+    {
+      "nombre": "3 FUEGOS PCI, S.L.",
+      "web": "https://www.3fuegos.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.3fuegos.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "3F INGENIERÍA",
+      "web": "http://3fingenieria.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "ABTEX, S.A.",
+      "web": "https://www.abtex.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.abtex.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "A28866408"
+    },
+    {
+      "nombre": "ACCIONA FACILITY SERVICE, S.A.",
+      "web": "http://www.acciona.com/es/facility-services/",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "identidad_ambigua",
+      "motivo": "La identidad fiscal del dominio de grupo no resuelve la sociedad que ejecuta la actividad."
+    },
+    {
+      "nombre": "ACECHO SEGURIDAD, S.L.",
+      "web": "https://www.acecho.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.acecho.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "ADRIGO SOLUCIONES, S.L.",
+      "web": "https://adrigosoluciones.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://adrigosoluciones.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "Aicon Sistemas",
+      "web": "https://www.aiconsistemas.com/",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B64322399"
+    },
+    {
+      "nombre": "AÏLLAMENTS PIRINEU",
+      "web": "http://www.aillamentspirineu.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "AIR FEU SL",
+      "web": "https://www.airfeu.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.airfeu.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "AISLAMIENTOS CUENCA, C.B.",
+      "web": "http://www.aislamientoscuenca.es",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "AISLAMIENTOS DE CASTILLA, S.A.",
+      "web": "http://www.aiscasa.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "Aislamientos e Ignifugaciones Los Montes",
+      "web": "https://www.aislamientoslosmontes.com/",
+      "origen": "busqueda_web",
+      "fuenteDescubrimiento": "https://www.aislamientoslosmontes.com/",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B93588275"
+    },
+    {
+      "nombre": "AISLAMIENTOS EUNA, S.L.",
+      "web": "http://www.euna.es",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "AISLAMIENTOS LA MANCHA",
+      "web": "http://www.aislamientoslamancha.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_identidad",
+      "motivo": "Se ha encontrado oferta de ignifugación/pasiva; falta completar identidad fiscal primaria."
+    },
+    {
+      "nombre": "AISLAMIENTOS VALDOVIÑO",
+      "web": "http://www.aislamientosvaldovino.es",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B15925860"
+    },
+    {
+      "nombre": "AISLAMIENTOS VASCOS ISOVAS, S.L.",
+      "web": "http://www.isovas.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "AISLAMIENTOS ZARAGOZA®",
+      "web": "http://www.aislamientoszaragoza.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "AISLAMOS, S.L.",
+      "web": "http://www.aislamos.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B36235380"
+    },
+    {
+      "nombre": "AISTEPOL, S.L",
+      "web": "http://www.aistepol.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_identidad",
+      "motivo": "Se ha encontrado oferta de ignifugación/pasiva; falta completar identidad fiscal primaria."
+    },
+    {
+      "nombre": "AISTERCOM, S.L.",
+      "web": "http://www.aistercom.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B78098324"
+    },
+    {
+      "nombre": "ALARMAS DE DETECCION LINEAL E INSTALACIONES, SL",
+      "web": "https://www.adlinstalaciones.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.adlinstalaciones.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "ALCARREÑA DE SEGURIDAD SL",
+      "web": "https://www.jomar-extintores.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.jomar-extintores.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "ALERTA SEGURETAT PONENT,S.L.",
+      "web": "https://www.alertaseguretat.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.alertaseguretat.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "APL",
+      "web": "http://www.aplevante.es",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B12744033"
+    },
+    {
+      "nombre": "Aplicaciones Apisur",
+      "web": "https://aplicacionesapisur.com/",
+      "origen": "busqueda_web",
+      "fuenteDescubrimiento": "https://aplicacionesapisur.com/",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B18777482"
+    },
+    {
+      "nombre": "APLIYES, S.L.U.",
+      "web": "https://www.apliyes.com/",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B84147198"
+    },
+    {
+      "nombre": "ARAISA SEGURIDAD, S.L.",
+      "web": "https://araisaseguridad.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://araisaseguridad.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "AREO FEU, GRUPO DE INCENDIOS, SOCIEDAD LIMITADA",
+      "web": "https://www.areo.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.areo.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B73630592"
+    },
+    {
+      "nombre": "AREX BOUZAS, S.L.",
+      "web": "https://www.arexbouzas.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.arexbouzas.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B50588078"
+    },
+    {
+      "nombre": "ARGOS GESTIÓN, S.L. (Madrid)",
+      "web": "https://www.ignifugacionesargos.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "AS FIRING, S.L.",
+      "web": "http://www.asfiring.es",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "ASPOR FACILITY & SERVICES SL",
+      "web": "http://www.aspor.es",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "ATERKI ISOLA, S.L.",
+      "web": "http://www.aterki.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "AUXCOM 98, S.L.",
+      "web": "https://www.auxcom98.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.auxcom98.com",
+      "estado": "identidad_ambigua",
+      "motivo": "CIF en War Room B96753843 y CIF publicado en web B96753043; resolver antes de enriquecer."
+    },
+    {
+      "nombre": "AYCONF, S.L.",
+      "web": "https://www.ayconf.net",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.ayconf.net",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B29062585"
+    },
+    {
+      "nombre": "BCN&SOS C.I.,S.L.",
+      "web": "http://www.bcnsos.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B64735285"
+    },
+    {
+      "nombre": "Berbel Porcel Asociados",
+      "web": "https://www.berbelporcel.com/",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B18577015",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "BERINI PROTECCION CONTRA INCENDIOS SOCIEDAD LIMITADA",
+      "web": "https://www.berini-pci.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.berini-pci.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "CARBOLINE",
+      "web": "http://www.carboline.es",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "fuera_alcance",
+      "motivo": "Fabricante de recubrimientos; sin evidencia validada de instalación propia en este lote."
+    },
+    {
+      "nombre": "CEPREVEN",
+      "web": "http://www.cepreven.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "fuera_alcance",
+      "motivo": "Asociación y formación, fuente sectorial y no empresa instaladora."
+    },
+    {
+      "nombre": "CHACARREX, S.L.",
+      "web": "https://www.chacarrex.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.chacarrex.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B80145766"
+    },
+    {
+      "nombre": "CHEMTROL PROYECTOS Y SISTEMAS, S.L.",
+      "web": "https://www.chepro.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.chepro.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B83517425"
+    },
+    {
+      "nombre": "CONTRAINCENDIS GIRONA SOCIEDAD LIMITADA",
+      "web": "https://www.contraincendisgirona.cat",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.contraincendisgirona.cat",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "CONTREXT INSTALACIONES SL",
+      "web": "https://www.contrext.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.contrext.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "Control Ignífugo / CISA",
+      "web": "https://www.controlignifugo.es/",
+      "origen": "usuario_y_tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "A19199892"
+    },
+    {
+      "nombre": "CONTUB MUNTATGES S.L.",
+      "web": "https://www.contubmuntatges.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.contubmuntatges.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "CORDOBESA PROYECTOS E INSTALACIONES SL",
+      "web": "https://www.corproin.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.corproin.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "COTTES",
+      "web": "https://www.cottesgroup.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.cottesgroup.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B12849212"
+    },
+    {
+      "nombre": "DASA SEGURIDAD,SL",
+      "web": "https://www.dasaseguridad.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.dasaseguridad.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B09557026"
+    },
+    {
+      "nombre": "DESICNA CONTRAINCENDIO S.L.",
+      "web": "https://www.desicnacontraincendio.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.desicnacontraincendio.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B76211655"
+    },
+    {
+      "nombre": "Diaterm Foc",
+      "web": "https://www.diatermfoc.com/",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B61849295"
+    },
+    {
+      "nombre": "EDEA SEGURIDAD, S.L.",
+      "web": "https://www.edeaseguridad.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.edeaseguridad.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B99477895"
+    },
+    {
+      "nombre": "Enesa Continental",
+      "web": "https://www.enesacontinental.com/",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B54593710"
+    },
+    {
+      "nombre": "ESTINSER, S.L.",
+      "web": "https://www.estinser.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.estinser.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "EXTINBUR, S.L.",
+      "web": "https://www.extinbur.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.extinbur.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B09320748"
+    },
+    {
+      "nombre": "EXTINTORES MANTEX",
+      "web": "https://extintoresmantex.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://extintoresmantex.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B45273075"
+    },
+    {
+      "nombre": "EXTINTORES MINAYA, S.L.",
+      "web": "https://extintoresminaya.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://extintoresminaya.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "EXTINTORES ORIGEN, SL",
+      "web": "https://www.extintoresorigen.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.extintoresorigen.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "EXTINTORES RECIX SL",
+      "web": "https://www.extintoresrecix.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.extintoresrecix.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B55423537"
+    },
+    {
+      "nombre": "EXTINTORS DIDAC SL",
+      "web": "https://www.systemfire.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.systemfire.com",
+      "estado": "identidad_ambigua",
+      "motivo": "Redirige a extintorgirona.com; confirmar continuidad de titularidad fiscal antes de enriquecer."
+    },
+    {
+      "nombre": "EXTINZAR PCI, S.L.",
+      "web": "https://www.extinzar.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.extinzar.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B99468738"
+    },
+    {
+      "nombre": "FIRESA SISTEMAS DE PROTECCION CONTRA INCENDIOS SL",
+      "web": "https://www.firesa.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.firesa.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B06960199"
+    },
+    {
+      "nombre": "FIREXT SISTEMAS DE EXTINCION, S.L.",
+      "web": "https://www.firext.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.firext.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B84793124"
+    },
+    {
+      "nombre": "FISECO",
+      "web": "https://fiseco.es/",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "Fuegodiez",
+      "web": "https://www.fuegodiez.com/",
+      "origen": "cepreven_en_base",
+      "fuenteDescubrimiento": "https://www.fuegodiez.com/",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B98250319"
+    },
+    {
+      "nombre": "GOEXTIN, S.L.",
+      "web": "https://goextin.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://goextin.es",
+      "estado": "identidad_ambigua",
+      "motivo": "CIF en War Room B92574854 y CIF publicado en web B92603372; resolver antes de enriquecer."
+    },
+    {
+      "nombre": "GRUPO FIRE MADRID, S.L.",
+      "web": "https://www.grupofiremadrid.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.grupofiremadrid.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B86172996"
+    },
+    {
+      "nombre": "GRUPO FIREWORD.S.L.",
+      "web": "https://www.fireword.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.fireword.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "HOSPITALER INGENIEROS 2019 SL",
+      "web": "http://www.hospitaler.es",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "IBERDETECTA PROTECCION CONTRA INCENDIOS, S.L.L.",
+      "web": "https://www.iberdetecta.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.iberdetecta.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B87083010"
+    },
+    {
+      "nombre": "Iberext",
+      "web": "https://www.iberext.com/",
+      "origen": "cepreven_y_tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "A78999968"
+    },
+    {
+      "nombre": "IGESUR SOLUCIONES AVANZADAS, S.L.",
+      "web": "http://www.igesur.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B56082860"
+    },
+    {
+      "nombre": "Ignifugaciones Ibéricas",
+      "web": "https://ignifugacionesibericas.com/",
+      "origen": "busqueda_web",
+      "fuenteDescubrimiento": "https://ignifugacionesibericas.com/",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B44668531"
+    },
+    {
+      "nombre": "Ignifugados Armero",
+      "web": "https://ignifugadosarmero.com/",
+      "origen": "busqueda_web",
+      "fuenteDescubrimiento": "https://ignifugadosarmero.com/",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B54917844"
+    },
+    {
+      "nombre": "Ignitor Martínez Franco",
+      "web": "https://www.ignitor-martinezfranco.com/",
+      "origen": "busqueda_web",
+      "fuenteDescubrimiento": "https://www.ignitor-martinezfranco.com/",
+      "estado": "pendiente_identidad",
+      "motivo": "Se ha encontrado oferta de ignifugación/pasiva; falta completar identidad fiscal primaria."
+    },
+    {
+      "nombre": "Ignitor Productos Ignífugos",
+      "web": "https://ignifugacionesignitor.com/",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B64404809"
+    },
+    {
+      "nombre": "IGNOFOC SISTEMAS SL",
+      "web": "https://www.ignofocsistemas.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.ignofocsistemas.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B01971274"
+    },
+    {
+      "nombre": "IKRAN MANAGEMENT SERVICES S.L",
+      "web": "http://www.ikran.es",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "INCOINSER TECNICAS CONTRA INCENDIOS S.L.",
+      "web": "https://www.incoinser.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.incoinser.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B88282033"
+    },
+    {
+      "nombre": "INICIATIVAS Y PROYECTOS CONTRA EL FUEG",
+      "web": "https://www.iniciativasfuego.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.iniciativasfuego.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "INOVA INGENIEROS, SLP",
+      "web": "http://www.inovaingenieros.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "INSONOTEC SERVICIOS INTEGRALES, S.L.",
+      "web": "https://www.insonotec.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.insonotec.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "INSTALACION Y CONSERVACION DE EXTINTOR",
+      "web": "https://www.incotex.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.incotex.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "INSTALACIÓN Y MANTENIMIENTO SANTOS, SL",
+      "web": "https://www.santossl.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.santossl.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "INSTALACIONES CONTRA INCENDIOS CONEJERO, S.L.",
+      "web": "https://www.manuelaconejero.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.manuelaconejero.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B54143250"
+    },
+    {
+      "nombre": "INSTALACIONES DE FONTANERIA EL TARAJAL",
+      "web": "https://www.contraincendiosmalaga.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.contraincendiosmalaga.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "INSULAR CANARIAS CANSERVEXT S.L",
+      "web": "https://www.insularcanariasc.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.insularcanariasc.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "INTEDESER GLOBAL SL",
+      "web": "https://www.intedeser.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.intedeser.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "INTERTEK IBÉRICA",
+      "web": "http://www.intertek.es",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "fuera_alcance",
+      "motivo": "Ensayos y certificación, fuera del universo de instaladoras/aplicadoras."
+    },
+    {
+      "nombre": "INTROPOL, S.L.",
+      "web": "http://www.intropol.es",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_identidad",
+      "motivo": "Se ha encontrado oferta de ignifugación/pasiva; falta completar identidad fiscal primaria."
+    },
+    {
+      "nombre": "ISPOL AISLAMIENTOS",
+      "web": "http://www.aislamientosispol.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "J.J. EMERPLAN SEGURIDAD, S.L.",
+      "web": "https://www.jjemerplan.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.jjemerplan.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "JS FEUER, S.L.",
+      "web": "https://www.jsfeuer.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.jsfeuer.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B76744721"
+    },
+    {
+      "nombre": "KAVIDOORS",
+      "web": "http://www.kavidoors.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "fuera_alcance",
+      "motivo": "Fabricante de puertas; no se ha validado ejecución de instalación propia en este lote."
+    },
+    {
+      "nombre": "MCI COSMOS SL",
+      "web": "https://www.mcicosmos.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.mcicosmos.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B31581598"
+    },
+    {
+      "nombre": "MCI QUERCUS, S.L.U.",
+      "web": "https://www.mciquercus.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.mciquercus.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "MEDITERRÁNEA DE CONTROL E INSPECCIÓN, S.L.",
+      "web": "http://https://www.mediterraneadecontrol.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "METALUR TRES CAMINOS, S.L.",
+      "web": "https://www.metalur.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.metalur.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "MOGASUR S.L.",
+      "web": "https://www.mogasur.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.mogasur.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B41706037"
+    },
+    {
+      "nombre": "MTM MANTENIMIENTO CONTRAINCENDIOS, S.L.",
+      "web": "https://www.mtmcontraincendios.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.mtmcontraincendios.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B86136025"
+    },
+    {
+      "nombre": "Naes 2014 / Naes PCI",
+      "web": "https://naes2014.es/",
+      "origen": "usuario",
+      "fuenteDescubrimiento": "https://naes2014.es/",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B87167011"
+    },
+    {
+      "nombre": "NI FOC NI FUM CONTRAINCENDIS 1983, SL",
+      "web": "https://www.nifocnifum.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.nifocnifum.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "NJORD SEGURIDAD S.L",
+      "web": "https://www.njordseguridad.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.njordseguridad.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "NORMATEX INGENIER¿A CONTRA INCENDIOS, S.L.",
+      "web": "https://www.normatex.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.normatex.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B30410013",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "PAIGO PROTECCIO CONTRA EL FOC S.L.",
+      "web": "https://www.maifoc.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.maifoc.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "PASSIVHAUS CUENCA",
+      "web": "http://www.passivhauscuenca.es",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "Pefipresa",
+      "web": "https://www.pefipresa.com/",
+      "origen": "cepreven_y_tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "A28145407"
+    },
+    {
+      "nombre": "PERFILEA, S.L.",
+      "web": "http://www.puertascontraincendios.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "PIREX DETECCION Y EXTINCION, S.L.",
+      "web": "https://www.pirex.info",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.pirex.info",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "Plasfoc",
+      "web": "https://www.plasfoc.com/",
+      "origen": "usuario_y_tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "A43708106"
+    },
+    {
+      "nombre": "PR. Y SER. INTEGR. CONTRAINCENDIOS S.L",
+      "web": "https://www.firecontrol.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.firecontrol.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "Prefire",
+      "web": "https://www.prefire.es/",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B61491023"
+    },
+    {
+      "nombre": "PREMAEX, S.L.",
+      "web": "https://www.premaex.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.premaex.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "PROAISLAMIENTOS",
+      "web": "http://proaislamientos.es",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_identidad",
+      "motivo": "Se ha encontrado oferta de ignifugación/pasiva; falta completar identidad fiscal primaria."
+    },
+    {
+      "nombre": "PROCAVAL",
+      "web": "http://www.procaval.es",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B98892631"
+    },
+    {
+      "nombre": "PROEX PROTECCION CONTRA INCENDIOS, S.L.",
+      "web": "https://www.proexpci.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.proexpci.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B07680127"
+    },
+    {
+      "nombre": "Propacon",
+      "web": "https://propacon.com/",
+      "origen": "busqueda_web",
+      "fuenteDescubrimiento": "https://propacon.com/",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B90411471"
+    },
+    {
+      "nombre": "PROTECCION Y DETECCION DE INCENDIOS SL",
+      "web": "https://www.prodeincendio.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.prodeincendio.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "PROTECCION Y ELECTRONICA DEL SUR, S. L",
+      "web": "https://www.protelsur.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.protelsur.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B41626862"
+    },
+    {
+      "nombre": "PROTECCION Y SEGURIDAD NORTE, S.L.",
+      "web": "https://www.prosenor.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.prosenor.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B95795993"
+    },
+    {
+      "nombre": "Protecciones Ignífugas del Centro",
+      "web": "https://www.picprotecciones.es/",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B71014898"
+    },
+    {
+      "nombre": "PROTECSA GROUP 2002, S.L.",
+      "web": "https://www.protecsa-group.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.protecsa-group.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "PROTEKNIA FIRE SL",
+      "web": "https://www.protekniafire.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.protekniafire.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "PROYECCIÓN VALLÉS, S.L.",
+      "web": "http://www.proyeccionvalles.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "Rada Ignifugación",
+      "web": "https://radaignifugacion.es/",
+      "origen": "busqueda_web",
+      "fuenteDescubrimiento": "https://radaignifugacion.es/",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B98701881"
+    },
+    {
+      "nombre": "RBC INSTALACIONES DE PROTECCIÓN CONTRA INCENDIOS E INTRUSIÓN",
+      "web": "https://www.rbcinstalaciones.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.rbcinstalaciones.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B98695513"
+    },
+    {
+      "nombre": "REDEPESA, S.L.",
+      "web": "http://www.redepesa.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "RG GREEN SYSTEMS, S.L.",
+      "web": "http://www@rg-systems.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "RIBER EXTINGA FIRE SL",
+      "web": "https://www.riberfire.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.riberfire.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B98436090"
+    },
+    {
+      "nombre": "RUHER INGENIEROS, S.L.",
+      "web": "https://www.ruher.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.ruher.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B83310169"
+    },
+    {
+      "nombre": "S.C.I.INALEX, S.L.",
+      "web": "https://www.inalex.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.inalex.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "S'EUBALLO SL",
+      "web": "https://seuballo.es/",
+      "origen": "ampliacion_web",
+      "fuenteDescubrimiento": "https://seuballo.es/ignifugaciones-para-construcciones/",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B16757601"
+    },
+    {
+      "nombre": "SABICO",
+      "web": "http://www.sabicocontraincendios.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_identidad",
+      "motivo": "Se ha encontrado oferta de ignifugación/pasiva; falta completar identidad fiscal primaria."
+    },
+    {
+      "nombre": "SAFE INGENIERIA DE GAS, S.L.",
+      "web": "https://www.sigas.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.sigas.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B84542497"
+    },
+    {
+      "nombre": "SEGURETAT ARSOL S.L",
+      "web": "https://www.seguretatarsol.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.seguretatarsol.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "SEGURIDAD Y CONTRAINCENDIOS DEL SUR SL",
+      "web": "https://www.secosur.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.secosur.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "SEGURIFOC, SL",
+      "web": "https://www.segurifoc.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.segurifoc.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "SEVICO INCENDIOS SL",
+      "web": "https://www.sevico.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.sevico.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B90205642"
+    },
+    {
+      "nombre": "SISTEMAS DE PROTECCION ORSEI SL",
+      "web": "https://www.orsei.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.orsei.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B74337304"
+    },
+    {
+      "nombre": "SOLER PREVENCION Y SEGURIDAD, S.A.",
+      "web": "http://www.solerprevencion.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "SOLUCIONES EXPERTAS EN INCENDIOS, S.L. (SOLEXÍN)",
+      "web": "http://www.solexin.es",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "SOS EXTINTORES TENERIFE, S.L.",
+      "web": "https://www.sosextintorestenerife.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.sosextintorestenerife.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "SUMINISTROS SUINCA, SL.",
+      "web": "https://www.suinca.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.suinca.es",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B38349684"
+    },
+    {
+      "nombre": "TABINORBA, S.L.",
+      "web": "http://www.tabinorba.es",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "TACTICA SOLUCIONES INTEGRALES, S.L.",
+      "web": "https://www.tactica-si.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.tactica-si.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "TEAM FIRE, S.L.",
+      "web": "https://www.team-fire.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.team-fire.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "TECASEM INGENIERÍA, S.L.",
+      "web": "https://www.tecasem.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.tecasem.com",
+      "estado": "identidad_ambigua",
+      "motivo": "Dominio compartido por TECASEM INGENIERÍA y TECASEM DLMS, con CIF diferentes; revisar entidad y actividad."
+    },
+    {
+      "nombre": "Técnicas y Proyectos Ignífugos / Teprosol",
+      "web": "https://teprosol.com/",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B78670049"
+    },
+    {
+      "nombre": "TECNIFIRE ASO SOCIEDAD LIMITADA",
+      "web": "https://www.tecnifireaso.es",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.tecnifireaso.es",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "TECRESA PROTECCION PASIVA, S.L",
+      "web": "https://www.mercortecresa.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.mercortecresa.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad.",
+      "accesoWeb": "Hubo errores de acceso durante el rastreo; no implican ausencia de actividad."
+    },
+    {
+      "nombre": "TENALBA OP3 SERVICIOS INTEGRALES, S.L.",
+      "web": "http://www.tenalbaop3.es",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B23865140"
+    },
+    {
+      "nombre": "TERPOLAR AÏLLAMENTS, S.L.",
+      "web": "http://www.terpolar.com",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "pendiente_identidad",
+      "motivo": "Se ha encontrado oferta de ignifugación/pasiva; falta completar identidad fiscal primaria."
+    },
+    {
+      "nombre": "TQ INCENDIOS",
+      "web": "http://www.tqincendios.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "TRIA, FIRE & SMOKE SOLUTIONS, S.L.",
+      "web": "http://www.tria-spain.com",
+      "origen": "tecnifuego",
+      "fuenteDescubrimiento": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B84794015"
+    },
+    {
+      "nombre": "VALFIRE SISTEMAS",
+      "web": "https://www.valfiresistemas.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.valfiresistemas.com",
+      "estado": "pendiente_revision",
+      "motivo": "Revisar actividad ejecutada e identidad. Un rastreo sin texto útil o con bloqueo no descarta actividad."
+    },
+    {
+      "nombre": "VILAHEXDOSS, S.L.",
+      "web": "https://www.vilahexdoss.com",
+      "origen": "pista_universo",
+      "fuenteDescubrimiento": "https://www.vilahexdoss.com",
+      "estado": "enriquecida",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B50942143"
+    },
+    {
+      "nombre": "VYAPEC, S.L.",
+      "web": "http://www.vyapec.es",
+      "origen": "aisla",
+      "fuenteDescubrimiento": "https://www.aisla.org/instaladores/",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad cruzada y actividad revisada; evidencia en el lote validado.",
+      "cif": "B03987823"
+    }
+  ]
+}

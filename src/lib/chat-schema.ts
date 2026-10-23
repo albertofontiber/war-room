@@ -96,6 +96,13 @@ CREATE TABLE "Empresa" (
   -- tiene el CIF). NULL = nunca consultado. Para "empresas vivas": estado IN ('activa','concurso').
   -- Las no activas siguen en el universo y pueden tener financieros antiguos.
   estado TEXT,
+  -- Actividad transversal: TRUE confirmada, FALSE revisada sin actividad, NULL sin revisar.
+  -- No es un sector ni una calificación Cepreven. No inferir FALSE desde NULL.
+  -- Para empresas de pasiva: WHERE "proteccionPasiva" IS TRUE.
+  "proteccionPasiva" BOOLEAN,
+  "pasivaServicios" TEXT[], -- estructura, compartimentacion, sellados, reaccion, puertas, conductos
+  "pasivaEvidencias" JSONB, -- array {url, fuente, tipo, fecha, descripcion}; trazabilidad de la actividad
+  "pasivaRevisadaAt" TIMESTAMP,
   "estadoAt" TIMESTAMP,  -- fecha de la extracción de SABI que fijó el estado
   "esAnonima" BOOLEAN DEFAULT false,   -- true = "lead anónimo" del Pipeline (identidad confidencial; CIF pattern "LEAD-{id}"). Filtrados fuera del mapa, tabla, BORME y stats.
   "finderSourceId" TEXT REFERENCES "Finder"(id),  -- finder que trajo la empresa

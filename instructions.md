@@ -1,6 +1,6 @@
 # Fontiber War Room — Instrucciones de desarrollo
 
-Revisado: **2026-10-23**, contra `main` en `6e26851` (PR #190).
+Revisado: **2026-10-23**, tras #191 y la implementación de pasiva transversal.
 
 Convenciones vigentes para cualquier colaborador. Consultar [README](README.md), [estado actual](docs/PROJECT_STATUS.md), [arquitectura](docs/ARCHITECTURE.md), [operación](docs/OPERATIONS.md) y [trabajo abierto](docs/ROADMAP.md). Los recuentos, versiones exactas y resultados de verificación pertenecen al estado fechado; no duplicarlos aquí.
 
@@ -26,6 +26,7 @@ La ampliación a protección pasiva se centra en instaladoras/aplicadoras, inclu
 | Chat | `src/app/api/chat/route.ts`, `src/lib/chat-tools/`, `src/lib/chat-schema.ts`, `src/lib/chat-db.ts` |
 | Estado y cuentas SABI | `src/lib/empresa-estado.ts`, `src/lib/sabi-financieros.ts`, `scripts/import-sabi-financieros.ts` |
 | Registros | `src/lib/cepreven/`, `src/lib/ripci/`, `src/lib/registros/` |
+| Protección pasiva | `src/lib/pasiva.ts`, `src/lib/pasiva-import.ts`, `scripts/import-pasiva.ts`, `docs/research/` |
 | Integraciones | `src/lib/graph-auth.ts`, `src/lib/email-task-matcher.ts`, `src/lib/calendar-task-matcher.ts`, `src/lib/onedrive.ts` |
 | Refresco cliente | `src/lib/data-events.ts`, `src/store/useWarRoomStore.ts` |
 | Datos y operación | `prisma/schema.prisma`, `prisma/migrations/`, `src/lib/cron-runs.ts`, `src/lib/logger.ts` |
@@ -85,6 +86,7 @@ Laterales: on_hold, muerto
 - Las altas ordinarias proceden de fuentes verificadas. Para la nueva prospección de pasiva, conservar identidad y evidencia antes de incorporarla; una mención en un directorio es un candidato, no una habilitación industrial.
 - Los sectores actuales son `PCI`, `seguridad_electronica` y `mixto`; este último combina PCI y seguridad electrónica. No reutilizarlo para «activa + pasiva».
 - `enPerimetro` y el CRM no se deben alterar por descubrir una nueva actividad. El origen de una empresa tampoco debe perderse al enriquecerla.
+- Pasiva es transversal: `proteccionPasiva=true/false/null` significa confirmada/revisión negativa/sin revisar. Conservar servicios, evidencia y fecha en sus campos propios; no inferir calificación Cepreven ni habilitación. El importador solo completa datos de identidad/localización vacíos si la fila lo pide expresamente y aporta fuente fiscal primaria. Las altas de prospección quedan fuera de perímetro y sin estado SABI hasta evaluarlas.
 - `estado` / `estadoAt` reflejan la consulta SABI. Nueve estados definidos en `empresa-estado.ts`; `null` significa sin consultar. «No encontrada en SABI» no significa inactiva.
 - Empresas disueltas o en otras situaciones siguen en el universo. El filtro de estado incluye «Sin consultar en SABI».
 - La importación SABI guarda estado de todas las empresas cruzadas; solo carga cuentas de activas y activas en concurso. Los años íntegramente vacíos/cero se omiten y los valores ausentes no pisan cifras previas.

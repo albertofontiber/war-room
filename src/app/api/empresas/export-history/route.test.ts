@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const getServerSessionMock = vi.fn();
 const financieroFindManyMock = vi.fn();
+const empresaFindManyMock = vi.fn();
 
 vi.mock("next-auth", () => ({
   getServerSession: (...args: unknown[]) => getServerSessionMock(...args),
@@ -11,6 +12,7 @@ vi.mock("@/lib/auth", () => ({ authOptions: {} }));
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
+    empresa: { findMany: (...args: unknown[]) => empresaFindManyMock(...args) },
     financiero: {
       findMany: (...args: unknown[]) => financieroFindManyMock(...args),
     },
@@ -31,6 +33,8 @@ describe("POST /api/empresas/export-history", () => {
   beforeEach(() => {
     getServerSessionMock.mockReset();
     financieroFindManyMock.mockReset();
+    empresaFindManyMock.mockReset();
+    empresaFindManyMock.mockResolvedValue([]);
     getServerSessionMock.mockResolvedValue({ kind: "admin" });
     financieroFindManyMock.mockResolvedValue([]);
   });
@@ -42,6 +46,7 @@ describe("POST /api/empresas/export-history", () => {
     getServerSessionMock.mockResolvedValueOnce({ kind: "finder" });
     expect((await POST(makeReq({ empresaIds: [1] }))).status).toBe(401);
     expect(financieroFindManyMock).not.toHaveBeenCalled();
+    expect(empresaFindManyMock).not.toHaveBeenCalled();
   });
 
   it("valida que los IDs sean enteros positivos", async () => {
@@ -53,7 +58,7 @@ describe("POST /api/empresas/export-history", () => {
   it("no consulta la BD si no hay empresas visibles", async () => {
     const response = await POST(makeReq({ empresaIds: [] }));
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ records: [] });
+    expect(await response.json()).toEqual({ records: [], pasiva: [] });
     expect(financieroFindManyMock).not.toHaveBeenCalled();
   });
 
@@ -91,6 +96,15 @@ describe("POST /api/empresas/export-history", () => {
           ebitda: 15,
         },
       ],
+      pasiva: [],
     });
+  });
+
+  it("exporta actividad y fuentes verificadas para los IDs solicitados", async () => {
+    const evidencia = { url: "https://empresa.es/pasiva", fuente: "Web corporativa", tipo: "web_corporativa", fecha: "2026-10-23", descripcion: "Instala protección pasiva." };
+    empresaFindManyMock.mockResolvedValue([{ id: 7, proteccionPasiva: true, pasivaServicios: ["sellados"], pasivaRevisadaAt: null, pasivaEvidencias: [evidencia, { ...evidencia, url: "javascript:alert(1)" }] }]);
+    const response = await POST(makeReq({ empresaIds: [7] }));
+    expect(empresaFindManyMock).toHaveBeenCalledWith(expect.objectContaining({ where: { id: { in: [7] }, esAnonima: false } }));
+    expect((await response.json()).pasiva).toEqual([{ id: 7, proteccionPasiva: true, pasivaServicios: ["sellados"], pasivaRevisadaAt: null, pasivaEvidencias: [evidencia] }]);
   });
 });

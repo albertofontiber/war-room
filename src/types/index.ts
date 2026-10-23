@@ -77,6 +77,10 @@ export interface EmpresaDetalle {
   enPerimetro: boolean;
   enPerimetroAt: string | null;
   esAnonima: boolean;
+  proteccionPasiva: boolean | null;
+  pasivaServicios: string[];
+  pasivaEvidencias: import("@/lib/pasiva").EvidenciaPasiva[];
+  pasivaRevisadaAt: string | null;
   estado: string | null;    // estado legal según SABI (src/lib/empresa-estado.ts); null = sin consultar
   // Documentación externa (OneDrive + Notion)
   oneDriveUrl: string | null;
@@ -169,6 +173,7 @@ export interface FiltrosActivos {
   // Estado legal según SABI (src/lib/empresa-estado.ts) + sentinel
   // "sin_consultar" para estado null. Vacío = sin filtrar.
   estado: string[];
+  pasiva: string[]; // confirmada | descartada | sin_revisar; vacío = todas
   // Códigos del Registro de Seguridad Privada ("INS", "CA"…). Se exigen TODAS
   // las seleccionadas: son atributos acumulables, y al marcar varias lo que se
   // busca es acotar ("con central de alarmas Y vigilancia"), no ampliar.
@@ -200,6 +205,7 @@ export const FILTROS_DEFAULT: FiltrosActivos = {
   cepreven: null,
   aerme: null,
   estado: [],
+  pasiva: [],
   habilitaciones: [],
   habilitacionAmbito: null,
   ripciCategorias: [],

@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { EmpresaHistoryExportSchema, zodError } from "@/lib/validation";
 import { log } from "@/lib/logger";
+import { parseEvidenciasPasiva } from "@/lib/pasiva";
 
 export const dynamic = "force-dynamic";
 
@@ -24,11 +25,11 @@ export async function POST(req: NextRequest) {
 
   const empresaIds = [...new Set(parsed.data.empresaIds)];
   if (empresaIds.length === 0) {
-    return NextResponse.json({ records: [] });
+    return NextResponse.json({ records: [], pasiva: [] });
   }
 
   try {
-    const records = await prisma.financiero.findMany({
+    const [records, actividades] = await Promise.all([prisma.financiero.findMany({
       where: {
         empresaId: { in: empresaIds },
         anio: { gte: 2020 },
@@ -41,9 +42,12 @@ export async function POST(req: NextRequest) {
         ebitda: true,
       },
       orderBy: [{ empresaId: "asc" }, { anio: "asc" }],
-    });
+    }), prisma.empresa.findMany({
+      where: { id: { in: empresaIds }, esAnonima: false },
+      select: { id: true, proteccionPasiva: true, pasivaServicios: true, pasivaEvidencias: true, pasivaRevisadaAt: true },
+    })]);
 
-    return NextResponse.json({ records });
+    return NextResponse.json({ records, pasiva: actividades.map((e) => ({ ...e, pasivaEvidencias: parseEvidenciasPasiva(e.pasivaEvidencias) })) });
   } catch (error) {
     log.error("api/empresas/export-history POST", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });

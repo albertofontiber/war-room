@@ -1,5 +1,8 @@
 "use client";
 
+import { PasivaBadge } from "@/components/PasivaBadge";
+import { estadoPasiva, PASIVA_LABEL, SERVICIOS_PASIVA, type ServicioPasiva, type PasivaExportRecord } from "@/lib/pasiva";
+
 import { useMemo, useState, useCallback, useEffect } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { useNavegacion } from "@/lib/navegacion";
@@ -171,10 +174,12 @@ export default function TablaEmpresas() {
 
       const payload = (await response.json()) as {
         records?: FinancieroExportRecord[];
+        pasiva?: PasivaExportRecord[];
       };
       const historyRecords = Array.isArray(payload.records)
         ? payload.records
         : [];
+      const pasivaPorId = new Map((payload.pasiva ?? []).map((e) => [e.id, e]));
 
       const headers = [
         "Empresa",
@@ -183,6 +188,10 @@ export default function TablaEmpresas() {
         "Ciudad",
         "Provincia",
         "Sector",
+        "Protección pasiva",
+        "Servicios de pasiva",
+        "Pasiva revisada el",
+        "Fuentes de pasiva",
         "CRM",
         "Web",
         ...(!modoPresentacion
@@ -192,13 +201,19 @@ export default function TablaEmpresas() {
       ];
       const summaryData: SheetData = [
         headers.map((header) => excelHeaderCell(header)),
-        ...rows.map((row) => [
+        ...rows.map((row) => {
+          const pasiva = pasivaPorId.get(row.id);
+          return [
           row.nombre,
           row.cif ?? "",
           row.grupoNombre ?? "",
           row.localidad ?? "",
           row.provincia,
           SECTOR_LABEL[row.sector as string] ?? row.sector,
+          PASIVA_LABEL[estadoPasiva(pasiva ? pasiva.proteccionPasiva : row.proteccionPasiva)],
+          pasiva?.pasivaServicios.map((s) => SERVICIOS_PASIVA[s as ServicioPasiva] ?? s).join(" · ") ?? "",
+          pasiva?.pasivaRevisadaAt?.slice(0, 10) ?? "",
+          pasiva?.pasivaEvidencias.map((e) => `${e.fuente} (${e.fecha}): ${e.url}`).join("\n") ?? "",
           DEAL_STAGE_LABEL[row.dealStage as DealStage] ?? row.dealStage ?? "—",
           row.web ?? "",
           ...(!modoPresentacion
@@ -214,7 +229,8 @@ export default function TablaEmpresas() {
               ]
             : []),
           row.empleados ?? null,
-        ]),
+        ];
+        }),
       ];
 
       const history = buildFinancialHistorySheet(
@@ -420,6 +436,7 @@ export default function TablaEmpresas() {
                   <p className="text-wr-muted text-[11px] mt-1">
                     {[r.localidad as string | null, r.provincia as string].filter(Boolean).join(", ")}
                     {r.sector ? ` · ${SECTOR_LABEL[r.sector as string] ?? r.sector}` : ""}
+                    <PasivaBadge value={r.proteccionPasiva} />
                   </p>
                   <div className="flex items-center flex-wrap gap-x-3 gap-y-1 mt-2">
                     {r.dealStage ? (
@@ -562,6 +579,7 @@ export default function TablaEmpresas() {
                   {/* Sector */}
                   <td className="px-3 py-2.5 text-wr-muted whitespace-nowrap">
                     {SECTOR_LABEL[r.sector as string] ?? (r.sector as string)}
+                    <span className="ml-1"><PasivaBadge value={r.proteccionPasiva} /></span>
                   </td>
 
                   {/* CRM Stage */}

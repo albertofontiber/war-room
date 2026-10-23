@@ -56,7 +56,7 @@ El mapa, la ficha, Operaciones y los tools del chat ya están divididos en módu
 
 | Bloque | Modelos y significado |
 |---|---|
-| Universo | `Empresa`, `Grupo`, `Financiero`; CIF único, sector, perímetro, localización, habilitaciones, RIPCI, Cepreven y estado SABI |
+| Universo | `Empresa`, `Grupo`, `Financiero`; CIF único, sector, actividad transversal de pasiva, perímetro, localización, habilitaciones, RIPCI, Cepreven y estado SABI |
 | Inteligencia jurídica | `BormeAlerta`, `PersonaCargo`, `BormePersona`; actos y cargos, con fuente y vigencia |
 | CRM | `CrmEstado`, `CrmLog`, `Contacto`, `Nota`, `Tarea`; etapa, dueño, interlocutores y actividad |
 | Equipo externo | `Finder`, `FinderNote`, `TargetProposal`, `FinderAccessLog` |
@@ -77,7 +77,9 @@ Ingresos se homogeneizan a **importe neto de la cifra de negocios** y GM a **Res
 
 RIPCI, habilitaciones de seguridad privada y Cepreven tienen semánticas propias. El sincronizador mensual aísla fallos por fuente y comunica altas o incidencias mediante un aviso conjunto.
 
-Las áreas Cepreven de pasiva ya existen en el modelo (`PAS-COMP`, `PAS-REAC`, `PAS-ESTR`). No constituyen todavía una clasificación exhaustiva de todas las empresas que instalan pasiva. La ampliación del universo requiere descubrimiento y evidencia de actividad, además de deduplicación de las empresas que ya tienen ficha; ver [investigación](PROTECCION_PASIVA.md).
+La actividad de pasiva se guarda en `Empresa.proteccionPasiva` como booleano nullable: confirmada, revisión negativa o sin revisar. `pasivaServicios`, `pasivaEvidencias` y `pasivaRevisadaAt` conservan el detalle. No cambia sector, perímetro o CRM. Las listas lite/full comparten clasificación para filtro, tabla y mapa; ficha y exportación aportan las fuentes. El chat conoce esos campos. `scripts/import-pasiva.ts` cruza por CIF y audita los cambios en una transacción; ver [implementación e investigación](PROTECCION_PASIVA.md).
+
+Las áreas Cepreven (`PAS-COMP`, `PAS-REAC`, `PAS-ESTR`) permanecen separadas de la actividad declarada. Ni una fuente asociativa ni la marca de pasiva otorgan calificación. La ausencia de revisión no descarta actividad y la clasificación no es todavía exhaustiva.
 
 ## 5. Automatizaciones e integraciones
 

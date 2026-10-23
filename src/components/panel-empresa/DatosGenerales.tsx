@@ -1,3 +1,4 @@
+import { ActividadPasiva } from "./ActividadPasiva";
 import { fmt } from "@/lib/format";
 import type { EmpresaDetalle } from "@/types";
 import { SectionLabel, KpiRow } from "./primitives";
@@ -47,6 +48,7 @@ export function DatosGenerales({
           <KpiRow label="Score" value={empresa.score.toFixed(1)} />
         )}
       </div>
+      <ActividadPasiva empresa={empresa} />
     </div>
   );
 }

@@ -16,6 +16,7 @@ import {
   SECCION_LABEL,
   TODAS_CATEGORIAS,
 } from "@/lib/ripci/categorias";
+import { ESTADOS_PASIVA, PASIVA_LABEL, type EstadoPasiva } from "@/lib/pasiva";
 import { OPCIONES_FILTRO_ESTADO, etiquetaEstado } from "@/lib/empresa-estado";
 
 // ─── Range slider de dos thumbs ───────────────────────────────────────────
@@ -364,6 +365,7 @@ export function SidebarContent({
         remove: () => setFiltro("aerme", null),
       });
     }
+    filtros.pasiva.forEach((v) => chips.push({ label: PASIVA_LABEL[v as EstadoPasiva] ?? v, remove: () => toggleFiltroArray("pasiva", v) }));
     filtros.estado.forEach((v) =>
       chips.push({ label: `Estado: ${etiquetaEstado(v)}`, remove: () => toggleFiltroArray("estado", v) })
     );
@@ -725,6 +727,17 @@ export function SidebarContent({
               ))}
             </div>
           </div>
+
+          <FilterChecklist
+            label="Actividad de protección pasiva"
+            options={ESTADOS_PASIVA.map((e) => PASIVA_LABEL[e])}
+            selected={filtros.pasiva.map((e) => PASIVA_LABEL[e as EstadoPasiva])}
+            onToggle={(label) => {
+              const value = ESTADOS_PASIVA.find((e) => PASIVA_LABEL[e] === label);
+              if (value) toggleFiltroArray("pasiva", value);
+            }}
+            onClear={() => setFiltro("pasiva", [])}
+          />
 
           {/* ── Estado legal según SABI ── */}
           <FilterChecklist

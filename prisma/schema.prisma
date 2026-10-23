@@ -61,6 +61,12 @@ model Empresa {
   // del universo: sigue buscable; la ficha avisa en la sección de financieros.
   estado           String?
   estadoAt         DateTime?     // fecha de la extracción de SABI que fijó el estado
+  // Actividad transversal; null = sin revisar, false = revisada sin actividad.
+  // No cambia sector, perímetro, grupo ni CRM. Evidencias con fuente/URL/fecha.
+  proteccionPasiva  Boolean?
+  pasivaServicios  String[]      @default([])
+  pasivaEvidencias Json?
+  pasivaRevisadaAt DateTime?
   // Leads anónimos: la identidad real del target no se conoce (confidencial).
   // CIF se genera como "LEAD-{id}" internamente. nombre = alias acordado (ej. "Asher").
   // Una vez revelada la identidad, se usa el endpoint de vinculación para mover

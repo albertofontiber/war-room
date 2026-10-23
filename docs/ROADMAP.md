@@ -6,13 +6,13 @@ Revisado: **2026-10-23**. Una función ausente del código no constituye por sí
 
 **Ampliar el universo a instaladoras y aplicadoras de protección pasiva en España**, incluyendo empresas existentes que también prestan ese servicio. Petición de Alberto del 23/10/2026; ejemplos: Control Ignífugo, Plasfoc y Naes 2014.
 
-Investigación, fuentes, cruce con la base y propuesta de incorporación en [Protección pasiva](PROTECCION_PASIVA.md). Distinguir descubrimiento, validación y alta/enriquecimiento. La pertenencia a una asociación no determina por sí sola perímetro de inversión, estado legal o actividad exclusiva.
+La clasificación transversal, la migración, el importador y la primera incorporación ampliada ya están implementados y aplicados; ver [Protección pasiva](PROTECCION_PASIVA.md). El encargo abierto continúa en la cobertura del universo: resolver las identidades pendientes y ampliar búsquedas regionales y asociativas, sin limitarse a la primera tanda. El seguimiento estructurado registra los casos abiertos. La pertenencia a una asociación no determina por sí sola perímetro de inversión, estado legal o actividad exclusiva.
 
 ## Limitaciones vigentes
 
 | Limitación | Evidencia y siguiente decisión |
 |---|---|
-| Pasiva no tiene clasificación transversal exhaustiva | Hay áreas Cepreven en el modelo, pero no cubren toda la actividad. Diseñar atributo compatible con las empresas y sectores actuales. |
+| La cobertura de pasiva sigue siendo parcial | El atributo transversal está entregado. Revisar empresas todavía sin clasificar, resolver los casos de identidad del seguimiento y recorrer nuevas fuentes/territorios. `null` no equivale a actividad descartada. |
 | Calendario recurrente se ingiere como serie | `calendar-task-matcher.ts`; una tarea por ocurrencia requeriría cambiar a `calendarView`. No está programado. |
 | Falta de URL de lectura del chat provoca fallback al cliente normal | `chat-db.ts`; comprobar configuración en cada entorno nuevo. El rol fue creado y documentado en #187; no volver a listar su creación como pendiente. |
 
@@ -39,6 +39,7 @@ No se presentan como tareas comprometidas ni tienen fecha objetivo:
 | Gestión de accesos, recuperación, invitaciones y cuenta | #161, #163, #182, #184 |
 | Rol de lectura del chat | #187; conservar la comprobación de configuración por entorno |
 | Cuentas SABI 2025 y estado legal | #190; verificación de datos en Estado actual |
+| Documentación depurada y modelo transversal de pasiva con primer lote aplicado | #191 y entrega de pasiva; detalles y casos aún abiertos en Protección pasiva |
 
 El eventual archivo del histórico de Pipedrive o baja de una suscripción son acciones externas cuyo estado no se deduce del repo: se retiran de la lista de pendientes técnicos. Tampoco se mantienen tickets como «si reaparece el bug», «spawn task creado» o cifras de cobertura de abril sin evidencia actual.
 

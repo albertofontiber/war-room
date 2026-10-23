@@ -9,6 +9,7 @@ import {
   FILTROS_DEFAULT,
 } from "@/types";
 import { isInFilter } from "@/lib/filtros";
+import { PASIVA_LABEL, type EstadoPasiva } from "@/lib/pasiva";
 import { etiquetaEstado } from "@/lib/empresa-estado";
 
 /**
@@ -41,6 +42,7 @@ export interface EmpresaFeatureProperties {
   enPerimetro: boolean;
   cepreven: string | null;
   aerme: boolean;
+  proteccionPasiva?: boolean | null;
   estado: string | null; // estado legal según SABI; null = sin consultar
   // Registro de Seguridad Privada: { "INS": "A", "CA": "E" … }. Solo lleva las
   // habilitaciones concedidas, así que suele ser un objeto de una o dos claves.
@@ -146,7 +148,7 @@ interface WarRoomState {
   toggleFiltroArray: <T extends string | number>(
     key: keyof Pick<
       FiltrosActivos,
-      "ccaa" | "provincia" | "sector" | "grupoId" | "crmStage" | "servicios" | "habilitaciones" | "ripciCategorias" | "estado"
+      "ccaa" | "provincia" | "sector" | "grupoId" | "crmStage" | "servicios" | "habilitaciones" | "ripciCategorias" | "estado" | "pasiva"
     >,
     value: T
   ) => void;
@@ -321,6 +323,7 @@ export const useWarRoomStore = create<WarRoomState>()(
             label: filtros.aerme ? "Aerme: sí" : "Aerme: no",
           });
         }
+        filtros.pasiva.forEach((v) => chips.push({ key: "pasiva", label: PASIVA_LABEL[v as EstadoPasiva] ?? v }));
         filtros.estado.forEach((v) =>
           chips.push({ key: "estado", label: `Estado: ${etiquetaEstado(v)}` })
         );
