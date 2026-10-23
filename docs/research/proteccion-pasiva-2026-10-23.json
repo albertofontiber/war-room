@@ -1,0 +1,461 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-23",
+  "codigoReferencia": "6e26851",
+  "alcance": "Instaladoras y aplicadoras de protección pasiva en España, incluidas empresas existentes.",
+  "naturaleza": "Lote de investigación; no es censo ni importación aprobada.",
+  "metodoCruce": "Consulta READ ONLY del universo. Prioridad CIF, después dominio exacto; un match de nombre exige revisión. Ausencia de match sin CIF no demuestra que la entidad no exista.",
+  "fuenteAsociacion": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+  "candidates": [
+    {
+      "key": "control-ignifugo",
+      "nombre": "Control Ignífugo / CISA",
+      "cif": "A19199892",
+      "web": "https://www.controlignifugo.es/",
+      "identidadUrl": "https://www.controlignifugo.es/aviso-legal/",
+      "actividad": "Aplicación de protección estructural, compartimentación y sellados.",
+      "actividadUrl": "https://www.controlignifugo.es/",
+      "origen": "usuario_y_tecnifuego",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "sin_coincidencia",
+        "metodo": null,
+        "empresas": []
+      },
+      "siguientePaso": "revisar_alta_con_identidad_y_actividad"
+    },
+    {
+      "key": "plasfoc",
+      "nombre": "Plasfoc",
+      "cif": "A43708106",
+      "web": "https://www.plasfoc.com/",
+      "identidadUrl": "https://www.plasfoc.com/aviso-legal/",
+      "actividad": "Instalación de protección estructural y compartimentación.",
+      "actividadUrl": "https://www.plasfoc.com/category/proteccion-pasiva-contra-incendios/",
+      "origen": "usuario_y_tecnifuego",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "confirmada_por_cif",
+        "metodo": "cif",
+        "empresas": [
+          {
+            "id": 569,
+            "cif": "A43708106",
+            "nombre": "PLASFOC . SA",
+            "areasCepreven": []
+          }
+        ]
+      },
+      "siguientePaso": "enriquecer_ficha_si_se_aprueba_el_modelo"
+    },
+    {
+      "key": "naes",
+      "nombre": "Naes 2014 / Naes PCI",
+      "cif": "B87167011",
+      "web": "https://naes2014.es/",
+      "identidadUrl": "https://aragonempresa.com/empresas-sello-rsa/imprimir.php?idencuesta=6&idusuario=3231",
+      "actividad": "La web presenta protección activa y pasiva como servicios.",
+      "actividadUrl": "https://naes2014.es/",
+      "origen": "usuario",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "confirmada_por_cif",
+        "metodo": "cif",
+        "empresas": [
+          {
+            "id": 1788,
+            "cif": "B87167011",
+            "nombre": "NAES 2014, S.L.",
+            "areasCepreven": []
+          }
+        ]
+      },
+      "siguientePaso": "enriquecer_ficha_si_se_aprueba_el_modelo"
+    },
+    {
+      "key": "teprosol",
+      "nombre": "Técnicas y Proyectos Ignífugos / Teprosol",
+      "cif": "B78670049",
+      "web": "https://teprosol.com/",
+      "identidadUrl": "https://teprosol.com/politica-de-privacidad/",
+      "actividad": "Ignifugación, compartimentación y sellado de pasos.",
+      "actividadUrl": "https://teprosol.com/",
+      "origen": "tecnifuego",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "sin_coincidencia",
+        "metodo": null,
+        "empresas": []
+      },
+      "siguientePaso": "revisar_alta_con_identidad_y_actividad"
+    },
+    {
+      "key": "ignitor-productos",
+      "nombre": "Ignitor Productos Ignífugos",
+      "web": "https://ignifugacionesignitor.com/",
+      "actividad": "Aplicación estructural y tratamiento ignífugo de textiles; también suministra producto.",
+      "actividadUrl": "https://ignifugacionesignitor.com/quienes-somos/",
+      "origen": "tecnifuego",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "sin_coincidencia",
+        "metodo": null,
+        "empresas": []
+      },
+      "siguientePaso": "resolver_cif_y_deduplicar_antes_de_alta"
+    },
+    {
+      "key": "ignitor-martinez-franco",
+      "nombre": "Ignitor Martínez Franco",
+      "web": "https://www.ignitor-martinezfranco.com/",
+      "actividad": "Se presenta como ingeniería e instaladora de sistemas de pasiva.",
+      "actividadUrl": "https://www.ignitor-martinezfranco.com/",
+      "origen": "busqueda_web",
+      "observacion": "No fusionar con Ignitor Productos Ignífugos por similitud de marca; falta resolver ambos CIF.",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "sin_coincidencia",
+        "metodo": null,
+        "empresas": []
+      },
+      "siguientePaso": "resolver_cif_y_deduplicar_antes_de_alta"
+    },
+    {
+      "key": "ignifugaciones-ibericas",
+      "nombre": "Ignifugaciones Ibéricas",
+      "cif": "B44668531",
+      "web": "https://ignifugacionesibericas.com/",
+      "identidadUrl": "https://ignifugacionesibericas.com/wp-content/uploads/2026/04/certificado-de-proteccion.-Modelo_compressed.pdf",
+      "actividad": "Instalación de protección pasiva e ignifugación en Andalucía y otras zonas.",
+      "actividadUrl": "https://ignifugacionesibericas.com/empresa-de-ignifugaciones-y-aislamientos-en-sevilla/",
+      "origen": "busqueda_web",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "sin_coincidencia",
+        "metodo": null,
+        "empresas": []
+      },
+      "siguientePaso": "revisar_alta_con_identidad_y_actividad"
+    },
+    {
+      "key": "apisur",
+      "nombre": "Aplicaciones Apisur",
+      "cif": "B18777482",
+      "web": "https://aplicacionesapisur.com/",
+      "identidadUrl": "https://aplicacionesapisur.com/ignifugaciones-sevilla/",
+      "actividad": "Aplicación de ignifugación, protección pasiva y sellados.",
+      "actividadUrl": "https://aplicacionesapisur.com/ignifugaciones-sevilla/",
+      "origen": "busqueda_web",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "sin_coincidencia",
+        "metodo": null,
+        "empresas": []
+      },
+      "siguientePaso": "revisar_alta_con_identidad_y_actividad"
+    },
+    {
+      "key": "propacon",
+      "nombre": "Propacon",
+      "web": "https://propacon.com/",
+      "actividad": "Diseño e instalación de sistemas de pasiva e insonorización.",
+      "actividadUrl": "https://propacon.com/",
+      "origen": "busqueda_web",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "sin_coincidencia",
+        "metodo": null,
+        "empresas": []
+      },
+      "siguientePaso": "resolver_cif_y_deduplicar_antes_de_alta"
+    },
+    {
+      "key": "armero",
+      "nombre": "Ignifugados Armero",
+      "web": "https://ignifugadosarmero.com/",
+      "actividad": "Aplicación de ignifugados; la página de Bilbao declara cobertura nacional.",
+      "actividadUrl": "https://ignifugadosarmero.com/ignifugaciones-bilbao/",
+      "origen": "busqueda_web",
+      "observacion": "La landing de Bilbao no representa otra empresa ni acredita sede en Bizkaia.",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "coincidencia_nombre_revisar",
+        "metodo": "nombre_revisar",
+        "empresas": [
+          {
+            "id": 5624,
+            "cif": "B54917844",
+            "nombre": "IGNIFUGADOS ARMERO, SL",
+            "areasCepreven": []
+          }
+        ]
+      },
+      "siguientePaso": "confirmar_cif_antes_de_enriquecer"
+    },
+    {
+      "key": "los-montes",
+      "nombre": "Aislamientos e Ignifugaciones Los Montes",
+      "web": "https://www.aislamientoslosmontes.com/",
+      "actividad": "Empresa instaladora de aislamiento e ignifugación pasiva.",
+      "actividadUrl": "https://www.aislamientoslosmontes.com/",
+      "origen": "busqueda_web",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "coincidencia_web_revisar_cif",
+        "metodo": "web",
+        "empresas": [
+          {
+            "id": 44,
+            "cif": "B93588275",
+            "nombre": "AISLAMIENTOS E IGNIFUGACIONES LOS MONTES S.L.",
+            "areasCepreven": []
+          }
+        ]
+      },
+      "siguientePaso": "confirmar_cif_antes_de_enriquecer"
+    },
+    {
+      "key": "rada",
+      "nombre": "Rada Ignifugación",
+      "web": "https://radaignifugacion.es/",
+      "actividad": "Ignifugación de estructuras y servicio de activa y pasiva.",
+      "actividadUrl": "https://radaignifugacion.es/",
+      "origen": "busqueda_web",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "coincidencia_web_revisar_cif",
+        "metodo": "web",
+        "empresas": [
+          {
+            "id": 196,
+            "cif": "B98701881",
+            "nombre": "RADA IGNIFUGACION SOCIEDAD LIMITADA",
+            "areasCepreven": []
+          }
+        ]
+      },
+      "siguientePaso": "confirmar_cif_antes_de_enriquecer"
+    },
+    {
+      "key": "iberext",
+      "nombre": "Iberext",
+      "web": "https://www.iberext.com/",
+      "actividad": "Instalación de sistemas de protección activa y pasiva.",
+      "actividadUrl": "https://www.iberext.com/",
+      "origen": "cepreven_y_tecnifuego",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "coincidencia_web_revisar_cif",
+        "metodo": "web",
+        "empresas": [
+          {
+            "id": 467,
+            "cif": "A78999968",
+            "nombre": "IBEREXT, S.A.",
+            "areasCepreven": [
+              "DAI",
+              "EAA-E",
+              "EAA-P",
+              "EAA-RE",
+              "EAA-RO",
+              "EAG-A",
+              "EAG-IQ",
+              "MANT-DAI",
+              "MANT-EAA",
+              "MANT-EAAer",
+              "MANT-EAG",
+              "MANT-EAP",
+              "MANT-MMP",
+              "MANT-SCH",
+              "PAS-COMP",
+              "PAS-ESTR",
+              "PAS-REAC",
+              "SCH-FB"
+            ]
+          }
+        ]
+      },
+      "siguientePaso": "confirmar_cif_antes_de_enriquecer"
+    },
+    {
+      "key": "pefipresa",
+      "nombre": "Pefipresa",
+      "web": "https://www.pefipresa.com/",
+      "actividad": "Instalación de sellados, ignifugación y compartimentación.",
+      "actividadUrl": "https://www.pefipresa.com/",
+      "origen": "cepreven_y_tecnifuego",
+      "actividadEstado": "web_corporativa_revisada",
+      "cruce": {
+        "estado": "coincidencia_web_revisar_cif",
+        "metodo": "web",
+        "empresas": [
+          {
+            "id": 446,
+            "cif": "A28145407",
+            "nombre": "PEFIPRESA, S.A.U.",
+            "areasCepreven": [
+              "DAI",
+              "EAA-E",
+              "EAA-P",
+              "EAA-RE",
+              "EAA-RO",
+              "EAG-A",
+              "EAG-B",
+              "EAG-IQ",
+              "MANT-DAI",
+              "MANT-EAA",
+              "MANT-EAG",
+              "MANT-MMP",
+              "PAS-COMP",
+              "PAS-ESTR",
+              "SCH-FB"
+            ]
+          }
+        ]
+      },
+      "siguientePaso": "confirmar_cif_antes_de_enriquecer"
+    },
+    {
+      "key": "fuegodiez",
+      "nombre": "Fuegodiez",
+      "web": "https://www.fuegodiez.com/",
+      "actividad": "Áreas de instalación de pasiva ya guardadas en la base.",
+      "actividadUrl": null,
+      "origen": "cepreven_en_base",
+      "actividadEstado": "dato_cepreven_en_base",
+      "cruce": {
+        "estado": "coincidencia_web_revisar_cif",
+        "metodo": "web",
+        "empresas": [
+          {
+            "id": 2863,
+            "cif": "B98250319",
+            "nombre": "FUEGODIEZ, S.L.",
+            "areasCepreven": [
+              "EAA-RO",
+              "PAS-COMP",
+              "PAS-ESTR",
+              "PAS-REAC"
+            ]
+          }
+        ]
+      },
+      "siguientePaso": "confirmar_cif_antes_de_enriquecer"
+    },
+    {
+      "key": "diaterm",
+      "nombre": "Diaterm Foc",
+      "web": "https://www.diatermfoc.com/",
+      "actividad": "Descubierta en el comité; falta revisar evidencia corporativa actual y entidad fiscal.",
+      "actividadUrl": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "origen": "tecnifuego",
+      "actividadEstado": "solo_descubrimiento",
+      "cruce": {
+        "estado": "sin_coincidencia",
+        "metodo": null,
+        "empresas": []
+      },
+      "siguientePaso": "resolver_cif_y_deduplicar_antes_de_alta"
+    },
+    {
+      "key": "berbelporcel",
+      "nombre": "Berbel Porcel Asociados",
+      "web": "https://www.berbelporcel.com/",
+      "actividad": "Descubierta en el comité; falta revisar servicios actuales.",
+      "actividadUrl": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "origen": "tecnifuego",
+      "actividadEstado": "solo_descubrimiento",
+      "cruce": {
+        "estado": "coincidencia_web_revisar_cif",
+        "metodo": "web",
+        "empresas": [
+          {
+            "id": 1855,
+            "cif": "B18577015",
+            "nombre": "BERBELPORCEL ASOCIADOS S.L.",
+            "areasCepreven": []
+          }
+        ]
+      },
+      "siguientePaso": "confirmar_cif_antes_de_enriquecer"
+    },
+    {
+      "key": "pic",
+      "nombre": "Protecciones Ignífugas del Centro",
+      "web": "https://www.picprotecciones.es/",
+      "actividad": "Descubierta en el comité; falta validar entidad y servicio.",
+      "actividadUrl": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "origen": "tecnifuego",
+      "actividadEstado": "solo_descubrimiento",
+      "cruce": {
+        "estado": "sin_coincidencia",
+        "metodo": null,
+        "empresas": []
+      },
+      "siguientePaso": "resolver_cif_y_deduplicar_antes_de_alta"
+    },
+    {
+      "key": "enesa",
+      "nombre": "Enesa Continental",
+      "web": "https://www.enesacontinental.com/",
+      "actividad": "Descubierta en el comité; falta validar instalación/aplicación frente a suministro.",
+      "actividadUrl": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "origen": "tecnifuego",
+      "actividadEstado": "solo_descubrimiento",
+      "cruce": {
+        "estado": "sin_coincidencia",
+        "metodo": null,
+        "empresas": []
+      },
+      "siguientePaso": "resolver_cif_y_deduplicar_antes_de_alta"
+    },
+    {
+      "key": "aicon",
+      "nombre": "Aicon Sistemas",
+      "web": "https://www.aiconsistemas.com/",
+      "actividad": "Descubierta en el comité; falta revisar servicio de pasiva actual.",
+      "actividadUrl": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "origen": "tecnifuego",
+      "actividadEstado": "solo_descubrimiento",
+      "cruce": {
+        "estado": "coincidencia_web_revisar_cif",
+        "metodo": "web",
+        "empresas": [
+          {
+            "id": 1360,
+            "cif": "B64322399",
+            "nombre": "AICON SISTEMAS SL",
+            "areasCepreven": []
+          }
+        ]
+      },
+      "siguientePaso": "confirmar_cif_antes_de_enriquecer"
+    },
+    {
+      "key": "prefire",
+      "nombre": "Prefire",
+      "web": "https://www.prefire.es/",
+      "actividad": "Descubierta en el comité; falta revisar servicio de pasiva actual.",
+      "actividadUrl": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "origen": "tecnifuego",
+      "actividadEstado": "solo_descubrimiento",
+      "cruce": {
+        "estado": "coincidencia_web_revisar_cif",
+        "metodo": "web",
+        "empresas": [
+          {
+            "id": 864,
+            "cif": "B61491023",
+            "nombre": "PREFIRE . SL",
+            "areasCepreven": [
+              "DAI",
+              "EAA-RE",
+              "EAA-RO"
+            ]
+          }
+        ]
+      },
+      "siguientePaso": "confirmar_cif_antes_de_enriquecer"
+    }
+  ]
+}
