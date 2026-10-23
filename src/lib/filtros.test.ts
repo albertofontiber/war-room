@@ -30,6 +30,16 @@ function makeFiltros(overrides: Partial<FiltrosActivos> = {}): FiltrosActivos {
   return { ...FILTROS_DEFAULT, ...overrides };
 }
 
+describe("isInFilter — pasiva transversal", () => {
+  it("combina actividad con sector y perímetro sin tratar un dato ausente como negativo", () => {
+    const f = makeFiltros({ sector: ["mixto"], pasiva: ["confirmada"], enPerimetro: null });
+    expect(isInFilter(makeProps({ sector: "mixto", proteccionPasiva: true, enPerimetro: false }), f, "")).toBe(true);
+    expect(isInFilter(makeProps({ sector: "PCI", proteccionPasiva: true }), f, "")).toBe(false);
+    expect(isInFilter(makeProps({ sector: "mixto", proteccionPasiva: null }), f, "")).toBe(false);
+    expect(isInFilter(makeProps({ proteccionPasiva: null }), makeFiltros({ pasiva: ["descartada"] }), "")).toBe(false);
+  });
+});
+
 describe("isInFilter — filtro crmStage con sentinel sin_crm", () => {
   it("sin filtros activos: pasa cualquier empresa", () => {
     expect(isInFilter(makeProps(), makeFiltros(), "")).toBe(true);

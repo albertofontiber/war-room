@@ -4,6 +4,7 @@ import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { fmt, fmtM } from "@/lib/format";
 import { DEAL_STAGE_LABEL, DEAL_STAGE_PILL_CLASS } from "@/lib/crm";
 import type { DealStage } from "@/types";
+import { PasivaBadge } from "./PasivaBadge";
 
 interface TooltipProps {
   x: number;
@@ -16,6 +17,7 @@ interface TooltipProps {
     nombre: string;
     provincia: string;
     sector: string;
+    proteccionPasiva?: boolean | null;
     dealStage: string | null;
     ingresos: number | null;
     margenBrutoPct: number | null;
@@ -116,6 +118,7 @@ export default function MapTooltip({ x, y, props }: TooltipProps) {
 
         {/* Badges */}
         <div className="flex flex-wrap gap-1 mb-2">
+          <PasivaBadge value={props.proteccionPasiva} />
           <span className="px-1.5 py-0.5 rounded text-[10px] bg-wr-surface2 text-wr-muted border border-wr-border">
             {SECTOR_LABEL[props.sector] ?? props.sector}
           </span>

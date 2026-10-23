@@ -8,6 +8,7 @@ import { calcTendencia, enrichFinancieros } from "@/lib/tendencia";
 import { esAreaValida } from "@/lib/cepreven/areas";
 import { isValidDealStage } from "@/lib/crm";
 import { log } from "@/lib/logger";
+import { parseEvidenciasPasiva } from "@/lib/pasiva";
 import type { DealStage } from "@/types";
 
 export async function GET(_req: Request, props: { params: Promise<{ id: string }> }) {
@@ -157,6 +158,10 @@ export async function GET(_req: Request, props: { params: Promise<{ id: string }
       enPerimetroAt: empresa.enPerimetroAt,
       esAnonima: empresa.esAnonima,
       estado: empresa.estado,
+      proteccionPasiva: empresa.proteccionPasiva,
+      pasivaServicios: empresa.pasivaServicios,
+      pasivaEvidencias: parseEvidenciasPasiva(empresa.pasivaEvidencias),
+      pasivaRevisadaAt: empresa.pasivaRevisadaAt,
       oneDriveUrl: empresa.oneDriveUrl,
       notionUrl: empresa.notionUrl,
       nombreComercial: empresa.nombreComercial,

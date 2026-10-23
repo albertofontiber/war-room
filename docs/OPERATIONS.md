@@ -37,7 +37,7 @@ El esquema está versionado en `prisma/migrations/`. No usar `prisma db push` en
 
 ### Estado de adopción
 
-La línea base `20260714093000_baseline` y las migraciones posteriores hasta `20261023120000_empresa_estado` constan aplicadas en el corte de datos. La adopción de migraciones y de `CronRun` ya está resuelta.
+La línea base `20260714093000_baseline` y las migraciones posteriores hasta `20261023140000_proteccion_pasiva` constan aplicadas en el corte de datos. La adopción de migraciones y de `CronRun` ya está resuelta.
 
 Solo si se incorpora otra base **preexistente** que ya contiene exactamente el esquema de la línea base, verificar su equivalencia y respaldo antes de registrar:
 
@@ -81,6 +81,20 @@ node --env-file=.env.local --import tsx scripts/import-sabi-financieros.ts "ruta
 El comando no escribe en la base; el informe CSV sí se guarda localmente. Revisar CIF sin match, duplicados, estados, cuentas nuevas/actualizadas, empleados y borrados propuestos. La escritura exige añadir `--apply` y utiliza una transacción única. Aplicar antes la migración requerida y disponer de una copia recuperable del estado previo.
 
 Los nulos no pisan cifras previas, los años íntegramente a cero no se cargan y solo se actualizan cuentas de activas o en concurso. La retirada de cuentas `informa_2026` restantes es una regla específica de homogeneización de esa fuente: revisar su efecto antes de reutilizar el importador para otro lote.
+
+## Importación de pasiva
+
+El lote y sus fuentes están en [Protección pasiva](PROTECCION_PASIVA.md). La migración aditiva de pasiva debe estar aplicada antes de desplegar código que lea esas columnas. El script no descubre empresas automáticamente: recibe filas previamente revisadas.
+
+```powershell
+node --env-file=.env.local --import tsx scripts/import-pasiva.ts docs/research/pasiva-validada-2026-10-23.json
+```
+
+Simula por defecto. La escritura requiere `--apply`, revalida el cruce en una transacción y usa un advisory lock para serializar importaciones de pasiva. Si queda una fila `revisar`, se aborta todo el lote. Bloquea CIF duplicados o ambiguos, dominios asociados a otro CIF, leads anónimos y revisiones negativas previas. Las altas exigen identidad fiscal, localización y `permitirAlta=true`; se crean fuera de perímetro y con estado SABI sin consultar.
+
+Los enriquecimientos conservan sector, perímetro, CRM, cuentas y fuente original. Por defecto cambian solo los cuatro campos de pasiva. `completarVacios=true` permite, con fuente fiscal primaria, completar web, domicilio o localización ausentes; conserva cualquier dato ya presente y completa coordenadas solo como par. El lote actual lo usa únicamente para Armero. Las coordenadas municipales y su procedencia se documentan en el lote.
+
+Cada escritura deja `AuditLog` con valores anteriores y posteriores, lote e identidad de fuente. Disponer de un respaldo de los campos afectados y revisar el informe antes de aplicar. Repetir la misma versión del lote debe devolver `sin_cambios` para todas las filas; no ejecutar la importación como cron. En el corte actual ya está aplicada.
 
 ## Configuración del chat
 

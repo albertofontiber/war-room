@@ -1,6 +1,6 @@
 # Fontiber War Room
 
-Aplicación de inteligencia y gestión M&A para Fontiber Industrial Partners: universo de empresas españolas de protección contra incendios y seguridad electrónica, financieros, señales BORME, grupos y CRM propio.
+Aplicación de inteligencia y gestión M&A para Fontiber Industrial Partners: universo de empresas españolas de protección contra incendios y seguridad electrónica, actividad transversal de protección pasiva, financieros, señales BORME, grupos y CRM propio.
 
 - War Room del equipo: <https://warroom.fontiber.com>.
 - Portal de finders: <https://portal.fontiber.com>.
