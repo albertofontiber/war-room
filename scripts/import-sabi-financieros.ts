@@ -17,10 +17,11 @@
  *      último año. Un dato que SABI no trae no pisa el que ya había.
  *   3. El resto (disueltas, no encontradas…) conserva su histórico; la ficha
  *      avisa del estado y de la antigüedad de las cuentas.
- *
- * Al pisar ingresos con la cifra de negocios se homogeneiza seguridad
- * electrónica, que se cargó en abril con «Ingresos de explotación». El
- * informe final cuenta las empresas que se quedan con ese dato antiguo.
+ *   4. Borra los años que quedan con «Ingresos de explotación» (fuente
+ *      informa_2026, seguridad electrónica, abril 2026) y que SABI no ha
+ *      sustituido, para que ningún ingreso de la base use esa definición
+ *      (decisión de Alberto, 23/10/2026). Si la empresa se queda sin años,
+ *      la ficha dice que no hay información financiera.
  */
 
 import { PrismaClient, Prisma } from "@prisma/client";
@@ -126,7 +127,17 @@ async function main() {
   log(`  años que se actualizan  ${actualizados}  (ingresos cambian >1 %: ${cambiaIngresos})`);
   log(`  activas sin ningún año con cifras: ${activasSinCifras}`);
   log(`  empleados: ${empleados.length} con dato, ${empleadosCambian} cambian`);
-  log(`\nEmpresas con años de «Ingresos de explotación» (informa_2026) que SABI no pisa: ${restoInforma.length}`);
+  const borrarInforma = restoInforma.flatMap((e) =>
+    e.financieros
+      .filter((x) => x.fuente === "informa_2026" && !tocados.has(`${e.id}:${x.anio}`))
+      .map((x) => ({ empresaId: e.id, anio: x.anio }))
+  );
+  log(`\nAños con «Ingresos de explotación» que SABI no sustituye → se borran ${borrarInforma.length} (${restoInforma.length} empresas):`);
+  for (const e of restoInforma) {
+    const anios = borrarInforma.filter((x) => x.empresaId === e.id).map((x) => x.anio);
+    const queda = anios.length === e.financieros.length ? " → sin financieros" : "";
+    log(`  ${e.cif} ${e.nombre.slice(0, 40).padEnd(40)} ${anios.join(",")}${queda}`);
+  }
 
   if (INFORME) {
     fs.writeFileSync(INFORME, informe.join("\n"), "utf8");
@@ -171,6 +182,14 @@ async function main() {
       FROM (VALUES ${Prisma.join(v)}) AS v(id, n) WHERE e.id = v.id`;
   }
   log(`✓ empleados actualizados en ${empleados.length} empresas`);
+
+  // 4. Años con «Ingresos de explotación» que SABI no ha sustituido.
+  if (borrarInforma.length > 0) {
+    const borrados = await tx.financiero.deleteMany({
+      where: { OR: borrarInforma.map((x) => ({ ...x, fuente: "informa_2026" })) },
+    });
+    log(`✓ ${borrados.count} años de «Ingresos de explotación» borrados`);
+  }
   }, { timeout: 600_000, maxWait: 30_000 });
 
   await prisma.$disconnect();
