@@ -166,6 +166,9 @@ export interface FiltrosActivos {
   // de las dos; "ninguna" = no consta en Cepreven; null = sin filtrar.
   cepreven: "calificada" | "asociada" | "cualquiera" | "ninguna" | null;
   aerme: boolean | null;
+  // Estado legal según SABI (src/lib/empresa-estado.ts) + sentinel
+  // "sin_consultar" para estado null. Vacío = sin filtrar.
+  estado: string[];
   // Códigos del Registro de Seguridad Privada ("INS", "CA"…). Se exigen TODAS
   // las seleccionadas: son atributos acumulables, y al marcar varias lo que se
   // busca es acotar ("con central de alarmas Y vigilancia"), no ampliar.
@@ -196,6 +199,7 @@ export const FILTROS_DEFAULT: FiltrosActivos = {
   enPerimetro: null,       // null = todos (sin filtro por perímetro)
   cepreven: null,
   aerme: null,
+  estado: [],
   habilitaciones: [],
   habilitacionAmbito: null,
   ripciCategorias: [],

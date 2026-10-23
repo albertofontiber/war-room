@@ -54,6 +54,29 @@ export function estadoDesdeSabi(valor: unknown): EstadoEmpresa {
   return estado;
 }
 
+/**
+ * Opciones del filtro por estado de la tabla y el mapa, en este orden. Incluye
+ * el sentinel `sin_consultar` (estado null): las empresas que entran después
+ * de la extracción (altas del RIPCI, registros…) aún no tienen estado y no
+ * deben desaparecer en silencio al filtrar.
+ */
+export const ESTADO_SIN_CONSULTAR = "sin_consultar";
+export const OPCIONES_FILTRO_ESTADO: { valor: string; etiqueta: string }[] = [
+  ...ESTADOS_EMPRESA.map((e) => ({ valor: e, etiqueta: ESTADO_LABEL[e] })),
+  { valor: ESTADO_SIN_CONSULTAR, etiqueta: "Sin consultar en SABI" },
+];
+
+/** Etiqueta de una opción del filtro (estado o sentinel). */
+export function etiquetaEstado(valor: string): string {
+  return OPCIONES_FILTRO_ESTADO.find((o) => o.valor === valor)?.etiqueta ?? valor;
+}
+
+/** Filtro multi-selección: vacío = todas; si no, el estado debe estar marcado. */
+export function cumpleFiltroEstado(estado: string | null, seleccion: string[]): boolean {
+  if (seleccion.length === 0) return true;
+  return seleccion.includes(estado ?? ESTADO_SIN_CONSULTAR);
+}
+
 /** Solo se cargan cifras de empresas vivas, incluidas las que están en concurso. */
 export function cargaFinancieros(estado: EstadoEmpresa): boolean {
   return estado === "activa" || estado === "concurso";

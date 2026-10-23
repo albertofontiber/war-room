@@ -1,6 +1,7 @@
 import type { FiltrosActivos } from "@/types";
 import type { EmpresaFeatureProperties } from "@/store/useWarRoomStore";
 import { cumpleFiltroRipci, parseRipci } from "@/lib/ripci/categorias";
+import { cumpleFiltroEstado } from "@/lib/empresa-estado";
 
 /**
  * Shape esperado para `isInFilter`. Típicamente es `EmpresaFeatureProperties`
@@ -59,6 +60,7 @@ export function isInFilter(
     }
   }
   if (f.aerme !== null && p.aerme !== f.aerme) return false;
+  if (!cumpleFiltroEstado(p.estado ?? null, f.estado)) return false;
   if (f.ripciCategorias.length && !cumpleFiltroRipci(parseRipci(p.ripci), f.ripciCategorias, f.ripciSeccion)) {
     return false;
   }

@@ -9,6 +9,7 @@ import {
   FILTROS_DEFAULT,
 } from "@/types";
 import { isInFilter } from "@/lib/filtros";
+import { etiquetaEstado } from "@/lib/empresa-estado";
 
 /**
  * Shape real de `properties` en los features GeoJSON.
@@ -40,6 +41,7 @@ export interface EmpresaFeatureProperties {
   enPerimetro: boolean;
   cepreven: string | null;
   aerme: boolean;
+  estado: string | null; // estado legal según SABI; null = sin consultar
   // Registro de Seguridad Privada: { "INS": "A", "CA": "E" … }. Solo lleva las
   // habilitaciones concedidas, así que suele ser un objeto de una o dos claves.
   habilitaciones: Record<string, string> | null;
@@ -144,7 +146,7 @@ interface WarRoomState {
   toggleFiltroArray: <T extends string | number>(
     key: keyof Pick<
       FiltrosActivos,
-      "ccaa" | "provincia" | "sector" | "grupoId" | "crmStage" | "servicios" | "habilitaciones" | "ripciCategorias"
+      "ccaa" | "provincia" | "sector" | "grupoId" | "crmStage" | "servicios" | "habilitaciones" | "ripciCategorias" | "estado"
     >,
     value: T
   ) => void;
@@ -319,6 +321,9 @@ export const useWarRoomStore = create<WarRoomState>()(
             label: filtros.aerme ? "Aerme: sí" : "Aerme: no",
           });
         }
+        filtros.estado.forEach((v) =>
+          chips.push({ key: "estado", label: `Estado: ${etiquetaEstado(v)}` })
+        );
         if (
           filtros.ingresosMin > FILTROS_DEFAULT.ingresosMin ||
           filtros.ingresosMax < FILTROS_DEFAULT.ingresosMax

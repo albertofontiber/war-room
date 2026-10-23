@@ -124,6 +124,7 @@ export async function GET() {
             grupoNombre: empresa.grupo?.nombre ?? null,
             cepreven: empresa.cepreven,
             aerme: empresa.aerme,
+            estado: empresa.estado,
             habilitaciones: empresa.habilitaciones,
             ripci: empresa.ripci,
             score: empresa.score,

@@ -207,3 +207,23 @@ describe("isInFilter — filtro por categoría RIPCI", () => {
     expect(isInFilter(instalaYMantiene, f, "")).toBe(false);
   });
 });
+
+describe("isInFilter — filtro por estado SABI", () => {
+  it("sin selección pasan todas, también las que no tienen estado", () => {
+    expect(isInFilter(makeProps({ estado: "disuelta" }), makeFiltros(), "")).toBe(true);
+    expect(isInFilter(makeProps({ estado: null }), makeFiltros(), "")).toBe(true);
+  });
+
+  it("solo pasan los estados marcados", () => {
+    const f = makeFiltros({ estado: ["activa", "concurso"] });
+    expect(isInFilter(makeProps({ estado: "activa" }), f, "")).toBe(true);
+    expect(isInFilter(makeProps({ estado: "concurso" }), f, "")).toBe(true);
+    expect(isInFilter(makeProps({ estado: "fusion" }), f, "")).toBe(false);
+    expect(isInFilter(makeProps({ estado: "no_encontrada" }), f, "")).toBe(false);
+  });
+
+  it("estado null solo pasa con el sentinel «sin_consultar»", () => {
+    expect(isInFilter(makeProps({ estado: null }), makeFiltros({ estado: ["activa"] }), "")).toBe(false);
+    expect(isInFilter(makeProps({ estado: null }), makeFiltros({ estado: ["sin_consultar"] }), "")).toBe(true);
+  });
+});
