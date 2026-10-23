@@ -90,6 +90,13 @@ CREATE TABLE "Empresa" (
   "scoreInicial" FLOAT,
   score FLOAT,                         -- scoring de atractivo (mayor = mejor)
   "anioConstitucion" INT,
+  -- Estado legal según SABI (extracción oct 2026): 'activa' | 'concurso' (activa en
+  -- concurso de acreedores) | 'disuelta' | 'fusion' (disuelta por fusión/absorción) |
+  -- 'liquidacion' | 'quiebra' | 'inactiva' | 'desconocida' | 'no_encontrada' (SABI no
+  -- tiene el CIF). NULL = nunca consultado. Para "empresas vivas": estado IN ('activa','concurso').
+  -- Las no activas siguen en el universo y pueden tener financieros antiguos.
+  estado TEXT,
+  "estadoAt" TIMESTAMP,  -- fecha de la extracción de SABI que fijó el estado
   "esAnonima" BOOLEAN DEFAULT false,   -- true = "lead anónimo" del Pipeline (identidad confidencial; CIF pattern "LEAD-{id}"). Filtrados fuera del mapa, tabla, BORME y stats.
   "finderSourceId" TEXT REFERENCES "Finder"(id),  -- finder que trajo la empresa
   "oneDriveUrl" TEXT,                  -- carpeta del target (desde primera_reunion)
@@ -108,7 +115,7 @@ CREATE TABLE "Financiero" (
   id SERIAL PRIMARY KEY,
   "empresaId" INT REFERENCES "Empresa"(id),
   anio INT,              -- año del dato financiero
-  ingresos FLOAT,        -- ingresos en euros
+  ingresos FLOAT,        -- ingresos en euros = importe neto de la cifra de negocios
   "margenBruto" FLOAT,   -- GM (gross margin) en euros (para %, dividir entre ingresos * 100). En las respuestas al usuario, llamarlo "GM" siempre.
   ebitda FLOAT,          -- EBITDA en euros (para %, dividir entre ingresos * 100)
   "resultadoNeto" FLOAT, -- resultado neto en euros

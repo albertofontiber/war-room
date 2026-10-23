@@ -77,6 +77,7 @@ export interface EmpresaDetalle {
   enPerimetro: boolean;
   enPerimetroAt: string | null;
   esAnonima: boolean;
+  estado: string | null;    // estado legal según SABI (src/lib/empresa-estado.ts); null = sin consultar
   // Documentación externa (OneDrive + Notion)
   oneDriveUrl: string | null;
   notionUrl: string | null;

@@ -55,6 +55,12 @@ model Empresa {
   scoreInicial     Float?
   score            Float?
   anioConstitucion Int?          // año de constitución (fuente: empresia)
+  // Estado legal según SABI/Informa (ver src/lib/empresa-estado.ts):
+  // "activa"|"concurso"|"disuelta"|"fusion"|"liquidacion"|"quiebra"|"inactiva"|
+  // "desconocida"|"no_encontrada". null = nunca consultado. No saca a la empresa
+  // del universo: sigue buscable; la ficha avisa en la sección de financieros.
+  estado           String?
+  estadoAt         DateTime?     // fecha de la extracción de SABI que fijó el estado
   // Leads anónimos: la identidad real del target no se conoce (confidencial).
   // CIF se genera como "LEAD-{id}" internamente. nombre = alias acordado (ej. "Asher").
   // Una vez revelada la identidad, se usa el endpoint de vinculación para mover
