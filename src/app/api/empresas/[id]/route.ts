@@ -156,6 +156,7 @@ export async function GET(_req: Request, props: { params: Promise<{ id: string }
       enPerimetro: empresa.enPerimetro,
       enPerimetroAt: empresa.enPerimetroAt,
       esAnonima: empresa.esAnonima,
+      estado: empresa.estado,
       oneDriveUrl: empresa.oneDriveUrl,
       notionUrl: empresa.notionUrl,
       nombreComercial: empresa.nombreComercial,

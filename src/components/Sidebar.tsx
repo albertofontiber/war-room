@@ -16,6 +16,7 @@ import {
   SECCION_LABEL,
   TODAS_CATEGORIAS,
 } from "@/lib/ripci/categorias";
+import { OPCIONES_FILTRO_ESTADO, etiquetaEstado } from "@/lib/empresa-estado";
 
 // ─── Range slider de dos thumbs ───────────────────────────────────────────
 
@@ -363,6 +364,9 @@ export function SidebarContent({
         remove: () => setFiltro("aerme", null),
       });
     }
+    filtros.estado.forEach((v) =>
+      chips.push({ label: `Estado: ${etiquetaEstado(v)}`, remove: () => toggleFiltroArray("estado", v) })
+    );
     for (const cat of filtros.ripciCategorias) {
       const donde =
         filtros.ripciSeccion === null ? "" : ` (${SECCION_LABEL[filtros.ripciSeccion].toLowerCase()})`;
@@ -721,6 +725,18 @@ export function SidebarContent({
               ))}
             </div>
           </div>
+
+          {/* ── Estado legal según SABI ── */}
+          <FilterChecklist
+            label="Estado (SABI)"
+            options={OPCIONES_FILTRO_ESTADO.map((o) => o.etiqueta)}
+            selected={filtros.estado.map(etiquetaEstado)}
+            onToggle={(etiqueta) => {
+              const valor = OPCIONES_FILTRO_ESTADO.find((o) => o.etiqueta === etiqueta)?.valor;
+              if (valor) toggleFiltroArray("estado", valor);
+            }}
+            onClear={() => setFiltro("estado", [])}
+          />
 
           {/* ── Ingresos range slider ── */}
           <RangeSliderFiltro
