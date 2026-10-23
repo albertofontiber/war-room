@@ -518,18 +518,6 @@ export function SidebarContent({
             </div>
           </div>
 
-          {/* ── Estado legal según SABI ── */}
-          <FilterChecklist
-            label="Estado (SABI)"
-            options={OPCIONES_FILTRO_ESTADO.map((o) => o.etiqueta)}
-            selected={filtros.estado.map(etiquetaEstado)}
-            onToggle={(etiqueta) => {
-              const valor = OPCIONES_FILTRO_ESTADO.find((o) => o.etiqueta === etiqueta)?.valor;
-              if (valor) toggleFiltroArray("estado", valor);
-            }}
-            onClear={() => setFiltro("estado", [])}
-          />
-
           {/* ── CCAA ── */}
           <FilterChecklist
             label="Comunidad autónoma"
@@ -737,6 +725,18 @@ export function SidebarContent({
               ))}
             </div>
           </div>
+
+          {/* ── Estado legal según SABI ── */}
+          <FilterChecklist
+            label="Estado (SABI)"
+            options={OPCIONES_FILTRO_ESTADO.map((o) => o.etiqueta)}
+            selected={filtros.estado.map(etiquetaEstado)}
+            onToggle={(etiqueta) => {
+              const valor = OPCIONES_FILTRO_ESTADO.find((o) => o.etiqueta === etiqueta)?.valor;
+              if (valor) toggleFiltroArray("estado", valor);
+            }}
+            onClear={() => setFiltro("estado", [])}
+          />
 
           {/* ── Ingresos range slider ── */}
           <RangeSliderFiltro
