@@ -1,0 +1,1773 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-24",
+  "alcance": "Tercera tanda: asociaciones CLÚSIC, AD’IP y AVACOI, y búsqueda regional en las 17 comunidades autónomas; instaladoras/aplicadoras en España, con cobertura parcial.",
+  "criterio": "Identidad fiscal primaria para altas y nuevos dominios; cruce por CIF normalizado con el universo. Una entidad por CIF, sin altas por marcas, delegaciones o páginas regionales.",
+  "geocodificacion": "Centroides municipales contrastados; no coordenadas exactas de los domicilios.",
+  "empresas": [
+    {
+      "cif": "A48190839",
+      "nombre": "TÉCNICAS DE REFRACTARIOS, S.A.U.",
+      "web": "https://www.tecresa.com/",
+      "identidadUrl": "https://www.tecresa.com/index.php/es/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.tecresa.com/index.php/es/actividades/proteccion-pasiva",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Diseña y ejecuta protección pasiva industrial mediante morteros, intumescentes, placas, sellados y sectorización de conducciones. Distinta de Mercor Tecresa."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.tecresa.com/index.php/es/actividades/proteccion-pasiva",
+          "fuente": "https://www.tecresa.com/index.php/es/actividades/proteccion-pasiva",
+          "region": "pais-vasco",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Bilbao",
+      "provincia": "Vizcaya",
+      "ccaa": "País Vasco",
+      "direccion": "Ribera de Zorrozaurre, 15, 2º",
+      "codigoPostal": "48014",
+      "lat": 43.2630018,
+      "lng": -2.9350039,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Bilbao&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Bilbao, Bizkaia, Euskadi, España",
+        "osmType": "relation",
+        "osmId": 339549
+      }
+    },
+    {
+      "cif": "B02579548",
+      "nombre": "PINTURAS LACAPIN, S.L.",
+      "web": "https://lacapin.com/",
+      "identidadUrl": "https://lacapin.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://lacapin.com/servicios/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Aplica pinturas intumescentes para estructuras metálicas y entrega documentación de ejecución de protección pasiva."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://lacapin.com/",
+          "fuente": "https://lacapin.com/",
+          "region": "castilla-mancha",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Villarrobledo",
+      "provincia": "Albacete",
+      "ccaa": "Castilla-La Mancha",
+      "direccion": "Avenida Reyes Católicos, 22",
+      "codigoPostal": "02600",
+      "lat": 39.2681742,
+      "lng": -2.6042132,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Villarrobledo&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Villarrobledo, Albacete, Castilla-La Mancha, 02600, España",
+        "osmType": "relation",
+        "osmId": 347705
+      }
+    },
+    {
+      "cif": "B06255715",
+      "nombre": "COMERCIAL EXTREMEÑA DE EXTINTORES S.L.",
+      "empresaIdEsperada": 3663,
+      "web": "https://extintoresextremadura.com/",
+      "identidadUrl": "https://extintoresextremadura.com/nosotros.html",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://extintoresextremadura.com/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Comercial Extremeña de Extintores ofrece expresamente instalación y mantenimiento de protección activa y pasiva. La página de empresa confirma el nombre de la sociedad; el dominio ya está vinculado al CIF en el universo."
+        }
+      ]
+    },
+    {
+      "cif": "B16756884",
+      "nombre": "MONTAJES Y AISLAMIENTOS EN PYL, S.L.",
+      "web": "https://www.mapyl.es/",
+      "identidadUrl": "https://www.mapyl.es/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.mapyl.es/servicios",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Instaladora de tabiquería y reformas que ofrece expresamente servicios de protección pasiva contra el fuego."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.mapyl.es/",
+          "fuente": "https://www.adip-as.com/porfolio/montajes-y-aislamientos-en-pyl-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.mapyl.es",
+          "fuente": "https://www.adip-as.com/porfolio/montajes-y-aislamientos-en-pyl-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "localidad": "Terrassa",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Carrer Viladecavalls, 27",
+      "codigoPostal": "08225",
+      "lat": 41.5629623,
+      "lng": 2.0100492,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Terrassa&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Terrassa, Vallès Occidental, Barcelona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 342210
+      }
+    },
+    {
+      "cif": "B25801770",
+      "nombre": "GESTIPLAC GESTIÓ D’OBRES, S.L.U.",
+      "web": "https://gestiplac.cat/",
+      "identidadUrl": "https://gestiplac.cat/politica-de-privacitat/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://gestiplac.cat/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Equipo de construcción en seco que realiza sistemas de yeso laminado, aislamientos y protección pasiva contra el fuego."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "http://www.gestiplac.cat/",
+          "fuente": "https://www.adip-as.com/porfolio/gestiplac-espais-interiors-slu/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.gestiplac.cat",
+          "fuente": "https://www.adip-as.com/porfolio/gestiplac-espais-interiors-slu/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "localidad": "Fondarella",
+      "provincia": "Lleida",
+      "ccaa": "Cataluña",
+      "direccion": "Polígono Industrial Les Basses, 9",
+      "codigoPostal": "25244",
+      "lat": 41.6342812,
+      "lng": 0.8739685,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Fondarella&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Fondarella, Pla d'Urgell, Lleida, Catalunya, 25244, España",
+        "osmType": "relation",
+        "osmId": 342358
+      }
+    },
+    {
+      "cif": "B33495516",
+      "nombre": "CARGAS Y LUCIDOS HERMANOS LEONESES, S.L.",
+      "web": "https://www.hermanosleoneses.com/",
+      "identidadUrl": "https://www.hermanosleoneses.com/component/content/article/2-uncategorised/32-aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.hermanosleoneses.com/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Empresa de obras, aplicación de yeso y mortero que ofrece ejecución de protección pasiva contra el fuego en Asturias."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.hermanosleoneses.com/index.php",
+          "fuente": "https://www.hermanosleoneses.com/index.php",
+          "region": "gal-ast",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Oviedo",
+      "provincia": "Asturias",
+      "ccaa": "Asturias",
+      "direccion": "Calle Monte Auseva, 12, bajo",
+      "codigoPostal": "33012",
+      "lat": 43.3533452,
+      "lng": -5.8795096,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Oviedo&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Oviedo, Asturias / Asturies, España",
+        "osmType": "relation",
+        "osmId": 346397
+      }
+    },
+    {
+      "cif": "B33998584",
+      "nombre": "ATENÚA, S.L.",
+      "web": "https://cys-atenua.com/",
+      "identidadUrl": "https://cys-atenua.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://cys-atenua.com/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Empresa de aislamientos e insonorización que ejecuta soluciones de protección pasiva contra el fuego en Asturias."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://cys-atenua.com/",
+          "fuente": "https://cys-atenua.com/",
+          "region": "gal-ast",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Gijón",
+      "provincia": "Asturias",
+      "ccaa": "Asturias",
+      "direccion": "Calle Bélgica",
+      "codigoPostal": "33210",
+      "lat": 43.5449422,
+      "lng": -5.66275,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Gij%C3%B3n&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Gijón, Asturias / Asturies, España",
+        "osmType": "relation",
+        "osmId": 345576
+      }
+    },
+    {
+      "cif": "B36586642",
+      "nombre": "CEXNOR TECNIC, S.L.",
+      "web": "https://www.cexnor.es/",
+      "identidadUrl": "https://www.cexnor.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "servicios": [
+        "estructura",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.cexnor.es/servicios/proteccion-contra-incendios/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Su servicio de instalaciones de protección pasiva incluye puertas cortafuegos e ignifugación de estructuras."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.cexnor.es/servicios/proteccion-contra-incendios/",
+          "fuente": "https://www.cexnor.es/servicios/proteccion-contra-incendios/",
+          "region": "galicia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "empresaIdEsperada": 3094
+    },
+    {
+      "cif": "B39743760",
+      "nombre": "FUOTUR CANTABRIA",
+      "web": "https://www.fuoturcantabria.com/",
+      "identidadUrl": "https://www.fuoturcantabria.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.fuoturcantabria.com/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Empresa de aislamientos que ejecuta trabajos de protección pasiva contra el fuego con equipo propio."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.fuoturcantabria.com/empresa/quienes-somos",
+          "fuente": "https://www.fuoturcantabria.com/empresa/quienes-somos",
+          "region": "cantabria",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "San Felices de Buelna",
+      "provincia": "Cantabria",
+      "ccaa": "Cantabria",
+      "direccion": "Barrio Rivero, 57-A",
+      "codigoPostal": "39409",
+      "lat": 43.2663088,
+      "lng": -4.0303292,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=San+Felices+de+Buelna&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "San Felices de Buelna, Cantabria, 39409, España",
+        "osmType": "relation",
+        "osmId": 345146
+      }
+    },
+    {
+      "cif": "B40519100",
+      "nombre": "APLICFIRE, S.L.",
+      "web": "https://www.aplicfire.es/",
+      "identidadUrl": "https://www.aplicfire.es/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.aplicfire.es/proteccion-pasiva",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Ejecuta proyecciones de mortero, aplicación de intumescente, franjas cortafuegos, instalación de placas y sistemas de sellado."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.aplicfire.es/index.html",
+          "fuente": "https://www.aplicfire.es/index.html",
+          "region": "valencia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Valencia",
+      "provincia": "Valencia",
+      "ccaa": "C. Valenciana",
+      "direccion": "Avenida del Cid, 60",
+      "codigoPostal": "46018",
+      "lat": 39.4697065,
+      "lng": -0.3763353,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Valencia&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "València, Comarca de València, València / Valencia, Comunitat Valenciana, España",
+        "osmType": "relation",
+        "osmId": 344953
+      }
+    },
+    {
+      "cif": "B40620874",
+      "nombre": "PROYECTOS Y SOLUCIONES ALDIMA, S.L.",
+      "web": "https://blinders.es/",
+      "identidadUrl": "https://blinders.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "servicios": [
+        "puertas",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://blinders.es/soluciones/cortinas-cortafuegos/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Blinders fabrica e instala cortinas cortafuegos con personal propio y publica casos ejecutados; el CIF ya existe como BLINDERS SOLUTIONS."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "http://www.blinders.es",
+          "fuente": "https://clusterincendis.com/soci/blinders/",
+          "region": "Cataluña",
+          "tipo": "asociacion"
+        }
+      ],
+      "empresaIdEsperada": 1422,
+      "completarVacios": true
+    },
+    {
+      "cif": "B57034324",
+      "nombre": "INSTALACIONES COBI BALEAR, S.L.",
+      "web": "https://cobibalear.es/",
+      "identidadUrl": "https://cobibalear.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://cobibalear.es/servicios/ignifugacion-de-estructuras/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Aplica protección de estructuras con pinturas intumescentes, mortero de vermiculita y placas; publica proyectos ejecutados."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://cobibalear.es/",
+          "fuente": "https://cobibalear.es/",
+          "region": "baleares",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Santa Maria del Camí",
+      "provincia": "Baleares",
+      "ccaa": "Baleares",
+      "direccion": "Carrer Ses Texidores, 26, Polígono Son Llaüt",
+      "codigoPostal": "07320",
+      "lat": 39.6479453,
+      "lng": 2.7779083,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Santa+Maria+del+Cam%C3%AD&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Santa Maria del Camí, Raiguer, Illes Balears, 07320, España",
+        "osmType": "relation",
+        "osmId": 342256
+      }
+    },
+    {
+      "cif": "B57998965",
+      "nombre": "OBRAS Y SISTEMAS CONTRAINCENDIOS GLOBAL PROYECT, S.L.U.",
+      "web": "https://www.globalproyect.com/",
+      "identidadUrl": "https://www.globalproyect.com/politicas-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.globalproyect.com/proteccion-pasiva-contra-incendios/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Realiza proyecciones ignífugas, franjas cortafuegos, panelados y aplicación de pintura intumescente dentro de sus instalaciones."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.globalproyect.com/empresa/",
+          "fuente": "https://www.globalproyect.com/empresa/",
+          "region": "baleares",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Palma",
+      "provincia": "Baleares",
+      "ccaa": "Baleares",
+      "direccion": "Carrer Can Valero, 38, nave 9",
+      "codigoPostal": "07011",
+      "lat": 39.5695818,
+      "lng": 2.6500745,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Palma&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Palma, Illes Balears, España",
+        "osmType": "relation",
+        "osmId": 341321
+      }
+    },
+    {
+      "cif": "B59304998",
+      "nombre": "DIVISIONES INTERIORES, S.L.",
+      "web": "https://divinter.es/",
+      "identidadUrl": "https://divinter.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://divinter.es/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Instaladora de interiores que incluye protección pasiva contra el fuego EI en sus servicios y cartera de obras."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "http://www.divinter.es/",
+          "fuente": "https://www.adip-as.com/porfolio/divisiones-interiores-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.divinter.es",
+          "fuente": "https://www.adip-as.com/porfolio/divisiones-interiores-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "localidad": "Sant Adrià de Besòs",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Avenida La Catalana, 123, local 4",
+      "codigoPostal": "08930",
+      "lat": 41.4304832,
+      "lng": 2.2182775,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Sant+Adri%C3%A0+de+Bes%C3%B2s&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Sant Adrià de Besòs, Barcelonès, Barcelona, Catalunya, 08930, España",
+        "osmType": "relation",
+        "osmId": 348950
+      }
+    },
+    {
+      "cif": "B61933214",
+      "nombre": "OPERSIS 1999, S.L.",
+      "web": "https://opersis.es/",
+      "identidadUrl": "https://opersis.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://opersis.es/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Diseña, instala y ejecuta construcción en seco; desarrolla soluciones y detalles constructivos de protección pasiva al fuego."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://opersis.es/",
+          "fuente": "https://opersis.es/",
+          "region": "Cataluña",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Cornellà de Llobregat",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Calle Tirso de Molina, 36",
+      "codigoPostal": "08940",
+      "localizacionFuente": {
+        "url": "https://opersis.es/",
+        "descripcion": "Domicilio publicado en contacto/pie de la web corporativa."
+      },
+      "lat": 41.355724,
+      "lng": 2.0706225,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Cornell%C3%A0+de+Llobregat&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Cornellà de Llobregat, Baix Llobregat, Barcelona, Catalunya, 08940, España",
+        "osmType": "relation",
+        "osmId": 339968
+      }
+    },
+    {
+      "cif": "B61989638",
+      "nombre": "IGNIFUGACIONS GENERALS, S.L.",
+      "web": "https://www.ignifugacionesgenerales.com/",
+      "identidadUrl": "https://www.ignifugacionesgenerales.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "reaccion",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.ignifugacionesgenerales.com/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Aplicadora de protección pasiva para estructuras, sectorización, sellados, elementos de madera y conductos; una sola entidad para los dominios castellano y catalán."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.ignifugacionesgenerales.com/nosotros/",
+          "fuente": "https://www.ignifugacionesgenerales.com/nosotros/",
+          "region": "extremadura",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://www.ignifugacionesgenerales.com/contacto/",
+          "fuente": "https://www.ignifugacionesgenerales.com/contacto/",
+          "region": "rioja",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://www.ignifugacionesgenerales.com/",
+          "fuente": "https://www.ignifugacionesgenerales.com/",
+          "region": "rioja",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Girona",
+      "provincia": "Girona",
+      "ccaa": "Cataluña",
+      "direccion": "Carretera Antiga d’Amer, 10-12, Polígono Domeny",
+      "lat": 41.9793006,
+      "lng": 2.8199439,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Girona&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Girona, Gironès, Girona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 343535
+      }
+    },
+    {
+      "cif": "B65850877",
+      "nombre": "DECOPLAC MARESME, S.L.",
+      "web": "http://www.decoplacmaresme.com/",
+      "identidadUrl": "http://www.decoplacmaresme.com/politica-privacidad.html",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "http://www.decoplacmaresme.com/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Instaladora de tabiquería seca que ejecuta soluciones de protección estructural contra el fuego, sectorización con placas y morteros."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "http://www.decoplacmaresme.com/",
+          "fuente": "https://www.adip-as.com/porfolio/decoplac-maresme-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.decoplacmaresme.com",
+          "fuente": "https://www.adip-as.com/porfolio/decoplac-maresme-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "localidad": "Mataró",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Calle Euskadi, 12",
+      "codigoPostal": "08303",
+      "lat": 41.5398348,
+      "lng": 2.4448926,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Matar%C3%B3&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Mataró, Maresme, Barcelona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 345587
+      }
+    },
+    {
+      "cif": "B66204579",
+      "nombre": "APLACAT SBD, S.L.",
+      "web": "https://aplacat.cat/",
+      "identidadUrl": "https://aplacat.cat/politica-de-privacitat",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://aplacat.cat/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Instala sistemas de yeso laminado, aislamiento y protección pasiva contra el fuego."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://aplacat.cat/",
+          "fuente": "https://www.adip-as.com/porfolio/aplacat-sbd-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.aplacat.cat",
+          "fuente": "https://www.adip-as.com/porfolio/aplacat-sbd-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "localidad": "Sabadell",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Carrer del Bruc, 114",
+      "codigoPostal": "08203",
+      "lat": 41.5460801,
+      "lng": 2.1083214,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Sabadell&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Sabadell, Vallès Occidental, Barcelona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 344202
+      }
+    },
+    {
+      "cif": "B66999079",
+      "nombre": "TABIC MON, S.L.",
+      "web": "https://tabicmon.com/",
+      "identidadUrl": "https://tabicmon.com/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://tabicmon.com/servicios/ignifugacion",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Ejecuta sectorizaciones PYL y monta collarines, sacos intumescentes, puertas RF, rejillas y trampillas."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "http://www.tabicmon.com/",
+          "fuente": "https://www.adip-as.com/porfolio/tabic-mon-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.tabicmon.com",
+          "fuente": "https://www.adip-as.com/porfolio/tabic-mon-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "localidad": "Terrassa",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Avinguda del Vallès, 306",
+      "codigoPostal": "08227",
+      "lat": 41.5629623,
+      "lng": 2.0100492,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Terrassa&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Terrassa, Vallès Occidental, Barcelona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 342210
+      }
+    },
+    {
+      "cif": "B70529128",
+      "nombre": "TERRANOVA OBRAS Y SERVICIOS, S.L.",
+      "web": "https://www.grupoterranova.es/",
+      "identidadUrl": "https://www.grupoterranova.es/aviso-legal.aspx",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.grupoterranova.es/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Instala sistemas de protección pasiva contra incendios, incluidos revestimientos y soluciones para la estabilidad de elementos estructurales."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.grupoterranova.es/",
+          "fuente": "https://www.grupoterranova.es/",
+          "region": "gal-ast",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Narón",
+      "provincia": "A Coruña",
+      "ccaa": "Galicia",
+      "direccion": "Camiño Doimas, 16, Polígono As Lagoas",
+      "codigoPostal": "15570",
+      "localizacionFuente": {
+        "url": "https://www.grupoterranova.es/",
+        "descripcion": "Domicilio publicado en contacto/pie de la web corporativa."
+      },
+      "lat": 43.5317883,
+      "lng": -8.1565473,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Nar%C3%B3n&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Narón, Ferrol, A Coruña, Galicia, España",
+        "osmType": "relation",
+        "osmId": 346499
+      }
+    },
+    {
+      "cif": "B73896383",
+      "nombre": "IGNIFUGACIONES SALINAS MUÑOZ, S.L.",
+      "web": "https://ignifugacionessalinas.es/",
+      "identidadUrl": "https://ignifugacionessalinas.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ignifugacionessalinas.es/empresa/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Aplicadora de sistemas de protección pasiva: ignifugación estructural, franjas y sellados cortafuegos."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://ignifugacionessalinas.es/empresa/",
+          "fuente": "https://ignifugacionessalinas.es/empresa/",
+          "region": "extremadura",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugacionessalinas.es/aviso-legal/",
+          "fuente": "https://ignifugacionessalinas.es/aviso-legal/",
+          "region": "murcia",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugacionessalinas.es/",
+          "fuente": "https://ignifugacionessalinas.es/",
+          "region": "murcia",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugacionessalinas.es/contacto/",
+          "fuente": "https://ignifugacionessalinas.es/contacto/",
+          "region": "murcia",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugacionessalinas.es/politicas-de-privacidad/",
+          "fuente": "https://ignifugacionessalinas.es/politicas-de-privacidad/",
+          "region": "murcia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Yecla",
+      "provincia": "Murcia",
+      "ccaa": "Murcia",
+      "direccion": "Príncipe de Asturias, parcela 7A, nave 5, Polígono La Herrada",
+      "lat": 38.6135956,
+      "lng": -1.1157882,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Yecla&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Yecla, Altiplano, Región de Murcia, 30510, España",
+        "osmType": "relation",
+        "osmId": 345590
+      }
+    },
+    {
+      "cif": "B76056753",
+      "nombre": "BRAPESA CANARIAS, S.L.",
+      "web": "https://www.brapesacanarias.com/",
+      "identidadUrl": "https://www.brapesacanarias.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.brapesacanarias.com/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Aplicadora de morteros y pinturas intumescentes; instala paneles y placas RF, compartimentación y sellados de pasos."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.brapesacanarias.com/contacto/",
+          "fuente": "https://www.brapesacanarias.com/contacto/",
+          "region": "canarias",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://www.brapesacanarias.com/",
+          "fuente": "https://www.brapesacanarias.com/",
+          "region": "canarias",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Agüimes",
+      "provincia": "Las Palmas",
+      "ccaa": "Canarias",
+      "direccion": "Calle Cincel, 8, Polígono Industrial Arinaga",
+      "codigoPostal": "35118",
+      "lat": 27.9049541,
+      "lng": -15.4445131,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Ag%C3%BCimes&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Agüimes, Las Palmas, Canarias, España",
+        "osmType": "relation",
+        "osmId": 345127
+      }
+    },
+    {
+      "cif": "B76122415",
+      "nombre": "JLD SERVICIOS E INGENIO, S.L.U.",
+      "web": "https://www.grupojld.es/",
+      "identidadUrl": "https://www.grupojld.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.grupojld.es/servicios/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Aplica sistemas de protección pasiva: lana de roca proyectada, pintura intumescente y morteros para estructuras."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.grupojld.es/",
+          "fuente": "https://www.grupojld.es/",
+          "region": "canarias",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Agüimes",
+      "provincia": "Las Palmas",
+      "ccaa": "Canarias",
+      "direccion": "Calle de la Fragua, 9",
+      "codigoPostal": "35118",
+      "lat": 27.9049541,
+      "lng": -15.4445131,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Ag%C3%BCimes&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Agüimes, Las Palmas, Canarias, España",
+        "osmType": "relation",
+        "osmId": 345127
+      }
+    },
+    {
+      "cif": "B76689801",
+      "nombre": "RSI TENERIFE, S.L.",
+      "web": "https://cys-rsitenerife.com/",
+      "identidadUrl": "https://cys-rsitenerife.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://cys-rsitenerife.com/proteccion-pasiva-contra-incendios",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Gestiona la ejecución y aplicación de protección pasiva para estructuras metálicas, naves y sectores de incendio."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://cys-rsitenerife.com/",
+          "fuente": "https://cys-rsitenerife.com/",
+          "region": "canarias",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Santa Cruz de Tenerife",
+      "provincia": "Santa Cruz de Tenerife",
+      "ccaa": "Canarias",
+      "direccion": "Calle Punta de Anaga, 4, local, Los Alisios",
+      "localizacionFuente": {
+        "url": "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2026-78-38",
+        "descripcion": "Cambio de domicilio de RSI TENERIFE SL, asiento 200832, inscrito 16/04/2026; prevalece sobre la dirección antigua de la web. Sin código postal inferido."
+      },
+      "lat": 28.467178,
+      "lng": -16.2507843,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Santa+Cruz+de+Tenerife&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Santa Cruz de Tenerife, Canarias, España",
+        "osmType": "relation",
+        "osmId": 340727
+      }
+    },
+    {
+      "cif": "B80566342",
+      "nombre": "URBANIZACIONES COBESA, S.L.",
+      "web": "https://ucobesa.es/",
+      "identidadUrl": "https://ucobesa.es/proteccion-pasiva-incendios/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ucobesa.es/proteccion-pasiva-incendios/quienes-somos/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Ejecuta trabajos de protección pasiva: ignifugación de estructuras, compartimentaciones y sellados."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://ucobesa.es/proteccion-pasiva-incendios/quienes-somos/",
+          "fuente": "https://ucobesa.es/proteccion-pasiva-incendios/quienes-somos/",
+          "region": "madrid",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ucobesa.es/proteccion-pasiva-incendios/",
+          "fuente": "https://ucobesa.es/proteccion-pasiva-incendios/",
+          "region": "madrid",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Madrid",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle Ciudad de las Frías, 24",
+      "codigoPostal": "28021",
+      "lat": 40.416782,
+      "lng": -3.703507,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Madrid&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Madrid, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 5326784
+      }
+    },
+    {
+      "cif": "B80826662",
+      "nombre": "IGNIFUGADOS Y REVESTIMIENTOS, S.L.",
+      "web": "https://www.ignifugadosyrevestimientos.com/",
+      "identidadUrl": "https://www.ignifugadosyrevestimientos.com/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.ignifugadosyrevestimientos.com/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Instala sistemas intumescentes y aplica morteros ignífugos; incluye sellados y collarines cortafuegos."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.ignifugadosyrevestimientos.com/contacto",
+          "fuente": "https://www.ignifugadosyrevestimientos.com/contacto",
+          "region": "madrid",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Madrid",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle Reina Mercedes, 18, oficina 4",
+      "codigoPostal": "28020",
+      "lat": 40.416782,
+      "lng": -3.703507,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Madrid&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Madrid, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 5326784
+      }
+    },
+    {
+      "cif": "B84318849",
+      "nombre": "SELLA2 PROTECCIÓN PASIVA, S.L.",
+      "web": "https://sella2.com/",
+      "identidadUrl": "https://www.sellados-ignifugados-madrid.es/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://sella2.com/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Instala protección de estructuras, sellados, franjas, compartimentaciones y conductos ignífugos. El aviso del dominio comercial vincula la sociedad con sella2.com."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://sella2.com/",
+          "fuente": "https://sella2.com/",
+          "region": "madrid",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://sella2.com/contacto/",
+          "fuente": "https://sella2.com/contacto/",
+          "region": "madrid",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://sella2.com/compartimentacion/",
+          "fuente": "https://sella2.com/compartimentacion/",
+          "region": "madrid",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Madrid",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle San Cipriano, 60",
+      "codigoPostal": "28032",
+      "lat": 40.416782,
+      "lng": -3.703507,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Madrid&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Madrid, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 5326784
+      }
+    },
+    {
+      "cif": "B87595633",
+      "nombre": "TÉCNICAS Y DINÁMICAS DE INTERIORES, S.L.",
+      "web": "https://tecdi.es/",
+      "identidadUrl": "https://tecdi.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://tecdi.es/category/proteccion-pasiva-contra-fuego/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Publica un proyecto propio de protección pasiva contra el fuego para la Escuela de Pilotos Lorenzo, cliente AZMER."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "http://www.tecdi.es/",
+          "fuente": "https://www.adip-as.com/porfolio/tecnicas-y-dinamicas-de-interiores-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.tecdi.es",
+          "fuente": "https://www.adip-as.com/porfolio/tecnicas-y-dinamicas-de-interiores-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "localidad": "Coslada",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Avenida de las Américas, 3, nave B7",
+      "codigoPostal": "28823",
+      "localizacionFuente": {
+        "url": "https://tecdi.es/category/proteccion-pasiva-contra-fuego/",
+        "descripcion": "Domicilio publicado en contacto/pie de la web corporativa."
+      },
+      "lat": 40.423802,
+      "lng": -3.5552882,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Coslada&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Coslada, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 345295
+      }
+    },
+    {
+      "cif": "B88668009",
+      "nombre": "INSTALACIONES Y PROYECTOS DE SISTEMAS DE INCENDIO, S.L.",
+      "web": "https://ipsincendio.es/",
+      "identidadUrl": "https://ipsincendio.es/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ipsincendio.es/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "IPS Incendio instala con técnicos propios sectorizaciones, ignifugación estructural, sellados de pasos y conductos de extracción."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://ipsincendio.es/",
+          "fuente": "https://ipsincendio.es/",
+          "region": "cantabria",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "empresaIdEsperada": 5702,
+      "completarVacios": true,
+      "localidad": "Maliaño",
+      "direccion": "Avenida La Cerrada, 24, puerta A",
+      "codigoPostal": "39600",
+      "lat": 43.4301,
+      "lng": -3.86163,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Camargo&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Camargo, Cantabria, España",
+        "osmType": "relation",
+        "osmId": 339825
+      }
+    },
+    {
+      "cif": "B90280454",
+      "nombre": "PROMATEC SERVICIOS INTEGRALES, S.L.U.",
+      "web": "https://ignifugacionespromatec.es/",
+      "identidadUrl": "https://ignifugacionespromatec.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ignifugacionespromatec.es/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Aplicadora con equipo propio: estructuras, franjas, puertas cortafuegos y tratamiento de pasos de instalaciones."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://ignifugacionespromatec.es/ignifugaciones-sevilla/",
+          "fuente": "https://ignifugacionespromatec.es/ignifugaciones-sevilla/",
+          "region": "andalucia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "empresaIdEsperada": 3962,
+      "completarVacios": true
+    },
+    {
+      "cif": "B95484945",
+      "nombre": "NEWCONS AISLAMIENTOS, S.L.",
+      "web": "https://www.newcons.es/",
+      "identidadUrl": "https://www.newcons.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.newcons.es/proteccion-pasiva/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Ofrece experiencia propia en instalación de sistemas de protección pasiva contra incendios."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.newcons.es/",
+          "fuente": "https://www.newcons.es/",
+          "region": "pais-vasco",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Bilbao",
+      "provincia": "Vizcaya",
+      "ccaa": "País Vasco",
+      "direccion": "Calle Enekuri, 12",
+      "codigoPostal": "48014",
+      "lat": 43.2630018,
+      "lng": -2.9350039,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Bilbao&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Bilbao, Bizkaia, Euskadi, España",
+        "osmType": "relation",
+        "osmId": 339549
+      }
+    },
+    {
+      "cif": "B96881180",
+      "nombre": "APLICACIONES ANTUNEZ, S.L.",
+      "web": "https://www.ignifugaciones-valencia.com/",
+      "identidadUrl": "https://www.ignifugaciones-valencia.com/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.ignifugaciones-valencia.com/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Aplan ejecuta ignifugación de estructuras con morteros y pintura intumescente y tratamientos de protección contra incendios."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.ignifugaciones-valencia.com/",
+          "fuente": "https://www.ignifugaciones-valencia.com/",
+          "region": "valencia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Alaquàs",
+      "provincia": "Valencia",
+      "ccaa": "C. Valenciana",
+      "direccion": "Calle Camp del Túria, 25, Polígono Bobalar",
+      "codigoPostal": "46970",
+      "lat": 39.4572928,
+      "lng": -0.46098,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Alaqu%C3%A0s&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Alaquàs, l'Horta Sud, València / Valencia, Comunitat Valenciana, 46970, España",
+        "osmType": "relation",
+        "osmId": 341833
+      }
+    },
+    {
+      "cif": "B97844054",
+      "nombre": "IGNIFOC AISLAMIENTOS INTEGRALES, S.L.",
+      "web": "https://ignifoc.com/",
+      "identidadUrl": "https://ignifoc.com/politica-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ignifoc.com/ignifugacion",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Aplica sistemas de protección pasiva para estructuras con morteros y pintura intumescente."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://ignifoc.com/contacto",
+          "fuente": "https://ignifoc.com/contacto",
+          "region": "valencia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Silla",
+      "provincia": "Valencia",
+      "ccaa": "C. Valenciana",
+      "direccion": "Plaza Viento de Poniente, 2, Polígono El Masset",
+      "codigoPostal": "46460",
+      "lat": 39.3632045,
+      "lng": -0.4112618,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Silla&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Silla, l'Horta Sud, València / Valencia, Comunitat Valenciana, 46460, España",
+        "osmType": "relation",
+        "osmId": 342734
+      }
+    },
+    {
+      "cif": "B98151467",
+      "nombre": "TÉCNICAS APLICADAS DEL MEDITERRÁNEO, S.L.",
+      "web": "https://www.tecnicasaplicadas.es/",
+      "identidadUrl": "https://www.tecnicasaplicadas.es/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.tecnicasaplicadas.es/empresa",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Empresa de construcción y tabiquería seca que incluye la ejecución de protección pasiva contra el fuego en sus servicios."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.tecnicasaplicadas.es/",
+          "fuente": "https://www.adip-as.com/porfolio/tecnicas-aplicadas-del-mediterraneo-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.tecnicasaplicadas.es",
+          "fuente": "https://www.adip-as.com/porfolio/tecnicas-aplicadas-del-mediterraneo-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "localidad": "Puçol",
+      "provincia": "Valencia",
+      "ccaa": "C. Valenciana",
+      "direccion": "Avenida Collidors, 32, nave 10",
+      "codigoPostal": "46530",
+      "lat": 39.6172229,
+      "lng": -0.3028272,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Pu%C3%A7ol&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Puçol, l'Horta Nord, València / Valencia, Comunitat Valenciana, España",
+        "osmType": "relation",
+        "osmId": 346558
+      }
+    },
+    {
+      "cif": "B98823735",
+      "nombre": "SISTEMAS DE PROTECCIÓN FIREPROF, S.L.",
+      "web": "https://empresadeignifugaciones.es/",
+      "identidadUrl": "https://empresadeignifugaciones.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://empresadeignifugaciones.es/empresa/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Bajo la marca Fireproof aplica protección pasiva frente a incendios en estructuras metálicas de establecimientos industriales."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://empresadeignifugaciones.es/",
+          "fuente": "https://empresadeignifugaciones.es/",
+          "region": "valencia",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://empresadeignifugaciones.es/empresa/",
+          "fuente": "https://empresadeignifugaciones.es/empresa/",
+          "region": "valencia",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://empresadeignifugaciones.es/proteccionpasivacontraincendios/",
+          "fuente": "https://empresadeignifugaciones.es/proteccionpasivacontraincendios/",
+          "region": "valencia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Bétera",
+      "provincia": "Valencia",
+      "ccaa": "C. Valenciana",
+      "direccion": "Calle Francisco Peris i Valls, 24, bajo",
+      "codigoPostal": "46117",
+      "lat": 39.5917307,
+      "lng": -0.4622695,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=B%C3%A9tera&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Bétera, el Camp de Túria, València / Valencia, Comunitat Valenciana, 46117, España",
+        "osmType": "relation",
+        "osmId": 346690
+      }
+    },
+    {
+      "cif": "B99067936",
+      "nombre": "TÉCNICAS DE SEGURIDAD PASIVA CONTRA INCENDIOS, S.L.",
+      "web": "https://www.tecoin.es/",
+      "identidadUrl": "https://www.tecoin.es/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.tecoin.es/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "TECOIN instala y aplica protección pasiva para estructuras, sectorización, sellados y conductos resistentes al fuego."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://www.tecoin.es/",
+          "fuente": "https://www.tecoin.es/",
+          "region": "aragon",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "Zaragoza",
+      "provincia": "Zaragoza",
+      "ccaa": "Aragón",
+      "direccion": "Polígono Industrial Tecnum, nave 1, La Cartuja Baja",
+      "codigoPostal": "50720",
+      "lat": 41.6915847,
+      "lng": -0.9101268,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Zaragoza&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Zaragoza, Aragón, España",
+        "osmType": "relation",
+        "osmId": 345740
+      }
+    },
+    {
+      "cif": "E42824722",
+      "nombre": "ESCADUR",
+      "web": "https://ignifugados.net/",
+      "identidadUrl": "https://ignifugados.net/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ignifugados.net/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Ignaria declara equipo propio de aplicación de morteros y pinturas, montaje de paneles, sellado de pasos y protección de conductos."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://ignifugados.net/",
+          "fuente": "https://ignifugados.net/",
+          "region": "castilla-mancha",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugados.net/zonas/logrono/",
+          "fuente": "https://ignifugados.net/zonas/logrono/",
+          "region": "rioja",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "localidad": "L'Alcúdia",
+      "provincia": "Valencia",
+      "ccaa": "C. Valenciana",
+      "direccion": "Calle Rei en Jaume, 45, 2º 2ª",
+      "codigoPostal": "46250",
+      "lat": 39.1947105,
+      "lng": -0.5042406,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=L%27Alc%C3%BAdia&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "l'Alcúdia, la Ribera Alta, València / Valencia, Comunitat Valenciana, 46250, España",
+        "osmType": "relation",
+        "osmId": 346361
+      }
+    },
+    {
+      "cif": "J43963792",
+      "nombre": "PROJECT TGN, S.C.P.",
+      "web": "https://projecttgn.com/",
+      "identidadUrl": "https://projecttgn.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "reaccion",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://projecttgn.com/proteccion-pasiva-contra-incendios/",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24",
+          "descripcion": "Ejecuta trabajos de protección pasiva: intumescentes, morteros, paneles, franjas, sellados, madera y conductos EI."
+        }
+      ],
+      "descubrimiento": [
+        {
+          "url": "https://projecttgn.com/",
+          "fuente": "https://clusterincendis.com/soci/projecttgn/",
+          "region": "Cataluña",
+          "tipo": "asociacion"
+        }
+      ],
+      "localidad": "Tarragona",
+      "provincia": "Tarragona",
+      "ccaa": "Cataluña",
+      "direccion": "Polígono Industrial Francolí, 30, 4A",
+      "lat": 41.1172364,
+      "lng": 1.2546057,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Tarragona&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Tarragona, Tarragonès, Tarragona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 339887
+      }
+    }
+  ]
+}

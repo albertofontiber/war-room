@@ -1,8 +1,20 @@
 # Protección pasiva: actividad transversal y ampliación del universo
 
-Revisión: **24/10/2026**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y dos lotes están aplicados en producción: **184 sociedades con pasiva confirmada**.
+Revisión: **24/10/2026, 13:10 Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y tres lotes están aplicados en producción: **222 entidades con pasiva confirmada**.
 
 ## Resultado aplicado
+
+La tercera tanda, de asociaciones y búsqueda regional, incorpora **33 altas y 5 enriquecimientos**. Su [lote de 38 entidades](research/pasiva-validada-regional-2026-10-24.json) y [seguimiento por dominio](research/pasiva-asociaciones-regiones-2026-10-24.json) conservan identidad primaria, actividad, fuentes de descubrimiento y resultado. Se aplicó con 38 auditorías; la repetición aplicada devuelve `sin_cambios=38` sin nuevas auditorías. Los campos protegidos, cuentas, CRM y recuentos de relaciones de las cinco fichas existentes se comprobaron por huella, sin alteraciones fuera de los vacíos autorizados.
+
+Se consultaron **97 perfiles de CLÚSIC, 70 de AD’IP y 24 de AVACOI**, más búsquedas en las 17 comunidades autónomas: **223 dominios descubiertos**, de los que 24 ya correspondían a fichas confirmadas por su dominio; de los 199 restantes, 87 mostraron indicios. El seguimiento distingue rastreo sin indicios, acceso fallido, identidad pendiente, ejecución no acreditada y altas/enriquecimientos. Dos dominios alternativos se resolvieron además contra CIF ya confirmados. La revisión no convierte a todos los asociados ni todos los dominios en empresas de pasiva.
+
+**Enriquecimientos de esta tanda:** Blinders / Proyectos y Soluciones Aldima (`B40620874`, ficha 1422), Promatec (`B90280454`, ficha 3962), IPS Incendio (`B88668009`, ficha 5702), Cexnor (`B36586642`, ficha 3094) y Comercial Extremeña de Extintores (`B06255715`, ficha 3663). Se completaron las tres primeras webs vacías y los campos vacíos de domicilio/localización de IPS; sus coordenadas son del municipio de Camargo, donde está Maliaño. Se conservó la localización previa de Blinders en Ontinyent aunque la web fiscal publica Badalona: esa discrepancia requiere conciliación registral separada y no justifica sobrescribir datos presentes.
+
+**Altas de esta tanda:** Aplacat, Project TGN, Tecoin, Global Proyect, Cobi Balear, JLD, Brapesa Canarias, RSI Tenerife, Fuotur Cantabria, Pinturas Lacapin, Escadur / Ignaria, Ignifugaciones Salinas Muñoz, Ignifugacions Generals, Hermanos Leoneses, Atenúa, Terranova, Ignifugados y Revestimientos, Urbanizaciones Cobesa, Sella2, Técnicas de Refractarios, Newcons, Aplicaciones Antunez / Aplan, Sistemas de Protección Fireprof, Aplicfire, Ignifoc, Opersis, Gestiplac, Decoplac Maresme, Técnicas Aplicadas del Mediterráneo, Técnicas y Dinámicas de Interiores, Tabic Mon, Montajes y Aislamientos en PYL y Divisiones Interiores. El nombre fiscal publicado de Escadur se conserva sin inventar forma social. Los servicios concretos solo se etiquetan cuando la fuente los acredita; una confirmación general puede tener la lista de servicios vacía.
+
+Los dominios de Sella2 y sus landings, y las versiones catalana/castellana de Ignifugacions Generals, se agruparon por CIF. **Técnicas de Refractarios (`A48190839`, tecresa.com) es distinta de Mercor Tecresa (`B48983746`)**. Para RSI Tenerife se usa el cambio de domicilio publicado en BORME en abril de 2026, más reciente que el aviso legal. No se crean entidades por delegación o página de ciudad.
+
+### Tandas anteriores
 
 El segundo lote incorpora **115 sociedades: 106 enriquecimientos y 9 altas**, adicionales a las 69 del 23/10. La simulación no dejó filas ambiguas. La aplicación inicial generó 115 auditorías y el complemento de localización de Extinhouse Group, una más. Repetir el lote final produce `sin_cambios=115`. Se comprobaron por huella los campos protegidos, las cuentas, el CRM y los recuentos de relaciones de las fichas existentes: permanecieron intactos, salvo los datos vacíos de identidad/localización expresamente completados.
 
@@ -56,6 +68,7 @@ La migración aditiva `20261023140000_proteccion_pasiva` está aplicada antes de
 
 | Fuente | Uso y límites |
 |---|---|
+| [CLÚSIC](https://clusterincendis.com/socis/), [AD’IP](https://www.adip-as.com/asociados/) y [AVACOI](https://www.avacoi.com/socios/categoria/asociado/) | Perfiles y webs de asociados como descubrimiento. Incluyen diferentes roles; la ejecución de pasiva se valida por entidad. 191 perfiles consultados en la tercera tanda. |
 | [Tecnifuego: comité de instalación de pasiva](https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de) | Descubrimiento especializado y evidencia sectorial para miembros del comité de instalación; revisar rol e identidad. No es una calificación. |
 | [AISLA: buscador de instaladores](https://www.aisla.org/instaladores/) | Se revisaron las tarjetas etiquetadas con servicio de protección pasiva. No se atribuye esa actividad a todos los instaladores de aislamiento. |
 | [Calificación Cepreven](https://www.calificacioncepreven.com/Descarga-Documentos.html) | Áreas de instalación de pasiva. Para Fuegodiez se conservaron como evidencia los códigos ya guardados; el lote no renueva su vigencia. |
@@ -76,9 +89,13 @@ Las evidencias se tipifican como `web_corporativa`, `asociacion` o `calificacion
 | Sabico Contra Incendios | Identificar la sociedad ejecutora, sin atribuir la actividad a la cabecera por marca. |
 | Dominios compartidos y redirecciones | Emacs, Starfoc y las redirecciones a Gefisa, Eurofesa e Incotex requieren atribución por sociedad. |
 | Resto del seguimiento | Identidad o ejecución pendientes, webs sin acceso o evidencia insuficiente, con motivo y URLs fechadas por candidata. |
+| Aplicanor | La política identifica varias sociedades del grupo; atribuir los trabajos al CIF ejecutor antes de incorporar. |
+| Acusfoc, Vimat, Ignifugados Borja y otras candidatas regionales | Hay indicios de ejecución; falta CIF en fuente primaria recuperable. |
+| Kaixo, Elexar y otros suministradores | Identidad resuelta, pero falta prueba específica de montaje/aplicación propia en pasiva. |
+| Blinders | Actividad y CIF confirmados en ficha existente; conciliar aparte Ontinyent frente al domicilio fiscal web de Badalona. |
 
 Carboline y KaviDoors quedan fuera de este lote por su rol de fabricante sin instalación propia validada; Intertek por ensayos/certificación y Cepreven por ser asociación. No se crean fichas por marca, delegación o landing de ciudad.
 
-La siguiente ampliación puede continuar por territorio, servicios y asociaciones: [CLÚSIC](https://clusterincendis.com/socis/), [AD'IP](https://www.adip-as.com/), fabricantes con redes de aplicadores y búsqueda regional en castellano y lenguas locales. Las 184 confirmadas no agotan el mercado. Para el universo actual quedan las sociedades sin web, los accesos fallidos y las atribuciones no resueltas; el primer barrido general de dominios ya está realizado.
+La primera ampliación por CLÚSIC, AD’IP, AVACOI y búsquedas regionales ya está realizada y aplicada; no se mantiene como una tarea genérica sin empezar. Las **222 confirmadas no agotan el mercado**. La continuidad consiste en resolver los casos concretos del seguimiento, recuperar accesos, investigar sociedades sin web y ampliar redes de aplicadores o territorios con evidencia adicional. Las webs comerciales de cobertura nacional no se cuentan como sedes en cada región. Conesam no recibe el CIF de su proveedor de protección de datos; las redes VKM/VKS quedan sin atribución de ejecución propia. No se aplican revisiones negativas.
 
 Para cada nueva tanda: validar actividad e identidad, cruzar CIF exacto, resolver dominios compartidos, simular, aplicar únicamente las filas validadas y verificar idempotencia. Los enriquecimientos no alteran perímetro, responsable, etapa, financieros, grupo o fuente original. Una empresa pendiente permanece `null`, nunca se transforma por defecto en «no hace pasiva».
