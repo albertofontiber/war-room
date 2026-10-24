@@ -1,6 +1,6 @@
 # Estado actual del proyecto
 
-Corte: **24 de octubre de 2026, 13:10 Europe/Madrid**. Código de referencia: [#193](https://github.com/albertofontiber/war-room/pull/193), fusionada en `cd869d5`. Este corte incorpora el tercer lote de pasiva, de asociaciones y búsqueda regional, aplicado en producción. Es una instantánea fechada, no un contador en vivo.
+Corte: **24 de octubre de 2026, 13:30 Europe/Madrid**. Base del universo: [#194](https://github.com/albertofontiber/war-room/pull/194), fusionada en `08bf2ec`. Incluye el tercer lote de pasiva y la derivación de actividades a partir de los datos existentes. Es una instantánea fechada, no un contador en vivo.
 
 ## Datos comprobados
 
@@ -13,6 +13,11 @@ Consulta a la base configurada para producción mediante Prisma dentro de una tr
 | Seguridad electrónica | 770 | Valor `seguridad_electronica` |
 | Mixtas | 468 | PCI y seguridad electrónica; no significa activa y pasiva |
 | Pasiva confirmada | 222 | `proteccionPasiva=true`; cobertura parcial, no censo del mercado |
+| Actividad PCI activa | 4.994 | Universo PCI/mixto previo y categorías RIPCI válidas; excluye altas de investigación pasiva sin evidencia de activa |
+| Actividad seguridad electrónica | 1.238 | Sectores `seguridad_electronica` o `mixto` |
+| PCI activa y PCI pasiva | 160 | Ambas actividades; pueden prestar también seguridad electrónica |
+| Las tres actividades | 22 | PCI activa, PCI pasiva y seguridad electrónica |
+| Solo PCI pasiva acreditada | 61 | Lista de actividades con únicamente pasiva; no constituye revisión negativa de las otras actividades |
 | Años de cuentas | 23.620 | Filas de `Financiero`; no número de empresas |
 | Cuentas del ejercicio 2025 | 2.725 | Filas con `anio=2025`, todas las fuentes |
 | Años de cuentas de la extracción SABI de octubre | 15.766 | Filas con `fuente=sabi_2610` |
@@ -36,7 +41,7 @@ Consulta a la base configurada para producción mediante Prisma dentro de una tr
 | No encontrada en SABI | 1.278 |
 | Sin consultar | 61 |
 
-El total de estados coincide con el universo del corte. No encontrada en SABI no implica inactividad. Las altas de pasiva conservan `estado=null` hasta una consulta SABI; no se han clasificado como activas por su web.
+El total de estados coincide con el universo del corte. No encontrada en SABI no implica inactividad. Las altas de pasiva conservan `estado=null` hasta una consulta SABI; no se han clasificado como activas por su web. Las métricas de actividad se solapan y no deben sumarse como sectores excluyentes. Su [criterio compartido](ACTIVIDADES.md) incorpora la aclaración de Alberto del 24/10 sobre PCI activa en el universo previo.
 
 Las diez migraciones versionadas hasta `20261023140000_proteccion_pasiva` constan aplicadas, sin pendientes. La presencia de estados y filas `sabi_2610` acredita la carga de octubre en la base.
 
@@ -77,6 +82,9 @@ Versiones declaradas: Next.js 15.5.18, React/React DOM 19.2.4, Prisma 5.22, Next
 - Implementación de #192 (23/10): **700 tests correctos, 60 archivos, cero fallos**, typecheck de aplicación/importador y build correctos; aviso de lint preexistente en `policia/parse-empresas.ts`.
 - Segunda tanda (24/10, datos y documentación): **11 tests de pasiva/importador correctos**, simulación sin ambigüedades, aplicación auditada y repetición sin cambios. Sin modificación del código de aplicación ni del esquema.
 - Tercera tanda: **11 tests de pasiva/importador correctos**, 33 altas y 5 enriquecimientos sin filas ambiguas, 38 auditorías y repetición aplicada sin cambios. Se preservan 23.620 filas financieras y los campos protegidos de las cinco fichas anteriores.
+- Filtro de actividades: **713 tests correctos en 63 archivos**, TypeScript y build locales correctos. Las pruebas cubren todas las combinaciones de las tres actividades, ambas modalidades, exclusión de activa en altas de pasiva sin RIPCI, consistencia de lite/full/ficha/exportación y filtrado/conteos de pipeline. Sin migración ni nuevas escrituras de datos.
+- Verificación local de APIs contra los 5.192 registros geográficos: 16 combinaciones selección/modo coherentes con consulta de solo lectura a la base; 22 con las tres, 160 con activa y pasiva, 222 con pasiva. Fichas de Plasfoc, Naes, IPS, Sella2, Técnicas de Refractarios y Project TGN y exportación de las 222 con actividad consistente. Acceso anónimo 401.
+- Verificación visual local de tabla y ficha en navegador: 22 con las tres, 160 con activa y pasiva, 222 con pasiva, y 5.192 al elegir cualquiera de las tres. Controles y resultados revisados en 375 px, 768 px y escritorio; sin desbordamiento del nuevo control. La tabla completa conserva su desplazamiento horizontal en tablet. No se modifica acceso por contraseña para estas pruebas.
 - API de producción en `warroom.fontiber.com`, con sesión admin temporal firmada para la prueba: lite/full devuelven las mismas **222** empresas de pasiva y la exportación conserva fuentes para las 222. Los 38 CIF del lote aparecen una sola vez. Fichas verificadas: Plasfoc, Naes, Blinders, IPS Incendio, Gestiplac, Brapesa Canarias, Sella2, Técnicas de Refractarios, Escadur y Project TGN. Acceso anónimo rechazado con 401. Esta sesión de prueba no verifica el flujo de contraseña.
 - La entrega de #192 quedó sin comprobación visual interactiva por fallo de la herramienta de navegador. El 24/10 se verificaron datos y APIs de producción; no se ha añadido una comprobación visual ni una auditoría de todos los flujos.
 - La CI del repositorio aplica migraciones, compara el esquema y ejecuta tests, typecheck y build; su resultado y el despliegue se enlazan desde la PR de esta entrega.
@@ -86,6 +94,7 @@ Versiones declaradas: Next.js 15.5.18, React/React DOM 19.2.4, Prisma 5.22, Next
 
 | Fecha | Entrega | Evidencia |
 |---|---|---|
+| 24/10/2026 | Actividades combinables PCI activa, PCI pasiva y seguridad electrónica, con todas/cualquiera; sustituye el filtro «Mixto» | [Criterio y flujo](ACTIVIDADES.md), sin reclasificación del universo |
 | 24/10/2026 | Asociaciones y búsqueda por las 17 comunidades: 33 altas y 5 enriquecimientos aplicados; 222 confirmadas acumuladas | [Seguimiento regional](research/pasiva-asociaciones-regiones-2026-10-24.json), [tercer lote](research/pasiva-validada-regional-2026-10-24.json) |
 | 24/10/2026 | 84 candidatas pendientes revisadas, barrido de 3.184 dominios y segundo lote aplicado: 106 enriquecimientos y 9 altas | [#193](https://github.com/albertofontiber/war-room/pull/193), [seguimiento](research/pasiva-seguimiento-2026-10-24.json), [lote](research/pasiva-validada-2026-10-24.json) |
 | 23/10/2026 | Pasiva transversal, filtro/distintivo/fuentes, API/exportación/chat e importador auditado; primer lote ampliado aplicado | [#192](https://github.com/albertofontiber/war-room/pull/192), [implementación y lote](PROTECCION_PASIVA.md) |

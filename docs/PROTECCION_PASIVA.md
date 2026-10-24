@@ -55,7 +55,7 @@ Las altas usan `sector=PCI`, `fuente=investigacion_pasiva_202610`, `enPerimetro=
 
 Pasiva es una actividad transversal. No modifica los sectores `PCI`, `seguridad_electronica` o `mixto`; este último sigue significando PCI y seguridad electrónica. Una misma empresa de activa y pasiva conserva un solo CIF y una sola ficha.
 
-- Filtro multiselección de pasiva compartido por mapa y tabla; combina con sector, perímetro y otros filtros.
+- Filtro **Actividades** compartido por mapa y tabla y disponible en pipeline: **PCI activa**, **PCI pasiva** y **Seguridad electrónica**, con todas/cualquiera. Sustituye el antiguo filtro de sector; el estado de revisión de pasiva permanece separado. Ver [criterio de actividades](ACTIVIDADES.md).
 - Distintivo en tabla y tooltip del mapa. La ficha muestra estado, servicios, revisión y fuentes desplegables.
 - Excel de la tabla: estado de pasiva, servicios, fecha y enlaces de evidencia, además del histórico financiero existente.
 - API de listas: clasificación; API de ficha y exportación: detalle de evidencia. El esquema del chat y su buscador conocen los campos.

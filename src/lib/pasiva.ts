@@ -3,7 +3,7 @@ import { z } from "zod";
 export const ESTADOS_PASIVA = ["confirmada", "descartada", "sin_revisar"] as const;
 export type EstadoPasiva = (typeof ESTADOS_PASIVA)[number];
 export const PASIVA_LABEL: Record<EstadoPasiva, string> = {
-  confirmada: "Pasiva confirmada",
+  confirmada: "PCI pasiva confirmada",
   descartada: "Revisada sin actividad",
   sin_revisar: "Sin revisar",
 };
@@ -28,6 +28,7 @@ export const EvidenciaPasivaSchema = z.object({
 export type EvidenciaPasiva = z.infer<typeof EvidenciaPasivaSchema>;
 export interface PasivaExportRecord {
   id: number;
+  actividades: import("./actividades").ActividadEmpresa[];
   proteccionPasiva: boolean | null;
   pasivaServicios: string[];
   pasivaEvidencias: EvidenciaPasiva[];

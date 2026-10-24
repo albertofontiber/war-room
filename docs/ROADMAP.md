@@ -47,6 +47,7 @@ No se presentan como tareas comprometidas ni tienen fecha objetivo:
 | Documentación depurada y modelo transversal de pasiva con primer lote aplicado | #191 y entrega de pasiva; detalles y casos aún abiertos en Protección pasiva |
 | Revisión de las 84 candidatas pendientes y primer barrido de webs del universo | Segundo lote del 24/10 aplicado y seguimiento con resultado por candidata; no implica censo completo |
 | Primera ampliación por CLÚSIC, AD’IP, AVACOI y búsquedas en las 17 comunidades | Tercer lote aplicado: 33 altas y 5 enriquecimientos, con seguimiento fechado por dominio; no implica agotar las fuentes |
+| Actividades combinables en lugar del filtro «Mixto» | PCI activa, PCI pasiva y seguridad electrónica con todas/cualquiera; criterio de activa confirmado por Alberto y documentado en [Actividades](ACTIVIDADES.md) |
 
 El eventual archivo del histórico de Pipedrive o baja de una suscripción son acciones externas cuyo estado no se deduce del repo: se retiran de la lista de pendientes técnicos. Tampoco se mantienen tickets como «si reaparece el bug», «spawn task creado» o cifras de cobertura de abril sin evidencia actual.
 

@@ -102,9 +102,9 @@ describe("POST /api/empresas/export-history", () => {
 
   it("exporta actividad y fuentes verificadas para los IDs solicitados", async () => {
     const evidencia = { url: "https://empresa.es/pasiva", fuente: "Web corporativa", tipo: "web_corporativa", fecha: "2026-10-23", descripcion: "Instala protección pasiva." };
-    empresaFindManyMock.mockResolvedValue([{ id: 7, proteccionPasiva: true, pasivaServicios: ["sellados"], pasivaRevisadaAt: null, pasivaEvidencias: [evidencia, { ...evidencia, url: "javascript:alert(1)" }] }]);
+    empresaFindManyMock.mockResolvedValue([{ id: 7, sector: "mixto", fuente: "ripci", proteccionPasiva: true, pasivaServicios: ["sellados"], pasivaRevisadaAt: null, pasivaEvidencias: [evidencia, { ...evidencia, url: "javascript:alert(1)" }] }]);
     const response = await POST(makeReq({ empresaIds: [7] }));
     expect(empresaFindManyMock).toHaveBeenCalledWith(expect.objectContaining({ where: { id: { in: [7] }, esAnonima: false } }));
-    expect((await response.json()).pasiva).toEqual([{ id: 7, proteccionPasiva: true, pasivaServicios: ["sellados"], pasivaRevisadaAt: null, pasivaEvidencias: [evidencia] }]);
+    expect((await response.json()).pasiva).toEqual([{ id: 7, actividades: ["pci_activa", "pci_pasiva", "seguridad_electronica"], proteccionPasiva: true, pasivaServicios: ["sellados"], pasivaRevisadaAt: null, pasivaEvidencias: [evidencia] }]);
   });
 });

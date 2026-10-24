@@ -4,7 +4,7 @@ import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { fmt, fmtM } from "@/lib/format";
 import { DEAL_STAGE_LABEL, DEAL_STAGE_PILL_CLASS } from "@/lib/crm";
 import type { DealStage } from "@/types";
-import { PasivaBadge } from "./PasivaBadge";
+import { ActividadesBadges } from "./ActividadesBadges";
 
 interface TooltipProps {
   x: number;
@@ -17,6 +17,7 @@ interface TooltipProps {
     nombre: string;
     provincia: string;
     sector: string;
+    actividades: unknown;
     proteccionPasiva?: boolean | null;
     dealStage: string | null;
     ingresos: number | null;
@@ -33,12 +34,6 @@ interface TooltipProps {
     tareasPendientesCount?: number;
   };
 }
-
-const SECTOR_LABEL: Record<string, string> = {
-  PCI: "PCI",
-  seguridad_electronica: "Seg. Electrónica",
-  mixto: "Mixto",
-};
 
 
 function TendenciaIcon({ dir, pct }: { dir: string; pct: number | null | undefined }) {
@@ -118,10 +113,7 @@ export default function MapTooltip({ x, y, props }: TooltipProps) {
 
         {/* Badges */}
         <div className="flex flex-wrap gap-1 mb-2">
-          <PasivaBadge value={props.proteccionPasiva} />
-          <span className="px-1.5 py-0.5 rounded text-[10px] bg-wr-surface2 text-wr-muted border border-wr-border">
-            {SECTOR_LABEL[props.sector] ?? props.sector}
-          </span>
+          <ActividadesBadges value={props.actividades} />
           {props.dealStage && (
             <span className={`px-1.5 py-0.5 rounded text-[10px] ${stageClass}`}>
               {DEAL_STAGE_LABEL[props.dealStage as DealStage] ?? props.dealStage}

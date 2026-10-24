@@ -1,4 +1,5 @@
 import type { OperacionItem } from "./types";
+import { textoActividades } from "@/lib/actividades";
 
 /** Drawer de detalle (fila expandida) de una operación. Mantiene el `colSpan=8`
  *  alineado con la cabecera de la tabla principal de Señales. */
@@ -20,7 +21,7 @@ export function RowDetail({
           </div>
           <div className="flex items-center gap-3 flex-shrink-0 text-[10px] text-wr-hint">
             {item.empresa.ccaa && <span>{item.empresa.ccaa}</span>}
-            {item.empresa.sector && <span>{item.empresa.sector}</span>}
+            <span>{textoActividades(item.empresa.actividades)}</span>
             {item.urlBorme && (
               <a
                 href={item.urlBorme}

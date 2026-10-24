@@ -15,6 +15,7 @@ import { prisma } from "@/lib/prisma";
 import { GRUPOS_SENALES } from "@/lib/borme-senales";
 import { bormePersonaToCargoKey } from "@/lib/normalize";
 import { log } from "@/lib/logger";
+import { obtenerActividades, type ActividadEmpresa } from "@/lib/actividades";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +47,7 @@ interface PersonaEnEmpresa extends EmpresaFinanciero {
   ccaa: string | null;
   provincia: string | null;
   sector: string | null;
+  actividades: ActividadEmpresa[];
   web: string | null;
   fuente: string;
   nombreOrig: string;
@@ -88,6 +90,9 @@ export async function GET() {
             ccaa: true,
             provincia: true,
             sector: true,
+            fuente: true,
+            ripci: true,
+            proteccionPasiva: true,
             web: true,
             grupo: { select: { nombre: true } },
             financieros: {
@@ -172,6 +177,7 @@ export async function GET() {
           ccaa: cargo.empresa.ccaa,
           provincia: cargo.empresa.provincia,
           sector: cargo.empresa.sector,
+          actividades: obtenerActividades(cargo.empresa),
           web: cargo.empresa.web,
           fuente: cargo.fuente,
           nombreOrig: cargo.nombreOrig,

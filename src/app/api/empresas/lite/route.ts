@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { log } from "@/lib/logger";
+import { obtenerActividades } from "@/lib/actividades";
+
+export const dynamic = "force-dynamic";
 
 // Endpoint "lite" — devuelve solo los campos que necesitan mapa, sidebar,
 // filtros y búsqueda del Navbar. La tabla y los paneles cargan el endpoint
@@ -48,6 +51,7 @@ export async function GET() {
         provincia: true,
         ccaa: true,
         sector: true,
+        fuente: true,
         lat: true,
         lng: true,
         enPerimetro: true,
@@ -105,6 +109,7 @@ export async function GET() {
             provincia: empresa.provincia,
             ccaa: empresa.ccaa,
             sector: empresa.sector,
+            actividades: obtenerActividades(empresa),
             dealStage: empresa.crmEstado?.dealStage ?? null,
             // Financieros para filtros y sizeMetric del mapa
             anioFinanciero: latestFin?.anio ?? null,

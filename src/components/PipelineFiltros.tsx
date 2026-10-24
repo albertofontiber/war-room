@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { FiltroActividades } from "./FiltroActividades";
+import type { ActividadEmpresa, ModoActividades } from "@/lib/actividades";
 
 export type PipelineFilters = {
   ccaa: string[];
   provincia: string[];
-  sector: ("PCI" | "seguridad_electronica" | "mixto")[];
+  actividades: ActividadEmpresa[];
+  actividadesModo: ModoActividades;
   owner: string | null;       // User.id
   finder: string | null;      // Finder.id
   conTarea: boolean;
@@ -15,7 +18,8 @@ export type PipelineFilters = {
 export const EMPTY_FILTERS: PipelineFilters = {
   ccaa: [],
   provincia: [],
-  sector: [],
+  actividades: [],
+  actividadesModo: "todas",
   owner: null,
   finder: null,
   conTarea: false,
@@ -49,7 +53,7 @@ export default function PipelineFiltros({
     let n = 0;
     if (filters.ccaa.length) n++;
     if (filters.provincia.length) n++;
-    if (filters.sector.length) n++;
+    if (filters.actividades.length) n++;
     if (filters.owner) n++;
     if (filters.finder) n++;
     if (filters.conTarea) n++;
@@ -69,7 +73,7 @@ export default function PipelineFiltros({
     return () => window.removeEventListener("click", handler);
   }, []);
 
-  function toggleInArray<K extends "ccaa" | "provincia" | "sector">(key: K, val: string) {
+  function toggleInArray<K extends "ccaa" | "provincia">(key: K, val: string) {
     const arr = filters[key] as string[];
     const next = arr.includes(val) ? arr.filter((v) => v !== val) : [...arr, val];
     onChange({ ...filters, [key]: next } as PipelineFilters);
@@ -107,24 +111,9 @@ export default function PipelineFiltros({
         onClear={() => onChange({ ...filters, provincia: [] })}
       />
 
-      {/* Sector */}
-      <div className="flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5">
-        {(["PCI", "seguridad_electronica", "mixto"] as const).map((s) => {
-          const active = filters.sector.includes(s);
-          const label = s === "seguridad_electronica" ? "Seg. Electr." : s === "mixto" ? "Mixto" : "PCI";
-          return (
-            <button
-              key={s}
-              onClick={() => toggleInArray("sector", s)}
-              className={`px-2 py-0.5 text-[10px] rounded transition-colors ${
-                active ? "bg-wr-blue text-white" : "text-wr-muted hover:text-wr-text"
-              }`}
-            >
-              {label}
-            </button>
-          );
-        })}
-      </div>
+      <FiltroActividades seleccion={filters.actividades} modo={filters.actividadesModo}
+        onSeleccionChange={(actividades) => onChange({ ...filters, actividades })}
+        onModoChange={(actividadesModo) => onChange({ ...filters, actividadesModo })} />
 
       {/* Owner */}
       <select

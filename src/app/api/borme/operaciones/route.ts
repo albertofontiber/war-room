@@ -12,6 +12,7 @@
  */
 
 import { NextResponse } from "next/server";
+import { obtenerActividades } from "@/lib/actividades";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -71,6 +72,9 @@ export async function GET() {
             ccaa: true,
             provincia: true,
             sector: true,
+            fuente: true,
+            ripci: true,
+            proteccionPasiva: true,
             financieros: {
               orderBy: { anio: "desc" },
               take: 1,
@@ -145,6 +149,7 @@ export async function GET() {
           ccaa: a.empresa.ccaa,
           provincia: a.empresa.provincia,
           sector: a.empresa.sector,
+          actividades: obtenerActividades(a.empresa),
           ingresos,
           ebitda,
           ebitdaPct,

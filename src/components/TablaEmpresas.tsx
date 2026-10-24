@@ -1,6 +1,7 @@
 "use client";
 
-import { PasivaBadge } from "@/components/PasivaBadge";
+import { ActividadesBadges } from "@/components/ActividadesBadges";
+import { textoActividades } from "@/lib/actividades";
 import { estadoPasiva, PASIVA_LABEL, SERVICIOS_PASIVA, type ServicioPasiva, type PasivaExportRecord } from "@/lib/pasiva";
 
 import { useMemo, useState, useCallback, useEffect } from "react";
@@ -20,18 +21,12 @@ import type { SheetData } from "write-excel-file/browser";
 // pulsa "Exportar a Excel" — la mayoría de visitas a la tabla nunca lo
 // usan, así que mantenerlo fuera del chunk inicial mejora TTI.
 
-const SECTOR_LABEL: Record<string, string> = {
-  PCI: "PCI",
-  seguridad_electronica: "Seg. Electrónica",
-  mixto: "Mixto",
-};
-
 type SortKey =
   | "nombre"
   | "cif"
   | "localidad"
   | "provincia"
-  | "sector"
+  | "actividades"
   | "dealStage"
   | "ingresos"
   | "margenBrutoPct"
@@ -126,8 +121,8 @@ export default function TablaEmpresas() {
       .map((f) => f.properties);
 
     filtered.sort((a, b) => {
-      const va = a[sortKey] ?? null;
-      const vb = b[sortKey] ?? null;
+      const va = sortKey === "actividades" ? textoActividades(a.actividades) : a[sortKey] ?? null;
+      const vb = sortKey === "actividades" ? textoActividades(b.actividades) : b[sortKey] ?? null;
 
       if (va === null && vb === null) return 0;
       if (va === null) return 1;
@@ -187,8 +182,8 @@ export default function TablaEmpresas() {
         "Grupo",
         "Ciudad",
         "Provincia",
-        "Sector",
-        "Protección pasiva",
+        "Actividades",
+        "Revisión de PCI pasiva",
         "Servicios de pasiva",
         "Pasiva revisada el",
         "Fuentes de pasiva",
@@ -209,7 +204,7 @@ export default function TablaEmpresas() {
           row.grupoNombre ?? "",
           row.localidad ?? "",
           row.provincia,
-          SECTOR_LABEL[row.sector as string] ?? row.sector,
+          textoActividades(pasiva?.actividades ?? row.actividades),
           PASIVA_LABEL[estadoPasiva(pasiva ? pasiva.proteccionPasiva : row.proteccionPasiva)],
           pasiva?.pasivaServicios.map((s) => SERVICIOS_PASIVA[s as ServicioPasiva] ?? s).join(" · ") ?? "",
           pasiva?.pasivaRevisadaAt?.slice(0, 10) ?? "",
@@ -435,9 +430,8 @@ export default function TablaEmpresas() {
                   ) : null}
                   <p className="text-wr-muted text-[11px] mt-1">
                     {[r.localidad as string | null, r.provincia as string].filter(Boolean).join(", ")}
-                    {r.sector ? ` · ${SECTOR_LABEL[r.sector as string] ?? r.sector}` : ""}
-                    <PasivaBadge value={r.proteccionPasiva} />
                   </p>
+                  <ActividadesBadges value={r.actividades} />
                   <div className="flex items-center flex-wrap gap-x-3 gap-y-1 mt-2">
                     {r.dealStage ? (
                       <span
@@ -480,7 +474,7 @@ export default function TablaEmpresas() {
               <Th col="cif">CIF</Th>
               <Th col="localidad">Ciudad</Th>
               <Th col="provincia">Provincia</Th>
-              <Th col="sector">Sector</Th>
+              <Th col="actividades">Actividades</Th>
               <Th col="dealStage">CRM</Th>
               {!modoPresentacion && (
                 <>
@@ -576,10 +570,9 @@ export default function TablaEmpresas() {
                     {r.provincia as string}
                   </td>
 
-                  {/* Sector */}
-                  <td className="px-3 py-2.5 text-wr-muted whitespace-nowrap">
-                    {SECTOR_LABEL[r.sector as string] ?? (r.sector as string)}
-                    <span className="ml-1"><PasivaBadge value={r.proteccionPasiva} /></span>
+                  {/* Actividades combinables */}
+                  <td className="px-3 py-2.5 text-wr-muted min-w-40 max-w-64">
+                    <ActividadesBadges value={r.actividades} />
                   </td>
 
                   {/* CRM Stage */}

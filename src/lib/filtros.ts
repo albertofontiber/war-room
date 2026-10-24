@@ -2,6 +2,7 @@ import type { FiltrosActivos } from "@/types";
 import type { EmpresaFeatureProperties } from "@/store/useWarRoomStore";
 import { cumpleFiltroRipci, parseRipci } from "@/lib/ripci/categorias";
 import { cumpleFiltroPasiva } from "@/lib/pasiva";
+import { cumpleFiltroActividades } from "@/lib/actividades";
 import { cumpleFiltroEstado } from "@/lib/empresa-estado";
 
 /**
@@ -28,7 +29,7 @@ export function isInFilter(
   if (f.enPerimetro !== null && p.enPerimetro !== f.enPerimetro) return false;
   if (f.ccaa.length && (p.ccaa === null || !f.ccaa.includes(p.ccaa))) return false;
   if (f.provincia.length && (p.provincia === null || !f.provincia.includes(p.provincia))) return false;
-  if (f.sector.length && (p.sector === null || !f.sector.includes(p.sector))) return false;
+  if (!cumpleFiltroActividades(p.actividades, f.actividades, f.actividadesModo)) return false;
   if (f.grupoId.length) {
     // Sentinel `0` representa "sin grupo asignado". Si la empresa no tiene
     // grupo (p.grupoId === null), pasa SOLO si 0 está en el array. Si tiene

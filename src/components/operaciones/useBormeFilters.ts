@@ -11,6 +11,7 @@ import { useMemo, useState } from "react";
 import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { FILTER_TIPOS } from "./types";
 import type { OperacionItem, PersonaCompartida, SortDir } from "./types";
+import { cumpleFiltroActividades, textoActividades } from "@/lib/actividades";
 
 interface UseBormeFiltersInput {
   items: OperacionItem[];
@@ -68,6 +69,7 @@ export function useBormeFilters({ items, personas }: UseBormeFiltersInput) {
         ccaa?: string | null;
         provincia?: string | null;
         sector?: string | null;
+        actividades?: unknown;
         grupoId?: number | null;
         ingresos?: number | null;
       };
@@ -75,6 +77,7 @@ export function useBormeFilters({ items, personas }: UseBormeFiltersInput) {
       ccaa?: string | null;
       provincia?: string | null;
       sector?: string | null;
+      actividades?: unknown;
       grupoId?: number | null;
       ingresos?: number | null;
     },
@@ -84,7 +87,7 @@ export function useBormeFilters({ items, personas }: UseBormeFiltersInput) {
       if (filtros.enPerimetro !== null && e.enPerimetro !== filtros.enPerimetro) return false;
       if (filtros.ccaa.length && (!e.ccaa || !filtros.ccaa.includes(e.ccaa))) return false;
       if (filtros.provincia.length && (!e.provincia || !filtros.provincia.includes(e.provincia))) return false;
-      if (filtros.sector.length && (!e.sector || !(filtros.sector as string[]).includes(e.sector))) return false;
+      if (!cumpleFiltroActividades(e.actividades, filtros.actividades, filtros.actividadesModo)) return false;
       if (filtros.grupoId.length && (e.grupoId === null || !filtros.grupoId.includes(e.grupoId!))) return false;
       if (filtros.ingresosMin > 0 && (e.ingresos == null || e.ingresos < filtros.ingresosMin)) return false;
       if (filtros.ingresosMax < Infinity && (e.ingresos == null || e.ingresos > filtros.ingresosMax)) return false;
@@ -171,7 +174,7 @@ export function useBormeFilters({ items, personas }: UseBormeFiltersInput) {
     if (filtros.enPerimetro !== null) chips.push(filtros.enPerimetro ? "En perímetro" : "Fuera perímetro");
     if (filtros.ccaa.length) chips.push(`CCAA: ${filtros.ccaa.join(", ")}`);
     if (filtros.provincia.length) chips.push(`Prov: ${filtros.provincia.join(", ")}`);
-    if (filtros.sector.length) chips.push(`Sector: ${filtros.sector.join(", ")}`);
+    if (filtros.actividades.length) chips.push(`${filtros.actividadesModo === "cualquiera" ? "Cualquiera" : "Todas"}: ${textoActividades(filtros.actividades)}`);
     if (filtros.grupoId.length) chips.push(`${filtros.grupoId.length} grupo(s)`);
     if (filtros.ingresosMin > 0 || filtros.ingresosMax < Infinity) chips.push("Ingresos");
     return chips;

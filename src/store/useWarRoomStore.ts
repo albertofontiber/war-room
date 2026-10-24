@@ -11,6 +11,7 @@ import {
 import { isInFilter } from "@/lib/filtros";
 import { PASIVA_LABEL, type EstadoPasiva } from "@/lib/pasiva";
 import { etiquetaEstado } from "@/lib/empresa-estado";
+import { ACTIVIDAD_LABEL, type ActividadEmpresa } from "@/lib/actividades";
 
 /**
  * Shape real de `properties` en los features GeoJSON.
@@ -31,6 +32,7 @@ export interface EmpresaFeatureProperties {
   provincia: string | null;
   ccaa: string | null;
   sector: Sector | null;
+  actividades: ActividadEmpresa[];
   dealStage: DealStage | null;
   // Financieros que usan filtros + sizeMetric del mapa
   anioFinanciero: number | null;
@@ -148,7 +150,7 @@ interface WarRoomState {
   toggleFiltroArray: <T extends string | number>(
     key: keyof Pick<
       FiltrosActivos,
-      "ccaa" | "provincia" | "sector" | "grupoId" | "crmStage" | "servicios" | "habilitaciones" | "ripciCategorias" | "estado" | "pasiva"
+      "ccaa" | "provincia" | "actividades" | "grupoId" | "crmStage" | "servicios" | "habilitaciones" | "ripciCategorias" | "estado" | "pasiva"
     >,
     value: T
   ) => void;
@@ -299,9 +301,10 @@ export const useWarRoomStore = create<WarRoomState>()(
         filtros.provincia.forEach((v) =>
           chips.push({ key: "provincia", label: `Prov: ${v}` })
         );
-        filtros.sector.forEach((v) =>
-          chips.push({ key: "sector", label: `Sector: ${v}` })
-        );
+        if (filtros.actividades.length) chips.push({
+          key: "actividades",
+          label: `${filtros.actividadesModo === "cualquiera" ? "Cualquiera" : "Todas"}: ${filtros.actividades.map((v) => ACTIVIDAD_LABEL[v]).join(" · ")}`,
+        });
         filtros.crmStage.forEach((v) =>
           chips.push({
             key: "crmStage",

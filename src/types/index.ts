@@ -62,6 +62,7 @@ export interface EmpresaDetalle {
   lat: number | null;
   lng: number | null;
   sector: Sector;
+  actividades: import("@/lib/actividades").ActividadEmpresa[];
   servicios: string[];
   empleados: number | null;
   web: string | null;
@@ -151,7 +152,8 @@ export interface EmpresaResumen {
 export interface FiltrosActivos {
   ccaa: string[];
   provincia: string[];
-  sector: Sector[];
+  actividades: import("@/lib/actividades").ActividadEmpresa[];
+  actividadesModo: import("@/lib/actividades").ModoActividades;
   grupoId: number[];
   // DealStage real ("identificado", "contactado", ...) + sentinel "sin_crm"
   // para filtrar empresas sin CrmEstado o con dealStage=null.
@@ -189,7 +191,8 @@ export interface FiltrosActivos {
 export const FILTROS_DEFAULT: FiltrosActivos = {
   ccaa: [],
   provincia: [],
-  sector: [],
+  actividades: [],
+  actividadesModo: "todas",
   grupoId: [],
   crmStage: [],
   ingresosMin: 0,

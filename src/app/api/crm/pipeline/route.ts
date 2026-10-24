@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { DEAL_STAGES, diasDesde } from "@/lib/crm";
 import { log } from "@/lib/logger";
 import type { DealStage } from "@/types";
+import { ACTIVIDADES_EMPRESA, cumpleFiltroActividades, obtenerActividades, type ActividadEmpresa } from "@/lib/actividades";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +26,9 @@ export const dynamic = "force-dynamic";
  * Query params opcionales (filtros):
  *   ?ccaa=...   (comma-separated)
  *   ?provincia=...
- *   ?sector=PCI|seguridad_electronica|mixto
+ *   ?actividades=pci_activa,pci_pasiva,seguridad_electronica
+ *   ?actividadesModo=todas|cualquiera (por defecto todas)
+ *   ?sector=... (compatibilidad con clientes anteriores)
  *   ?owner=<userId>     (filtra por CrmEstado.ownerUserId)
  *   ?finder=<finderId>|__none__  (filtra por Empresa.finderSourceId)
  *   ?conTarea=true      (solo empresas con al menos una tarea pendiente)
@@ -44,6 +47,11 @@ export async function GET(req: NextRequest) {
     const ccaa = url.searchParams.get("ccaa")?.split(",").filter(Boolean) ?? [];
     const provincia = url.searchParams.get("provincia")?.split(",").filter(Boolean) ?? [];
     const sector = url.searchParams.get("sector")?.split(",").filter(Boolean) ?? [];
+    const seleccion = url.searchParams.get("actividades")?.split(",").filter(Boolean) ?? [];
+    const modo = url.searchParams.get("actividadesModo") ?? "todas";
+    if (seleccion.some((a) => !ACTIVIDADES_EMPRESA.includes(a as ActividadEmpresa)) || !["todas", "cualquiera"].includes(modo)) {
+      return NextResponse.json({ error: "Filtro de actividades no válido" }, { status: 400 });
+    }
     const owner = url.searchParams.get("owner") ?? null;
     const finder = url.searchParams.get("finder") ?? null;
     const conTarea = url.searchParams.get("conTarea") === "true";
@@ -114,6 +122,7 @@ export async function GET(req: NextRequest) {
       ccaa: string | null;
       provincia: string | null;
       sector: string | null;
+      actividades: ActividadEmpresa[];
       web: string | null;
       grupoNombre: string | null;
       dealStage: DealStage | null;
@@ -156,6 +165,7 @@ export async function GET(req: NextRequest) {
         ccaa: e.ccaa,
         provincia: e.provincia,
         sector: e.sector,
+        actividades: obtenerActividades(e),
         web: e.web,
         grupoNombre: e.grupo?.nombre ?? null,
         dealStage: (e.crmEstado?.dealStage as DealStage | undefined) ?? null,
@@ -176,14 +186,15 @@ export async function GET(req: NextRequest) {
       };
     });
 
+    const porActividad = tarjetas.filter((t) => cumpleFiltroActividades(t.actividades, seleccion as ActividadEmpresa[], modo === "cualquiera" ? "cualquiera" : "todas"));
     // Filtro en memoria: días sin actividad ≥ N
     const filtered =
       diasSinActividadMin != null && Number.isFinite(diasSinActividadMin)
-        ? tarjetas.filter((t) => {
+        ? porActividad.filter((t) => {
             if (t.diasSinActividad == null) return true; // si nunca hubo actividad, incluir
             return t.diasSinActividad >= diasSinActividadMin;
           })
-        : tarjetas;
+        : porActividad;
 
     // Agrupar por stage. Tras el `where` de arriba todas las cards tienen
     // `dealStage` no null; el guard es defensa por si la BD se queda en estado

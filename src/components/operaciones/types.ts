@@ -24,6 +24,7 @@ export interface EmpresaOp {
   ccaa: string | null;
   provincia: string | null;
   sector: string | null;
+  actividades: import("@/lib/actividades").ActividadEmpresa[];
   ingresos: number | null;
   ebitda: number | null;
   ebitdaPct: number | null;
@@ -56,6 +57,7 @@ export interface PersonaEnEmpresa {
   ccaa: string | null;
   provincia: string | null;
   sector: string | null;
+  actividades: import("@/lib/actividades").ActividadEmpresa[];
   web: string | null;
   fuente: string;
   nombreOrig: string;

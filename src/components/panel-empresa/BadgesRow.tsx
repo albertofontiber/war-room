@@ -12,11 +12,9 @@ export function BadgesRow({ empresa }: { empresa: EmpresaDetalle }) {
 
   return (
     <div className="flex flex-wrap gap-1.5">
-      {/* Lleva colgadas las habilitaciones de seguridad privada: el sector ya
-          identifica la actividad, y un "Autonómica" suelto en la fila no
-          diría de qué. */}
+      {/* Las habilitaciones cuelgan de las actividades a las que se refieren. */}
       <SectorBadge
-        sector={empresa.sector}
+        actividades={empresa.actividades}
         habilitaciones={empresa.habilitaciones}
         ripci={empresa.ripci}
       />
