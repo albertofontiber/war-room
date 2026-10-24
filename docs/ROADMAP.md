@@ -8,13 +8,16 @@ Revisado: **2026-10-24**. Una función ausente del código no constituye por sí
 
 La clasificación transversal, la migración y el importador están entregados en #192. El 24/10 se revisaron las **84 candidatas pendientes**, se rastrearon **3.184 dominios** y se aplicaron **106 enriquecimientos y 9 altas**: 184 sociedades confirmadas en total. La revisión inicial de pendientes y el primer barrido general de webs están realizados; los casos no confirmados tienen motivo y fuentes en el [seguimiento actualizado](research/pasiva-seguimiento-2026-10-24.json). No se arrastra la antigua tarea genérica de revisar esas 84 sin indicar el resultado.
 
-La cobertura sigue abierta a evidencia adicional: identidades no resueltas, webs bloqueadas o ausentes y ampliaciones regionales/asociativas. Las nuevas fuentes son continuidad por priorizar, no una tarea de investigación exhaustiva completada. La pertenencia a una asociación no determina por sí sola perímetro de inversión, estado legal o actividad exclusiva.
+La tercera tanda, también aplicada el 24/10, añade **33 altas y 5 enriquecimientos**, hasta **222 entidades confirmadas**. Se consultaron 191 perfiles de CLÚSIC, AD’IP y AVACOI y se buscaron empresas por las 17 comunidades autónomas. El [seguimiento regional](research/pasiva-asociaciones-regiones-2026-10-24.json) documenta los 223 dominios descubiertos y el resultado de cada uno; las landings de una misma entidad no generan altas adicionales.
+
+La cobertura sigue abierta a evidencia adicional: identidades no resueltas, webs bloqueadas o ausentes y otras redes de aplicadores. La primera búsqueda asociativa/regional ya se ha realizado; la investigación exhaustiva del mercado no está completada. La pertenencia a una asociación no determina por sí sola perímetro de inversión, estado legal o actividad exclusiva.
 
 ## Limitaciones vigentes
 
 | Limitación | Evidencia y siguiente decisión |
 |---|---|
-| La cobertura de pasiva sigue siendo parcial | Primer barrido general realizado. Resolver los casos identificados del seguimiento, recuperar accesos fallidos, investigar empresas sin web y priorizar nuevas fuentes/territorios. `null` no equivale a actividad descartada. |
+| La cobertura de pasiva sigue siendo parcial | Barrido general y primera ampliación asociativa/regional realizados. Resolver CIF de Acusfoc/Vimat/Borja, sociedad ejecutora de Aplicanor y otros casos identificados; recuperar accesos e investigar empresas sin web. `null` no equivale a actividad descartada. |
+| Discrepancia de domicilio de Blinders | CIF y actividad resueltos; se conserva Ontinyent frente al domicilio fiscal web de Badalona hasta conciliación registral. |
 | Calendario recurrente se ingiere como serie | `calendar-task-matcher.ts`; una tarea por ocurrencia requeriría cambiar a `calendarView`. No está programado. |
 | Falta de URL de lectura del chat provoca fallback al cliente normal | `chat-db.ts`; comprobar configuración en cada entorno nuevo. El rol fue creado y documentado en #187; no volver a listar su creación como pendiente. |
 
@@ -43,6 +46,7 @@ No se presentan como tareas comprometidas ni tienen fecha objetivo:
 | Cuentas SABI 2025 y estado legal | #190; verificación de datos en Estado actual |
 | Documentación depurada y modelo transversal de pasiva con primer lote aplicado | #191 y entrega de pasiva; detalles y casos aún abiertos en Protección pasiva |
 | Revisión de las 84 candidatas pendientes y primer barrido de webs del universo | Segundo lote del 24/10 aplicado y seguimiento con resultado por candidata; no implica censo completo |
+| Primera ampliación por CLÚSIC, AD’IP, AVACOI y búsquedas en las 17 comunidades | Tercer lote aplicado: 33 altas y 5 enriquecimientos, con seguimiento fechado por dominio; no implica agotar las fuentes |
 
 El eventual archivo del histórico de Pipedrive o baja de una suscripción son acciones externas cuyo estado no se deduce del repo: se retiran de la lista de pendientes técnicos. Tampoco se mantienen tickets como «si reaparece el bug», «spawn task creado» o cifras de cobertura de abril sin evidencia actual.
 
