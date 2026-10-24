@@ -10,7 +10,15 @@ export function FiltroActividades({ seleccion, modo, onSeleccionChange, onModoCh
 }) {
   return (
     <fieldset className="min-w-0">
-      <legend className="text-[10px] font-semibold text-wr-muted uppercase tracking-widest mb-2">Actividades</legend>
+      <legend className="w-full mb-2">
+        <span className="flex items-center justify-between">
+          <span className="text-[10px] font-semibold text-wr-muted uppercase tracking-widest">Actividades</span>
+          {seleccion.length > 0 && (
+            <button type="button" onClick={() => onSeleccionChange([])} aria-label="Limpiar actividades"
+              className="max-lg:tap-target-h text-[10px] text-wr-hint hover:text-wr-amber transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wr-blue">Limpiar</button>
+          )}
+        </span>
+      </legend>
       <div className="flex flex-wrap gap-1.5">
         {ACTIVIDADES_EMPRESA.map((actividad) => {
           const activa = seleccion.includes(actividad);
@@ -30,10 +38,6 @@ export function FiltroActividades({ seleccion, modo, onSeleccionChange, onModoCh
           <option value="todas">Todas las seleccionadas</option>
           <option value="cualquiera">Cualquiera de las seleccionadas</option>
         </select>
-      )}
-      {seleccion.length > 0 && (
-        <button type="button" onClick={() => onSeleccionChange([])} aria-label="Limpiar actividades"
-          className="mt-1 block max-lg:tap-target-h text-[10px] text-wr-muted hover:text-wr-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wr-blue">Limpiar</button>
       )}
     </fieldset>
   );
