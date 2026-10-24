@@ -1,0 +1,1696 @@
+{
+  "fechaRevision": "2026-10-24",
+  "verificadoEn": "2026-10-24T18:33:39.624Z",
+  "alcance": "Cuarta tanda de ampliación de PCI pasiva: continuación asociativa y búsqueda regional. Una entidad por CIF. Cobertura parcial.",
+  "lote": "pasiva-validada-ampliacion2-2026-10-24.json",
+  "antecedente": "pasiva-asociaciones-regiones-2026-10-24.json",
+  "metodo": "Descubrimiento web regional y reconsulta de candidatas asociativas; revisión manual de ejecución, identidad fiscal primaria y localización. CIF exacto frente a 5.824 empresas de partida, con bloqueos adicionales de nombre y dominio del importador.",
+  "fuentesAsociativas": [
+    {
+      "nombre": "AD’IP",
+      "url": "https://www.adip-as.com/asociados/",
+      "detalle": "Continuación de perfiles y artículos de instaladoras; La Instaladora queda resuelta. La presentación genérica de la asociación no acredita pasiva de todos sus miembros."
+    },
+    {
+      "nombre": "AISLA",
+      "url": "https://www.aisla.org/instaladores/",
+      "detalle": "Directorio de instaladores como pista; no se atribuye pasiva a todo instalador de aislamiento."
+    },
+    {
+      "nombre": "Tecnifuego",
+      "url": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "detalle": "Comité de ingeniería, instalación y mantenimiento; fuente de continuidad, sin afirmar barrido exhaustivo nuevo."
+    },
+    {
+      "nombre": "ANSPI / Federación Nacional de Empresarios Pintores",
+      "url": "https://anspi-fnep.com/igesur-proteccion-pasiva-y-recubrimientos-tecnicos/",
+      "detalle": "Amplía la ruta de descubrimiento a aplicadoras de recubrimientos; Igesur ya estaba confirmada y no se cuenta como alta."
+    },
+    {
+      "nombre": "APILCA",
+      "url": "https://poligonolascapellanias.com/directory/incopac-90/",
+      "detalle": "Descubrimiento de Incopac 90; se conserva pendiente de ejecución, pese a resolver el CIF."
+    }
+  ],
+  "regionesConAltas": [
+    "Andalucía",
+    "Aragón",
+    "Baleares",
+    "C. Valenciana",
+    "Canarias",
+    "Cantabria",
+    "Castilla y León",
+    "Castilla-La Mancha",
+    "Cataluña",
+    "Madrid",
+    "Navarra"
+  ],
+  "resumen": {
+    "entidadesAplicadas": 22,
+    "altas": 18,
+    "fichasExistentesEnriquecidas": 4,
+    "existentesConfirmadasPorPrimeraVez": 3,
+    "existentesYaConfirmadasConMasEvidencia": 1,
+    "pasivaAntes": 222,
+    "pasivaDespues": 243,
+    "universoAntes": 5824,
+    "universoDespues": 5842,
+    "auditorias": 23,
+    "detalleAuditoria": "22 escrituras iniciales y un ajuste de redacción en la evidencia de Vimat para que describa solo la página corporativa enlazada; la adjudicación municipal permanece como fuente fiscal.",
+    "repeticionAplicada": "sin_cambios=22, sin nuevas auditorías",
+    "camposProtegidosAlterados": 0,
+    "financieros": 23620,
+    "relacionesCRM": "Huellas de filas existentes con cuentas, CRM y recuentos de tareas, notas y contactos conservadas."
+  },
+  "entidades": [
+    {
+      "cif": "B09570748",
+      "nombre": "APLYTEC APLICACIONES INDUSTRIALES, S.L.",
+      "empresaId": 5855,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B16544926",
+      "nombre": "CALIDAD CROMÁTICA, S.L.",
+      "empresaId": 5856,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B17944034",
+      "nombre": "VIMAT IGNIFUGATS, S.L.U.",
+      "empresaId": 5857,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B24490997",
+      "nombre": "JOSMAG, S.S.C.I., S.L.",
+      "empresaId": 3311,
+      "accion": "enriquecimiento",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B31378326",
+      "nombre": "PROTECCIONES INDUSTRIALES Y DECORATIVAS",
+      "empresaId": 5858,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B38289518",
+      "nombre": "PROYECTOS E INGENIERÍA DE SEGURIDAD, S.L.",
+      "empresaId": 2709,
+      "accion": "enriquecimiento",
+      "clasificacionAnterior": true
+    },
+    {
+      "cif": "B39467493",
+      "nombre": "AISLAMIENTOS SAN FELICES",
+      "empresaId": 5859,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B44903037",
+      "nombre": "VENTASUELOS, S.L.",
+      "empresaId": 5860,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B47503511",
+      "nombre": "OLIDETEC, S.L.",
+      "empresaId": 5861,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B48983746",
+      "nombre": "TECRESA PROTECCIÓN PASIVA, S.L.",
+      "empresaId": 699,
+      "accion": "enriquecimiento",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B50110956",
+      "nombre": "FIREX, S.L.",
+      "empresaId": 1111,
+      "accion": "enriquecimiento",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B60512134",
+      "nombre": "LA INSTALADORA DE SISTEMAS Y AISLAMIENTOS, S.L.",
+      "empresaId": 5862,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B66198995",
+      "nombre": "IGNIFUGACIONES LOTOR, S.L.",
+      "empresaId": 5863,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B66443763",
+      "nombre": "IGNIFUGACIONES PPCI, S.L.",
+      "empresaId": 5864,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B76605815",
+      "nombre": "GRUPO REFRIPECA 2005, S.L.",
+      "empresaId": 5865,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B86850062",
+      "nombre": "AZUL COBALTO DECORACIÓN, S.L.",
+      "empresaId": 5866,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B87121018",
+      "nombre": "IGNIDEC AISLAMIENTOS, S.L.",
+      "empresaId": 5867,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B90250879",
+      "nombre": "MARTÍNEZ SOLUCIONES CONSTRUCTIVAS, S.L.",
+      "empresaId": 5868,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B91111955",
+      "nombre": "TRILLO GRUPO 2000, S.L.",
+      "empresaId": 5869,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B93127645",
+      "nombre": "IMPERESPUMA MÁLAGA, S.L.",
+      "empresaId": 5870,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B97642284",
+      "nombre": "ACUSFOC, S.L.",
+      "empresaId": 5871,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B99427791",
+      "nombre": "APLICACIONES ALAGÓN",
+      "empresaId": 5872,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    }
+  ],
+  "resueltosDelSeguimientoAnterior": [
+    "lainstaladoradesistemas.es",
+    "vimat-ignifugats.com",
+    "acusfoc.com"
+  ],
+  "limites": "No es un censo. No se cuentan delegaciones ni marcas como sociedades nuevas; no se infiere independencia, tamaño, vigencia legal ni habilitación por una web. Las coordenadas son centros municipales, salvo centro de localidad de Imárcoain; no son coordenadas exactas de los domicilios. No se aplican revisiones negativas. Los seguimientos anteriores son instantáneas históricas y este documento resuelve sus tres pendientes expresos.",
+  "dominios": [
+    {
+      "dominio": "a24seguridad.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "ejecucion_pendiente",
+      "motivo": "Descripción general de protección pasiva y productos; no prueba suficiente de instalación propia en las páginas revisadas.",
+      "fuentesConsultadas": [
+        "https://a24seguridad.com/politica-de-cookies",
+        "https://a24seguridad.com/contacto",
+        "https://a24seguridad.com/seguridad/incendio",
+        "https://a24seguridad.com/aviso-legal",
+        "https://a24seguridad.com/seguridad/incendio/proteccion-contra-incendios-pasiva"
+      ]
+    },
+    {
+      "dominio": "acusfoc.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad fiscal en acta municipal de 2017; domicilio de Alaquàs en BORME de 2013, concordante con directorios actuales. Son fuentes históricas de identidad/localización, sin inferir vigencia legal.",
+      "cif": "B97642284",
+      "empresaId": 5871,
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://www.acusfoc.com/ignifugaciones/",
+          "fuente": "https://www.acusfoc.com/ignifugaciones/",
+          "region": "castilla-leon",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://www.acusfoc.com/ignifugacion/",
+          "fuente": "https://www.acusfoc.com/ignifugacion/",
+          "region": "castilla-leon",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://www.acusfoc.com/ignifugos-valencia/",
+          "fuente": "https://www.acusfoc.com/ignifugos-valencia/",
+          "region": "valencia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://www.acusfoc.com/ignifugacion-estructuras-metalicas/",
+        "https://www.acusfoc.com/aviso-legal/",
+        "https://www.acusfoc.com/politica-de-cookies/",
+        "https://www.acusfoc.com/ignifugacion/",
+        "https://www.acusfoc.com/contacto/",
+        "https://www.acusfoc.com/ignifugacion-en-valencia/",
+        "https://www.acusfoc.com/ignifugaciones-en-valencia/",
+        "https://www.acusfoc.com/aislamiento-ignifugo/",
+        "https://www.acusfoc.com/aislamientos-ignifugos/",
+        "https://www.acusfoc.com/ignifugacion-de-naves-en-valencia/",
+        "https://www.acusfoc.com/ignifugaciones/",
+        "https://www.acusfoc.com/aislamiento-ignifugo-en-valencia/",
+        "https://www.acusfoc.com/politica-de-privacidad/",
+        "https://www.acusfoc.com/ignifugos-valencia/",
+        "https://www.acusfoc.com/acusfoc-empresa-de-ignifugacion/"
+      ],
+      "fuenteFiscal": "https://www.valencia.es/documents/20142/10346178/A_00002_20171201_0930_0_firmadoweb.pdf/fd643049-2e03-9faa-25a0-8569c5e02b18?t=1613818540625",
+      "fuenteActividad": "https://www.acusfoc.com/ignifugaciones-en-valencia/"
+    },
+    {
+      "dominio": "aislamientossanfelices.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Los dominios .es y .net comparten CIF y domicilio; se agrupan. Se conserva el nombre fiscal publicado, sin inventar forma social.",
+      "cif": "B39467493",
+      "empresaId": 5859,
+      "fuentesConsultadas": [
+        "https://www.aislamientossanfelices.es/proteccion-pasiva",
+        "https://www.aislamientossanfelices.es/contacto",
+        "https://www.aislamientossanfelices.es/aviso-legal",
+        "https://www.aislamientossanfelices.es/politica-de-privacidad",
+        "https://www.aislamientossanfelices.es/politica-de-cookies"
+      ],
+      "fuenteFiscal": "https://www.aislamientossanfelices.es/aviso-legal",
+      "fuenteActividad": "https://www.aislamientossanfelices.es/proteccion-pasiva"
+    },
+    {
+      "dominio": "aislamientossanfelices.net",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Los dominios .es y .net comparten CIF y domicilio; se agrupan. Se conserva el nombre fiscal publicado, sin inventar forma social.",
+      "cif": "B39467493",
+      "empresaId": 5859,
+      "fuentesConsultadas": [
+        "https://aislamientossanfelices.net/aviso-legal/",
+        "http://aislamientossanfelices.net/contacto/",
+        "https://aislamientossanfelices.net/proteccion-pasiva/proteccion-contra-el-fuego/",
+        "https://aislamientossanfelices.net/contacto/",
+        "https://aislamientossanfelices.net/politica-de-cookies/",
+        "https://aislamientossanfelices.net/proteccion-pasiva/franja-cortafuegos/",
+        "https://aislamientossanfelices.net/proteccion-pasiva/",
+        "https://aislamientossanfelices.net/proteccion-pasiva/proteccion-de-estructuras-metalicas/",
+        "https://aislamientossanfelices.net/proteccion-pasiva/proyeccion-de-mortero-ignifugo/"
+      ],
+      "fuenteFiscal": "https://www.aislamientossanfelices.es/aviso-legal",
+      "fuenteActividad": "https://www.aislamientossanfelices.es/proteccion-pasiva"
+    },
+    {
+      "dominio": "aislapol.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "titular_persona_fisica",
+      "motivo": "Publica titular persona física. No se inventa una sociedad ni se transforma una secuencia de texto en un CIF societario.",
+      "fuentesConsultadas": [
+        "https://www.aislapol.es/index.php?seccion=IGNIF",
+        "https://www.aislapol.es/index.php?seccion=LEGAL",
+        "https://www.aislapol.es/index.php"
+      ]
+    },
+    {
+      "dominio": "alfatorres.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "http://www.alfatorres.es/",
+          "fuente": "https://clusterincendis.com/soci/grup-alfatorres/",
+          "region": "Cataluña",
+          "tipo": "asociacion"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://www.alfatorres.es/cortafuegos/accesos-peatonales/",
+        "https://www.alfatorres.es/cortafuegos/correderas/",
+        "https://alfatorres.es/politica-de-privacidad/",
+        "https://www.alfatorres.es/cortafuegos/",
+        "https://www.alfatorres.es/cortafuegos/guillotinas/",
+        "https://www.alfatorres.es/contacto/",
+        "https://www.alfatorres.es/cortafuegos/enrollables/",
+        "https://www.alfatorres.es/cortafuegos/sistema-con-reduccion-acustica/"
+      ]
+    },
+    {
+      "dominio": "an4.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "acceso_no_recuperado",
+      "motivo": "Pista en AD’IP; no se recuperó contenido útil de la web para validar identidad.",
+      "fuentesConsultadas": [
+        "https://an4.es/"
+      ]
+    },
+    {
+      "dominio": "angelmir.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "http://www.angelmir.com",
+          "fuente": "https://clusterincendis.com/soci/portes-bisbal-sl/",
+          "region": "Cataluña",
+          "tipo": "asociacion"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://www.angelmir.com/ca/portes-tallafocs.html",
+        "https://www.angelmir.com/en/legal-warning.html",
+        "https://www.angelmir.com/es/contacto.html",
+        "https://www.angelmir.com/ca/contacte.html",
+        "https://www.angelmir.com/ca/portes-industrials/portes-tallafocs/porta-seccional-tallafocs.html",
+        "https://www.angelmir.com/es/puertas-cortafuegos.html",
+        "https://www.angelmir.com/en/privacity-policy.html",
+        "https://www.angelmir.com/ca/politica-de-privacitat.html",
+        "https://www.angelmir.com/es/politica-de-privacidad.html",
+        "https://www.angelmir.com/es/es/aviso-legal.html",
+        "https://www.angelmir.com/ca/avis-legal.html",
+        "https://www.angelmir.com/es/puertas-industriales/puertas-cortafuegos/puerta-enrollable-cortafuegos.html",
+        "https://www.angelmir.com/ca/portes-industrials/portes-tallafocs/porta-batent-tallafocs.html",
+        "https://www.angelmir.com/es/puertas-industriales/puertas-cortafuegos/puerta-guillotina-cortafuegos.html",
+        "https://www.angelmir.com/es/aviso-legal.html",
+        "https://www.angelmir.com/es/empresa.html",
+        "https://www.angelmir.com/ca/portes-industrials/portes-tallafocs/porta-enrotllable-tallafocs.html",
+        "https://www.angelmir.com/es/puertas-industriales/puertas-cortafuegos/puerta-batiente-cortafuegos.html",
+        "https://www.angelmir.com/ca/ca/avis-legal.html",
+        "https://www.angelmir.com/ca/portes-industrials/portes-tallafocs/porta-guillotina-tallafocs.html",
+        "https://www.angelmir.com/es/puertas-industriales/puertas-cortafuegos/puerta-seccional-cortafuegos.html",
+        "https://www.angelmir.com/ca/portes-tallafocs/porta-corredissa-tallafocs.html",
+        "https://www.angelmir.com/es/puertas-cortafuegos/puerta-corredera-cortafuegos.html"
+      ]
+    },
+    {
+      "dominio": "aplicacionesalagon.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "El aviso legal y contacto difieren en el número 23/24 de Monasterio de Piedra; se omite la calle hasta conciliarla. No se inventa forma social.",
+      "cif": "B99427791",
+      "empresaId": 5872,
+      "fuentesConsultadas": [
+        "https://aplicacionesalagon.es/politica-de-privacidad/",
+        "https://aplicacionesalagon.es/contacto/",
+        "https://aplicacionesalagon.es/",
+        "https://aplicacionesalagon.es/sobre-nosotros/",
+        "https://aplicacionesalagon.es/aviso-legal/",
+        "https://aplicacionesalagon.es/politica-de-cookies/"
+      ],
+      "fuenteFiscal": "https://aplicacionesalagon.es/aviso-legal/",
+      "fuenteActividad": "https://aplicacionesalagon.es/"
+    },
+    {
+      "dominio": "aplicanor.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "atribucion_fiscal_pendiente",
+      "motivo": "La política identifica varias entidades del grupo; no se distribuye la misma actividad automáticamente entre todos los CIF.",
+      "estadoAnterior": "identidad_ambigua",
+      "origenes": [
+        {
+          "url": "https://www.aplicanor.com/servicios/ignifugaciones-y-aislamientos",
+          "fuente": "https://www.aplicanor.com/servicios/ignifugaciones-y-aislamientos",
+          "region": "galicia",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://www.aplicanor.com/",
+          "fuente": "https://www.aplicanor.com/",
+          "region": "Galicia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://www.aplicanor.com/servicios/pavimentos-continuos",
+        "https://www.aplicanor.com/contacto",
+        "https://www.aplicanor.com/servicios/refuerzos-y-reparaciones-estructurales",
+        "https://www.aplicanor.com/servicios/ignifugaciones-y-aislamientos",
+        "https://www.aplicanor.com/servicios",
+        "https://www.aplicanor.com/aviso-legal",
+        "https://www.aplicanor.com/servicios/recrecidos",
+        "https://www.aplicanor.com/politica-de-privacidad",
+        "https://www.aplicanor.com/politica-de-cookies",
+        "https://www.aplicanor.com/servicios/impermeabilizaciones"
+      ]
+    },
+    {
+      "dominio": "aplytec.eu",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Resytec remite a Aplytec para esta ejecución. Se valida a Aplytec, sin atribuir automáticamente la actividad al gestor de residuos.",
+      "cif": "B09570748",
+      "empresaId": 5855,
+      "fuentesConsultadas": [
+        "https://www.aplytec.eu/Politica/Privacidad",
+        "https://www.aplytec.eu/"
+      ],
+      "fuenteFiscal": "https://www.aplytec.eu/Politica/Privacidad",
+      "fuenteActividad": "https://www.aplytec.eu/"
+    },
+    {
+      "dominio": "asturfire.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://www.asturfire.es/",
+          "fuente": "https://www.asturfire.es/",
+          "region": "gal-ast",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://www.asturfire.es/"
+      ]
+    },
+    {
+      "dominio": "conforthome.net",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://www.conforthome.net/contacto/",
+          "fuente": "https://www.conforthome.net/contacto/",
+          "region": "baleares",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://www.conforthome.net/contacto/",
+        "https://www.conforthome.net/ignifugaciones-proteccion-pasiva-mallorca/",
+        "https://www.conforthome.net/morteros-ignifugos-perlita-vermiculita-lana-de-roca-mallorca/",
+        "https://www.conforthome.net/refuerzo-estructural-hormigon-pasivado-armaduras-hierro/",
+        "https://www.conforthome.net/pintura-intumescente-mallorca/"
+      ]
+    },
+    {
+      "dominio": "diseyco.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "suministro_sin_ejecucion",
+      "motivo": "Comercializa materiales y asesora; no se acreditó montaje propio de pasiva.",
+      "fuentesConsultadas": [
+        "https://www.diseyco.es/soluciones/proteccion-pasiva/",
+        "https://www.diseyco.es/proteccion-pasiva/",
+        "https://www.diseyco.es/empresa/",
+        "https://www.diseyco.es/contacte-con-nosotros/",
+        "https://www.diseyco.es/politica-de-privacidad/",
+        "https://www.diseyco.es/aviso-legal/"
+      ]
+    },
+    {
+      "dominio": "fagonsa.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "ejecucion_pendiente",
+      "motivo": "Instaladora de seguridad con pasiva en catálogo, pendiente de atribución específica de montaje o aplicación.",
+      "fuentesConsultadas": [
+        "https://fagonsa.com/avisos-legales/",
+        "https://fagonsa.com/productos/",
+        "https://fagonsa.com/quienes-somos/",
+        "https://fagonsa.com/servicios/",
+        "https://fagonsa.com/politica-de-privacidad/"
+      ]
+    },
+    {
+      "dominio": "firex.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "enriquecida",
+      "motivo": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "cif": "B50110956",
+      "empresaId": 1111,
+      "fuentesConsultadas": [
+        "https://firex.es/privacy-policy",
+        "https://www.firex.es/cookies-policy",
+        "https://www.firex.es/about-us",
+        "https://www.firex.es/privacy-policy",
+        "https://www.firex.es/legal-notice",
+        "https://www.firex.es/contactus",
+        "http://firex.es/contacto/",
+        "https://www.firex.es/incendios"
+      ],
+      "fuenteFiscal": "https://www.firex.es/privacy-policy",
+      "fuenteActividad": "https://www.firex.es/incendios"
+    },
+    {
+      "dominio": "grupo-martinez.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "cif": "B90250879",
+      "empresaId": 5868,
+      "fuentesConsultadas": [
+        "https://grupo-martinez.es/proteccion-pasiva-contra-incendios/proyectados-para-proteccion-pasiva/",
+        "https://grupo-martinez.es/politica-de-privacidad/",
+        "https://grupo-martinez.es/aviso-legal/",
+        "https://grupo-martinez.es/proteccion-pasiva-contra-incendios/",
+        "https://grupo-martinez.es/aislamientos-para-edificios/",
+        "https://grupo-martinez.es/contactar/",
+        "https://grupo-martinez.es/",
+        "https://grupo-martinez.es/proteccion-pasiva-contra-incendios/sistemas-de-proteccion-pasiva-contra-el-fuego/",
+        "https://grupo-martinez.es/aislamientos-para-edificios/aislamiento-proyectado/"
+      ],
+      "fuenteFiscal": "https://grupo-martinez.es/aviso-legal/",
+      "fuenteActividad": "https://grupo-martinez.es/proteccion-pasiva-contra-incendios/proyectados-para-proteccion-pasiva/"
+    },
+    {
+      "dominio": "ignidec.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "cif": "B87121018",
+      "empresaId": 5867,
+      "fuentesConsultadas": [
+        "https://www.ignidec.com/aviso-legal-ignidec-aislamientos-ignifugos.html",
+        "https://www.ignidec.com/servicios-aislamientos-ignifugos-madrid.html",
+        "https://www.ignidec.com/ignidec-aislamientos-ignifugos-madrid.html",
+        "https://www.ignidec.com/contactar-ignidec-aislamientos-ignifugos.php",
+        "https://www.ignidec.com/politica-privacidad.html"
+      ],
+      "fuenteFiscal": "https://www.ignidec.com/aviso-legal-ignidec-aislamientos-ignifugos.html",
+      "fuenteActividad": "https://www.ignidec.com/ignidec-aislamientos-ignifugos-madrid.html"
+    },
+    {
+      "dominio": "ignifugacionbarcelona.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "ignifugacionbarcelona.com e ignifugacioneslotor.com publican el mismo CIF: una sola alta.",
+      "cif": "B66198995",
+      "empresaId": 5863,
+      "fuentesConsultadas": [
+        "https://www.ignifugacionbarcelona.com/es/saber-mas",
+        "https://www.ignifugacionbarcelona.com/",
+        "https://www.ignifugacionbarcelona.com/es/galeria",
+        "https://www.ignifugacionbarcelona.com/es/contacto",
+        "https://www.ignifugacionbarcelona.com/politica-de-privacidad",
+        "https://www.ignifugacionbarcelona.com/aviso-legal",
+        "https://www.ignifugacionbarcelona.com/es/productos",
+        "https://www.ignifugacionbarcelona.com/es/videos"
+      ],
+      "fuenteFiscal": "https://www.ignifugacioneslotor.com/aviso-legal/",
+      "fuenteActividad": "https://www.ignifugacioneslotor.com/"
+    },
+    {
+      "dominio": "ignifugaciones.barcelona",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "cif": "B66443763",
+      "empresaId": 5864,
+      "fuentesConsultadas": [
+        "https://ignifugaciones.barcelona/galeria",
+        "https://ignifugaciones.barcelona/",
+        "https://ignifugaciones.barcelona/servicios",
+        "https://ignifugaciones.barcelona/contacto",
+        "https://ignifugaciones.barcelona/aviso-legal",
+        "https://ignifugaciones.barcelona/inici"
+      ],
+      "fuenteFiscal": "https://ignifugaciones.barcelona/aviso-legal",
+      "fuenteActividad": "https://ignifugaciones.barcelona/"
+    },
+    {
+      "dominio": "ignifugaciones.cat",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://ignifugaciones.cat/",
+          "fuente": "https://ignifugaciones.cat/",
+          "region": "catalunya",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://ignifugaciones.cat/lhospitalet-de-llobregat/",
+        "https://ignifugaciones.cat/lleida/",
+        "https://ignifugaciones.cat/reus/",
+        "https://ignifugaciones.cat/",
+        "https://ignifugaciones.cat/tarragona/",
+        "https://ignifugaciones.cat/sabadell/",
+        "https://ignifugaciones.cat/terrassa/",
+        "https://ignifugaciones.cat/andorra/",
+        "https://ignifugaciones.cat/mataro/"
+      ]
+    },
+    {
+      "dominio": "ignifugacionesandalucia.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://ignifugacionesandalucia.com/",
+          "fuente": "https://ignifugacionesandalucia.com/",
+          "region": "andalucia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://ignifugacionesandalucia.com/ignifugaciones-granada/",
+        "https://ignifugacionesandalucia.com/ignifugaciones-sevilla/",
+        "https://ignifugacionesandalucia.com/",
+        "https://ignifugacionesandalucia.com/ignifugaciones-cadiz/",
+        "https://ignifugacionesandalucia.com/ignifugaciones-malaga/",
+        "mailto:info@ignifugacionesandalucia.com",
+        "https://ignifugacionesandalucia.com/ignifugaciones-almeria/",
+        "https://ignifugacionesandalucia.com/aviso-legal/",
+        "https://ignifugacionesandalucia.com/politica-privacidad/",
+        "https://ignifugacionesandalucia.com/ignifugaciones-jaen/",
+        "https://ignifugacionesandalucia.com/ignifugaciones-cordoba/",
+        "https://ignifugacionesandalucia.com/ignifugaciones-huelva/"
+      ]
+    },
+    {
+      "dominio": "ignifugacionesbarna.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://ignifugacionesbarna.com/",
+          "fuente": "https://ignifugacionesbarna.com/",
+          "region": "catalunya",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://ignifugacionesbarna.com/ca/",
+        "https://ignifugacionesbarna.com/",
+        "https://ignifugacionesbarna.com/ca/pintura-intumescent-barcelona/",
+        "https://ignifugacionesbarna.com/ignifugacion-lleida/",
+        "https://ignifugacionesbarna.com/ca/avis-legal/",
+        "https://ignifugacionesbarna.com/ca/ignifugacio-lleida/",
+        "https://ignifugacionesbarna.com/ignifugacion-tarragona/",
+        "https://ignifugacionesbarna.com/ca/ignifugacio-girona/",
+        "https://ignifugacionesbarna.com/ca/ignifugacio-naus-industrials-barcelona/",
+        "https://ignifugacionesbarna.com/pintura-intumescente-barcelona/",
+        "https://ignifugacionesbarna.com/ca/politica-privacitat/",
+        "https://ignifugacionesbarna.com/ca/ignifugacio-tarragona/",
+        "https://ignifugacionesbarna.com/ignifugacion-naves-industriales-barcelona/",
+        "https://ignifugacionesbarna.com/aviso-legal/",
+        "https://ignifugacionesbarna.com/ignifugacion-girona/",
+        "https://ignifugacionesbarna.com/ca/morter-ignifug-projectat-barcelona/",
+        "https://ignifugacionesbarna.com/mortero-ignifugo-proyectado-barcelona/",
+        "https://ignifugacionesbarna.com/politica-privacidad/"
+      ]
+    },
+    {
+      "dominio": "ignifugacionesdelnorte.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://ignifugacionesdelnorte.com/contacto/",
+          "fuente": "https://ignifugacionesdelnorte.com/contacto/",
+          "region": "cantabria",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugacionesdelnorte.com/sobre-nosotros/",
+          "fuente": "https://ignifugacionesdelnorte.com/sobre-nosotros/",
+          "region": "castilla-leon",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugacionesdelnorte.com/leon/",
+          "fuente": "https://ignifugacionesdelnorte.com/leon/",
+          "region": "castilla-leon",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugacionesdelnorte.com/navarra/",
+          "fuente": "https://ignifugacionesdelnorte.com/navarra/",
+          "region": "navarra",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugacionesdelnorte.com/asturias/",
+          "fuente": "https://ignifugacionesdelnorte.com/asturias/",
+          "region": "norte",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugacionesdelnorte.com/pci-bilbao/",
+          "fuente": "https://ignifugacionesdelnorte.com/pci-bilbao/",
+          "region": "pais-vasco",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://ignifugacionesdelnorte.com/pci-bilbao/",
+        "https://ignifugacionesdelnorte.com/burgos/",
+        "https://ignifugacionesdelnorte.com/palencia/",
+        "https://ignifugacionesdelnorte.com/navarra/",
+        "https://ignifugacionesdelnorte.com/pci-vitoria/",
+        "https://ignifugacionesdelnorte.com/asturias/",
+        "https://ignifugacionesdelnorte.com/leon/",
+        "https://ignifugacionesdelnorte.com/ignifugaciones-gijon/",
+        "https://ignifugacionesdelnorte.com/ignifugaciones-cantabria/",
+        "https://ignifugacionesdelnorte.com/ignifugaciones-bilbao/",
+        "https://ignifugacionesdelnorte.com/",
+        "https://ignifugacionesdelnorte.com/pci-asturias/",
+        "https://ignifugacionesdelnorte.com/ignifugaciones-vitoria/",
+        "https://ignifugacionesdelnorte.com/sobre-nosotros/",
+        "https://ignifugacionesdelnorte.com/contacto/",
+        "https://ignifugacionesdelnorte.com/pci-gijon/"
+      ]
+    },
+    {
+      "dominio": "ignifugacioneslotor.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "ignifugacionbarcelona.com e ignifugacioneslotor.com publican el mismo CIF: una sola alta.",
+      "cif": "B66198995",
+      "empresaId": 5863,
+      "fuentesConsultadas": [
+        "https://www.ignifugacioneslotor.com/aviso-legal/"
+      ],
+      "fuenteFiscal": "https://www.ignifugacioneslotor.com/aviso-legal/",
+      "fuenteActividad": "https://www.ignifugacioneslotor.com/"
+    },
+    {
+      "dominio": "ignifugacionesmadrid.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://ignifugacionesmadrid.com/",
+          "fuente": "https://ignifugacionesmadrid.com/",
+          "region": "madrid",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://ignifugacionesmadrid.com/",
+        "https://ignifugacionesmadrid.com/contacto/"
+      ]
+    },
+    {
+      "dominio": "ignifugacionesvalencia.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "intermediacion",
+      "motivo": "El aviso del titular describe intermediación entre clientes y aplicadoras, sin ejecución propia.",
+      "fuentesConsultadas": [
+        "https://ignifugacionesvalencia.es/",
+        "mailto:info@ignifugacionesvalencia.es",
+        "https://ignifugacionesvalencia.es/politica-de-cookies-ue/",
+        "https://ignifugacionesvalencia.es/politica-de-privacidad/",
+        "https://ignifugacionesvalencia.es/sobre-nosotros/",
+        "https://ignifugacionesvalencia.es/contacto/"
+      ]
+    },
+    {
+      "dominio": "ignifugacionindustrial.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "intermediacion",
+      "motivo": "Explica expresamente que deriva solicitudes a aplicadoras y no aplica materiales.",
+      "fuentesConsultadas": []
+    },
+    {
+      "dominio": "ignifugados.cat",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://www.ignifugados.cat/",
+          "fuente": "https://www.ignifugados.cat/",
+          "region": "catalunya",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://www.ignifugados.cat/services",
+        "https://www.ignifugados.cat/contact",
+        "mailto:info@ignifugados.cat",
+        "https://www.ignifugados.cat/donde-trabajamos",
+        "https://www.ignifugados.cat/"
+      ]
+    },
+    {
+      "dominio": "ignifugadosalbacete.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://ignifugadosalbacete.com/",
+          "fuente": "https://ignifugadosalbacete.com/",
+          "region": "castilla-mancha",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugadosalbacete.com/contacto/",
+          "fuente": "https://ignifugadosalbacete.com/contacto/",
+          "region": "castilla-mancha",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://ignifugadosalbacete.com/contacto/",
+        "https://ignifugadosalbacete.com/ignifugados/",
+        "https://ignifugadosalbacete.com/donde-estamos/",
+        "https://ignifugadosalbacete.com/epoxi/",
+        "https://ignifugadosalbacete.com/"
+      ]
+    },
+    {
+      "dominio": "ignifugadosborja.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://www.ignifugadosborja.es/",
+          "fuente": "https://www.ignifugadosborja.es/",
+          "region": "andalucia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://www.ignifugadosborja.es/tour-virtual",
+        "https://www.ignifugadosborja.es/saber-mas",
+        "https://www.ignifugadosborja.es/galeria",
+        "https://www.ignifugadosborja.es/politica-de-privacidad",
+        "https://www.ignifugadosborja.es/noticias",
+        "https://www.ignifugadosborja.es/contacto",
+        "https://www.ignifugadosborja.es/productos",
+        "https://www.ignifugadosborja.es/servicios",
+        "https://www.ignifugadosborja.es/",
+        "https://www.ignifugadosborja.es/videos",
+        "https://www.ignifugadosborja.es/blog"
+      ]
+    },
+    {
+      "dominio": "ignifugadosjaen.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://ignifugadosjaen.com/",
+          "fuente": "https://ignifugadosjaen.com/",
+          "region": "castilla-leon",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://ignifugadosjaen.com/",
+        "https://ignifugadosjaen.com/donde-estamos/",
+        "https://ignifugadosjaen.com/contacto/",
+        "https://ignifugadosjaen.com/ignifugados/",
+        "https://ignifugadosjaen.com/epoxi/"
+      ]
+    },
+    {
+      "dominio": "ignifugadosmurcia.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://ignifugadosmurcia.com/",
+          "fuente": "https://ignifugadosmurcia.com/",
+          "region": "sur",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://ignifugadosmurcia.com/epoxi/",
+        "https://ignifugadosmurcia.com/ignifugados/",
+        "https://ignifugadosmurcia.com/",
+        "https://ignifugadosmurcia.com/contacto/",
+        "https://ignifugadosmurcia.com/donde-estamos/"
+      ]
+    },
+    {
+      "dominio": "ignifugartela.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://ignifugartela.com/",
+          "fuente": "https://ignifugartela.com/",
+          "region": "aragon",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugartela.com/ignifugaciones-murcia/",
+          "fuente": "https://ignifugartela.com/ignifugaciones-murcia/",
+          "region": "murcia",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://ignifugartela.com/ignifugaciones-bilbao/",
+          "fuente": "https://ignifugartela.com/ignifugaciones-bilbao/",
+          "region": "pais-vasco",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://ignifugartela.com/ignifugaciones-murcia/",
+        "https://ignifugartela.com/venta-de-productos-ignifugantes/",
+        "https://ignifugartela.com/politica-de-privacidad/",
+        "https://ignifugartela.com/ignifugaciones-malaga/",
+        "https://ignifugartela.com/tela-ignifuga/",
+        "https://ignifugartela.com/ignifugar-madera/",
+        "https://ignifugartela.com/ignifugaciones-zaragoza/",
+        "https://ignifugartela.com/aislamiento-ignifugo/",
+        "https://ignifugartela.com/mantenimiento-integral/",
+        "https://ignifugartela.com/certificado-ignifugo/",
+        "https://ignifugartela.com/ignifugacion-valencia/",
+        "https://ignifugartela.com/ignifugaciones-sevilla/",
+        "https://ignifugartela.com/ignifugaciones-bilbao/",
+        "https://ignifugartela.com/aviso-legal/",
+        "https://ignifugartela.com/",
+        "https://ignifugartela.com/ignifugados-madrid/",
+        "https://ignifugartela.com/contacto/",
+        "https://ignifugartela.com/ignifugaciones-barcelona/"
+      ]
+    },
+    {
+      "dominio": "ignifugosproyectados.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://ignifugosproyectados.com/",
+          "fuente": "https://ignifugosproyectados.com/",
+          "region": "madrid",
+          "tipo": "busqueda_regional"
+        },
+        {
+          "url": "https://www.ignifugosproyectados.com/",
+          "fuente": "https://www.ignifugosproyectados.com/",
+          "region": "madrid",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://ignifugosproyectados.com/",
+        "https://ignifugosproyectados.com/contactar",
+        "https://ignifugosproyectados.com/proyectado",
+        "https://ignifugosproyectados.com/otros/24/",
+        "https://ignifugosproyectados.com/otros/1/",
+        "https://ignifugosproyectados.com/franjas",
+        "https://ignifugosproyectados.com/otros/23/",
+        "https://ignifugosproyectados.com/pladur"
+      ]
+    },
+    {
+      "dominio": "ignival.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://ignival.es/",
+          "fuente": "https://ignival.es/",
+          "region": "valencia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://ignival.es/cookies/",
+        "https://ignival.es/",
+        "https://ignival.es/aviso-legal/",
+        "https://ignival.es/privacidad/"
+      ]
+    },
+    {
+      "dominio": "imperespumamalaga.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "cif": "B93127645",
+      "empresaId": 5870,
+      "fuentesConsultadas": [
+        "https://imperespumamalaga.com/politica-de-privacidad/",
+        "https://imperespumamalaga.com/aviso-legal/",
+        "https://imperespumamalaga.com/servicios/",
+        "https://imperespumamalaga.com/quienes-somos/",
+        "https://imperespumamalaga.com/"
+      ],
+      "fuenteFiscal": "https://imperespumamalaga.com/aviso-legal/",
+      "fuenteActividad": "https://imperespumamalaga.com/servicios/"
+    },
+    {
+      "dominio": "incopac90.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "ejecucion_pendiente",
+      "motivo": "Identidad fiscal obtenida, pero las páginas consultadas mezclan productos y servicios sin precisar instalación propia de pasiva.",
+      "fuentesConsultadas": [
+        "https://incopac90.com/aviso-legal/",
+        "https://incopac90.com/contacto/",
+        "https://incopac90.com/productos-servicios/",
+        "https://incopac90.com/politica-de-privacidad/"
+      ]
+    },
+    {
+      "dominio": "indecamposta.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "http://www.indecamposta.com/",
+          "fuente": "https://www.adip-as.com/porfolio/laurentiu-hincianu/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.indecamposta.com",
+          "fuente": "https://www.adip-as.com/porfolio/laurentiu-hincianu/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://www.indecamposta.com/aviso-legal",
+        "https://www.indecamposta.com/servicios-constructivos-indec-amposta",
+        "https://www.indecamposta.com/servicios-indec-instalaciones-amposta",
+        "https://www.indecamposta.com/",
+        "https://www.indecamposta.com/contacto",
+        "https://www.indecamposta.com/politica-cookies",
+        "https://www.indecamposta.com/authenticate?ReturnUrl=%2Faviso-legal"
+      ]
+    },
+    {
+      "dominio": "isaphone.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "http://www.isaphone.es/",
+          "fuente": "https://www.adip-as.com/porfolio/isaphone-sa/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.isaphone.es",
+          "fuente": "https://www.adip-as.com/porfolio/isaphone-sa/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://isaphone.es/ca/avis-legal/",
+        "https://isaphone.es/contactar/",
+        "https://isaphone.es/ca/contacte/",
+        "https://isaphone.es/productos/proteccion-pasiva-contra-el-fuego/",
+        "https://isaphone.es/aviso-legal/",
+        "https://isaphone.es/ca/productes/proteccio-pasiva-contra-el-foc/",
+        "https://isaphone.es/politica-de-cookies/"
+      ]
+    },
+    {
+      "dominio": "josmagsl.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "enriquecida",
+      "motivo": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "cif": "B24490997",
+      "empresaId": 3311,
+      "fuentesConsultadas": [
+        "https://josmagsl.com/quienes-somos-josmag-leon",
+        "https://josmagsl.com/aviso-legal",
+        "https://josmagsl.com/politica-cookies",
+        "https://josmagsl.com/authenticate?ReturnUrl=%2Fquienes-somos-josmag-leon",
+        "https://josmagsl.com/servicios-josmag-ssci",
+        "https://josmagsl.com/authenticate?ReturnUrl=%2Faviso-legal",
+        "https://josmagsl.com/contacto"
+      ],
+      "fuenteFiscal": "https://josmagsl.com/aviso-legal",
+      "fuenteActividad": "https://josmagsl.com/quienes-somos-josmag-leon"
+    },
+    {
+      "dominio": "lainstaladoradesistemas.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Se utiliza el domicilio fiscal publicado en LSSIYCE; la página de contacto publica centro operativo en Cornellà. Una sola entidad por CIF.",
+      "cif": "B60512134",
+      "empresaId": 5862,
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "http://www.lainstaladoradesistemas.es/",
+          "fuente": "https://www.adip-as.com/porfolio/la-instaladora-sistemas-y-aislamientos-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.lainstaladoradesistemas.es",
+          "fuente": "https://www.adip-as.com/porfolio/la-instaladora-sistemas-y-aislamientos-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://www.lainstaladoradesistemas.es/politica-de-cookies/",
+        "https://www.lainstaladoradesistemas.es/informacion-legal-lssiyce/",
+        "https://www.lainstaladoradesistemas.es/sobre-nosotros/",
+        "https://www.lainstaladoradesistemas.es/proteccion-pasiva-contra-incendios/",
+        "https://www.lainstaladoradesistemas.es/contacto/"
+      ],
+      "fuenteFiscal": "https://www.lainstaladoradesistemas.es/informacion-legal-lssiyce/",
+      "fuenteActividad": "https://www.lainstaladoradesistemas.es/proteccion-pasiva-contra-incendios/"
+    },
+    {
+      "dominio": "mercorlv.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "enriquecida",
+      "motivo": "El aviso atribuye el dominio a Tecresa Protección Pasiva B48983746, ficha 699. No se crea otra sociedad por la marca Mercor LV ni se confunde con Técnicas de Refractarios A48190839.",
+      "cif": "B48983746",
+      "empresaId": 699,
+      "fuentesConsultadas": [
+        "https://mercorlv.es/fr/contact",
+        "https://mercorlv.es/pt/aviso-legal",
+        "https://mercorlv.es/politica-de-privacidad",
+        "https://mercorlv.es/aviso-legal",
+        "https://mercorlv.es/pt/politica-de-privacidade",
+        "https://mercorlv.es/empresa",
+        "https://mercorlv.es/compuertas-cortafuego",
+        "https://mercorlv.es/pt/empresa",
+        "https://mercorlv.es/",
+        "https://mercorlv.es/politica-de-cookies",
+        "https://mercorlv.es/blog/compuertas-cortafuego-circulares-eis-120",
+        "https://mercorlv.es/blog/mercor-tecresa-instala-sistemas-de-control-de-humos-avanzados-en-bauhaus-leganes",
+        "https://mercorlv.es/404-error-page",
+        "https://mercorlv.es/blog/compuertas-cortafuego-rectangulares-eis-120",
+        "https://mercorlv.es/fr/mentions-legales",
+        "https://mercorlv.es/contacto",
+        "https://mercorlv.es/blog/lucernarios-curvos-de-aluminio-con-exutorios-integrados",
+        "https://mercorlv.es/en/contact-us"
+      ],
+      "fuenteFiscal": "https://mercorlv.es/politica-de-privacidad",
+      "fuenteActividad": "https://mercorlv.es/"
+    },
+    {
+      "dominio": "montajesimplalusa.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Pendiente del seguimiento anterior sin reconsulta útil en esta tanda; se conserva su estado y no se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "http://www.montajesimplalusa.com/",
+          "fuente": "https://www.adip-as.com/porfolio/montajes-implalusa-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.montajesimplalusa.com",
+          "fuente": "https://www.adip-as.com/porfolio/montajes-implalusa-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "fuentesConsultadas": []
+    },
+    {
+      "dominio": "olidetec.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "cif": "B47503511",
+      "empresaId": 5861,
+      "fuentesConsultadas": [
+        "https://olidetec.es/politica-de-privacidad/",
+        "https://olidetec.es/aviso-legal/",
+        "https://olidetec.es/"
+      ],
+      "fuenteFiscal": "https://olidetec.es/aviso-legal/",
+      "fuenteActividad": "https://olidetec.es/"
+    },
+    {
+      "dominio": "pimed.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "La política corporativa de calidad identifica PIMED con Azul Cobalto Decoración SL, resolviendo el texto residual SCOEL del aviso. Illescas pertenece a Toledo; se corrige el rótulo provincial Madrid del aviso.",
+      "cif": "B86850062",
+      "empresaId": 5866,
+      "fuentesConsultadas": [
+        "https://pimed.es/empresa-de-proteccion-pasiva/",
+        "https://pimed.es/aviso-legal/#top",
+        "https://pimed.es/aviso-legal/",
+        "https://pimed.es/pinturas-intumescentes/",
+        "https://pimed.es/politica-de-privacidad/",
+        "https://pimed.es/servicios-integrales-pimed/",
+        "https://pimed.es/obras-proteccion-pasiva/"
+      ],
+      "fuenteFiscal": "https://pimed.es/aviso-legal/",
+      "fuenteActividad": "https://pimed.es/empresa-de-proteccion-pasiva/"
+    },
+    {
+      "dominio": "pintoreshermanosalba.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "identidad_pendiente",
+      "motivo": "Aplicación de intumescentes explícita; no se recuperó identidad fiscal primaria societaria.",
+      "fuentesConsultadas": [
+        "https://pintoreshermanosalba.com/pintura-intumescente/"
+      ]
+    },
+    {
+      "dominio": "pinturapro.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "contenido_editorial",
+      "motivo": "Guías y contenidos sobre pintura; no ejecutora validada.",
+      "fuentesConsultadas": [
+        "https://pinturapro.es/politica-de-privacidad/",
+        "https://pinturapro.es/pintura-intumescente-para-hormigon-y-acero-promapaint-sc3-proteccion-al-fuego/",
+        "https://pinturapro.es/aviso-legal/",
+        "https://pinturapro.es/category/intumescente/",
+        "https://pinturapro.es/about/",
+        "https://pinturapro.es/contact/",
+        "https://pinturapro.es/politica-de-cookies/"
+      ]
+    },
+    {
+      "dominio": "pinturastrillo.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "cif": "B91111955",
+      "empresaId": 5869,
+      "fuentesConsultadas": [
+        "https://www.pinturastrillo.com/proteccion-pasiva-contra-incendios/",
+        "https://www.pinturastrillo.com/politica-privacidad/",
+        "https://www.pinturastrillo.com/contacto/",
+        "https://www.pinturastrillo.com/servicios/",
+        "https://www.pinturastrillo.com/aviso-legal/"
+      ],
+      "fuenteFiscal": "https://www.pinturastrillo.com/aviso-legal/",
+      "fuenteActividad": "https://www.pinturastrillo.com/proteccion-pasiva-contra-incendios/"
+    },
+    {
+      "dominio": "placasyaislamientos.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "suministro_sin_ejecucion",
+      "motivo": "Distribución de materiales a instaladores, sin aplicación propia acreditada.",
+      "fuentesConsultadas": [
+        "https://placasyaislamientos.com/politica-de-privacidad/",
+        "https://placasyaislamientos.com/productos/proteccion-pasiva/",
+        "https://placasyaislamientos.com/aviso-legal/",
+        "https://placasyaislamientos.com/contacto/",
+        "https://placasyaislamientos.com/"
+      ]
+    },
+    {
+      "dominio": "pladiser-mi.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "http://www.pladiser-mi.com/",
+          "fuente": "https://www.adip-as.com/porfolio/pladiser-montajes-e-instalaciones-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.pladiser-mi.com",
+          "fuente": "https://www.adip-as.com/porfolio/pladiser-montajes-e-instalaciones-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://pladiser-mi.com/politica-cookies",
+        "https://pladiser-mi.com/contacto",
+        "https://pladiser-mi.com/empresa-instalacion-pladur-alcorcon",
+        "https://pladiser-mi.com/"
+      ]
+    },
+    {
+      "dominio": "pladurbilbao.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Pendiente del seguimiento anterior sin reconsulta útil en esta tanda; se conserva su estado y no se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad_y_ejecucion",
+      "origenes": [
+        {
+          "url": "https://www.pladurbilbao.com/es/proteccion-contra-el-fuego-bilbao",
+          "fuente": "https://www.pladurbilbao.com/es/proteccion-contra-el-fuego-bilbao",
+          "region": "pais-vasco",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": []
+    },
+    {
+      "dominio": "pladurlleida.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "identidad_y_ejecucion_pendientes",
+      "motivo": "Descubierta mediante DECO-TEBA’S en AD’IP; no se acredita aún titular fiscal y ejecución específica de pasiva.",
+      "fuentesConsultadas": [
+        "https://pladurlleida.com/aviso-legal",
+        "https://pladurlleida.com/politica-de-privacidad",
+        "https://pladurlleida.com/"
+      ]
+    },
+    {
+      "dominio": "proind.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Domicilio fiscal del aviso en Imárcoain, municipio de Noáin. El contacto muestra además centro operativo en Barbatáin; no se confunden sedes con entidades. Nombre conservado tal como figura en la fuente.",
+      "cif": "B31378326",
+      "empresaId": 5858,
+      "fuentesConsultadas": [
+        "https://proind.es/en/politica-de-privacidad-2/",
+        "https://proind.es/politica-de-privacidad-2/",
+        "https://proind.es/informacion-contacto/",
+        "https://proind.es/informacion-empresa/",
+        "https://proind.es/en/informacion-empresa/",
+        "https://proind.es/aviso-legal-2/",
+        "https://proind.es/preferencia-de-cookies/",
+        "https://proind.es/restauracion-de-fachadas/",
+        "https://proind.es/politica-de-cookies-2/",
+        "https://proind.es/en/aviso-legal-2/"
+      ],
+      "fuenteFiscal": "https://proind.es/aviso-legal-2/",
+      "fuenteActividad": "https://proind.es/informacion-empresa/"
+    },
+    {
+      "dominio": "proinse.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "enriquecida",
+      "motivo": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "cif": "B38289518",
+      "empresaId": 2709,
+      "fuentesConsultadas": [
+        "https://www.proinse.com/aviso-legal/",
+        "https://www.proinse.com/sectorizacion-placas-en-tenerife/",
+        "https://www.proinse.com/morteros-ignifugos-en-tenerife/",
+        "https://www.proinse.com/proteccion-pasiva-contra-incendios-en-tenerife/",
+        "https://www.proinse.com/puertas-cortafuego-en-tenerife/",
+        "https://www.proinse.com/pintura-intumescente-en-tenerife/",
+        "https://www.proinse.com/revision-proteccion-pasiva-tenerife/",
+        "https://www.proinse.com/politica-de-privacidad/"
+      ],
+      "fuenteFiscal": "https://www.proinse.com/",
+      "fuenteActividad": "https://www.proinse.com/sectorizacion-placas-en-tenerife/"
+    },
+    {
+      "dominio": "pylbages.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://pylbages.es/",
+          "fuente": "https://www.adip-as.com/porfolio/placas-yeso-laminado-del-bages-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.pylbages.es",
+          "fuente": "https://www.adip-as.com/porfolio/placas-yeso-laminado-del-bages-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://pylbages.es/"
+      ]
+    },
+    {
+      "dominio": "qromia.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "El mismo aviso contiene dos calles diferentes en Son Castelló; solo se incorpora el municipio y código postal comunes. La referencia comercial a Carboline no se transforma en calificación Cepreven.",
+      "cif": "B16544926",
+      "empresaId": 5856,
+      "fuentesConsultadas": [
+        "https://www.qromia.com/wp-content/uploads/Qromia_Carboline_Proteccion_Pasiva_contra_el_fuego.jpeg",
+        "https://www.qromia.com/legal/",
+        "https://www.qromia.com/blog/",
+        "https://www.qromia.com/contacto/",
+        "https://www.qromia.com/qromia_carboline_proteccion_pasiva_contra_el_fuego/",
+        "https://www.qromia.com/empresa/"
+      ],
+      "fuenteFiscal": "https://www.qromia.com/legal/",
+      "fuenteActividad": "https://www.qromia.com/qromia_carboline_proteccion_pasiva_contra_el_fuego/"
+    },
+    {
+      "dominio": "refripeca.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "cif": "B76605815",
+      "empresaId": 5865,
+      "fuentesConsultadas": [
+        "https://www.refripeca.com/en/politica-de-privacidad",
+        "https://www.refripeca.com/en/proteccion-pasiva",
+        "https://refripeca.com/en/servicios-construccion-y-reforma-en-tenerife",
+        "https://www.refripeca.com/en/servicios-construccion-y-reforma-en-tenerife",
+        "https://refripeca.com/en/politica-de-privacidad",
+        "https://refripeca.com/en/proteccion-pasiva"
+      ],
+      "fuenteFiscal": "https://www.refripeca.com/en/politica-de-privacidad",
+      "fuenteActividad": "https://www.refripeca.com/en/proteccion-pasiva"
+    },
+    {
+      "dominio": "resytec.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "ejecutor_resuelto_en_otro_cif",
+      "motivo": "La web remite a Aplytec para las aplicaciones industriales. Se da de alta Aplytec B09570748, sin atribuir la ejecución al gestor de residuos.",
+      "fuentesConsultadas": [
+        "https://resytec.com/politica-privacidad/",
+        "https://resytec.com/"
+      ]
+    },
+    {
+      "dominio": "rprevestimientos.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://rprevestimientos.com/",
+          "fuente": "https://www.adip-as.com/porfolio/rafael-peralvarez-revestimientos-slu/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.rprevestimientos.com",
+          "fuente": "https://www.adip-as.com/porfolio/rafael-peralvarez-revestimientos-slu/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://rprevestimientos.com/once-empresas-entre-ellas-isover-participan-en-la-actualizacion-de-la-norma-une-iso-1996-parte-1-y-2-sobre-acustica/",
+        "https://rprevestimientos.com/project/protecciones-pasivas-ei120/",
+        "https://rprevestimientos.com/",
+        "https://rprevestimientos.com/project/protecciones-pasivas-ei120/nggallery/slideshow"
+      ]
+    },
+    {
+      "dominio": "sintec-sll.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "ejecucion_pendiente",
+      "motivo": "Identidad resuelta, pero no se acredita específicamente aplicación propia de pasiva.",
+      "fuentesConsultadas": [
+        "https://www.sintec-sll.es/quienes-somos.html",
+        "https://www.sintec-sll.es/aviso-legal.html",
+        "https://www.sintec-sll.es/aviso_legal.php",
+        "https://www.sintec-sll.es/empresas-distribuidas.html",
+        "https://www.sintec-sll.es/contacto.html",
+        "https://www.sintec-sll.es/empresas-representadas.html"
+      ]
+    },
+    {
+      "dominio": "sistemplac.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "http://www.sistemplac.es/",
+          "fuente": "https://www.adip-as.com/porfolio/aislamientos-sistemplac-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        },
+        {
+          "url": "https://www.sistemplac.es",
+          "fuente": "https://www.adip-as.com/porfolio/aislamientos-sistemplac-sl/",
+          "region": "Nacional",
+          "tipo": "asociacion"
+        }
+      ],
+      "fuentesConsultadas": [
+        "http://sistemplac.es/politica-de-privacidad/",
+        "http://sistemplac.es/contacto/",
+        "http://sistemplac.es/aviso-legal/",
+        "http://sistemplac.es/politica-de-cookies/",
+        "http://sistemplac.es/ignifugacion/"
+      ]
+    },
+    {
+      "dominio": "tabitecvigo.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "reconsulta_no_concluyente",
+      "motivo": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://tabitecvigo.com/servicios/proteccion-incendios/",
+          "fuente": "https://tabitecvigo.com/servicios/proteccion-incendios/",
+          "region": "galicia",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "https://tabitecvigo.com/servicios/tabiqueria-seca/",
+        "https://tabitecvigo.com/servicios/proteccion-incendios/",
+        "https://tabitecvigo.com/contacto-y-localizacion/",
+        "https://tabitecvigo.com/servicios/aislamiento/",
+        "https://tabitecvigo.com/servicios/falso-techo/",
+        "https://tabitecvigo.com/servicios/asesoria-valor-anadido/",
+        "https://tabitecvigo.com/aviso-legal/"
+      ]
+    },
+    {
+      "dominio": "tespatech.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "fabricante_sin_ejecucion",
+      "motivo": "Desarrolla y fabrica productos de protección pasiva; no se acreditó aplicación propia.",
+      "fuentesConsultadas": [
+        "https://tespatech.com/",
+        "https://tespatech.com/aviso-legal/"
+      ]
+    },
+    {
+      "dominio": "ventasuelos.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "cif": "B44903037",
+      "empresaId": 5860,
+      "fuentesConsultadas": [
+        "https://ventasuelos.com/ignifugaciones/",
+        "https://ventasuelos.com/politica-de-privacidad/",
+        "https://ventasuelos.com/contacto/",
+        "https://ventasuelos.com/aviso-legal/",
+        "mailto:info@ventasuelos.com?subject=Solicitar%20presupuesto%20ignifugaciones"
+      ],
+      "fuenteFiscal": "https://ventasuelos.com/aviso-legal/",
+      "fuenteActividad": "https://ventasuelos.com/ignifugaciones/"
+    },
+    {
+      "dominio": "vimat-ignifugats.com",
+      "fechaRevision": "2026-10-24",
+      "estado": "alta_aplicada",
+      "motivo": "Privacidad publica B17944034 y aviso legal B62174677. La adjudicación municipal identifica expresamente a Vimat con B17944034; el otro CIF no se da de alta.",
+      "cif": "B17944034",
+      "empresaId": 5857,
+      "estadoAnterior": "pendiente_identidad",
+      "origenes": [
+        {
+          "url": "https://vimat-ignifugats.com/ca/empresa/",
+          "fuente": "https://vimat-ignifugats.com/ca/empresa/",
+          "region": "catalunya",
+          "tipo": "busqueda_regional"
+        }
+      ],
+      "fuentesConsultadas": [
+        "http://vimat-ignifugats.com/ca/compartimentacio/franges-tallafocs/",
+        "http://vimat-ignifugats.com/ca/proteccio-passiva-contra-incendis/estructures-de-formigo/",
+        "http://vimat-ignifugats.com/",
+        "http://vimat-ignifugats.com/ca/compartimentacio/falsos-sostres/",
+        "http://vimat-ignifugats.com/ca/proteccio-passiva-contra-incendis/",
+        "http://vimat-ignifugats.com/ca/empresa/",
+        "http://vimat-ignifugats.com/ca/proteccio-passiva-contra-incendis/estructures-de-fusta-i-decoratives/",
+        "http://vimat-ignifugats.com/ca/compartimentacio/conductes-de-ventilacio/",
+        "http://vimat-ignifugats.com/ca/",
+        "http://vimat-ignifugats.com/compartimentacion/conductos-de-ventilacion/",
+        "http://vimat-ignifugats.com/ca/proteccio-passiva-contra-incendis/estructures-metalliques/",
+        "mailto:vimat@vimat-ignifugats.com",
+        "http://vimat-ignifugats.com/compartimentacion/falsos-techos/",
+        "http://vimat-ignifugats.com/ca/politica-privacidad/",
+        "http://vimat-ignifugats.com/compartimentacion/",
+        "http://vimat-ignifugats.com/empresa-vimat-ignifugats/",
+        "http://vimat-ignifugats.com/ca/proteccio-passiva-contra-incendis/forjats-i-murs/",
+        "http://vimat-ignifugats.com/ca/compartimentacio/",
+        "http://vimat-ignifugats.com/ca/aviso-legal/",
+        "http://vimat-ignifugats.com/proteccion-pasiva-incendios/estructuras-metalicas/",
+        "http://vimat-ignifugats.com/compartimentacion/franjas-cortafuegos/",
+        "http://vimat-ignifugats.com/proteccion-pasiva-incendios/forjados-y-muros/",
+        "http://vimat-ignifugats.com/proteccion-pasiva-incendios/",
+        "http://vimat-ignifugats.com/aviso-legal/",
+        "http://vimat-ignifugats.com/proteccion-pasiva-incendios/estructuras-de-hormigon/",
+        "http://vimat-ignifugats.com/proteccion-pasiva-incendios/estructuras-de-madera-y-decorativas/",
+        "http://vimat-ignifugats.com/politica-privacidad/"
+      ],
+      "fuenteFiscal": "https://www.calella.cat/media/repository/documents_oficials/acords_junta_govern/2023/Acta_num._8_JGL__1_de_marc_de_2023.pdf",
+      "fuenteActividad": "http://vimat-ignifugats.com/ca/empresa/"
+    },
+    {
+      "dominio": "vkscontraincendioscislascanarias.es",
+      "fechaRevision": "2026-10-24",
+      "estado": "intermediacion",
+      "motivo": "Red de colaboradores y derivación; no una sociedad ejecutora por landing provincial.",
+      "fuentesConsultadas": [
+        "https://www.vkscontraincendioscislascanarias.es/sistemas-proteccion-prevencion-contra-incendios/ignifugaciones-en-edificios-y-naves",
+        "https://www.vkscontraincendioscislascanarias.es/sistemas-proteccion-prevencion-contra-incendios/aislamientos-termicos-e-ignifugos",
+        "https://www.vkscontraincendioscislascanarias.es/politica-de-privacidad",
+        "https://www.vkscontraincendioscislascanarias.es/contactar",
+        "https://www.vkscontraincendioscislascanarias.es/sistemas-proteccion-prevencion-contra-incendios",
+        "https://www.vkscontraincendioscislascanarias.es/aviso-legal"
+      ]
+    }
+  ]
+}
