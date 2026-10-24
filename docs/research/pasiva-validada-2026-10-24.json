@@ -1,0 +1,2595 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-24",
+  "alcance": "Segunda tanda: candidatas pendientes y revisión de webs de sociedades existentes en España. Instaladoras/aplicadoras; sin inferir calificación, habilitación ni estado SABI.",
+  "criterio": "CIF exacto; fuente fiscal primaria para altas o atribución de dominios compartidos. Dominio unívoco ya vinculado al CIF para otros enriquecimientos. Las redirecciones no transfieren actividad a otra sociedad.",
+  "geocodificacion": "Las altas usan centroides municipales contrastados, no coordenadas exactas de los domicilios.",
+  "empresas": [
+    {
+      "cif": "A08175994",
+      "nombre": "ACCIONA FACILITY SERVICES, S.A.",
+      "web": "https://www.acciona.com/es/facility-services/",
+      "identidadMetodo": "registro_publico",
+      "identidadUrl": "https://www.contratacion.euskadi.eus/contenidos/anuncio_contratacion/expjaso725806/es_doc/",
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+          "tipo": "asociacion",
+          "fuente": "Tecnifuego",
+          "fecha": "2026-10-24",
+          "descripcion": "El comité de ingeniería, instalación y mantenimiento de protección pasiva identifica expresamente Acciona Facility Service; identidad fiscal resuelta en contratación pública, separada de la matriz Acciona."
+        }
+      ],
+      "permitirAlta": false,
+      "empresaIdEsperada": 338
+    },
+    {
+      "cif": "A28649911",
+      "nombre": "INLLAMA, S.A.",
+      "web": "https://inllama.es/",
+      "identidadUrl": "https://inllama.es/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1645,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://inllama.es/proteccion-pasiva-estructura-incendio",
+          "descripcion": "Ofrece protección pasiva de estructuras contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "A30016042",
+      "nombre": "GENERAL IBERICA DE EXTINTORES S.A",
+      "web": "https://zenith.es/",
+      "identidadUrl": "https://zenith.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1214,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://zenith.es/instalaciones-contra-incendios/",
+          "descripcion": "Su actividad de instalaciones contra incendios incluye sistemas de protección pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "A78360955",
+      "nombre": "EUROFESA, S.A.",
+      "web": "https://www.eurofesa.es/",
+      "identidadUrl": "https://www.eurofesa.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 653,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.eurofesa.es/sistemas-proteccion-pasiva-contra-incendios.html",
+          "descripcion": "Instala sistemas de protección pasiva contra incendios dentro de sus soluciones PCI.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "A83257121",
+      "nombre": "PROTECCION Y EXTINCION, S.A.",
+      "web": "https://www.protexsa.net/",
+      "identidadUrl": "https://www.protexsa.net/politica_privacidad.php",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2417,
+      "servicios": [
+        "estructura",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.protexsa.net/",
+          "descripcion": "Incluye ignifugación y puertas cortafuegos dentro de sus servicios de instalaciones.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B01179795",
+      "nombre": "ETXEGUREN ZERBITZUAK, S.L.",
+      "web": "https://www.etxeguren.com/",
+      "identidadUrl": "https://www.etxeguren.com/privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2516,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.etxeguren.com/",
+          "descripcion": "Su servicio de instalaciones PCI incluye diseño y proyectos de protección activa y pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B02235331",
+      "nombre": "SEGURIDAD EXTIN-ALBA SL",
+      "web": "https://extin-alba.com/",
+      "identidadUrl": "https://extin-alba.com/politica-de-privacidad-y-proteccion-de-datos/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1904,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://extin-alba.com/contraincendios/proteccion-pasiva/",
+          "descripcion": "Ofrece protección pasiva como parte de sus instalaciones contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B02272904",
+      "nombre": "SEGURIDAD JESUS CASTILLO HIDALGO SL",
+      "web": "https://www.seguridadjch.com/",
+      "identidadUrl": "https://www.seguridadjch.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3222,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.seguridadjch.com/",
+          "descripcion": "Ofrece protección pasiva contra incendios dentro de sus instalaciones de seguridad y PCI.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B02762680",
+      "nombre": "INOTEC INGENIERIA CONTRA INCENDIOS",
+      "web": "https://inoteccontraincendios.com/",
+      "identidadUrl": "https://inoteccontraincendios.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 4213,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://inoteccontraincendios.com/",
+          "descripcion": "Su oferta de instalación PCI incluye protección pasiva con puertas, sellados, revestimientos y compartimentación.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B02908523",
+      "nombre": "PCI TUDEMANA 2021 S.L.",
+      "web": "https://tudemana.com/",
+      "identidadUrl": "https://tudemana.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2505,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://tudemana.com/servicios/puertas-cortafuegos-luminarias-y-cctv",
+          "descripcion": "Ofrece puertas cortafuegos y experiencia en instalación de sistemas de seguridad; la sociedad titular actual es PCI Tudemana 2021 SL, ya existente sin web.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ],
+      "completarVacios": true
+    },
+    {
+      "cif": "B04482691",
+      "nombre": "INICIATIVAS Y PROYECTOS CONTRA EL FUEG",
+      "web": "https://www.iniciativasfuego.es/",
+      "identidadUrl": "https://www.iniciativasfuego.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2081,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.iniciativasfuego.es/servicios/",
+          "descripcion": "Declara instalación de sistemas de protección pasiva contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B04750485",
+      "nombre": "EUROEXTINEX SEGURIDAD E INCENDIOS, S.L.",
+      "web": "https://www.nexseguridad.com/",
+      "identidadUrl": "https://www.nexseguridad.com/es/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1777,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.nexseguridad.com/es/deteccion-de-incendios?seccion=proteccion-pasiva",
+          "descripcion": "Ofrece soluciones especializadas de protección pasiva en su servicio de sistemas contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B04853214",
+      "nombre": "PERFILEA SL",
+      "web": "https://puertascontraincendios.com/",
+      "identidadUrl": "https://puertascontraincendios.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "direccion": "Hispania, 12, polígono Clavieja",
+      "codigoPostal": "04700",
+      "localidad": "El Ejido",
+      "provincia": "Almería",
+      "ccaa": "Andalucía",
+      "servicios": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://puertascontraincendios.com/empresa-2/",
+          "descripcion": "Ofrece soluciones de puertas cortafuegos a medida con montaje incluido, además de asistencia técnica.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ],
+      "lat": 36.7743863,
+      "lng": -2.8124886,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=El+Ejido%2C+Almer%C3%ADa%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=3",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "El Ejido, Almería, Andalucía, España",
+        "osmType": "relation",
+        "osmId": 345425
+      }
+    },
+    {
+      "cif": "B05240577",
+      "nombre": "EXTINTORES AVILEXT, S.L.",
+      "web": "https://www.extintoresavilext.es/",
+      "identidadUrl": "https://www.extintoresavilext.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3415,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.extintoresavilext.es/",
+          "descripcion": "Incluye ignifugación entre los sistemas contra incendios que instala y mantiene.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B06115190",
+      "nombre": "PROTECCION Y SEGURIDAD EXTREMEÑA S.L.",
+      "web": "http://www.proysex.es/",
+      "identidadUrl": "https://www.proysex.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1888,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "http://www.proysex.es/",
+          "descripcion": "Ofrece protección pasiva en su servicio de protección contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B07233653",
+      "nombre": "PITIUSAS DE SEGURIDAD,S.L.",
+      "web": "https://www.pitiusasdeseguridad.com/",
+      "identidadUrl": "http://www.pitiusasdeseguridad.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1867,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.pitiusasdeseguridad.com/",
+          "descripcion": "Instala sistemas contra incendios que incluyen ignifugaciones y sectorizaciones.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B08942310",
+      "nombre": "SEMAPRIN S.L.",
+      "web": "https://www.semaprin.com/",
+      "identidadUrl": "https://www.semaprin.com/aviso-legal.php",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1416,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.semaprin.com/",
+          "descripcion": "Diseña, instala y mantiene sistemas contra incendios que incluyen protección pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B11246725",
+      "nombre": "METALUR TRES CAMINOS, S.L.",
+      "web": "https://metalur.com/",
+      "identidadUrl": "https://metalur.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1817,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://metalur.com/",
+          "descripcion": "Incluye protección pasiva en su actividad de instalaciones contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B11604972",
+      "nombre": "SEVITAS, S.L.",
+      "web": "https://www.sevitas.es/",
+      "identidadUrl": "https://www.sevitas.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2054,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.sevitas.es/productos/sistemas-de-proteccion-pasiva/",
+          "descripcion": "Instala y mantiene puertas cortafuegos como parte de su servicio de protección pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B11916178",
+      "nombre": "GRUPO JEALSA SPAIN SL",
+      "web": "https://grupojealsaspain.es/",
+      "identidadUrl": "https://grupojealsaspain.es/aviso-legal/?swcfpc=1",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2939,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://grupojealsaspain.es/",
+          "descripcion": "Instaladora que ofrece soluciones de protección pasiva para obra nueva, empresas y particulares.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B13464847",
+      "nombre": "SIDEXTIN, S.L.",
+      "web": "https://sidextin.com/",
+      "identidadUrl": "https://sidextin.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2610,
+      "servicios": [
+        "estructura",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://sidextin.com/productos/proteccion-pasiva/",
+          "descripcion": "Instala soluciones de protección pasiva que incluyen puertas cortafuego, pinturas intumescentes e ignifugación.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B13730890",
+      "nombre": "GRUPO FIREWORD.S.L.",
+      "web": "https://fireword.es/",
+      "identidadUrl": "https://www.fireword.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3477,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://fireword.es/",
+          "descripcion": "Incluye ignifugaciones entre sus trabajos de instalación contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B15851231",
+      "nombre": "TERMODINAIR, SL",
+      "web": "https://termodinair.com/",
+      "identidadUrl": "https://www.termodinair.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2002,
+      "servicios": [
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "http://termodinair.com/specialists.php",
+          "descripcion": "Diseña, fabrica, instala y mantiene sistemas de sectorización y barreras cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B16153199",
+      "nombre": "APOLINAR COCERA SL",
+      "web": "https://passivhauscuenca.es/",
+      "identidadUrl": "https://passivhauscuenca.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "direccion": "Las Huertas, 17",
+      "codigoPostal": "16193",
+      "localidad": "Fuentes",
+      "provincia": "Cuenca",
+      "ccaa": "Castilla-La Mancha",
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.aisla.org/instaladores/",
+          "descripcion": "El directorio de instaladores AISLA etiqueta protección pasiva entre los servicios de Passivhaus Cuenca, marca de Apolinar Cócera SL.",
+          "tipo": "asociacion",
+          "fuente": "AISLA",
+          "fecha": "2026-10-24"
+        }
+      ],
+      "lat": 39.9503682,
+      "lng": -2.0210007,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Fuentes%2C+Cuenca%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=3",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Fuentes, Cuenca, Castilla-La Mancha, España",
+        "osmType": "relation",
+        "osmId": 347713
+      }
+    },
+    {
+      "cif": "B16298028",
+      "nombre": "EXTINTORES MINAYA, S.L.",
+      "web": "https://extintoresminaya.com/",
+      "identidadUrl": "https://extintoresminaya.com/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3086,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://extintoresminaya.com/proteccion-pasiva/",
+          "descripcion": "Ofrece protección pasiva junto a sus servicios de protección activa contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B17039876",
+      "nombre": "SEGURIFOC, SL",
+      "web": "https://segurifoc.com/",
+      "identidadUrl": "https://segurifoc.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1533,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://segurifoc.com/servicios/instalaciones-contra-incendios/",
+          "descripcion": "Instala ignifugación, sectorización, puertas cortafuegos y sellado de conductos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B19106301",
+      "nombre": "ALCARREÑA DE SEGURIDAD SL",
+      "web": "https://jomar-extintores.com/",
+      "identidadUrl": "https://jomar-extintores.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1407,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas",
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://jomar-extintores.com/servicios/",
+          "descripcion": "Instala tratamientos ignífugos, compartimentación, pinturas, morteros, sellado de cables y puertas cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B20503579",
+      "nombre": "ATERKI ISOLA SL",
+      "web": "https://www.aterki.com/es/",
+      "identidadUrl": "https://www.aterki.com/es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "direccion": "Telleriarte 16, pabellones 4-5 (Zubitxo)",
+      "codigoPostal": "20230",
+      "localidad": "Legazpi",
+      "provincia": "Guipúzcoa",
+      "ccaa": "País Vasco",
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.aisla.org/instaladores/",
+          "descripcion": "El directorio de instaladores AISLA identifica protección pasiva entre sus servicios.",
+          "tipo": "asociacion",
+          "fuente": "AISLA",
+          "fecha": "2026-10-24"
+        }
+      ],
+      "lat": 43.051235,
+      "lng": -2.3344403,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Legazpi%2C+Guip%C3%BAzcoa%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=3",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Legazpi, Gipuzkoa, Euskadi, España",
+        "osmType": "relation",
+        "osmId": 342583
+      }
+    },
+    {
+      "cif": "B21352323",
+      "nombre": "DOS FUENTES SLU",
+      "web": "https://www.dosfuentes.net/",
+      "identidadUrl": "https://www.dosfuentes.net",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1679,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.dosfuentes.net/",
+          "descripcion": "Ejecuta montajes y mantenimiento industrial e incluye soluciones de protección pasiva en construcción e industria.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B23725005",
+      "nombre": "COYMA FUEGO SL",
+      "web": "http://www.grupocoyma.es/",
+      "identidadUrl": "https://www.grupocoyma.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3157,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas",
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "http://www.grupocoyma.es/proteccion-pasiva-contra-incendios/",
+          "descripcion": "Ejecuta ignifugaciones, proyectados, pintura intumescente, franjas, sellados y puertas y cortinas cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B24226888",
+      "nombre": "ALSON SISTEMAS DE SEGURIDAD, S.L. INSTALACIONES DE",
+      "web": "https://alsonsl.com/",
+      "identidadUrl": "https://alsonsl.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 4481,
+      "servicios": [
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://alsonsl.com/sistemas-de-proteccion-pasiva/",
+          "descripcion": "Ofrece sistemas de protección pasiva, compartimentación y sellados de pasos como servicio contratabile de su área PCI.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B24319535",
+      "nombre": "AISTEPOL SL",
+      "web": "https://aistepol.com/",
+      "identidadUrl": "https://aistepol.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "direccion": "Carretera Corbillos, 2",
+      "codigoPostal": "24227",
+      "localidad": "Valdefresno",
+      "provincia": "León",
+      "ccaa": "Castilla y León",
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://aistepol.com/",
+          "descripcion": "Aplica tratamientos de protección pasiva y sistemas de ignifugación.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ],
+      "lat": 42.5940041,
+      "lng": -5.4926699,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Valdefresno%2C+Le%C3%B3n%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=3",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Valdefresno, León, Castilla y León, 24227, España",
+        "osmType": "relation",
+        "osmId": 344479
+      }
+    },
+    {
+      "cif": "B24755019",
+      "nombre": "EXTINHOUSE GROUP, S.L.",
+      "web": "https://extinhouse.es/",
+      "identidadUrl": "https://extinhouse.es/politica-de-privacidad-y-cookies-2/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 5503,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://extinhouse.es/proteccion-pasiva-contra-incendios-ignifugados/",
+          "descripcion": "La sociedad titular actual instala morteros, pintura intumescente, placas, puertas y sellados. Se enriquece Extinhouse Group SL, ya existente, y se deja intacta la antigua comunidad de bienes.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ],
+      "completarVacios": true,
+      "direccion": "Doctor Ricardo Robles, 2, 3ª escalera, 1º J",
+      "codigoPostal": "30110",
+      "localidad": "Murcia",
+      "lat": 37.9347521,
+      "lng": -1.1131029,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Murcia&country=Spain&format=jsonv2&addressdetails=1&limit=5",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Murcia, Área Metropolitana de Murcia, Región de Murcia, España",
+        "osmType": "relation",
+        "osmId": 340611
+      },
+      "localizacionFuente": {
+        "url": "https://extinhouse.es/politica-de-privacidad-y-cookies-2/",
+        "nota": "El aviso fiscal identifica domicilio en Murcia. Solo se completan dirección, código postal, localidad y par de coordenadas nulos; provincia y comunidad existentes se conservan."
+      }
+    },
+    {
+      "cif": "B25233487",
+      "nombre": "SIEF 2 SL",
+      "web": "https://www.sief2.com/",
+      "identidadUrl": "https://www.sief2.com/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 946,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.sief2.com/servicios/proteccion-contra-incendios-pasiva",
+          "descripcion": "Instala soluciones de protección pasiva, sectorización, ignifugación y elementos cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B25343161",
+      "nombre": "ALERTA SEGURETAT PONENT,S.L.",
+      "web": "https://alertaseguretat.com/",
+      "identidadUrl": "https://www.alertaseguretat.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3265,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://alertaseguretat.com/contingutIA/proteccio.php",
+          "descripcion": "Ofrece instalación y mantenimiento de protección pasiva contra incendios en Lleida.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B25525957",
+      "nombre": "SIC24 SECURITY SYSTEMS, SL",
+      "web": "https://www.sic24.com/",
+      "identidadUrl": "https://www.sic24.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 769,
+      "servicios": [
+        "estructura",
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.sic24.com/servicios/sistemas-proteccion-incendios/",
+          "descripcion": "En su servicio PCI declara ignifugación de estructuras y elementos de hierro y madera, paredes y rejillas.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B26491167",
+      "nombre": "S.C.I.INALEX, S.L.",
+      "web": "https://inalex.es/",
+      "identidadUrl": "https://inalex.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2631,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://inalex.es/",
+          "descripcion": "Ofrece ignifugación de estructuras de naves para alcanzar la resistencia al fuego requerida.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B28841393",
+      "nombre": "EXTINTORES LA UNION, S.L.",
+      "web": "https://extintoreslaunion.com/",
+      "identidadUrl": "https://extintoreslaunion.com/legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2035,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://extintoreslaunion.com/proteccion-pasiva",
+          "descripcion": "Ejecuta protección pasiva mediante aplicación de morteros, pinturas y sistemas de sectorización.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B29406873",
+      "nombre": "INSTALACIONES DE FONTANERIA EL TARAJAL",
+      "web": "https://www.contraincendiosmalaga.com/",
+      "identidadUrl": "https://www.contraincendiosmalaga.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2133,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.contraincendiosmalaga.com/proteccion-pasiva-incendios-andalucia/",
+          "descripcion": "Ofrece protección pasiva contra incendios dentro de sus servicios instaladores en Andalucía.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B29855897",
+      "nombre": "MECOL INSTALACIONES ELECTRICAS S.L.",
+      "web": "https://mecol.es/",
+      "identidadUrl": "https://mecol.es/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2116,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://mecol.es/",
+          "descripcion": "Incluye protección pasiva en sus servicios de sistemas contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B31095730",
+      "nombre": "PROTECCION Y DETECCION DE INCENDIOS SL",
+      "web": "https://prodeincendio.com/",
+      "identidadUrl": "https://prodeincendio.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1728,
+      "servicios": [
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://prodeincendio.com/proteccion-pasiva-incendios/",
+          "descripcion": "Instala y mantiene elementos intumescentes y publica referencias de collarines y almohadillas instalados.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B31461593",
+      "nombre": "EXTINIRUÑA SL",
+      "web": "https://extiniruna.com/",
+      "identidadUrl": "https://extiniruna.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1608,
+      "servicios": [
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://extiniruna.com/proteccion-pasiva/",
+          "descripcion": "Ofrece protección pasiva mediante puertas y registros cortafuegos y sellados de pasos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B31552680",
+      "nombre": "SERCOIN NAVARRA SL",
+      "web": "http://www.sercoin.info/",
+      "identidadUrl": "https://www.sercoin.info",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1959,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "http://www.sercoin.info/",
+          "descripcion": "Declara instalación de sistemas de detección y protección contra incendios, tanto activa como pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B31678931",
+      "nombre": "AISLAMIENTOS EUNA SL",
+      "web": "https://euna.es/",
+      "identidadUrl": "https://www.vitoria-gasteiz.org/docs/j34/catalogo/00/18/terceros2016.pdf",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "direccion": "Sarasate, 1 D",
+      "codigoPostal": "31550",
+      "localidad": "Ribaforada",
+      "provincia": "Navarra",
+      "ccaa": "Navarra",
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://euna.es/productos-y-servicios/proteccion-pasiva-contra-incendios/",
+          "descripcion": "Instaladora de sistemas de protección pasiva de estructuras y compartimentación; identidad fiscal contrastada en documento público municipal, sin inferir vigencia legal.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ],
+      "localizacionFuente": {
+        "url": "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2016-218-31",
+        "nota": "Domicilio inscrito en 2016, coincidente con la localidad corporativa actual. La evidencia fiscal municipal es histórica; no acredita vigencia legal."
+      },
+      "lat": 41.9981387,
+      "lng": -1.5126628,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Ribaforada%2C+Navarra%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=3",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Ribaforada, Ribera / Erribera, Navarra, Navarra / Nafarroa, 31550, España",
+        "osmType": "relation",
+        "osmId": 341322
+      }
+    },
+    {
+      "cif": "B33970211",
+      "nombre": "SOCIEDAD CONTRA EL FUEGO DEL PRINCIPADO DE ASTURIAS",
+      "web": "https://www.sofoca.es/",
+      "identidadUrl": "https://www.sofoca.es/politica-de-privacidad-del-sitio-web/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2941,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.sofoca.es/proteccion-pasiva-contra-incendios-asturias/",
+          "descripcion": "Declara instalación de protección pasiva con materiales ignífugos, puertas, franjas y collarines.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B36870517",
+      "nombre": "ALARCIN, S.L.",
+      "web": "https://www.alarcin.com/",
+      "identidadUrl": "https://www.alarcin.com/aviso-legal.aspx",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2277,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.alarcin.com/",
+          "descripcion": "Incluye protección pasiva en sus servicios de diseño, instalación y mantenimiento contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B37453123",
+      "nombre": "EXTINTORES ORIGEN, SL",
+      "web": "https://extintoresorigen.com/",
+      "identidadUrl": "https://extintoresorigen.com/privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1433,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://extintoresorigen.com/productos/proteccion-pasiva/",
+          "descripcion": "Ofrece protección pasiva dentro de sus productos, instalaciones y proyectos contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B37535929",
+      "nombre": "MCI QUERCUS, S.L.U.",
+      "web": "https://mciquercus.com/",
+      "identidadUrl": "https://www.mciquercus.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2587,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://mciquercus.com/",
+          "descripcion": "Ofrece soluciones de protección pasiva en sus instalaciones de sistemas contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B38289518",
+      "nombre": "PROYECTOS E INGENIERIA DE SEGURIDAD, S.L",
+      "web": "https://www.proinse.com/",
+      "identidadUrl": "https://www.proinse.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2709,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.proinse.com/proteccion-pasiva-contra-incendios-en-tenerife/",
+          "descripcion": "Instala y documenta soluciones ensayadas de protección pasiva contra incendios para edificios y naves.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B38343554",
+      "nombre": "J.J. EMERPLAN SEGURIDAD, S.L.",
+      "web": "https://jjemerplan.com/",
+      "identidadUrl": "https://jjemerplan.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2440,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://jjemerplan.com/",
+          "descripcion": "Declara especialización en prevención y protección activa y pasiva contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B39835426",
+      "nombre": "ALARMAS DE DETECCION LINEAL E INSTALACIONES, SL",
+      "web": "https://www.adlinstalaciones.com/",
+      "identidadUrl": "https://www.adlinstalaciones.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2884,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.adlinstalaciones.com/pci-pasiva/",
+          "descripcion": "Declara asesoramiento, instalación y mantenimiento de sistemas de protección activa y pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B40226151",
+      "nombre": "INSONOTEC SERVICIOS INTEGRALES, S.L.",
+      "web": "https://insonotec.com/",
+      "identidadUrl": "https://insonotec.com/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2248,
+      "servicios": [
+        "estructura",
+        "reaccion",
+        "puertas",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://insonotec.com/proteccion-pasiva-contra-el-fuego/",
+          "descripcion": "Instala protección pasiva, realiza tratamiento ignífugo de textiles y ofrece cortinas y protección de conductos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B40593774",
+      "nombre": "INCOVAL PROTECCION CONTRA INCENDIOS, S.L.",
+      "web": "https://www.incovalproteccioncontraincendios.es/",
+      "identidadUrl": "https://www.incovalproteccioncontraincendios.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2083,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.incovalproteccioncontraincendios.es/producto/proteccion-pasiva-contra-incendios",
+          "descripcion": "Ofrece sellados de pasantes, puertas, franjas perimetrales y proyección de morteros en su servicio de protección pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B42675439",
+      "nombre": "IGNIS SISTEMAS DE PROTECCION CONTRAINCENDIOS, S.L.",
+      "web": "https://ignis-sistemas.com/",
+      "identidadUrl": "https://ignis-sistemas.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3295,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ignis-sistemas.com/",
+          "descripcion": "Ofrece ignifugación, sectorización, morteros RF y bandas cortafuegos en su área de instalaciones PCI.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B44852226",
+      "nombre": "TECNIFIRE ASO SOCIEDAD LIMITADA",
+      "web": "https://www.tecnifireaso.es/",
+      "identidadUrl": "https://www.tecnifireaso.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3420,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.tecnifireaso.es/servicios/",
+          "descripcion": "Ofrece ignifugaciones dentro de su catálogo de servicios de protección contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B45273406",
+      "nombre": "ZENITH TOLEDO, S.L.",
+      "web": "https://zenithtoledo.com/",
+      "identidadUrl": "https://zenithtoledo.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1896,
+      "servicios": [
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://zenithtoledo.com/proteccion-contra-incendios/proteccion-pasiva/",
+          "descripcion": "Ofrece protección pasiva con lana de roca, aplicación de pintura intumescente, silicatos y protección de pasos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B45630126",
+      "nombre": "NUEVAS TECNOLOGIAS CONTRA INCENDIOS, S.L.",
+      "web": "https://www.ntci.es/",
+      "identidadUrl": "https://www.ntci.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1576,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.ntci.es/",
+          "descripcion": "Sus servicios de ingeniería e instalación incluyen protección estructural y sectorización contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B45894714",
+      "nombre": "GRUPO LASMAR ENERGIAS S.L.",
+      "web": "https://grupolasmar.es/",
+      "identidadUrl": "https://www.grupolasmar.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3282,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://grupolasmar.es/",
+          "descripcion": "Instala y mantiene equipos de protección activa y pasiva, incluyendo puertas cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B47266721",
+      "nombre": "CRESPO COMERCIAL ESPAï¿½OLA DE PROTECCION S.L.",
+      "web": "https://www.extintorescrespo.com/",
+      "identidadUrl": "https://www.extintorescrespo.com/aviso-legal.php",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1165,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.extintorescrespo.com/",
+          "descripcion": "Incluye protección pasiva entre las instalaciones contra incendios que realiza.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B47801717",
+      "nombre": "ADRIGO SOLUCIONES, S.L.",
+      "web": "https://adrigosoluciones.com/",
+      "identidadUrl": "https://adrigosoluciones.com/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3043,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://adrigosoluciones.com/",
+          "descripcion": "Incluye protección activa y pasiva entre sus instalaciones y servicios técnicos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B48302335",
+      "nombre": "EUROFIRE, S.L.",
+      "web": "https://www.eurofire.net/",
+      "identidadUrl": "https://www.eurofire.net",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1813,
+      "servicios": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.eurofire.net/soluciones-especiales-en-sectorizacion/",
+          "descripcion": "Fabrica y aplica sistemas cortafuegos; publica trabajos propios de sectorización mediante puertas y cortinas.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B48729842",
+      "nombre": "AISLAMIENTOS VASCOS ISOVAS SL",
+      "web": "https://isovas.com/",
+      "identidadUrl": "https://isovas.com/aviso-redes-sociales/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "direccion": "Igeltzera Kalea, 4",
+      "codigoPostal": "48610",
+      "localidad": "Urduliz",
+      "provincia": "Vizcaya",
+      "ccaa": "País Vasco",
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://isovas.com/proteccion-pasiva-contra-incendios/",
+          "descripcion": "Instala aislamiento y protección pasiva contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ],
+      "lat": 43.3730262,
+      "lng": -2.9482016,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Urduliz%2C+Vizcaya%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=3",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Urduliz, Bizkaia, Euskadi, 48610, España",
+        "osmType": "relation",
+        "osmId": 343779
+      }
+    },
+    {
+      "cif": "B50563246",
+      "nombre": "MANIX INTEGRAL S.L.",
+      "web": "https://manixintegral.com/",
+      "identidadUrl": "https://www.manixintegral.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 955,
+      "servicios": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://manixintegral.com/",
+          "descripcion": "Sus instalaciones PCI incluyen compartimentación y puertas cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B53357448",
+      "nombre": "EXTINTORES CANDELA, S.L.",
+      "web": "https://extintorescandela.com/",
+      "identidadUrl": "https://extintorescandela.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2943,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://extintorescandela.com/",
+          "descripcion": "Declara comercialización, instalación y mantenimiento de sistemas de protección activa y pasiva contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B54652268",
+      "nombre": "PROFUEGO",
+      "web": "https://profuego.es/",
+      "identidadUrl": "https://profuego.es/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2813,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://profuego.es/proteccion-pasiva-contra-incendios/",
+          "descripcion": "Su servicio de protección pasiva comprende instalación, documentación y mantenimiento de sistemas estructurales y de sectorización.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B55593750",
+      "nombre": "MONTAJES VIKEL SL",
+      "web": "https://montajesvikel.com/",
+      "identidadUrl": "https://montajesvikel.com/privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2970,
+      "servicios": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://montajesvikel.com/servicio/8/57/cortinas-cortafuegos-o-de-sectorizacion-de-humos",
+          "descripcion": "Ofrece montaje de sistemas de sectorización con cortinas cortafuegos y barreras de humo y fuego.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B55638399",
+      "nombre": "MCG GLOBAL SECURITY SOCIEDAD LIMITADA",
+      "web": "https://www.mcgglobalsecurity.com/",
+      "identidadUrl": "https://www.mcgglobalsecurity.com/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3310,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.mcgglobalsecurity.com/proteccion-pasiva/",
+          "descripcion": "Ofrece protección de estructuras, sellados, sectorizaciones y cortafuegos batientes entre sus servicios instaladores.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B56046337",
+      "nombre": "CORDOBESA PROYECTOS E INSTALACIONES SL",
+      "web": "https://corproin.es/",
+      "identidadUrl": "https://www.corproin.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2776,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://corproin.es/",
+          "descripcion": "Aplica pinturas intumescentes y morteros proyectados para proteger estructuras metálicas.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B56068976",
+      "nombre": "AF PROTECCION, S.L.",
+      "web": "https://afproteccion.com/",
+      "identidadUrl": "https://www.afproteccion.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2062,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://afproteccion.com/servicios/proteccion-pasiva/",
+          "descripcion": "Diseña, instala y mantiene protección pasiva: sellados, sectorización, puertas, cortinas, franjas y protección estructural.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B57510430",
+      "nombre": "NI FOC NI FUM CONTRAINCENDIS 1983, SL",
+      "web": "https://www.nifocnifum.com/",
+      "identidadUrl": "https://www.nifocnifum.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2181,
+      "servicios": [
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.nifocnifum.com/sectorizacion-y-senalizacion.php",
+          "descripcion": "Desarrolla sistemas de sectorización contra incendios, además de detección y extinción.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B59590406",
+      "nombre": "TERPOLAR AILLAMENTS SLU",
+      "web": "https://terpolar.com/",
+      "identidadUrl": "https://terpolar.com/avis-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "direccion": "Ter, 134, polígono Matabosch",
+      "codigoPostal": "08570",
+      "localidad": "Torelló",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://terpolar.com/ignifugacions-la-proteccio-passiva-contra-el-foc/",
+          "descripcion": "Aplica sistemas de ignifugación para resistencia, integridad y aislamiento al fuego.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ],
+      "lat": 42.0478304,
+      "lng": 2.2643391,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Torell%C3%B3%2C+Barcelona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=3",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Torelló, Osona, Barcelona, Catalunya, 08570, España",
+        "osmType": "relation",
+        "osmId": 343668
+      }
+    },
+    {
+      "cif": "B59810093",
+      "nombre": "ECA SEGURIDAD INTEGRAL CONTRA INCENDIOS, S.L.",
+      "web": "https://www.ecasici.com/",
+      "identidadUrl": "https://www.ecasici.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2123,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.ecasici.com/",
+          "descripcion": "Ofrece protección pasiva entre sus servicios de instalación, mantenimiento y soluciones contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B60645785",
+      "nombre": "FOC I SEGURETAT SL",
+      "web": "https://fiseg.com/",
+      "identidadUrl": "https://fiseg.com/es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2055,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://fiseg.com/",
+          "descripcion": "Dispone de un área de protección pasiva dentro de sus servicios integrales contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B61033239",
+      "nombre": "Seguridad y proteccion contra incendios exb",
+      "web": "https://www.exb.es/",
+      "identidadUrl": "https://www.exb.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3597,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.exb.es/instalaciones-proteccion-pasiva/",
+          "descripcion": "Realiza instalaciones de protección pasiva con proyectados, revestimientos, collarines, sellados, puertas y compuertas cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B62359880",
+      "nombre": "GEFISA BIOSCA FIRE, S.L.",
+      "web": "https://www.gefisa.com/es",
+      "identidadUrl": "https://www.gefisa.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1604,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.gefisa.com/es",
+          "descripcion": "Ofrece protección pasiva junto a instalación y mantenimiento integral de sistemas contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B62449954",
+      "nombre": "INSTALACIONES GARCIA ROBLES SL",
+      "web": "https://www.garciarobles.com/",
+      "identidadUrl": "https://www.garciarobles.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2371,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.garciarobles.com/",
+          "descripcion": "Diseña e implementa sistemas de protección pasiva dentro de su actividad instaladora.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B63550073",
+      "nombre": "INTROPOL SL",
+      "web": "https://www.intropol.es/",
+      "identidadUrl": "https://www.intropol.es/politica-de-privacidad-y-proteccion-de-datos/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "direccion": "Colón, 5",
+      "codigoPostal": "08160",
+      "localidad": "Montmeló",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.intropol.es/ignifugados/",
+          "descripcion": "Aplica morteros ignífugos y protege estructuras metálicas y de madera.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ],
+      "lat": 41.5515189,
+      "lng": 2.2480812,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Montmel%C3%B3%2C+Barcelona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=3",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Montmeló, Vallès Oriental, Barcelona, Catalunya, 08160, España",
+        "osmType": "relation",
+        "osmId": 340375
+      }
+    },
+    {
+      "cif": "B63960744",
+      "nombre": "INSTAFOC BARCELONA SL",
+      "web": "https://www.extintoresbarcelona.es/",
+      "identidadUrl": "https://www.extintoresbarcelona.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2620,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.extintoresbarcelona.es/",
+          "descripcion": "Instafoc ofrece ignifugaciones dentro de sus servicios de instalaciones contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B64844228",
+      "nombre": "SPANIVUIT SL",
+      "web": "https://www.spanivuit.net/",
+      "identidadUrl": "https://www.spanivuit.net/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2992,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.spanivuit.net/pasiva",
+          "descripcion": "Instala protección pasiva con mortero, lana de roca, franjas, pintura y material intumescente para pasamuros.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B65949661",
+      "nombre": "SEGUFOC CONTRA INCENDIS\\, S.L.",
+      "web": "https://segufoc.com/",
+      "identidadUrl": "https://segufoc.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2352,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://segufoc.com/proteccion-pasiva/",
+          "descripcion": "Aplica pinturas, barnices y morteros, ejecuta sectorizaciones y sellados e instala barreras cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B67057083",
+      "nombre": "SISTEMAS DE SEGURIDAD Y CONTRAINCENDIOS-INTEGRAS S.L.",
+      "web": "https://integras.es/",
+      "identidadUrl": "https://www.integras.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2082,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://integras.es/servicios/proteccion-pasiva/",
+          "descripcion": "Ofrece soluciones de protección pasiva en su catálogo de instalaciones y servicios de ingeniería integral.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B67089441",
+      "nombre": "TUBSNET FIRE, S.L.",
+      "web": "https://tubsnet.com/",
+      "identidadUrl": "https://tubsnet.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2533,
+      "servicios": [
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://tubsnet.com/proteccion-pasiva-ignifugacion/",
+          "descripcion": "Ofrece proyección de lana de roca, pintura, placas y sellados intumescentes como servicio de protección pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B67593335",
+      "nombre": "EXIA PROTECCION CONTRA INCENDIO S.L.",
+      "web": "https://exiapci.com/",
+      "identidadUrl": "https://www.exiapci.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 990,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://exiapci.com/proteccion-incendios/proteccion-pasiva/",
+          "descripcion": "Instaladora de PCI con soluciones de protección pasiva estructural y sectorización fija y móvil.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B67933804",
+      "nombre": "A2G PREVECNCION INCENDIOS S.L",
+      "web": "https://www.a2gpci.es/",
+      "identidadUrl": "https://www.a2gpci.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3161,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.a2gpci.es/servicios/",
+          "descripcion": "Su catálogo de servicios incluye proyectados ignífugos, pinturas intumescentes, sectorización y puertas cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B72298573",
+      "nombre": "PR. Y SER. INTEGR. CONTRAINCENDIOS S.L",
+      "web": "https://www.firecontrol.es/",
+      "identidadUrl": "https://www.firecontrol.es/privacy-policy.html",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3076,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.firecontrol.es/",
+          "descripcion": "Ejecuta ignifugación de instalaciones mediante aplicación de mortero de lana de roca.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B72747090",
+      "nombre": "AMD DAMCLIMA INSTALACIONES Y MANTENIMIENTOS, S.L.",
+      "web": "https://damclima.es/",
+      "identidadUrl": "https://www.damclima.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3039,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://damclima.es/",
+          "descripcion": "Su área de protección contra incendios ejecuta instalaciones de protección activa y pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B73032542",
+      "nombre": "FONTANERIA PROINSA SL",
+      "web": "https://fontaneriaproinsa.com/",
+      "identidadUrl": "https://www.fontaneriaproinsa.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2615,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://fontaneriaproinsa.com/",
+          "descripcion": "Declara proyectos e instalaciones de protección pasiva y activa contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B73422586",
+      "nombre": "SUPRA SEGURIDAD, S.L",
+      "web": "https://gruposupra.es/",
+      "identidadUrl": "https://gruposupra.es/politica-de-privacidad-de-datos/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1001,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://gruposupra.es/protecion-pasiva/",
+          "descripcion": "Ofrece protección pasiva estructural, sectorización y sellado de pasos de instalaciones.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B73900326",
+      "nombre": "SLEVING FIRE & SECURITY, S,L.",
+      "web": "https://sleving.es/",
+      "identidadUrl": "https://www.sleving.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3119,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://sleving.es/trabajos-realizados/proteccion-pasiva/",
+          "descripcion": "Publica trabajos propios de protección pasiva en industria farmacéutica y de la madera.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B74024472",
+      "nombre": "PREVENCION DE INCENDIOS SEGURIDAD APL SL",
+      "web": "https://previnsa.com/",
+      "identidadUrl": "https://previnsa.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 694,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://previnsa.com/",
+          "descripcion": "Diseña y ejecuta instalaciones contra incendios que incluyen protección pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B76582642",
+      "nombre": "INSTALACIONES Y SERVICIOS TENSUR, S.L.",
+      "web": "https://www.tensur.es/",
+      "identidadUrl": "https://www.tensur.es/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3434,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.tensur.es/servicio/proteccion-pasiva-contra-incendios",
+          "descripcion": "Ofrece protección pasiva estructural, compartimentación y tratamientos ignífugos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B79346920",
+      "nombre": "MONTAJES AGUERO, S.L.U.",
+      "web": "https://agueroinstalaciones.es/",
+      "identidadUrl": "https://agueroinstalaciones.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 735,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://agueroinstalaciones.es/",
+          "descripcion": "Realiza instalaciones contra incendios que incluyen protección pasiva mediante ignifugación.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B80243504",
+      "nombre": "VERFIRE, S.L.",
+      "web": "https://verfire.es/",
+      "identidadUrl": "https://verfire.es/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3142,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://verfire.es/",
+          "descripcion": "Diseña e instala sistemas completos para protección activa y pasiva contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B81053811",
+      "nombre": "MATERIAL CONTRA INCENDIOS, MCI, S.L.",
+      "web": "https://mciproteccion.com/",
+      "identidadUrl": "https://mciproteccion.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1686,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://mciproteccion.com/proteccion-pasiva/",
+          "descripcion": "Ofrece protección estructural, cerramientos, sellado de penetraciones y puertas cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B81296949",
+      "nombre": "3F INGENIERIA MANTENIMIENTOS, S.L.",
+      "web": "https://3fingenieria.com/",
+      "identidadUrl": "https://3fingenieria.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1077,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://3fingenieria.com/proteccion-pasiva/",
+          "descripcion": "Realiza instalaciones de protección pasiva, activa y sistemas especiales.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        },
+        {
+          "url": "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+          "descripcion": "Asociación sectorial: identifica a la empresa entre instaladores de protección pasiva. La atribución al CIF se contrasta por separado.",
+          "tipo": "asociacion",
+          "fuente": "Tecnifuego",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B81316275",
+      "nombre": "IBERCOIN INGENIEROS, S.L.",
+      "web": "https://ibercoiningenieros.es/",
+      "identidadUrl": "https://ibercoiningenieros.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2665,
+      "servicios": [
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ibercoiningenieros.es/proteccion-pasiva/",
+          "descripcion": "Ofrece soluciones de protección pasiva mediante morteros, pinturas, placas, collarines y espumas ignífugas.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B84374131",
+      "nombre": "OBRAS Y REFORMAS COMA S.L.",
+      "web": "https://grupocoma.es/",
+      "identidadUrl": "https://grupocoma.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1838,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://grupocoma.es/proteccion-pasiva-madrid-centro/",
+          "descripcion": "Ofrece ejecución de protección pasiva contra incendios dentro de sus instalaciones.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B85441772",
+      "nombre": "MARTINEZ FRANCO INGENIERIA Y TECNICAS DE PROTECCION PASIVA SL",
+      "web": "https://www.ignitor-martinezfranco.com/",
+      "identidadUrl": "https://www.ignitor-martinezfranco.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "direccion": "Elfo, 27, bajo",
+      "localidad": "Madrid",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.ignitor-martinezfranco.com/",
+          "descripcion": "Instala y aplica sistemas de protección pasiva de estructuras y sellados. Entidad distinta de Ignitor Productos Ignífugos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ],
+      "localizacionFuente": {
+        "url": "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2025-224-28",
+        "nota": "El BORME corrige el domicilio de Elfo 17 a Elfo 27; el aviso legal conserva otra dirección anterior. No se infiere estado SABI."
+      },
+      "lat": 40.416782,
+      "lng": -3.703507,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Madrid&country=Spain&format=jsonv2&addressdetails=1&limit=5",
+        "precision": "municipio",
+        "fecha": "2026-10-24",
+        "resultado": "Madrid, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 5326784
+      }
+    },
+    {
+      "cif": "B86091014",
+      "nombre": "TECNITEX FIRE SYSTEM S.L",
+      "web": "https://tecnitexfire.com/",
+      "identidadUrl": "https://tecnitexfire.com/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1267,
+      "servicios": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://tecnitexfire.com/aplicaciones/sectorizacion-incendios-en-hoteles/",
+          "descripcion": "Fabrica e instala sistemas de compartimentación con cortinas cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B86777950",
+      "nombre": "SISTEMAS CONTRA INCENDIOS MADRID, S.L.U.",
+      "web": "https://sistemascontraincendios-madrid.es/",
+      "identidadUrl": "https://sistemascontraincendios-madrid.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2887,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://sistemascontraincendios-madrid.es/",
+          "descripcion": "Ofrece instalaciones de protección pasiva y puertas cortafuegos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B87330783",
+      "nombre": "INSTALACIONES Y PROYECTOS MADRID SL",
+      "web": "https://ipm-instalaciones.es/",
+      "identidadUrl": "https://www.ipm-instalaciones.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3269,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ipm-instalaciones.es/precio-ignifugar-escalera-metalica",
+          "descripcion": "Declara ejecución especializada de ignifugación de estructuras metálicas y de madera.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B87795449",
+      "nombre": "MG AISLAMIENTOS SL",
+      "web": "http://www.mgaislamientos.es/",
+      "identidadUrl": "http://www.mgaislamientos.es/aviso-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 965,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "http://www.mgaislamientos.es/",
+          "descripcion": "Instala sistemas RF: puertas y aleros cortafuego, tabiques, morteros, techos y pinturas resistentes al fuego.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B87836052",
+      "nombre": "EXTINTORES PINTO S.L.",
+      "web": "https://www.extintorespinto.com/",
+      "identidadUrl": "https://www.extintorespinto.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2792,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.extintorespinto.com/",
+          "descripcion": "Realiza instalaciones contra incendios que incluyen ignifugación y su certificación.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B88427836",
+      "nombre": "TECASEM DLMS SL",
+      "web": "https://www.tecasem.com/",
+      "identidadUrl": "https://www.tecasem.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1829,
+      "servicios": [
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.tecasem.com/",
+          "descripcion": "Ofrece soluciones de sectorización de incendios para infraestructuras del transporte. Solo se atribuye al titular fiscal publicado, TECASEM DLMS.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B90168253",
+      "nombre": "TRIODO INGENIEROS, S.L.",
+      "web": "http://www.triodoingenieros.com/",
+      "identidadUrl": "https://www.triodoingenieros.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2648,
+      "servicios": [
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "http://www.triodoingenieros.com/",
+          "descripcion": "Su actividad instaladora de PCI incluye compartimentación.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B92006048",
+      "nombre": "TEAM FIRE, S.L.",
+      "web": "https://www.team-fire.com/promocion/",
+      "identidadUrl": "https://www.team-fire.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3042,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.team-fire.com/promocion/",
+          "descripcion": "Empresa de instalaciones contra incendios que ofrece protección activa y pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B92534643",
+      "nombre": "INSTALACION Y CONSERVACION DE EXTINTOR",
+      "web": "https://incotex.es/",
+      "identidadUrl": "https://incotex.es/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2027,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://incotex.es/servicios/servicios-de-ignifugacion/",
+          "descripcion": "Ofrece servicios de ignifugación dentro de su actividad instaladora contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B94129368",
+      "nombre": "DESEÑO ENXEÑARIA E XESTIÓN DE OBRAS S.L.",
+      "web": "https://dexo.gal/",
+      "identidadUrl": "https://dexo.gal/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1547,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://dexo.gal/",
+          "descripcion": "Ofrece asesoría e instalación de sistemas de detección, extinción y protección pasiva contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B96410915",
+      "nombre": "SEMAMCOIN, S.L.",
+      "web": "https://semamcoin.com/",
+      "identidadUrl": "https://www.semamcoin.com",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1685,
+      "servicios": [
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://semamcoin.com/sellados-de-pasos-frente-al-fuego/",
+          "descripcion": "Ofrece sellados de pasos frente al fuego mediante sistemas intumescentes y collarines.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B96753843",
+      "nombre": "AUXCOM 98, S.L.",
+      "web": "https://www.auxcom98.com/",
+      "identidadUrl": "https://www.auxcom98.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1938,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.auxcom98.com/sistemas-p-c-i/pasiva/",
+          "descripcion": "Instala protección pasiva mediante morteros, placas, pinturas, sellados y compuertas; identidad contrastada con su política de privacidad.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B97477913",
+      "nombre": "EXTINTORES CARLISA S.L.L",
+      "web": "https://extintorescarlisa.es/",
+      "identidadUrl": "https://www.extintorescarlisa.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 3266,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://extintorescarlisa.es/proteccion-pasiva-contra-incendios/",
+          "descripcion": "Ofrece protección pasiva mediante protección estructural, compartimentación y tratamientos ignífugos.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B97838577",
+      "nombre": "RADA INSTALACIONES Y PREVENCIONES, S.L.",
+      "web": "https://radainstalaciones.wordpress.com/",
+      "identidadUrl": "https://www.radainstalaciones.es",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2643,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://radainstalaciones.wordpress.com/",
+          "descripcion": "La web corporativa de Rada declara instalación de sistemas contra incendios e ignifugación.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B98692593",
+      "nombre": "RBC INGESEG, S.L.",
+      "web": "https://www.rbcsl.es/",
+      "identidadUrl": "https://www.rbcsl.es/privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2131,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.rbcsl.es/",
+          "descripcion": "Declara diseño, instalación y mantenimiento tanto de sistemas de protección activa como pasiva.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B98723414",
+      "nombre": "TACTICA SOLUCIONES INTEGRALES, S.L.",
+      "web": "https://tactica-si.es/",
+      "identidadUrl": "https://tactica-si.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 2518,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://tactica-si.es/proteccion-pasiva-contra-incendios/",
+          "descripcion": "Ofrece protección pasiva como servicio dentro de sus instalaciones contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "cif": "B99035453",
+      "nombre": "PREMAEX, S.L.",
+      "web": "https://www.premaex.com/",
+      "identidadUrl": "https://www.premaex.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "empresaIdEsperada": 1963,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.premaex.com/proteccion-pasiva/",
+          "descripcion": "Instaladora que incluye protección pasiva en sus servicios y sistemas contra incendios.",
+          "tipo": "web_corporativa",
+          "fuente": "Web corporativa",
+          "fecha": "2026-10-24"
+        }
+      ]
+    }
+  ]
+}
