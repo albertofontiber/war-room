@@ -1,8 +1,22 @@
 # Protección pasiva: actividad transversal y ampliación del universo
 
-Revisión: **24/10/2026, 13:10 Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y tres lotes están aplicados en producción: **222 entidades con pasiva confirmada**.
+Revisión: **24/10/2026, 20:35 Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y cuatro lotes están aplicados en producción: **243 entidades con pasiva confirmada**.
 
 ## Resultado aplicado
+
+La cuarta tanda incorpora **18 altas y 4 enriquecimientos**, con presencia de las altas en **11 comunidades autónomas**. El [lote aplicado](research/pasiva-validada-ampliacion2-2026-10-24.json) conserva identidad fiscal primaria, ejecución, localización y fuentes; el [nuevo seguimiento](research/pasiva-ampliacion2-seguimiento-2026-10-24.json) distingue 67 dominios de candidatas y marcas, sus resultados y los pendientes anteriores no resueltos. No se cuentan como empresas adicionales las webs alternativas de Lotor o Aislamientos San Felices.
+
+Las nuevas entidades son Aplicaciones Alagón, Ignidec, La Instaladora de Sistemas y Aislamientos, PIMED / Azul Cobalto Decoración, Vimat Ignifugats, Ignifugaciones Lotor, Ignifugaciones PPCI, Aislamientos San Felices, Qromia / Calidad Cromática, Trillo Grupo 2000, Imperespuma Málaga, Proind / Protecciones Industriales y Decorativas, Hidra Floors / Ventasuelos, Martínez Soluciones Constructivas, Olidetec, Grupo Refripeca 2005, Aplytec y Acusfoc. No existían por CIF en las 5.824 empresas de partida; el universo pasa a **5.842**.
+
+Se enriquecen **Josmag (ficha 3311), Firex (1111), Tecresa Protección Pasiva / Mercor Light & Vent (699) y Proinse (2709)**. Las tres primeras pasan a pasiva confirmada; Proinse ya estaba confirmada y amplía servicios y evidencia. Por ello, 22 fichas trabajadas añaden 21 confirmaciones, hasta 243. Sus campos ajenos a pasiva, cuentas, CRM y recuentos de relaciones conservan la misma huella. Las altas entran fuera de perímetro y sin estado SABI. La carga inicial dejó 22 auditorías y un ajuste posterior de redacción de la evidencia de Vimat dejó una más; repetir el lote final devuelve `sin_cambios=22` sin nuevas auditorías.
+
+Quedan resueltos tres pendientes de la tanda anterior: **La Instaladora, Vimat y Acusfoc**. Para Vimat, una adjudicación del Ayuntamiento de Calella confirma `B17944034` frente al otro CIF publicado en su aviso; para Acusfoc, el acta municipal de València aporta el CIF y BORME el domicilio de Alaquàs. Estas fuentes históricas de identidad no acreditan vigencia legal. PIMED queda vinculada a Azul Cobalto por su política corporativa de calidad; se usa Toledo como provincia de Illescas. Las discrepancias de calle de Qromia y Aplicaciones Alagón se conservan como observaciones y no se inventa dirección. Imárcoain utiliza centro de localidad; las demás coordenadas son centros municipales, nunca precisión de portal.
+
+La continuación consulta artículos/perfiles de AD’IP, AISLA y Tecnifuego y añade vías en la Federación Nacional de Empresarios Pintores y APILCA, además de búsqueda regional. Se identifica **Aplytec** como ejecutora desde la web de Resytec; no se atribuye esa ejecución al gestor de residuos. Tespa queda como fabricante, Diseyco y Placas y Aislamientos como suministro sin ejecución validada, e Incopac 90 pendiente de precisar montaje propio. Tampoco se dan de alta titulares de intermediación o una sociedad ficticia para una actividad cuyo titular es persona física. Ninguna revisión no concluyente escribe `false`.
+
+La API de producción verifica los 22 CIF una sola vez en las listas geográficas, las 22 fichas, 16 combinaciones de actividades y la exportación de **243** con fuentes. Se conservan las **23.620** filas financieras.
+
+### Tercera tanda
 
 La tercera tanda, de asociaciones y búsqueda regional, incorpora **33 altas y 5 enriquecimientos**. Su [lote de 38 entidades](research/pasiva-validada-regional-2026-10-24.json) y [seguimiento por dominio](research/pasiva-asociaciones-regiones-2026-10-24.json) conservan identidad primaria, actividad, fuentes de descubrimiento y resultado. Se aplicó con 38 auditorías; la repetición aplicada devuelve `sin_cambios=38` sin nuevas auditorías. Los campos protegidos, cuentas, CRM y recuentos de relaciones de las cinco fichas existentes se comprobaron por huella, sin alteraciones fuera de los vacíos autorizados.
 
@@ -90,12 +104,12 @@ Las evidencias se tipifican como `web_corporativa`, `asociacion` o `calificacion
 | Dominios compartidos y redirecciones | Emacs, Starfoc y las redirecciones a Gefisa, Eurofesa e Incotex requieren atribución por sociedad. |
 | Resto del seguimiento | Identidad o ejecución pendientes, webs sin acceso o evidencia insuficiente, con motivo y URLs fechadas por candidata. |
 | Aplicanor | La política identifica varias sociedades del grupo; atribuir los trabajos al CIF ejecutor antes de incorporar. |
-| Acusfoc, Vimat, Ignifugados Borja y otras candidatas regionales | Hay indicios de ejecución; falta CIF en fuente primaria recuperable. |
+| Ignifugados Borja y otras candidatas regionales | Hay indicios de ejecución; falta CIF en fuente primaria recuperable. Acusfoc y Vimat están resueltas en la cuarta tanda. |
 | Kaixo, Elexar y otros suministradores | Identidad resuelta, pero falta prueba específica de montaje/aplicación propia en pasiva. |
 | Blinders | Actividad y CIF confirmados en ficha existente; conciliar aparte Ontinyent frente al domicilio fiscal web de Badalona. |
 
 Carboline y KaviDoors quedan fuera de este lote por su rol de fabricante sin instalación propia validada; Intertek por ensayos/certificación y Cepreven por ser asociación. No se crean fichas por marca, delegación o landing de ciudad.
 
-La primera ampliación por CLÚSIC, AD’IP, AVACOI y búsquedas regionales ya está realizada y aplicada; no se mantiene como una tarea genérica sin empezar. Las **222 confirmadas no agotan el mercado**. La continuidad consiste en resolver los casos concretos del seguimiento, recuperar accesos, investigar sociedades sin web y ampliar redes de aplicadores o territorios con evidencia adicional. Las webs comerciales de cobertura nacional no se cuentan como sedes en cada región. Conesam no recibe el CIF de su proveedor de protección de datos; las redes VKM/VKS quedan sin atribución de ejecución propia. No se aplican revisiones negativas.
+Las ampliaciones por asociaciones y búsqueda regional están realizadas y aplicadas en los lotes fechados; no se mantienen como una tarea genérica sin empezar. Las **243 confirmadas no agotan el mercado**. La continuidad consiste en resolver los casos concretos del seguimiento más reciente, recuperar accesos, investigar sociedades sin web y ampliar redes de aplicadores o territorios con evidencia adicional. Las webs comerciales de cobertura nacional no se cuentan como sedes en cada región. Conesam no recibe el CIF de su proveedor de protección de datos; las redes VKM/VKS quedan sin atribución de ejecución propia. No se aplican revisiones negativas.
 
 Para cada nueva tanda: validar actividad e identidad, cruzar CIF exacto, resolver dominios compartidos, simular, aplicar únicamente las filas validadas y verificar idempotencia. Los enriquecimientos no alteran perímetro, responsable, etapa, financieros, grupo o fuente original. Una empresa pendiente permanece `null`, nunca se transforma por defecto en «no hace pasiva».

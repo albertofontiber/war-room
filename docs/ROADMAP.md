@@ -10,13 +10,15 @@ La clasificación transversal, la migración y el importador están entregados e
 
 La tercera tanda, también aplicada el 24/10, añade **33 altas y 5 enriquecimientos**, hasta **222 entidades confirmadas**. Se consultaron 191 perfiles de CLÚSIC, AD’IP y AVACOI y se buscaron empresas por las 17 comunidades autónomas. El [seguimiento regional](research/pasiva-asociaciones-regiones-2026-10-24.json) documenta los 223 dominios descubiertos y el resultado de cada uno; las landings de una misma entidad no generan altas adicionales.
 
+La cuarta tanda añade **18 altas en 11 comunidades y 4 enriquecimientos**, hasta **243 confirmadas**. Resuelve La Instaladora, Vimat y Acusfoc y distingue tres nuevas confirmaciones en fichas existentes de la ampliación de evidencia de Proinse. El [seguimiento más reciente](research/pasiva-ampliacion2-seguimiento-2026-10-24.json) y el [lote aplicado](research/pasiva-validada-ampliacion2-2026-10-24.json) sustituyen esos pendientes anteriores; no se inventan sociedades por marcas ni webs de ciudad.
+
 La cobertura sigue abierta a evidencia adicional: identidades no resueltas, webs bloqueadas o ausentes y otras redes de aplicadores. La primera búsqueda asociativa/regional ya se ha realizado; la investigación exhaustiva del mercado no está completada. La pertenencia a una asociación no determina por sí sola perímetro de inversión, estado legal o actividad exclusiva.
 
 ## Limitaciones vigentes
 
 | Limitación | Evidencia y siguiente decisión |
 |---|---|
-| La cobertura de pasiva sigue siendo parcial | Barrido general y primera ampliación asociativa/regional realizados. Resolver CIF de Acusfoc/Vimat/Borja, sociedad ejecutora de Aplicanor y otros casos identificados; recuperar accesos e investigar empresas sin web. `null` no equivale a actividad descartada. |
+| La cobertura de pasiva sigue siendo parcial | Cuatro tandas aplicadas. Resolver identidad de Borja y otras candidatas, sociedad ejecutora de Aplicanor y montaje propio en casos de suministro; recuperar accesos e investigar empresas sin web. Acusfoc, Vimat y La Instaladora ya están incorporadas. `null` no equivale a actividad descartada. |
 | Discrepancia de domicilio de Blinders | CIF y actividad resueltos; se conserva Ontinyent frente al domicilio fiscal web de Badalona hasta conciliación registral. |
 | Calendario recurrente se ingiere como serie | `calendar-task-matcher.ts`; una tarea por ocurrencia requeriría cambiar a `calendarView`. No está programado. |
 | Falta de URL de lectura del chat provoca fallback al cliente normal | `chat-db.ts`; comprobar configuración en cada entorno nuevo. El rol fue creado y documentado en #187; no volver a listar su creación como pendiente. |
