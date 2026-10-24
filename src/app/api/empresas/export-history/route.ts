@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { EmpresaHistoryExportSchema, zodError } from "@/lib/validation";
 import { log } from "@/lib/logger";
 import { parseEvidenciasPasiva } from "@/lib/pasiva";
+import { obtenerActividades } from "@/lib/actividades";
 
 export const dynamic = "force-dynamic";
 
@@ -44,10 +45,14 @@ export async function POST(req: NextRequest) {
       orderBy: [{ empresaId: "asc" }, { anio: "asc" }],
     }), prisma.empresa.findMany({
       where: { id: { in: empresaIds }, esAnonima: false },
-      select: { id: true, proteccionPasiva: true, pasivaServicios: true, pasivaEvidencias: true, pasivaRevisadaAt: true },
+      select: { id: true, sector: true, fuente: true, ripci: true, proteccionPasiva: true, pasivaServicios: true, pasivaEvidencias: true, pasivaRevisadaAt: true },
     })]);
 
-    return NextResponse.json({ records, pasiva: actividades.map((e) => ({ ...e, pasivaEvidencias: parseEvidenciasPasiva(e.pasivaEvidencias) })) });
+    return NextResponse.json({ records, pasiva: actividades.map((e) => ({
+      id: e.id, actividades: obtenerActividades(e), proteccionPasiva: e.proteccionPasiva,
+      pasivaServicios: e.pasivaServicios, pasivaRevisadaAt: e.pasivaRevisadaAt,
+      pasivaEvidencias: parseEvidenciasPasiva(e.pasivaEvidencias),
+    })) });
   } catch (error) {
     log.error("api/empresas/export-history POST", error);
     return NextResponse.json({ error: "Error interno" }, { status: 500 });

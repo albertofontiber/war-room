@@ -22,6 +22,7 @@ import { useNavegacion } from "@/lib/navegacion";
 import { dispatchDataChanged, subscribeDataChanged } from "@/lib/data-events";
 import type { DealStage } from "@/types";
 import { DEAL_STAGES, DEAL_STAGE_LABEL } from "@/lib/crm";
+import { textoActividades } from "@/lib/actividades";
 
 type PipelineData = {
   stages: DealStage[];
@@ -70,7 +71,10 @@ function buildQuery(f: PipelineFilters): URLSearchParams {
   const p = new URLSearchParams();
   if (f.ccaa.length) p.set("ccaa", f.ccaa.join(","));
   if (f.provincia.length) p.set("provincia", f.provincia.join(","));
-  if (f.sector.length) p.set("sector", f.sector.join(","));
+  if (f.actividades.length) {
+    p.set("actividades", f.actividades.join(","));
+    p.set("actividadesModo", f.actividadesModo);
+  }
   if (f.owner) p.set("owner", f.owner);
   if (f.finder) p.set("finder", f.finder);
   if (f.conTarea) p.set("conTarea", "true");
@@ -199,7 +203,7 @@ export default function PipelinePageClient() {
   const handleExport = useCallback(async () => {
     const sheetData = [
       [
-        "Empresa", "CIF", "Stage", "Grupo", "CCAA", "Provincia", "Sector",
+        "Empresa", "CIF", "Stage", "Grupo", "CCAA", "Provincia", "Actividades",
         "Web", "Owner", "Finder", "Ingresos (€)", "GM (%)", "EBITDA (€)",
         "Días en stage", "Días sin actividad", "Tareas pendientes", "Última actividad",
       ],
@@ -210,7 +214,7 @@ export default function PipelinePageClient() {
         c.grupoNombre ?? "",
         c.ccaa ?? "",
         c.provincia ?? "",
-        c.sector ?? "",
+        textoActividades(c.actividades),
         c.web ?? "",
         c.ownerName ?? "",
         c.finderName ?? "",

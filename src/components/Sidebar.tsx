@@ -6,7 +6,9 @@ import { useWarRoomStore } from "@/store/useWarRoomStore";
 import { fmt, fmtCompactMoney, fmtM } from "@/lib/format";
 import { getSelectionStats } from "@/lib/filtros";
 import { FILTROS_DEFAULT } from "@/types";
-import type { DealStage, Sector } from "@/types";
+import type { DealStage } from "@/types";
+import { FiltroActividades } from "./FiltroActividades";
+import { ACTIVIDAD_LABEL } from "@/lib/actividades";
 import {
   ETIQUETA_HABILITACION,
   HABILITACIONES,
@@ -323,9 +325,8 @@ export function SidebarContent({
     filtros.provincia.forEach((v) =>
       chips.push({ label: `Prov: ${v}`, remove: () => toggleFiltroArray("provincia", v) })
     );
-    filtros.sector.forEach((v) => {
-      const lbl = v === "PCI" ? "PCI" : v === "seguridad_electronica" ? "Seg. El." : "Mixto";
-      chips.push({ label: `Sector: ${lbl}`, remove: () => toggleFiltroArray("sector", v) });
+    filtros.actividades.forEach((v) => {
+      chips.push({ label: ACTIVIDAD_LABEL[v], remove: () => toggleFiltroArray("actividades", v) });
     });
     filtros.grupoId.forEach((v) => {
       // sentinel 0 = "sin grupo"
@@ -539,24 +540,9 @@ export function SidebarContent({
             searchable
           />
 
-          {/* ── Sector ── */}
-          <div>
-            <SectionLabel>Sector</SectionLabel>
-            <div className="flex gap-1.5 flex-wrap">
-              {(["PCI", "seguridad_electronica", "mixto"] as Sector[]).map((s) => {
-                const lbl = s === "PCI" ? "PCI" : s === "seguridad_electronica" ? "Seg. El." : "Mixto";
-                return (
-                  <TogglePill
-                    key={s}
-                    active={filtros.sector.includes(s)}
-                    onClick={() => toggleFiltroArray("sector", s)}
-                  >
-                    {lbl}
-                  </TogglePill>
-                );
-              })}
-            </div>
-          </div>
+          <FiltroActividades seleccion={filtros.actividades} modo={filtros.actividadesModo}
+            onSeleccionChange={(v) => setFiltro("actividades", v)}
+            onModoChange={(v) => setFiltro("actividadesModo", v)} />
 
           {/* ── CRM ── */}
           <div>
@@ -729,7 +715,7 @@ export function SidebarContent({
           </div>
 
           <FilterChecklist
-            label="Actividad de protección pasiva"
+            label="Revisión de PCI pasiva"
             options={ESTADOS_PASIVA.map((e) => PASIVA_LABEL[e])}
             selected={filtros.pasiva.map((e) => PASIVA_LABEL[e as EstadoPasiva])}
             onToggle={(label) => {

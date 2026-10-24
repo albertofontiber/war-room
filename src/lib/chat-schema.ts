@@ -411,6 +411,8 @@ CREATE TABLE "FinderAccessLog" (
 - PersonaCargo con vigente=true son cargos actuales; vigente=false son históricos
 - La tabla BormeAlerta tiene backfill de 2 años (desde abril 2024)
 - sector "mixto" = empresa que opera tanto en PCI como en seguridad electrónica
+- Actividades combinables en la UI: "PCI activa", "PCI pasiva" y "Seguridad electrónica". "Mixto" se conserva en BD por compatibilidad, no es una cuarta actividad.
+- El universo previo con sector PCI o mixto acredita PCI activa (criterio de Alberto, origen RIPCI). Excepción: altas con fuente que empieza por 'investigacion_pasiva_' no acreditan activa solo por tener sector PCI. Un RIPCI con categorías válidas de instalación o mantenimiento sí acredita activa, también para esas altas. PCI pasiva requiere "proteccionPasiva"=true; seguridad electrónica corresponde a sector seguridad_electronica o mixto. No inferir actividad negativa desde falta de evidencia. Para exigir las tres, combinar estas condiciones con AND.
 
 ### CRM (MVP 1 desde abril 2026)
 - El War Room es la fuente de verdad del CRM (Pipedrive deprecado tras cut-over de 2026-05-02).

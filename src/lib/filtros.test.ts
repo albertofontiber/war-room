@@ -2,10 +2,11 @@ import { describe, expect, it } from "vitest";
 import { getSelectionStats, isInFilter, type RawProps } from "./filtros";
 import { FILTROS_DEFAULT } from "@/types";
 import type { FiltrosActivos } from "@/types";
+import { obtenerActividades } from "./actividades";
 
 // Builder mínimo de RawProps para tests
 function makeProps(overrides: Partial<RawProps> = {}): RawProps {
-  return {
+  const props = {
     id: 1,
     nombre: "TEST SL",
     cif: "B00000000",
@@ -24,6 +25,7 @@ function makeProps(overrides: Partial<RawProps> = {}): RawProps {
     empleados: 20,
     ...overrides,
   } as RawProps;
+  return { ...props, actividades: overrides.actividades ?? obtenerActividades(props) };
 }
 
 function makeFiltros(overrides: Partial<FiltrosActivos> = {}): FiltrosActivos {
@@ -31,8 +33,8 @@ function makeFiltros(overrides: Partial<FiltrosActivos> = {}): FiltrosActivos {
 }
 
 describe("isInFilter — pasiva transversal", () => {
-  it("combina actividad con sector y perímetro sin tratar un dato ausente como negativo", () => {
-    const f = makeFiltros({ sector: ["mixto"], pasiva: ["confirmada"], enPerimetro: null });
+  it("exige las tres actividades y combina revisión y perímetro sin convertir un dato ausente en negativo", () => {
+    const f = makeFiltros({ actividades: ["pci_activa", "pci_pasiva", "seguridad_electronica"], pasiva: ["confirmada"], enPerimetro: null });
     expect(isInFilter(makeProps({ sector: "mixto", proteccionPasiva: true, enPerimetro: false }), f, "")).toBe(true);
     expect(isInFilter(makeProps({ sector: "PCI", proteccionPasiva: true }), f, "")).toBe(false);
     expect(isInFilter(makeProps({ sector: "mixto", proteccionPasiva: null }), f, "")).toBe(false);

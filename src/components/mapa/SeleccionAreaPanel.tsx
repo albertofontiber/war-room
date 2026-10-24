@@ -9,7 +9,8 @@ import { useCallback, useMemo, useState } from "react";
 import { useWarRoomStore, type EmpresaFeatureProperties } from "@/store/useWarRoomStore";
 import { useNavegacion } from "@/lib/navegacion";
 import { fmtM, fmtPct } from "@/lib/format";
-import { SECTOR_LBL, STAGE_LBL, STAGE_CLR } from "./labels";
+import { STAGE_LBL, STAGE_CLR } from "./labels";
+import { textoActividades } from "@/lib/actividades";
 
 type Props = EmpresaFeatureProperties;
 
@@ -116,7 +117,7 @@ export function SeleccionAreaPanel({
                 <tr className="text-[10px] font-semibold text-wr-hint uppercase tracking-widest border-b border-wr-border">
                   <th className="text-left px-4 py-2">Empresa</th>
                   <th className="text-left px-3 py-2">Provincia</th>
-                  <th className="text-left px-3 py-2">Sector</th>
+                  <th className="text-left px-3 py-2">Actividades</th>
                   <th className="text-left px-3 py-2">CRM</th>
                   {!modoPresentacion && (
                     <>
@@ -152,7 +153,7 @@ export function SeleccionAreaPanel({
                       {r.provincia as string}
                     </td>
                     <td className="px-3 py-2 text-wr-muted whitespace-nowrap">
-                      {SECTOR_LBL[r.sector as string] ?? (r.sector as string)}
+                      {textoActividades(r.actividades)}
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap">
                       {r.dealStage ? (

@@ -55,7 +55,7 @@ export function Leyenda() {
         </div>
         <div className="flex items-center gap-2 text-wr-muted">
           <svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0.5 9.5,3 9.5,7 5,9.5 0.5,7 0.5,3" fill="#64748b" /></svg>
-          Mixto
+          PCI + Seg. electrónica
         </div>
         <div className="border-t border-wr-border mt-1.5 pt-1.5 space-y-1">
           <p className="text-wr-hint uppercase tracking-wider mb-1">CRM</p>

@@ -35,7 +35,7 @@ Prisma accede a PostgreSQL desde el servidor. La app no utiliza Supabase Auth ni
 
 ## 3. Producto y navegación
 
-Las cuatro vistas de la portada comparten filtros, selección de empresa y ficha. La URL conserva el contexto; `hrefVista()` evita enlaces a rutas que no existen.
+Las cuatro vistas de la portada comparten filtros, selección de empresa y ficha. La URL conserva el contexto; `hrefVista()` evita enlaces a rutas que no existen. El filtro de actividades combina PCI activa, PCI pasiva y seguridad electrónica con modos todas/cualquiera; `src/lib/actividades.ts` deriva el mismo dato para APIs, ficha y exportación a partir de sector, origen, RIPCI y pasiva. El sector histórico se conserva; ver [Actividades](ACTIVIDADES.md).
 
 | Zona | Función |
 |---|---|

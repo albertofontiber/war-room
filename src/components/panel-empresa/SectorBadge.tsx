@@ -8,23 +8,23 @@ import {
 } from "@/lib/policia/habilitaciones";
 import { parseRipci, SECCION_LABEL, type SeccionRipci } from "@/lib/ripci/categorias";
 import { BadgeConDetalle } from "./BadgeConDetalle";
-import { SECTOR_LABEL } from "./constants";
+import { textoActividades, type ActividadEmpresa } from "@/lib/actividades";
 
 /**
- * Distintivo de sector, con las habilitaciones de seguridad privada al
+ * Distintivo de actividades, con las habilitaciones de seguridad privada al
  * pulsarlo o pasar el ratón.
  *
  * El detalle cuelga de este distintivo y no de uno propio porque un
- * "Autonómica" suelto en la fila no dice de qué es autonómica. El sector ya
- * identifica la actividad, así que es su sitio natural: el mismo patrón que
+ * "Autonómica" suelto en la fila no dice de qué es autonómica. La fila ya
+ * identifica las actividades, así que es su sitio natural: el mismo patrón que
  * el distintivo de Cepreven, que resume y deja el desglose dentro.
  */
 export function SectorBadge({
-  sector,
+  actividades,
   habilitaciones,
   ripci,
 }: {
-  sector: string;
+  actividades: ActividadEmpresa[];
   habilitaciones: unknown;
   ripci: unknown;
 }) {
@@ -34,9 +34,9 @@ export function SectorBadge({
   const distintivo = (
     <Badge
       variant="outline"
-      className="text-[10px] bg-wr-surface2 text-wr-muted border-wr-border"
+      className="h-auto min-h-5 max-w-full whitespace-normal text-left text-[10px] bg-wr-surface2 text-wr-muted border-wr-border"
     >
-      {SECTOR_LABEL[sector] ?? sector}
+      {textoActividades(actividades) || "Sin actividad clasificada"}
     </Badge>
   );
 

@@ -6,7 +6,7 @@ export function ActividadPasiva({ empresa }: { empresa: EmpresaDetalle }) {
   const estado = estadoPasiva(empresa.proteccionPasiva);
   return (
     <section className="mt-3 border-t border-wr-border pt-3" aria-label="Actividad de protección pasiva">
-      <SectionLabel>Protección pasiva</SectionLabel>
+      <SectionLabel>PCI pasiva</SectionLabel>
       <p className={`text-xs ${estado === "confirmada" ? "text-orange-300" : "text-wr-muted"}`}>
         {PASIVA_LABEL[estado]}
       </p>

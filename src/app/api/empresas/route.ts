@@ -4,6 +4,9 @@ import { calcTendencia } from "@/lib/tendencia";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { log } from "@/lib/logger";
+import { obtenerActividades } from "@/lib/actividades";
+
+export const dynamic = "force-dynamic";
 
 // La respuesta es la misma para cualquier admin autenticado pero el universo
 // se muta desde la UI (CRM, perímetro, BORME nocturno). El Cache-Control
@@ -101,6 +104,7 @@ export async function GET() {
             provincia: empresa.provincia,
             ccaa: empresa.ccaa,
             sector: empresa.sector,
+            actividades: obtenerActividades(empresa),
             dealStage,
             // Financieros (último año disponible)
             anioFinanciero: latestFin?.anio ?? null,

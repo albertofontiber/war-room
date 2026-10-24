@@ -1,6 +1,6 @@
 # Fontiber War Room — Instrucciones de desarrollo
 
-Revisado: **2026-10-23**, tras #191 y la implementación de pasiva transversal.
+Revisado: **2026-10-24**, tras pasiva transversal y el filtro de actividades combinables.
 
 Convenciones vigentes para cualquier colaborador. Consultar [README](README.md), [estado actual](docs/PROJECT_STATUS.md), [arquitectura](docs/ARCHITECTURE.md), [operación](docs/OPERATIONS.md) y [trabajo abierto](docs/ROADMAP.md). Los recuentos, versiones exactas y resultados de verificación pertenecen al estado fechado; no duplicarlos aquí.
 
@@ -85,6 +85,7 @@ Laterales: on_hold, muerto
 - `Empresa.cif` es único. Priorizar CIF para cruzar fuentes; nombre y web sirven para revisar candidatos, no para fusionar automáticamente entidades distintas.
 - Las altas ordinarias proceden de fuentes verificadas. Para la nueva prospección de pasiva, conservar identidad y evidencia antes de incorporarla; una mención en un directorio es un candidato, no una habilitación industrial.
 - Los sectores actuales son `PCI`, `seguridad_electronica` y `mixto`; este último combina PCI y seguridad electrónica. No reutilizarlo para «activa + pasiva».
+- El filtro visible usa actividades combinables: **PCI activa**, **PCI pasiva** y **Seguridad electrónica**, con modos todas/cualquiera. Criterio confirmado por Alberto el 24/10: el universo previo PCI/mixto acredita activa. Las altas `investigacion_pasiva_*` no la reciben por su sector de compatibilidad; un RIPCI válido sí la acredita. Derivar con `src/lib/actividades.ts`, sin duplicar la lógica en cada API. Ver [Actividades](docs/ACTIVIDADES.md).
 - `enPerimetro` y el CRM no se deben alterar por descubrir una nueva actividad. El origen de una empresa tampoco debe perderse al enriquecerla.
 - Pasiva es transversal: `proteccionPasiva=true/false/null` significa confirmada/revisión negativa/sin revisar. Conservar servicios, evidencia y fecha en sus campos propios; no inferir calificación Cepreven ni habilitación. El importador solo completa datos de identidad/localización vacíos si la fila lo pide expresamente y aporta fuente fiscal primaria. Las altas de prospección quedan fuera de perímetro y sin estado SABI hasta evaluarlas.
 - `estado` / `estadoAt` reflejan la consulta SABI. Nueve estados definidos en `empresa-estado.ts`; `null` significa sin consultar. «No encontrada en SABI» no significa inactiva.
@@ -104,7 +105,7 @@ Laterales: on_hold, muerto
 - Personas físicas: tokens normalizados y ordenados; jurídicas: quitar forma social sin reordenar. Conservar nombre original y procedencia.
 - En el mapa, el anillo BORME corresponde a señales M&A recientes y solo a empresas que pasan el filtro. Conservar jitter determinista por CIF, orden de capas e imágenes de clusters al reutilizar Mapbox.
 - Cepreven asociada y Cepreven calificada no son equivalentes. Las áreas tienen familia y código; `PAS-COMP`, `PAS-REAC` y `PAS-ESTR` son las áreas de instalación de pasiva ya representables.
-- RIPCI, habilitaciones de seguridad privada y calificación Cepreven son datos diferentes. No inferir una autorización o una actividad concreta a partir del sector genérico.
+- RIPCI, habilitaciones de seguridad privada y calificación Cepreven son datos diferentes. No inferir una autorización desde el sector. La derivación de activa del universo previo sigue el criterio de Alberto documentado en Actividades; no extenderla a las altas de pasiva.
 
 ## 8. Chat e integraciones
 
