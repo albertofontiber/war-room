@@ -14,6 +14,12 @@ La simulación no dejó filas para revisar. Se generaron **14 auditorías** y re
 
 La cobertura aumenta en nueve provincias; Zamora sigue sin confirmadas en nuestra base, sin inferir ausencia de oferta. Las coordenadas nuevas son centros municipales salvo Portes Bisbal, que usa el centro de la localidad de Cruïlles; ninguna tiene precisión de portal. Gruman queda pendiente porque su web actual devuelve una plantilla/404 frente al contenido del índice. Insonotec requiere atribuir fiscalmente el nuevo dominio antes de trasladar servicios. Las consultas acotadas de Global Fire, AMS/ASM, Parfoc, Igniva y PYL Bages no resuelven sus identidades; no se reconsultan todos los pendientes históricos.
 
+### Complemento de descripciones iniciales
+
+El 25/10 se completan los resúmenes iniciales de las ocho altas de la décima tanda y de CISA, Mecosa y Energimac, que también tenían `descripcion` vacía. El [lote de descripciones](research/descripciones-pasiva-ampliacion8-2026-10-25.json) conserva los once textos y sus fuentes. Las descripciones de Aficon, Nevada Fire y Sistemas Guadalquivir se mantienen: las catorce fichas de la tanda tienen ahora resumen general, además de la evidencia específica de pasiva.
+
+El complemento genera once auditorías; repetirlo no escribe cambios ni nuevas auditorías. Se comprueban por huella los campos ajenos a `descripcion` y los datos relacionados de las catorce fichas, y los once textos se verifican en sus API de producción. Se mantienen 5.891 empresas, 303 con pasiva y 23.620 filas financieras. El importador admite `descripcion` en las altas nuevas; al enriquecer conserva las descripciones existentes.
+
 ## Alcance de cierres y conductos
 
 La aclaración de Alberto del 25/10 incorpora expresamente estas vías a la búsqueda, manteniendo los campos y servicios actuales:

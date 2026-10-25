@@ -6,6 +6,7 @@ const url = z.string().url().refine((v) => /^https?:/.test(v));
 export const FilaPasivaSchema = z.object({
   cif: z.string().transform(normalizeCif).refine(looksLikeCif, "CIF no válido"),
   nombre: z.string().trim().min(3),
+  descripcion: z.string().trim().min(1).optional(),
   web: url,
   identidadUrl: url,
   identidadMetodo: z.enum(["aviso_legal", "documento_corporativo", "registro_publico", "universo_cif_dominio"]),

@@ -1,0 +1,128 @@
+{
+  "fechaRevision": "2026-10-25",
+  "alcance": "Resumen inicial de las ocho altas de la décima tanda y de tres fichas enriquecidas sin descripción: CISA, Mecosa y Energimac.",
+  "criterio": "Texto breve de actividad, con el mismo campo descripcion usado por el resto de empresas. Solo se completan valores vacíos, sin sustituir descripciones existentes ni modificar actividad, perímetro, CRM, cuentas o estado SABI. Las fuentes y evidencias de pasiva conservan su función separada.",
+  "loteActividad": "pasiva-validada-ampliacion8-2026-10-25.json",
+  "empresas": [
+    {
+      "empresaId": 5914,
+      "cif": "32816931W",
+      "nombre": "MIGUEL NAVEIRA MARTÍNEZ / AUTOMATISMOS NAVEIRA",
+      "descripcion": "Instalación y automatización de puertas en Oleiros (A Coruña), incluidas puertas cortafuegos. Trabaja con viviendas, locales y organismos públicos.",
+      "fuentes": [
+        "https://www.automatismosnaveira.com/aviso-legal.aspx",
+        "https://www.automatismosnaveira.com/"
+      ]
+    },
+    {
+      "empresaId": 5915,
+      "cif": "A17476409",
+      "nombre": "KRODE, S.A.",
+      "descripcion": "Fabricación e instalación de puertas industriales en Olot (Girona), incluidas puertas cortafuegos correderas. Ofrece también reparación de puertas.",
+      "fuentes": [
+        "https://www.krode.com/aviso-legal/",
+        "https://www.krode.com/"
+      ]
+    },
+    {
+      "empresaId": 5794,
+      "cif": "A19199892",
+      "nombre": "CONTROL IGNIFUGO SOLUCIONES AVANZADAS SA",
+      "descripcion": "Aplicación de protección pasiva contra incendios: protección de estructuras, compartimentación, sellado de instalaciones y conductos resistentes al fuego. Ubicada en Leganés (Madrid).",
+      "fuentes": [
+        "https://controlignifugo.es/",
+        "https://www.controlignifugo.es/soluciones/conductos-de-ventilacion-y-extraccion-de-humos/",
+        "https://www.controlignifugo.es/obras/estadio-santiago-bernabeu/"
+      ]
+    },
+    {
+      "empresaId": 5916,
+      "cif": "B17956459",
+      "nombre": "CREANI",
+      "descripcion": "Instalación y mantenimiento de cerramientos cortafuegos de vidrio y perfilería, puertas y cortinas de sectorización. Ubicada en Granollers (Barcelona).",
+      "fuentes": [
+        "https://creani.net/politica-de-privacidad/",
+        "https://creani.net/",
+        "https://creani.net/servicios/",
+        "https://creani.net/contacto/"
+      ]
+    },
+    {
+      "empresaId": 5917,
+      "cif": "B34186320",
+      "nombre": "DRHUMO SOLUCIONES Y SERVICIOS, S.L.",
+      "descripcion": "Diseño y montaje de sistemas de ventilación y extracción en Villalobón (Palencia), incluidos conductos resistentes al fuego.",
+      "fuentes": [
+        "https://doctorhumo.com/content/2-aviso-legal",
+        "https://doctorhumo.com/content/10-gases-y-ventilacion-conductos-ei",
+        "https://doctorhumo.com/content/3-politica-de-privacidad",
+        "https://www.drhumo.com/aviso-legal/"
+      ]
+    },
+    {
+      "empresaId": 5918,
+      "cif": "B35749340",
+      "nombre": "COLLBAIX CANARIAS, S.L.",
+      "descripcion": "Diseño, fabricación e instalación de puertas y sistemas de cierre en Canarias, incluidas puertas cortafuegos. Ubicada en Agüimes (Las Palmas).",
+      "fuentes": [
+        "https://collbaix.com/canarias/aviso-legal/",
+        "https://guia.aenaga.com/ver-empresa-TVRFNQ%3D%3D",
+        "https://collbaix.com/canarias/"
+      ]
+    },
+    {
+      "empresaId": 5919,
+      "cif": "B55123806",
+      "nombre": "PORTES BISBAL, S.L. / ÀNGEL MIR",
+      "descripcion": "Diseño, fabricación e instalación de puertas industriales bajo la marca Àngel Mir, incluidas puertas cortafuegos. Ubicada en Cruïlles (Girona).",
+      "fuentes": [
+        "https://angelmir.com/index.php/es/aviso-legal.html",
+        "https://www.angelmir.com/es-mx/empresa.html"
+      ]
+    },
+    {
+      "empresaId": 5899,
+      "cif": "B60510096",
+      "nombre": "METALOCONSTRUCCIONES MECOSA, S.L.",
+      "descripcion": "Fabricación e instalación de cierres de sectorización, incluidas puertas cortafuegos y cortinas textiles irrigadas y sin irrigación. Ofrece montaje y puesta en marcha.",
+      "fuentes": [
+        "https://www.grupomecosa.com/",
+        "https://www.grupomecosa.com/FACS/"
+      ]
+    },
+    {
+      "empresaId": 5920,
+      "cif": "B85276855",
+      "nombre": "PROYBOR PROTECCIÓN PASIVA, S.L.",
+      "descripcion": "Instalación de protección pasiva contra incendios: protección estructural, compartimentación, puertas cortafuegos, sellados y conductos resistentes al fuego. Ubicada en Madrid.",
+      "fuentes": [
+        "https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?DocumentIdParam=d166314a-496b-474c-b3fb-d2cc8c6364e1&cmpntname=GetDocumentsById&source=library&srv=cmpnt",
+        "https://proybor.com/proteccion-pasiva-contra-incendios/",
+        "https://proybor.com/aviso-legal/",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2023-75-28"
+      ]
+    },
+    {
+      "empresaId": 1386,
+      "cif": "B87700670",
+      "nombre": "ENERGIMAC SEGURIDAD Y CONFORT SL",
+      "descripcion": "Instalación y montaje de sistemas de control de humos y calor y cierres de sectorización. Su oferta incluye cortinas cortafuegos, exutorios y ventilación.",
+      "fuentes": [
+        "https://energimac.es/",
+        "https://energimac.es/servicios/cortinas-de-cantonamiento/",
+        "https://energimac.es/sobre-nosotros/",
+        "https://energimac.es/servicios/"
+      ]
+    },
+    {
+      "empresaId": 5921,
+      "cif": "B94134285",
+      "nombre": "TECOMSA GESTIÓN, S.L.",
+      "descripcion": "Construcción e instalaciones industriales en Galicia. Instala sistemas de protección contra incendios, puertas RF y cortinas irrigadas.",
+      "fuentes": [
+        "https://tecomsa.es/legal/",
+        "https://tecomsa.es/"
+      ]
+    }
+  ]
+}

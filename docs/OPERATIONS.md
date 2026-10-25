@@ -84,7 +84,7 @@ Los nulos no pisan cifras previas, los años íntegramente a cero no se cargan y
 
 ## Importación de pasiva
 
-El lote y sus fuentes están en [Protección pasiva](PROTECCION_PASIVA.md). La migración aditiva de pasiva debe estar aplicada antes de desplegar código que lea esas columnas. El script no descubre empresas automáticamente: recibe filas previamente revisadas.
+El lote y sus fuentes están en [Protección pasiva](PROTECCION_PASIVA.md). La migración aditiva de pasiva debe estar aplicada antes de desplegar código que lea esas columnas. El script no descubre empresas automáticamente: recibe filas previamente revisadas. Preparar en cada nueva alta un resumen breve de actividad en `descripcion`, basado en las fuentes contrastadas. El importador lo guarda al crear la ficha; sigue siendo opcional para admitir lotes históricos y no sustituye las descripciones al enriquecer.
 
 ```powershell
 node --env-file=.env.local --import tsx scripts/import-pasiva.ts docs/research/pasiva-validada-ampliacion8-2026-10-25.json
