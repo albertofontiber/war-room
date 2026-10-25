@@ -1,0 +1,1281 @@
+{
+  "fechaRevision": "2026-10-25",
+  "alcance": "Décima tanda: 32 candidatas y fichas, con foco en puertas y cortinas cortafuegos, incluidas irrigadas, y conductos resistentes al fuego. Fuentes asociativas y búsqueda regional. Cobertura parcial.",
+  "lote": "pasiva-validada-ampliacion8-2026-10-25.json",
+  "antecedente": "pasiva-ampliacion7-seguimiento-2026-10-25.json",
+  "metodo": "Validación manual de ejecución y titular; cruce por CIF/NIF, nombre y dominio con las 5.883 empresas previas. Se reutilizan fichas existentes sin extender la actividad a homónimos, marcas, sedes o grupos. Sin cambios de esquema, perfiles exploratorios ni SABI.",
+  "resumen": {
+    "candidatasYFichasRevisadas": 32,
+    "altas": 8,
+    "enriquecimientos": 6,
+    "confirmacionesNuevasEnExistentes": 4,
+    "confirmadasPreviasConEvidenciaAmpliada": 2,
+    "yaConfirmadasSinEscritura": 4,
+    "casosSinConfirmacionSuficiente": 13,
+    "fueraDelLotePorRol": 1,
+    "websVaciasCompletadas": 0,
+    "universoAntes": 5883,
+    "universoDespues": 5891,
+    "pasivaAntes": 291,
+    "pasivaDespues": 303
+  },
+  "criteriosDeActividad": [
+    {
+      "actividad": "Puertas y cortinas cortafuegos, incluidas irrigadas",
+      "servicio": "puertas",
+      "criterio": "Instalación, montaje o mantenimiento propio de cierres resistentes al fuego/sectorización. La irrigación se describe en evidencia; no crea categoría nueva.",
+      "fuente": "https://www.une.org/salainformaciondocumentos/NP%20Norma%20UNE%20Tecnifuego%20sept-19.pdf"
+    },
+    {
+      "actividad": "Conductos de ventilación y extracción resistentes al fuego",
+      "servicio": "conductos",
+      "criterio": "Instalación o protección de conductos con resistencia al fuego acreditada, como CISA y DrHumo. No basta ventilación genérica.",
+      "fuentes": [
+        "https://www.controlignifugo.es/soluciones/conductos-de-ventilacion-y-extraccion-de-humos/",
+        "https://ant.tecnifuego.org/GuiaConductos/GuiaConductos2018.pdf"
+      ]
+    },
+    {
+      "actividad": "Extracción, exutorios, presurización o cortinas de humo genéricos",
+      "criterio": "No confirman automáticamente pasiva. SCTEH figura entre los sistemas de protección activa del RIPCI; se necesita evidencia específica de barrera/elemento resistente al fuego. No se infiere habilitación ni activa para altas de investigación.",
+      "fuente": "https://www.boe.es/buscar/act.php?id=BOE-A-2017-6606"
+    }
+  ],
+  "coberturaProvincial": {
+    "metodo": "Base previa de 5.883 registros actualizada con las 14 escrituras verificadas. Alias de provincia agrupados solo para análisis. Domicilio de ficha, no territorio de servicio ni censo.",
+    "provinciasSinConfirmadasAntes": [
+      "Zamora"
+    ],
+    "provinciasSinConfirmadasDespues": [
+      "Zamora"
+    ],
+    "nuevasProvinciasConConfirmacion": [],
+    "advertencia": "Zamora sin confirmadas no prueba ausencia de oferta local. Ceuta y Melilla se separan de las 50 provincias.",
+    "provincias": [
+      {
+        "provincia": "A Coruña",
+        "totalAntes": 178,
+        "pasivaAntes": 4,
+        "totalDespues": 179,
+        "pasivaDespues": 6
+      },
+      {
+        "provincia": "Albacete",
+        "totalAntes": 34,
+        "pasivaAntes": 4,
+        "totalDespues": 34,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Alicante",
+        "totalAntes": 213,
+        "pasivaAntes": 9,
+        "totalDespues": 213,
+        "pasivaDespues": 9
+      },
+      {
+        "provincia": "Almería",
+        "totalAntes": 68,
+        "pasivaAntes": 3,
+        "totalDespues": 68,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Asturias",
+        "totalAntes": 119,
+        "pasivaAntes": 5,
+        "totalDespues": 119,
+        "pasivaDespues": 5
+      },
+      {
+        "provincia": "Badajoz",
+        "totalAntes": 64,
+        "pasivaAntes": 2,
+        "totalDespues": 64,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Baleares",
+        "totalAntes": 216,
+        "pasivaAntes": 7,
+        "totalDespues": 216,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Barcelona",
+        "totalAntes": 928,
+        "pasivaAntes": 36,
+        "totalDespues": 929,
+        "pasivaDespues": 37
+      },
+      {
+        "provincia": "Burgos",
+        "totalAntes": 33,
+        "pasivaAntes": 3,
+        "totalDespues": 33,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Cantabria",
+        "totalAntes": 53,
+        "pasivaAntes": 7,
+        "totalDespues": 53,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Castellón",
+        "totalAntes": 55,
+        "pasivaAntes": 2,
+        "totalDespues": 55,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Ceuta",
+        "totalAntes": 1,
+        "pasivaAntes": 0,
+        "totalDespues": 1,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Ciudad Real",
+        "totalAntes": 54,
+        "pasivaAntes": 2,
+        "totalDespues": 54,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Cuenca",
+        "totalAntes": 19,
+        "pasivaAntes": 2,
+        "totalDespues": 19,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Cáceres",
+        "totalAntes": 40,
+        "pasivaAntes": 2,
+        "totalDespues": 40,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Cádiz",
+        "totalAntes": 100,
+        "pasivaAntes": 6,
+        "totalDespues": 100,
+        "pasivaDespues": 6
+      },
+      {
+        "provincia": "Córdoba",
+        "totalAntes": 61,
+        "pasivaAntes": 4,
+        "totalDespues": 61,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Girona",
+        "totalAntes": 107,
+        "pasivaAntes": 3,
+        "totalDespues": 109,
+        "pasivaDespues": 5
+      },
+      {
+        "provincia": "Granada",
+        "totalAntes": 72,
+        "pasivaAntes": 2,
+        "totalDespues": 72,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Guadalajara",
+        "totalAntes": 20,
+        "pasivaAntes": 1,
+        "totalDespues": 20,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Guipúzcoa",
+        "totalAntes": 44,
+        "pasivaAntes": 1,
+        "totalDespues": 44,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Huelva",
+        "totalAntes": 39,
+        "pasivaAntes": 1,
+        "totalDespues": 39,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Huesca",
+        "totalAntes": 22,
+        "pasivaAntes": 1,
+        "totalDespues": 22,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Jaén",
+        "totalAntes": 76,
+        "pasivaAntes": 1,
+        "totalDespues": 76,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "La Rioja",
+        "totalAntes": 54,
+        "pasivaAntes": 3,
+        "totalDespues": 54,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Las Palmas",
+        "totalAntes": 151,
+        "pasivaAntes": 3,
+        "totalDespues": 152,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "León",
+        "totalAntes": 33,
+        "pasivaAntes": 3,
+        "totalDespues": 33,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Lleida",
+        "totalAntes": 62,
+        "pasivaAntes": 4,
+        "totalDespues": 62,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Lugo",
+        "totalAntes": 36,
+        "pasivaAntes": 1,
+        "totalDespues": 36,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Madrid",
+        "totalAntes": 959,
+        "pasivaAntes": 52,
+        "totalDespues": 960,
+        "pasivaDespues": 54
+      },
+      {
+        "provincia": "Melilla",
+        "totalAntes": 1,
+        "pasivaAntes": 0,
+        "totalDespues": 1,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Murcia",
+        "totalAntes": 223,
+        "pasivaAntes": 8,
+        "totalDespues": 223,
+        "pasivaDespues": 8
+      },
+      {
+        "provincia": "Málaga",
+        "totalAntes": 237,
+        "pasivaAntes": 7,
+        "totalDespues": 237,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Navarra",
+        "totalAntes": 93,
+        "pasivaAntes": 7,
+        "totalDespues": 93,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Ourense",
+        "totalAntes": 31,
+        "pasivaAntes": 1,
+        "totalDespues": 31,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Palencia",
+        "totalAntes": 14,
+        "pasivaAntes": 1,
+        "totalDespues": 15,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Pontevedra",
+        "totalAntes": 106,
+        "pasivaAntes": 4,
+        "totalDespues": 107,
+        "pasivaDespues": 5
+      },
+      {
+        "provincia": "Salamanca",
+        "totalAntes": 23,
+        "pasivaAntes": 2,
+        "totalDespues": 23,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Santa Cruz de Tenerife",
+        "totalAntes": 122,
+        "pasivaAntes": 7,
+        "totalDespues": 122,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Segovia",
+        "totalAntes": 16,
+        "pasivaAntes": 1,
+        "totalDespues": 16,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Sevilla",
+        "totalAntes": 256,
+        "pasivaAntes": 12,
+        "totalDespues": 256,
+        "pasivaDespues": 12
+      },
+      {
+        "provincia": "Sin provincia",
+        "totalAntes": 62,
+        "pasivaAntes": 0,
+        "totalDespues": 62,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Soria",
+        "totalAntes": 13,
+        "pasivaAntes": 1,
+        "totalDespues": 13,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Tarragona",
+        "totalAntes": 124,
+        "pasivaAntes": 5,
+        "totalDespues": 124,
+        "pasivaDespues": 5
+      },
+      {
+        "provincia": "Teruel",
+        "totalAntes": 14,
+        "pasivaAntes": 1,
+        "totalDespues": 14,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Toledo",
+        "totalAntes": 68,
+        "pasivaAntes": 8,
+        "totalDespues": 68,
+        "pasivaDespues": 8
+      },
+      {
+        "provincia": "Valencia",
+        "totalAntes": 275,
+        "pasivaAntes": 27,
+        "totalDespues": 275,
+        "pasivaDespues": 27
+      },
+      {
+        "provincia": "Valladolid",
+        "totalAntes": 46,
+        "pasivaAntes": 4,
+        "totalDespues": 46,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Vizcaya",
+        "totalAntes": 93,
+        "pasivaAntes": 8,
+        "totalDespues": 93,
+        "pasivaDespues": 8
+      },
+      {
+        "provincia": "Zamora",
+        "totalAntes": 11,
+        "pasivaAntes": 0,
+        "totalDespues": 11,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Zaragoza",
+        "totalAntes": 105,
+        "pasivaAntes": 9,
+        "totalDespues": 105,
+        "pasivaDespues": 9
+      },
+      {
+        "provincia": "Álava",
+        "totalAntes": 30,
+        "pasivaAntes": 2,
+        "totalDespues": 30,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Ávila",
+        "totalAntes": 9,
+        "pasivaAntes": 2,
+        "totalDespues": 9,
+        "pasivaDespues": 2
+      }
+    ]
+  },
+  "viasDeDescubrimiento": [
+    {
+      "fuente": "AENAGA / Guía de la Zona Industrial de Arinaga",
+      "url": "https://guia.aenaga.com/ver-empresa-TVRFNQ%3D%3D",
+      "resultado": "Perfil de Collbaix Canarias con instalación expresa de puertas cortafuegos. Fiscalidad contrastada en el aviso de esa sociedad; no se atribuye solo por pertenecer al grupo."
+    },
+    {
+      "fuente": "CLÚSIC",
+      "url": "https://clusterincendis.com/es/mecosa-entrevista-jose-pajares/",
+      "resultado": "Mecosa ya confirmada: se precisa evidencia corporativa de cortinas irrigadas y no irrigadas, sin nueva ficha."
+    },
+    {
+      "fuente": "UNE / Tecnifuego y guía sectorial CLÚSIC",
+      "urls": [
+        "https://www.une.org/salainformaciondocumentos/NP%20Norma%20UNE%20Tecnifuego%20sept-19.pdf",
+        "https://ant.tecnifuego.org/GuiaConductos/GuiaConductos2018.pdf",
+        "https://clusterincendis.com/wp-content/uploads/2018/02/CLUSTER-DOSSIER-CAST.-18-BAIXA.pdf"
+      ],
+      "resultado": "Contraste del alcance técnico; no se utiliza una guía general para acreditar actividad de cada asociado."
+    },
+    {
+      "fuente": "Búsqueda regional y fichas existentes",
+      "regiones": [
+        "Cataluña",
+        "Galicia",
+        "Madrid",
+        "Castilla y León",
+        "Canarias",
+        "Andalucía"
+      ],
+      "resultado": "Altas y enriquecimientos de instaladores de cierres y conductos; fabricantes admitidos únicamente cuando acreditan instalación propia. No se asigna una sede por cada región atendida."
+    },
+    {
+      "fuente": "Contratación pública / BORME",
+      "urls": [
+        "https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?DocumentIdParam=d166314a-496b-474c-b3fb-d2cc8c6364e1&cmpntname=GetDocumentsById&source=library&srv=cmpnt",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2023-75-28"
+      ],
+      "resultado": "Proybor: adjudicación histórica del INAEM acredita CIF; BORME 20/04/2023 publica domicilio de Getafe posterior al de la web. La actividad actual se contrasta además en página corporativa. No se deduce estado legal actual."
+    }
+  ],
+  "entidades": [
+    {
+      "cif": "32816931W",
+      "nombre": "MIGUEL NAVEIRA MARTÍNEZ / AUTOMATISMOS NAVEIRA",
+      "empresaId": 5914,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.automatismosnaveira.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su equipo declara montaje y automatización de puertas, incluidas puertas cortafuegos, para viviendas, locales y organismos públicos. Se confirma ejecución por ese servicio concreto."
+        }
+      ],
+      "identidadUrl": "https://www.automatismosnaveira.com/aviso-legal.aspx",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "El aviso identifica a Miguel Naveira Martínez con NIF público profesional 32816931W. Se utiliza el titular real, como en el universo de activa, sin crear una SL por la marca Automatismos Naveira."
+    },
+    {
+      "cif": "A17476409",
+      "nombre": "KRODE, S.A.",
+      "empresaId": 5915,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.krode.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Fabrica, vende e instala puertas cortafuegos, incluidas correderas para cierre y sectorización de huecos. Declara control del proceso hasta la instalación y reparaciones propias."
+        }
+      ],
+      "identidadUrl": "https://www.krode.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "El aviso identifica A17476409 y Olot. La condición de fabricante no excluye su alta, porque la web acredita también instalación propia; no se deduce pasiva de sus puertas seccionales ordinarias."
+    },
+    {
+      "cif": "A19199892",
+      "nombre": "CONTROL IGNIFUGO SOLUCIONES AVANZADAS SA",
+      "empresaId": 5794,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": false,
+      "serviciosAnteriores": [
+        "compartimentacion",
+        "estructura",
+        "sellados"
+      ],
+      "serviciosAñadidos": [
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.controlignifugo.es/soluciones/conductos-de-ventilacion-y-extraccion-de-humos/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta conductos de ventilación y extracción resistentes al fuego con paneles de silicato, mortero o lana de roca. Su obra del Bernabéu acredita conductos resistentes al fuego; se añade protección de conductos."
+        }
+      ],
+      "identidadUrl": "https://controlignifugo.es/",
+      "identidadMetodo": "universo_cif_dominio",
+      "observaciones": "Se amplía la ficha 5794, CISA, ya confirmada. El conducto resistente al fuego se representa en el servicio existente conductos; no se asigna PCI activa por esta aplicación ni se cambia esquema o filtro."
+    },
+    {
+      "cif": "B15494230",
+      "nombre": "AFICON SEGURIDAD Y CONTRAINCENDIOS, S.L.",
+      "empresaId": 2781,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.aficon.com/produtos-contraincendios-coru%C3%B1a.html",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su oferta de productos incluye puertas cortafuegos con estructura de acero y cierre; declara instalación y mantenimiento de los productos suministrados, además de la venta."
+        }
+      ],
+      "identidadUrl": "https://www.aficon.com/aviso-legal.html",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "Nueva confirmación de la ficha 2781 por instalación de cierres cortafuegos. No se añade calificación por su certificado de calidad ni pasiva por vender mantas u otros equipos."
+    },
+    {
+      "cif": "B17956459",
+      "nombre": "CREANI",
+      "empresaId": 5916,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://creani.net/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece instalación y mantenimiento de cerramientos cortafuego de vidrio y perfilería, puertas y cortinas. Publica proyectos propios de puertas EI y cortinas de sectorización, además de mantenimiento de estas instalaciones."
+        }
+      ],
+      "identidadUrl": "https://creani.net/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "La política de privacidad, leída en navegador, identifica B17956459 y domicilio en Granollers. Se conserva el nombre publicado CREANI; no se crean entidades por sus sedes internacionales. La fuente de actividad es instalación y mantenimiento propios, no la mera fabricación de vidrio."
+    },
+    {
+      "cif": "B19555473",
+      "nombre": "NEVADA FIRE S.L.",
+      "empresaId": 3090,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.nevadafire.es/puertas-cortafuegos.html",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara distribución e instalación propia de puertas cortafuegos batientes, correderas, guillotina y a medida. Distingue expresamente instalación del suministro."
+        }
+      ],
+      "identidadUrl": "https://www.nevadafire.es/",
+      "identidadMetodo": "universo_cif_dominio",
+      "observaciones": "Nueva confirmación en la ficha 3090, dominio único ya vinculado. Se conservan sus datos y no se confunde con Ingeniería Nevada B18699520."
+    },
+    {
+      "cif": "B23785546",
+      "nombre": "SISTEMAS GUADALQUIVIR SLU",
+      "empresaId": 2652,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "puertas",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://contraincendios.sistemasguadalquivir.com/sistemas-de-sectorizacion-en-jaen/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara instalación de sistemas de sectorización en Jaén, con puertas y cortinas cortafuegos y sellados de pasos de instalaciones."
+        }
+      ],
+      "identidadUrl": "https://www.sistemasguadalquivir.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "Nueva confirmación de la ficha 2652 con CIF corporativo B23785546. No se atribuye al registro 4675, que comparte nombre pero tiene NIF 15513528M; no se fusionan ni se modifica esa otra ficha."
+    },
+    {
+      "cif": "B34186320",
+      "nombre": "DRHUMO SOLUCIONES Y SERVICIOS, S.L.",
+      "empresaId": 5917,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://doctorhumo.com/content/10-gases-y-ventilacion-conductos-ei",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Diseña y monta conductos con resistencia al fuego EI-30, EI-60 y EI-120 para extracción y ventilación; publica certificación del trabajo realizado. Pasiva se acredita por la resistencia al fuego del conducto, no por la extracción genérica."
+        }
+      ],
+      "identidadUrl": "https://doctorhumo.com/content/2-aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "Se agrupan doctorhumo.com y drhumo.com por el mismo titular y CIF B34186320. B34254045 corresponde al proveedor informático citado en privacidad y no se incorpora. El RITE declarado no se transforma en RIPCI ni acredita automáticamente PCI activa."
+    },
+    {
+      "cif": "B35749340",
+      "nombre": "COLLBAIX CANARIAS, S.L.",
+      "empresaId": 5918,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://guia.aenaga.com/ver-empresa-TVRFNQ%3D%3D",
+          "fuente": "AENAGA / Guía de la Zona Industrial de Arinaga",
+          "tipo": "asociacion",
+          "fecha": "2026-10-25",
+          "descripcion": "El perfil de la empresa en AENAGA declara diseño, fabricación e instalación de puertas cortafuegos, entre otros accesos. La web de la sociedad canaria confirma instalación propia; no se atribuye la actividad por el catálogo del grupo."
+        }
+      ],
+      "identidadUrl": "https://collbaix.com/canarias/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "Aviso corporativo leído en navegador con B35749340, titular canario y domicilio de Agüimes. La asociación identifica expresamente a esa sociedad y su instalación de puertas cortafuegos. No se da de alta una delegación ni la cabecera peninsular bajo el mismo CIF."
+    },
+    {
+      "cif": "B55123806",
+      "nombre": "PORTES BISBAL, S.L. / ÀNGEL MIR",
+      "empresaId": 5919,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.angelmir.com/es-mx/empresa.html",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Diseña, fabrica y monta puertas industriales, incluidas cortafuegos, con servicio de entrega e instalación. Se confirma pasiva por los cierres resistentes al fuego de su oferta propia."
+        }
+      ],
+      "identidadUrl": "https://angelmir.com/index.php/es/aviso-legal.html",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "El aviso identifica B-55.123.806 y Cruïlles, Girona. Àngel Mir es la marca del titular Portes Bisbal. La página de empresa pertenece al dominio corporativo y describe expresamente la operación española; no se crea una entidad extranjera por el prefijo de idioma /es-mx/ ni fichas por delegaciones. Coordenadas del centro de la localidad de Cruïlles (no del portal), identificada por municipio y código postal en Nominatim."
+    },
+    {
+      "cif": "B60510096",
+      "nombre": "METALOCONSTRUCCIONES MECOSA, S.L.",
+      "empresaId": 5899,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": false,
+      "serviciosAnteriores": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "serviciosAñadidos": [],
+      "evidencias": [
+        {
+          "url": "https://www.grupomecosa.com/FACS/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Fabrica e instala cierres de sectorización: puertas cortafuegos y cortinas textiles EI irrigadas y sin irrigación. Ofrece montaje y puesta en marcha; la evidencia se precisa para incluir expresamente cortinas irrigadas."
+        }
+      ],
+      "identidadUrl": "https://www.grupomecosa.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "observaciones": "La ficha 5899 ya estaba confirmada con compartimentación y puertas. Se precisa la evidencia, sin sumar otra confirmación ni crear un servicio nuevo para irrigadas. Se mantienen domicilio y coordenadas existentes frente a otras plantas del grupo."
+    },
+    {
+      "cif": "B85276855",
+      "nombre": "PROYBOR PROTECCIÓN PASIVA, S.L.",
+      "empresaId": 5920,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "compartimentacion",
+        "conductos",
+        "estructura",
+        "puertas",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://proybor.com/proteccion-pasiva-contra-incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Instala protección estructural y de forjados, aleros cortafuegos, puertas cortafuegos, sellados de pasos y conductos resistentes al fuego. Un contrato público documenta además trabajos de cierre RF y activación de irrigación."
+        }
+      ],
+      "identidadUrl": "https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?DocumentIdParam=d166314a-496b-474c-b3fb-d2cc8c6364e1&cmpntname=GetDocumentsById&source=library&srv=cmpnt",
+      "identidadMetodo": "registro_publico",
+      "observaciones": "El aviso web está incompleto (campos de plantilla), por lo que no se utiliza para fiscalidad. El anuncio oficial 2018IN000125 del INAEM identifica B85276855. BORME 20/04/2023 publica Torneros 34, Getafe, posterior a Ciudad de Frías en la web. Se usa ese domicilio registral; se omite código postal no corroborado. Los documentos históricos no acreditan estado legal actual."
+    },
+    {
+      "cif": "B87700670",
+      "nombre": "ENERGIMAC SEGURIDAD Y CONFORT SL",
+      "empresaId": 1386,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://energimac.es/servicios/cortinas-de-cantonamiento/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Incluye cortinas de sectorización y cortafuegos en su oferta de servicios, junto con montaje y servicio técnico propios. La confirmación se basa en los cierres cortafuegos, no en exutorios, ventiladores o simples cortinas de humo."
+        }
+      ],
+      "identidadUrl": "https://energimac.es/",
+      "identidadMetodo": "universo_cif_dominio",
+      "observaciones": "Nueva confirmación en la ficha 1386 por su dominio único ya vinculado. Se conserva PCI activa derivada del universo previo; no se infiere una nueva habilitación ni se clasifica toda evacuación de humos como pasiva."
+    },
+    {
+      "cif": "B94134285",
+      "nombre": "TECOMSA GESTIÓN, S.L.",
+      "empresaId": 5921,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://tecomsa.es/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta construcción e instalaciones industriales y declara instalación de sistemas PCI, puertas RF y cortinas irrigadas para industrias. Se acredita pasiva por los cierres sectorizadores, sin inferir otras especialidades."
+        }
+      ],
+      "identidadUrl": "https://tecomsa.es/legal/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "El aviso identifica B-94.134.285, normalizado B94134285. No se confunde con Tecomsa Maquinaria del Levante, ni con otras sociedades homónimas. Una sola alta por su titular, sin otra ficha para la delegación de Madrid."
+    }
+  ],
+  "pendientesPrioritarios": [
+    {
+      "caso": "Gruman",
+      "siguienteEvidencia": "Corroboración primaria actual de titular y ejecución; la web actual ya no sirve los contenidos indexados."
+    },
+    {
+      "caso": "Insonotec",
+      "empresaId": 2248,
+      "siguienteEvidencia": "Identidad fiscal de insonotec.com antes de trasladar nuevos servicios a la ficha de insonotec.es."
+    },
+    {
+      "caso": "REVES, Serfitasa y MJS / EI-30.com",
+      "siguienteEvidencia": "Titular fiscal primario y, para Serfitasa, ejecución propia contrastada."
+    },
+    {
+      "caso": "Koneba y HBL",
+      "siguienteEvidencia": "Ejecución actual de pasiva específica, no solo extracción de humos u objeto social."
+    },
+    {
+      "caso": "Global Fire (4358), AMS/ASM, Parfoc (2349), Igniva (4196), PYL Bages",
+      "siguienteEvidencia": "Consulta acotada sin resolver fiscalidad; conservar antecedente hasta obtener fuente nueva. No repetir búsquedas idénticas sin pista adicional."
+    }
+  ],
+  "verificacion": {
+    "camposProtegidosAlterados": [],
+    "sinClasificar": [],
+    "altas": 8,
+    "altasInvalidas": [],
+    "complementosIncorrectos": [],
+    "auditorias": 14,
+    "repeticion": "sin_cambios=14",
+    "testsPasivaImportador": 11,
+    "financierosAntes": 23620,
+    "financierosDespues": 23620,
+    "complementosVacios": [],
+    "actividades": {
+      "total": 5891,
+      "pci_activa": 4994,
+      "pci_pasiva": 303,
+      "seguridad_electronica": 1238,
+      "activaYPasiva": 174,
+      "tres": 26,
+      "soloPasiva": 128
+    },
+    "api": {
+      "host": "https://warroom.fontiber.com",
+      "geograficas": 5259,
+      "cifsNifsUnicos": 14,
+      "fichasConFuente": 14,
+      "combinaciones": 16,
+      "exportacionPasiva": 303,
+      "anonimo": 401
+    }
+  },
+  "rastreoTecnico": {
+    "urlsIntentadas": 90,
+    "dominiosIntentados": 36,
+    "adicional": "Lectura en navegador de identidad y servicios de Creani, Proybor, Collbaix Canarias y Gruman; fuentes primarias indexadas y PDF oficiales complementan el HTTP. Una respuesta WAF o un índice antiguo no acreditan por sí solos contenido actual.",
+    "limite": "32 decisiones manuales, no 32 altas. Los intentos técnicos incluyen auxiliares, páginas inaccesibles y redirecciones."
+  },
+  "limites": [
+    "Solo se escriben las 14 filas del lote; los otros 18 casos no reciben actividad negativa, estado, web ni CRM.",
+    "No es un barrido de todas las empresas del sector o de todas las fichas sin web. Los cinco pendientes históricos reconsultados tienen alcance acotado; el resto conserva sus antecedentes.",
+    "Las ocho altas no existían por CIF/NIF, nombre o dominio en la base previa; entran fuera de perímetro y con estado null. Se incluye un autónomo bajo su NIF profesional público, sin inventar una SL.",
+    "No se confunden Sistemas Guadalquivir B23785546 con el registro de NIF 15513528M, EXIA con EXIA IBERICA, ni Tecomsa Gestión con maquinaria homónima.",
+    "Coordenadas de centros municipales salvo Portes Bisbal: centro de localidad de Cruïlles. No precisión de portal; las localizaciones existentes se conservan.",
+    "Se conservan las 23.620 filas financieras y por huella todos los campos ajenos a pasiva de las seis fichas existentes. Sin nuevas clasificaciones de especialización, cuentas ni estados SABI."
+  ],
+  "casos": [
+    {
+      "candidata": "AFICON SEGURIDAD Y CONTRAINCENDIOS, S.L.",
+      "dominio": "aficon.com",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B15494230",
+      "empresaId": 2781,
+      "motivo": "Nueva confirmación de la ficha 2781 por instalación de cierres cortafuegos. No se añade calificación por su certificado de calidad ni pasiva por vender mantas u otros equipos.",
+      "fuentesConsultadas": [
+        "https://www.aficon.com/aviso-legal.html",
+        "https://www.aficon.com/produtos-contraincendios-coru%C3%B1a.html",
+        "https://www.aficon.com/"
+      ]
+    },
+    {
+      "candidata": "AICON Sistemas",
+      "dominio": "aiconsistemas.com",
+      "estado": "ya_confirmada_sin_escritura",
+      "revisionManual": true,
+      "motivo": "Se conserva la confirmación y compartimentación anteriores. El catálogo y la explicación de métodos de instalación no justifican añadir ahora puertas por ejecución propia.",
+      "fuentesConsultadas": [
+        "https://www.aiconsistemas.com/"
+      ],
+      "cif": "B64322399",
+      "empresaId": 1360
+    },
+    {
+      "candidata": "AMS Madrid / ASM Andalucía",
+      "dominio": "grupo-ams.com",
+      "estado": "pendiente_atribucion",
+      "revisionManual": true,
+      "motivo": "Se revisan páginas del grupo y localización de Madrid. Identifican la marca y oferta general, pero no resuelven qué titular fiscal ejecuta pasiva; no se aplica al grupo entero.",
+      "fuentesConsultadas": [
+        "https://www.grupo-ams.com/el-grupo/",
+        "https://www.grupo-ams.com/proveedores/",
+        "https://www.grupo-ams.com/localizacion/madrid/"
+      ]
+    },
+    {
+      "candidata": "COLLBAIX CANARIAS, S.L.",
+      "dominio": "collbaix.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B35749340",
+      "empresaId": 5918,
+      "motivo": "Aviso corporativo leído en navegador con B35749340, titular canario y domicilio de Agüimes. La asociación identifica expresamente a esa sociedad y su instalación de puertas cortafuegos. No se da de alta una delegación ni la cabecera peninsular bajo el mismo CIF.",
+      "fuentesConsultadas": [
+        "https://collbaix.com/canarias/aviso-legal/",
+        "https://guia.aenaga.com/ver-empresa-TVRFNQ%3D%3D",
+        "https://collbaix.com/canarias/"
+      ]
+    },
+    {
+      "candidata": "CONTROL IGNIFUGO SOLUCIONES AVANZADAS SA",
+      "dominio": "controlignifugo.es",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "A19199892",
+      "empresaId": 5794,
+      "motivo": "Se amplía la ficha 5794, CISA, ya confirmada. El conducto resistente al fuego se representa en el servicio existente conductos; no se asigna PCI activa por esta aplicación ni se cambia esquema o filtro.",
+      "fuentesConsultadas": [
+        "https://controlignifugo.es/",
+        "https://www.controlignifugo.es/soluciones/conductos-de-ventilacion-y-extraccion-de-humos/",
+        "https://www.controlignifugo.es/obras/estadio-santiago-bernabeu/"
+      ]
+    },
+    {
+      "candidata": "CREANI",
+      "dominio": "creani.net",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B17956459",
+      "empresaId": 5916,
+      "motivo": "La política de privacidad, leída en navegador, identifica B17956459 y domicilio en Granollers. Se conserva el nombre publicado CREANI; no se crean entidades por sus sedes internacionales. La fuente de actividad es instalación y mantenimiento propios, no la mera fabricación de vidrio.",
+      "fuentesConsultadas": [
+        "https://creani.net/politica-de-privacidad/",
+        "https://creani.net/",
+        "https://creani.net/servicios/",
+        "https://creani.net/contacto/"
+      ]
+    },
+    {
+      "candidata": "CYPSA / Cerramiento y Protección",
+      "dominio": "cypsa.net",
+      "estado": "ya_confirmada_sin_escritura",
+      "revisionManual": true,
+      "motivo": "Instalación y mantenimiento de puertas cortafuegos ya recogidos. No se vuelve a incorporar una empresa de una tanda anterior.",
+      "fuentesConsultadas": [
+        "https://cypsa.net/"
+      ],
+      "cif": "A28933083",
+      "empresaId": 5886
+    },
+    {
+      "candidata": "DRHUMO SOLUCIONES Y SERVICIOS, S.L.",
+      "dominio": "doctorhumo.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B34186320",
+      "empresaId": 5917,
+      "motivo": "Se agrupan doctorhumo.com y drhumo.com por el mismo titular y CIF B34186320. B34254045 corresponde al proveedor informático citado en privacidad y no se incorpora. El RITE declarado no se transforma en RIPCI ni acredita automáticamente PCI activa.",
+      "fuentesConsultadas": [
+        "https://doctorhumo.com/content/2-aviso-legal",
+        "https://doctorhumo.com/content/10-gases-y-ventilacion-conductos-ei",
+        "https://doctorhumo.com/content/3-politica-de-privacidad",
+        "https://www.drhumo.com/aviso-legal/"
+      ]
+    },
+    {
+      "candidata": "ENERGIMAC SEGURIDAD Y CONFORT SL",
+      "dominio": "energimac.es",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B87700670",
+      "empresaId": 1386,
+      "motivo": "Nueva confirmación en la ficha 1386 por su dominio único ya vinculado. Se conserva PCI activa derivada del universo previo; no se infiere una nueva habilitación ni se clasifica toda evacuación de humos como pasiva.",
+      "fuentesConsultadas": [
+        "https://energimac.es/",
+        "https://energimac.es/servicios/cortinas-de-cantonamiento/",
+        "https://energimac.es/sobre-nosotros/",
+        "https://energimac.es/servicios/"
+      ]
+    },
+    {
+      "candidata": "EXIA",
+      "dominio": "exiapci.com",
+      "estado": "ya_confirmada_sin_escritura",
+      "revisionManual": true,
+      "motivo": "La ficha 990 ya incluye puertas y sectorización. La referencia pública a cortinas irrigadas sirve como pista complementaria, sin atribuirla a EXIA IBERICA 4297, de CIF diferente.",
+      "fuentesConsultadas": [
+        "https://exiapci.com/proteccion-incendios/proteccion-pasiva/",
+        "https://es.linkedin.com/posts/ferran-carrasco-bah%C3%AD-85490b3a_muy-agradecidos-a-frime-y-proega-por-confiar-activity-6945757145367781376-LSzY"
+      ],
+      "cif": "B67593335",
+      "empresaId": 990
+    },
+    {
+      "candidata": "Fichet Granada / Aguilar Seguridad",
+      "dominio": "fichet-granada.es",
+      "estado": "actividad_pasiva_no_acreditada",
+      "revisionManual": true,
+      "motivo": "La página de servicios acredita puertas acorazadas y cerrajería, sin resistencia al fuego o instalación de puertas cortafuegos contrastadas. No se marca actividad negativa.",
+      "fuentesConsultadas": [
+        "https://www.fichet-granada.es/servicios/"
+      ]
+    },
+    {
+      "candidata": "Global Fire Ingeniería",
+      "dominio": "globalfireingenieria.com",
+      "estado": "pendiente_atribucion",
+      "revisionManual": true,
+      "motivo": "Reconsulta acotada por E67738773 en contratación pública sin documento nuevo que resuelva la atribución. Se conserva el resultado anterior y la ficha 4358, sin nueva web ni actividad.",
+      "fuentesConsultadas": [
+        "https://contrataciondelestado.es/"
+      ],
+      "cif": "E67738773",
+      "empresaId": 4358,
+      "consulta": "site:contrataciondelestado.es \"E67738773\""
+    },
+    {
+      "candidata": "Gruman",
+      "dominio": "grumansl.com",
+      "estado": "pendiente_contenido_actual",
+      "revisionManual": true,
+      "motivo": "El índice conserva aviso fiscal y páginas de instalación de puertas y cortinas irrigadas, pero la lectura actual HTTP y en navegador devuelve 404 y una plantilla WordPress. Se requiere corroborar operador y ejecución actuales antes del alta; no se deduce inactividad.",
+      "fuentesConsultadas": [
+        "https://grumansl.com/aviso-legal/",
+        "https://grumansl.com/instalacion-puertas-automaticas/",
+        "https://grumansl.com/cortinas-cortafuegos-ei2-irrigadas/"
+      ],
+      "cif": "B83963330"
+    },
+    {
+      "candidata": "HBL Soluciones & Servicios",
+      "dominio": null,
+      "estado": "pendiente_ejecucion",
+      "revisionManual": true,
+      "motivo": "El objeto social histórico menciona instalación de puertas cortafuegos. No demuestra ejecución actual; el CIF localizado en fuente secundaria queda como pista y no habilita un alta.",
+      "fuentesConsultadas": [
+        "https://www.boe.es/borme/dias/2018/02/15/pdfs/BORME-A-2018-33-15.pdf"
+      ],
+      "cifCandidatoNoValidado": "B15876717"
+    },
+    {
+      "candidata": "Ignifugacions del Vallès / Igniva",
+      "dominio": "ignifugacionsdelvalles.com",
+      "estado": "pendiente_atribucion",
+      "revisionManual": true,
+      "motivo": "Búsqueda acotada por nombre y teléfono sin documento fiscal nuevo del titular actual. La ejecución descrita en la web no resuelve por sí sola la relación con la sociedad histórica; no cambia su estado SABI.",
+      "fuentesConsultadas": [
+        "https://ignifugacionsdelvalles.com/",
+        "https://ignifugacionsdelvalles.com/contacte/"
+      ],
+      "cif": "B67089490",
+      "empresaId": 4196
+    },
+    {
+      "candidata": "Insonotec",
+      "dominio": "insonotec.com",
+      "estado": "pendiente_atribucion",
+      "revisionManual": true,
+      "motivo": "La nueva web acredita sellados y franjas, pero no se recupera CIF primario que la vincule con Insonotec Servicios Integrales SL, ficha 2248, cuya web previa es insonotec.es. Se conserva la pasiva anterior; no se trasladan nuevos servicios por similitud de nombre.",
+      "fuentesConsultadas": [
+        "https://insonotec.com/proteccion-pasiva-contra-el-fuego/",
+        "https://insonotec.com/"
+      ],
+      "cif": "B40226151",
+      "empresaId": 2248
+    },
+    {
+      "candidata": "Koneba",
+      "dominio": "koneba.com",
+      "estado": "pendiente_ejecucion_pasiva",
+      "revisionManual": true,
+      "motivo": "Las obras localizadas acreditan exutorios y cortinas de humo. Se necesita ejecución de barrera de sectorización resistente al fuego o protección de conductos; un artículo general de pasiva no la acredita.",
+      "fuentesConsultadas": [
+        "https://www.koneba.com/es/noticias/183-koneba-instala-sus-exutorios-kuadron-steel-door-y-sus-cortinas-kortex-da-fix-en-burgos",
+        "https://koneba.com/es/noticias/185-koneba-protege-la-universidad-catolica-de-valencia",
+        "https://www.koneba.com/es/noticias/199-sistemas-pasivos-de-proteccion-contra-incendios-en-aeropuertos"
+      ]
+    },
+    {
+      "candidata": "KRODE, S.A.",
+      "dominio": "krode.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "A17476409",
+      "empresaId": 5915,
+      "motivo": "El aviso identifica A17476409 y Olot. La condición de fabricante no excluye su alta, porque la web acredita también instalación propia; no se deduce pasiva de sus puertas seccionales ordinarias.",
+      "fuentesConsultadas": [
+        "https://www.krode.com/aviso-legal/",
+        "https://www.krode.com/"
+      ]
+    },
+    {
+      "candidata": "METALOCONSTRUCCIONES MECOSA, S.L.",
+      "dominio": "grupomecosa.com",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B60510096",
+      "empresaId": 5899,
+      "motivo": "La ficha 5899 ya estaba confirmada con compartimentación y puertas. Se precisa la evidencia, sin sumar otra confirmación ni crear un servicio nuevo para irrigadas. Se mantienen domicilio y coordenadas existentes frente a otras plantas del grupo.",
+      "fuentesConsultadas": [
+        "https://www.grupomecosa.com/",
+        "https://www.grupomecosa.com/FACS/"
+      ]
+    },
+    {
+      "candidata": "MIGUEL NAVEIRA MARTÍNEZ / AUTOMATISMOS NAVEIRA",
+      "dominio": "automatismosnaveira.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "32816931W",
+      "empresaId": 5914,
+      "motivo": "El aviso identifica a Miguel Naveira Martínez con NIF público profesional 32816931W. Se utiliza el titular real, como en el universo de activa, sin crear una SL por la marca Automatismos Naveira.",
+      "fuentesConsultadas": [
+        "https://www.automatismosnaveira.com/aviso-legal.aspx",
+        "https://www.automatismosnaveira.com/"
+      ]
+    },
+    {
+      "candidata": "MJS / EI-30.com",
+      "dominio": "ei-30.com",
+      "estado": "pendiente_atribucion",
+      "revisionManual": true,
+      "motivo": "Las páginas describen montaje propio de conductos EI-30 en Madrid, sin identificar fiscalmente al operador. EI-30 y el blog MJS no se cuentan como dos empresas.",
+      "fuentesConsultadas": [
+        "https://www.ei-30.com/p/montar-tubos.html",
+        "https://mjsextraccion.blogspot.com/"
+      ]
+    },
+    {
+      "candidata": "NEVADA FIRE S.L.",
+      "dominio": "nevadafire.es",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B19555473",
+      "empresaId": 3090,
+      "motivo": "Nueva confirmación en la ficha 3090, dominio único ya vinculado. Se conservan sus datos y no se confunde con Ingeniería Nevada B18699520.",
+      "fuentesConsultadas": [
+        "https://www.nevadafire.es/",
+        "https://www.nevadafire.es/puertas-cortafuegos.html"
+      ]
+    },
+    {
+      "candidata": "Parfoc",
+      "dominio": "parfoc.com",
+      "estado": "pendiente_atribucion",
+      "revisionManual": true,
+      "motivo": "Reconsulta acotada en fuentes oficiales por B67604686 sin nueva prueba fiscal que vincule la ejecución a la ficha. Se conserva el antecedente corporativo y web aparcada, sin modificar 2349.",
+      "fuentesConsultadas": [
+        "https://parfoc.com/"
+      ],
+      "cif": "B67604686",
+      "empresaId": 2349,
+      "consulta": "site:gencat.cat \"B67604686\""
+    },
+    {
+      "candidata": "PORTES BISBAL, S.L. / ÀNGEL MIR",
+      "dominio": "angelmir.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B55123806",
+      "empresaId": 5919,
+      "motivo": "El aviso identifica B-55.123.806 y Cruïlles, Girona. Àngel Mir es la marca del titular Portes Bisbal. La página de empresa pertenece al dominio corporativo y describe expresamente la operación española; no se crea una entidad extranjera por el prefijo de idioma /es-mx/ ni fichas por delegaciones. Coordenadas del centro de la localidad de Cruïlles (no del portal), identificada por municipio y código postal en Nominatim.",
+      "fuentesConsultadas": [
+        "https://angelmir.com/index.php/es/aviso-legal.html",
+        "https://www.angelmir.com/es-mx/empresa.html"
+      ]
+    },
+    {
+      "candidata": "Prefire",
+      "dominio": "prefire.es",
+      "estado": "ya_confirmada_sin_escritura",
+      "revisionManual": true,
+      "motivo": "La ficha 864 ya incluye compartimentación y puertas. Referencias propias de cortinas EI y la noticia histórica de cortinas irrigadas no requieren nueva ficha ni nueva categoría.",
+      "fuentesConsultadas": [
+        "https://www.prefire.es/referencias.php?cortinas=&ipp=All&page=1",
+        "https://www.prefire.es/referencia.php?id_not=501&page=1",
+        "https://www.prefire.es/noticia.php?id_not=90"
+      ],
+      "cif": "B61491023",
+      "empresaId": 864
+    },
+    {
+      "candidata": "PROYBOR PROTECCIÓN PASIVA, S.L.",
+      "dominio": "proybor.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B85276855",
+      "empresaId": 5920,
+      "motivo": "El aviso web está incompleto (campos de plantilla), por lo que no se utiliza para fiscalidad. El anuncio oficial 2018IN000125 del INAEM identifica B85276855. BORME 20/04/2023 publica Torneros 34, Getafe, posterior a Ciudad de Frías en la web. Se usa ese domicilio registral; se omite código postal no corroborado. Los documentos históricos no acreditan estado legal actual.",
+      "fuentesConsultadas": [
+        "https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?DocumentIdParam=d166314a-496b-474c-b3fb-d2cc8c6364e1&cmpntname=GetDocumentsById&source=library&srv=cmpnt",
+        "https://proybor.com/proteccion-pasiva-contra-incendios/",
+        "https://proybor.com/aviso-legal/",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2023-75-28"
+      ]
+    },
+    {
+      "candidata": "PYL Bages",
+      "dominio": null,
+      "estado": "pendiente_atribucion",
+      "revisionManual": true,
+      "motivo": "La búsqueda de NIF vuelve a aportar referencias secundarias, sin fuente primaria del operador. B09713207 sigue como candidato no validado. No se le atribuyen anuncios oficiales de otros titulares. ",
+      "fuentesConsultadas": [],
+      "cifCandidatoNoValidado": "B09713207",
+      "consulta": "\"PYL Bages\" NIF"
+    },
+    {
+      "candidata": "REVES",
+      "dominio": "reves.es",
+      "estado": "pendiente_atribucion",
+      "revisionManual": true,
+      "motivo": "La página corporativa indexada declara instalación de sistemas resistentes al fuego, conductos y sellados, pero no se recupera identidad fiscal primaria. No se crea una sociedad por la marca.",
+      "fuentesConsultadas": [
+        "https://reves.es/instalacion-sistemas-contra-incendios/"
+      ]
+    },
+    {
+      "candidata": "Serfitasa / Alfa Torres",
+      "dominio": "serfitasa.com",
+      "estado": "pendiente_atribucion",
+      "revisionManual": true,
+      "motivo": "Directorios describen instalación de puertas y cortinas, pero no se recupera contenido corporativo útil ni identidad fiscal primaria del ejecutor. No se valida a partir del directorio.",
+      "fuentesConsultadas": [
+        "https://www.serfitasa.com/",
+        "https://construnews.com/empresa/serfitasa_sl",
+        "https://www.paxinasgalegas.es/serfitasa-81615em.html"
+      ]
+    },
+    {
+      "candidata": "SISTEMAS GUADALQUIVIR SLU",
+      "dominio": "sistemasguadalquivir.com",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B23785546",
+      "empresaId": 2652,
+      "motivo": "Nueva confirmación de la ficha 2652 con CIF corporativo B23785546. No se atribuye al registro 4675, que comparte nombre pero tiene NIF 15513528M; no se fusionan ni se modifica esa otra ficha.",
+      "fuentesConsultadas": [
+        "https://www.sistemasguadalquivir.com/aviso-legal/",
+        "https://contraincendios.sistemasguadalquivir.com/sistemas-de-sectorizacion-en-jaen/"
+      ]
+    },
+    {
+      "candidata": "Sodeca",
+      "dominio": "sodeca.com",
+      "estado": "fuera_del_lote_por_rol",
+      "revisionManual": true,
+      "motivo": "La fuente corporativa muestra fabricación de ventiladores, extracción y presurización. No acredita en esta revisión ejecución propia de protección pasiva. No se incorpora por suministro de equipos SCTEH.",
+      "fuentesConsultadas": [
+        "https://www.sodeca.com/"
+      ]
+    },
+    {
+      "candidata": "TECOMSA GESTIÓN, S.L.",
+      "dominio": "tecomsa.es",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B94134285",
+      "empresaId": 5921,
+      "motivo": "El aviso identifica B-94.134.285, normalizado B94134285. No se confunde con Tecomsa Maquinaria del Levante, ni con otras sociedades homónimas. Una sola alta por su titular, sin otra ficha para la delegación de Madrid.",
+      "fuentesConsultadas": [
+        "https://tecomsa.es/legal/",
+        "https://tecomsa.es/"
+      ]
+    }
+  ]
+}
