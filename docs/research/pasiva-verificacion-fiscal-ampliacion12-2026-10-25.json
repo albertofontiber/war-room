@@ -1,0 +1,669 @@
+{
+  "fechaRevision": "2026-10-25",
+  "criterio": "Se conserva consulta y respuesta fiscal primaria; valid=false en VIES no determina validez del NIF español ni estado legal SABI. Coincidencia de nombre, calle, CP y municipio se evalúa por separado.",
+  "vies": [
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B92574854",
+        "traderName": "GOEXTIN SL",
+        "traderStreet": "CALETA DE VELEZ 43 A",
+        "traderPostalCode": "29004",
+        "traderCity": "MALAGA"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B92574854",
+        "requestDate": "2026-10-25T21:31:41.553Z",
+        "valid": true,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "GOEXTIN SL",
+        "traderStreet": "CALETA DE VELEZ 43 A",
+        "traderPostalCode": "29004",
+        "traderCity": "MALAGA",
+        "traderNameMatch": "VALID",
+        "traderStreetMatch": "VALID",
+        "traderPostalCodeMatch": "VALID",
+        "traderCityMatch": "VALID",
+        "traderCompanyTypeMatch": "NOT_PROCESSED"
+      },
+      "consultadoAt": "2026-10-25T21:31:39.824Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B92603372",
+        "traderName": "GOEXTIN SL"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B92603372",
+        "requestDate": "2026-10-25T21:31:41.736Z",
+        "valid": true,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "GOEXTIN SL",
+        "traderNameMatch": "INVALID",
+        "traderStreetMatch": "NOT_PROCESSED",
+        "traderPostalCodeMatch": "NOT_PROCESSED",
+        "traderCityMatch": "NOT_PROCESSED",
+        "traderCompanyTypeMatch": "NOT_PROCESSED"
+      },
+      "consultadoAt": "2026-10-25T21:31:39.995Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B92603372",
+        "traderName": "SERVIHOGAR MALAGA SL"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B92603372",
+        "requestDate": "2026-10-25T21:31:41.908Z",
+        "valid": true,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "SERVIHOGAR MALAGA SL",
+        "traderNameMatch": "VALID",
+        "traderStreetMatch": "NOT_PROCESSED",
+        "traderPostalCodeMatch": "NOT_PROCESSED",
+        "traderCityMatch": "NOT_PROCESSED",
+        "traderCompanyTypeMatch": "NOT_PROCESSED"
+      },
+      "consultadoAt": "2026-10-25T21:31:40.167Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B57834095",
+        "traderName": "DESIGN ARKON 2000 SL"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B57834095",
+        "requestDate": "2026-10-25T21:31:42.148Z",
+        "valid": false,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "---",
+        "traderStreet": "---",
+        "traderPostalCode": "---",
+        "traderCity": "---",
+        "traderCompanyType": "---"
+      },
+      "consultadoAt": "2026-10-25T21:31:40.407Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B91141465",
+        "traderName": "AISLAMIENTOS E INSTALACIONES MODULARES DEL SUR SL",
+        "traderStreet": "PINO SALGAREÑO 2",
+        "traderCity": "SEVILLA",
+        "traderPostalCode": "41016"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B91141465",
+        "requestDate": "2026-10-25T21:31:42.327Z",
+        "valid": true,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "AISLAMIENTOS E INSTALACIONES MODULARES DEL SUR SL",
+        "traderStreet": "PINO SALGAREÑO 2",
+        "traderPostalCode": "41016",
+        "traderCity": "SEVILLA",
+        "traderNameMatch": "VALID",
+        "traderStreetMatch": "VALID",
+        "traderPostalCodeMatch": "VALID",
+        "traderCityMatch": "VALID",
+        "traderCompanyTypeMatch": "NOT_PROCESSED"
+      },
+      "consultadoAt": "2026-10-25T21:31:40.584Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B91571158",
+        "traderName": "AISLAMIENTOS Y SISTEMAS MODULARES SL",
+        "traderStreet": "PINO SILVESTRE 21",
+        "traderCity": "SEVILLA",
+        "traderPostalCode": "41016"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B91571158",
+        "requestDate": "2026-10-25T21:31:42.504Z",
+        "valid": true,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "AISLAMIENTOS Y SISTEMAS MODULARES SL",
+        "traderStreet": "PINO SILVESTRE 21",
+        "traderPostalCode": "41016",
+        "traderCity": "SEVILLA",
+        "traderNameMatch": "VALID",
+        "traderStreetMatch": "INVALID",
+        "traderPostalCodeMatch": "VALID",
+        "traderCityMatch": "VALID",
+        "traderCompanyTypeMatch": "NOT_PROCESSED"
+      },
+      "consultadoAt": "2026-10-25T21:31:40.763Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B73086043",
+        "traderName": "SOL SURESTE SL"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B73086043",
+        "requestDate": "2026-10-25T21:31:42.684Z",
+        "valid": true,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "SOL SURESTE SL",
+        "traderNameMatch": "VALID",
+        "traderStreetMatch": "NOT_PROCESSED",
+        "traderPostalCodeMatch": "NOT_PROCESSED",
+        "traderCityMatch": "NOT_PROCESSED",
+        "traderCompanyTypeMatch": "NOT_PROCESSED"
+      },
+      "consultadoAt": "2026-10-25T21:31:40.941Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B02385441",
+        "traderName": "LCHPRO SL"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B02385441",
+        "requestDate": "2026-10-25T21:31:42.880Z",
+        "valid": false,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "---",
+        "traderStreet": "---",
+        "traderPostalCode": "---",
+        "traderCity": "---",
+        "traderCompanyType": "---"
+      },
+      "consultadoAt": "2026-10-25T21:31:41.138Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B19693639",
+        "traderName": "IGNITEGRA SL"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B19693639",
+        "requestDate": "2026-10-25T21:31:43.047Z",
+        "valid": false,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "---",
+        "traderStreet": "---",
+        "traderPostalCode": "---",
+        "traderCity": "---",
+        "traderCompanyType": "---"
+      },
+      "consultadoAt": "2026-10-25T21:31:41.307Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B09713207",
+        "traderName": "PLACAS YESO LAMINADO DEL BAGES SL"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B09713207",
+        "requestDate": "2026-10-25T21:31:43.223Z",
+        "valid": false,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "---",
+        "traderStreet": "---",
+        "traderPostalCode": "---",
+        "traderCity": "---",
+        "traderCompanyType": "---"
+      },
+      "consultadoAt": "2026-10-25T21:31:41.482Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B91571158",
+        "traderName": "AISLAMIENTOS Y SISTEMAS MODULARES SL",
+        "traderStreet": "PINO SALGAREÑO 2",
+        "traderPostalCode": "41016",
+        "traderCity": "SEVILLA"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B91571158",
+        "requestDate": "2026-10-25T21:35:51.452Z",
+        "valid": true,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "AISLAMIENTOS Y SISTEMAS MODULARES SL",
+        "traderStreet": "PINO SALGAREÑO 2",
+        "traderPostalCode": "41016",
+        "traderCity": "SEVILLA",
+        "traderNameMatch": "VALID",
+        "traderStreetMatch": "INVALID",
+        "traderPostalCodeMatch": "VALID",
+        "traderCityMatch": "VALID",
+        "traderCompanyTypeMatch": "NOT_PROCESSED"
+      },
+      "consultadoAt": "2026-10-25T21:35:49.726Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B65954398",
+        "traderName": "MONTAJES IMPLALUSA SL",
+        "traderStreet": "MIGUEL HERNANDEZ 14",
+        "traderPostalCode": "08042",
+        "traderCity": "BARCELONA"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B65954398",
+        "requestDate": "2026-10-25T21:35:51.652Z",
+        "valid": true,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "MONTAJES IMPLALUSA SL",
+        "traderStreet": "MIGUEL HERNANDEZ 14",
+        "traderPostalCode": "08042",
+        "traderCity": "BARCELONA",
+        "traderNameMatch": "VALID",
+        "traderStreetMatch": "VALID",
+        "traderPostalCodeMatch": "VALID",
+        "traderCityMatch": "VALID",
+        "traderCompanyTypeMatch": "NOT_PROCESSED"
+      },
+      "consultadoAt": "2026-10-25T21:35:49.908Z"
+    },
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B13209671",
+        "traderName": "YESOS MUÑOZ E HIJOS SL",
+        "traderStreet": "MANTUA CARPETANORUM 2",
+        "traderPostalCode": "28610",
+        "traderCity": "VILLAMANTA"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B13209671",
+        "requestDate": "2026-10-25T21:36:18.604Z",
+        "valid": false,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "---",
+        "traderStreet": "---",
+        "traderPostalCode": "---",
+        "traderCity": "---",
+        "traderCompanyType": "---"
+      },
+      "consultadoAt": "2026-10-25T21:36:16.871Z"
+    }
+  ],
+  "gleif": [
+    {
+      "url": "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalName%5D=IGNITEGRA&page%5Bsize%5D=10",
+      "consultadoAt": "2026-10-25T21:33:51.501Z",
+      "registros": [
+        {
+          "lei": "894500RV4FK07CSLTH69",
+          "entity": {
+            "legalName": {
+              "name": "IGNITEGRA, S.L.",
+              "language": "es"
+            },
+            "otherNames": [],
+            "transliteratedOtherNames": [],
+            "legalAddress": {
+              "language": "es",
+              "addressLines": [
+                "Calle Huetor Vega 135 Puerta 18"
+              ],
+              "addressNumber": null,
+              "addressNumberWithinBuilding": null,
+              "mailRouting": null,
+              "city": "ALBOLOTE",
+              "region": null,
+              "country": "ES",
+              "postalCode": "18220"
+            },
+            "headquartersAddress": {
+              "language": "es",
+              "addressLines": [
+                "Calle Huetor Vega 135 Puerta 18"
+              ],
+              "addressNumber": null,
+              "addressNumberWithinBuilding": null,
+              "mailRouting": null,
+              "city": "ALBOLOTE",
+              "region": null,
+              "country": "ES",
+              "postalCode": "18220"
+            },
+            "registeredAt": {
+              "id": "RA000535",
+              "other": null
+            },
+            "registeredAs": "B19693639",
+            "jurisdiction": "ES",
+            "category": "GENERAL",
+            "legalForm": {
+              "id": "DP3Q",
+              "other": null
+            },
+            "associatedEntity": {
+              "lei": null,
+              "name": null
+            },
+            "status": "ACTIVE",
+            "expiration": {
+              "date": null,
+              "reason": null
+            },
+            "successorEntity": {
+              "lei": null,
+              "name": null
+            },
+            "successorEntities": [],
+            "creationDate": "2019-07-09T10:00:00Z",
+            "subCategory": null,
+            "otherAddresses": [],
+            "eventGroups": []
+          },
+          "registration": {
+            "initialRegistrationDate": "2024-04-30T11:25:22Z",
+            "lastUpdateDate": "2026-03-04T19:54:06Z",
+            "status": "ISSUED",
+            "nextRenewalDate": "2027-04-29T22:00:00Z",
+            "managingLou": "529900F6BNUR3RJ2WH29",
+            "corroborationLevel": "FULLY_CORROBORATED",
+            "validatedAt": {
+              "id": "RA000535",
+              "other": null
+            },
+            "validatedAs": "B19693639",
+            "otherValidationAuthorities": []
+          }
+        },
+        {
+          "lei": "959800B5AJP9BXUVN896",
+          "entity": {
+            "legalName": {
+              "name": "IGNITEGRA,S.L.",
+              "language": "es"
+            },
+            "otherNames": [],
+            "transliteratedOtherNames": [],
+            "legalAddress": {
+              "language": "es",
+              "addressLines": [
+                "P.I.JUNCARIL,C/HUETOR VEGA 135 18"
+              ],
+              "addressNumber": "135",
+              "addressNumberWithinBuilding": "18",
+              "mailRouting": null,
+              "city": "Albolote",
+              "region": null,
+              "country": "ES",
+              "postalCode": "18220"
+            },
+            "headquartersAddress": {
+              "language": "es",
+              "addressLines": [
+                "P.I.JUNCARIL,C/HUETOR VEGA 135 18"
+              ],
+              "addressNumber": "135",
+              "addressNumberWithinBuilding": "18",
+              "mailRouting": null,
+              "city": "Albolote",
+              "region": null,
+              "country": "ES",
+              "postalCode": "18220"
+            },
+            "registeredAt": {
+              "id": "RA000533",
+              "other": null
+            },
+            "registeredAs": "1000209007455",
+            "jurisdiction": "ES",
+            "category": "GENERAL",
+            "legalForm": {
+              "id": "DP3Q",
+              "other": null
+            },
+            "associatedEntity": {
+              "lei": null,
+              "name": null
+            },
+            "status": "INACTIVE",
+            "expiration": {
+              "date": null,
+              "reason": null
+            },
+            "successorEntity": {
+              "lei": null,
+              "name": null
+            },
+            "successorEntities": [],
+            "creationDate": null,
+            "subCategory": null,
+            "otherAddresses": [],
+            "eventGroups": [
+              {
+                "groupType": "STANDALONE",
+                "events": [
+                  {
+                    "validationDocuments": "OTHER_OFFICIAL_DOCUMENTS",
+                    "effectiveDate": "2019-01-30T23:00:00Z",
+                    "recordedDate": "2022-03-15T10:25:30Z",
+                    "type": "DISSOLUTION",
+                    "status": "COMPLETED"
+                  }
+                ]
+              }
+            ]
+          },
+          "registration": {
+            "initialRegistrationDate": "2018-01-03T11:48:31Z",
+            "lastUpdateDate": "2026-08-23T11:52:22Z",
+            "status": "RETIRED",
+            "nextRenewalDate": "2020-01-03T11:48:31Z",
+            "managingLou": "959800R2X69K6Y6MX775",
+            "corroborationLevel": "FULLY_CORROBORATED",
+            "validatedAt": {
+              "id": "RA000533",
+              "other": null
+            },
+            "validatedAs": "1000209007455",
+            "otherValidationAuthorities": [
+              {
+                "validatedAt": {
+                  "id": "RA000535"
+                },
+                "validatedAs": "B18632166"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalName%5D=SOL+SURESTE&page%5Bsize%5D=10",
+      "consultadoAt": "2026-10-25T21:33:51.701Z",
+      "registros": [
+        {
+          "lei": "959800V331AF8KKX9G64",
+          "entity": {
+            "legalName": {
+              "name": "SOL SURESTE S.L.",
+              "language": "es"
+            },
+            "otherNames": [],
+            "transliteratedOtherNames": [],
+            "legalAddress": {
+              "language": "es",
+              "addressLines": [
+                "C/ ALDEBARAN 51 NAVE 8"
+              ],
+              "addressNumber": "51",
+              "addressNumberWithinBuilding": "NAVE 8",
+              "mailRouting": null,
+              "city": "Molina de Segura",
+              "region": "ES-MU",
+              "country": "ES",
+              "postalCode": "30500"
+            },
+            "headquartersAddress": {
+              "language": "es",
+              "addressLines": [
+                "C/ ALARILLA 3 BAJO"
+              ],
+              "addressNumber": "3",
+              "addressNumberWithinBuilding": "BAJO",
+              "mailRouting": null,
+              "city": "Murcia",
+              "region": "ES-MU",
+              "country": "ES",
+              "postalCode": "30002"
+            },
+            "registeredAt": {
+              "id": "RA000533",
+              "other": null
+            },
+            "registeredAs": "1000140888359",
+            "jurisdiction": "ES",
+            "category": "GENERAL",
+            "legalForm": {
+              "id": "DP3Q",
+              "other": null
+            },
+            "associatedEntity": {
+              "lei": null,
+              "name": null
+            },
+            "status": "ACTIVE",
+            "expiration": {
+              "date": null,
+              "reason": null
+            },
+            "successorEntity": {
+              "lei": null,
+              "name": null
+            },
+            "successorEntities": [],
+            "creationDate": "2000-05-11T10:00:00Z",
+            "subCategory": null,
+            "otherAddresses": [],
+            "eventGroups": []
+          },
+          "registration": {
+            "initialRegistrationDate": "2020-01-14T12:16:58Z",
+            "lastUpdateDate": "2026-10-09T16:31:38Z",
+            "status": "ISSUED",
+            "nextRenewalDate": "2027-01-14T12:16:58Z",
+            "managingLou": "959800R2X69K6Y6MX775",
+            "corroborationLevel": "FULLY_CORROBORATED",
+            "validatedAt": {
+              "id": "RA000533",
+              "other": null
+            },
+            "validatedAs": "1000140888359",
+            "otherValidationAuthorities": [
+              {
+                "validatedAt": {
+                  "id": "RA000535"
+                },
+                "validatedAs": "B73086043"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "contratacionCatalunya": {
+    "url": "https://analisi.transparenciacatalunya.cat/resource/ybgg-dgi6.json?%24where=upper%28denominacio_adjudicatari%29+like+%27%25IMPLALUSA%25%27&%24select=identificacio_adjudicatari%2Cdenominacio_adjudicatari%2Cdenominacio%2Cnom_organ%2Ccodi_expedient%2Cenllac_publicacio&%24limit=15",
+    "consultadoAt": "2026-10-25T21:34:55.551Z",
+    "data": [
+      {
+        "identificacio_adjudicatari": "B65954398",
+        "denominacio_adjudicatari": "Montajes Implalusa",
+        "denominacio": "Contractació menor de serveis d'insonorització del local social",
+        "nom_organ": "Ajuntament de Rodonyà",
+        "codi_expedient": "4313250006-2026-0000082",
+        "enllac_publicacio": {
+          "url": "https://contractaciopublica.cat/ca/detall-publicacio/3693e0ae-2062-422a-8f39-8f8d3cfddb60/300741925"
+        }
+      }
+    ]
+  },
+  "pdfs": [
+    {
+      "nombre": "Confort Home",
+      "url": "https://www.conforthome.net/wp-content/uploads/2015/03/IMPER-POOL-CH.pdf",
+      "pagina": 1,
+      "sha256": "8522141c98e25bbd86768e77e6cedb3f6bc479aca7064c3e7a30c97811d1a1c5",
+      "revisionVisual": true
+    },
+    {
+      "nombre": "Goextín",
+      "url": "https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?DocumentIdParam=757823df-eb0d-4bee-a7cb-fa8fbc1c8d94&cmpntname=GetDocumentsById&source=library&srv=cmpnt",
+      "pagina": 1,
+      "sha256": "f8e37f58f7e714a13f4488a44ee91f62b06d862809c11c27d8c132e0c17dc92e",
+      "revisionVisual": true
+    },
+    {
+      "nombre": "LCHPRO",
+      "url": "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?cifrado=QUC1GjXXSiLkydRHJBmbpw%3D%3D&DocumentIdParam=DL0oQnlVBmYEu5MOdoO%2B7VtqC9tRsPgZ9yXCjMp8oR1Qs8SrBYDypdtOjRpfgTLF0xxRyz9nbhSew0ThMHHm%2B%2BQFudyL9pQQNMRcNu6%2BHnF7QB3HKyQaFUExmUVQCerk",
+      "pagina": 2,
+      "sha256": "ca8fc4c751fe656d67ea95545c8e8327c00cfe0dddf06c68ebcaff5282513c98",
+      "revisionVisual": true
+    }
+  ],
+  "consultaNavegador": [
+    {
+      "url": "https://www.solsureste.com/politica-privacidad/",
+      "titular": "SOL SURESTE, S.L.",
+      "cif": "B73086043",
+      "direccionPublicada": "Calle Alarilla, 3, bajo, 30002 Murcia",
+      "telefono": "968266807",
+      "fecha": "2026-10-25",
+      "metodo": "Navegador: DOM y árbol accesible tras verificarse automáticamente la carga; no se sortea CAPTCHA."
+    },
+    {
+      "url": "https://crmgia.com/politica-de-privacidad/",
+      "resultado": "Recuperada en navegador. La identificación contiene marca crmgia y dirección de Ciudad Real, sin razón social completa ni CIF/NIF; mantiene partes de plantilla.",
+      "fecha": "2026-10-25"
+    }
+  ]
+}
