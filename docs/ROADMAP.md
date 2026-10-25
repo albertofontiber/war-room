@@ -4,6 +4,8 @@ Revisado: **2026-10-25**. Una función ausente del código no constituye por sí
 
 ## Encargo actual
 
+La revisión específica de resúmenes de pasiva está **completada**: se han revisado 303 fichas, añadido 173 descripciones que faltaban en tandas anteriores y conservado las 130 existentes. Todas las confirmadas tienen ahora descripción inicial, con el mismo criterio de actividad y servicios acreditados que PCI activa. Ver [lote y verificación](research/descripciones-pasiva-historicas-2026-10-25.json). No queda pendiente un barrido genérico de estas descripciones; la ampliación del universo continúa siendo parcial.
+
 **Ampliar el universo a instaladoras y aplicadoras de protección pasiva en España**, incluyendo empresas existentes que también prestan ese servicio. Petición de Alberto del 23/10/2026; ejemplos: Control Ignífugo, Plasfoc y Naes 2014.
 
 La clasificación transversal, la migración y el importador están entregados en #192. El 24/10 se revisaron las **84 candidatas pendientes**, se rastrearon **3.184 dominios** y se aplicaron **106 enriquecimientos y 9 altas**: 184 sociedades confirmadas en total. La revisión inicial de pendientes y el primer barrido general de webs están realizados; los casos no confirmados tienen motivo y fuentes en el [seguimiento actualizado](research/pasiva-seguimiento-2026-10-24.json). No se arrastra la antigua tarea genérica de revisar esas 84 sin indicar el resultado.

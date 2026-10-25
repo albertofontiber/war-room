@@ -106,6 +106,10 @@ Alberto confirma continuar con los campos actuales de actividad, servicios y fue
 
 El identificador admite CIF y NIF, como el universo de PCI activa. La séptima tanda resuelve Ignifugados Borja como negocio de su titular persona física: una sola ficha bajo su NIF público profesional, sin crear una SL ficticia ni confundirlo con QDQ, proveedor de la web.
 
+### Complementos de descripciones de empresa
+
+Los complementos de resumen son independientes de la importación de actividad de pasiva. El [lote histórico de descripciones](research/descripciones-pasiva-historicas-2026-10-25.json) completa 173 valores vacíos; conserva 130 textos existentes. Antes de escribir se contrastan ID y CIF/NIF, se guarda respaldo y se aborta ante una descripción concurrente diferente. La escritura modifica únicamente `descripcion`, registra `AuditLog` con texto anterior, posterior y fuentes, y comprueba que repetir no cree más cambios ni auditorías. Se verifican los 303 resúmenes en la API de producción. No se ejecuta como cron ni reescribe fichas de PCI activa que ya tengan descripción.
+
 ## Configuración del chat
 
 `CHAT_READONLY_DATABASE_URL` debe apuntar al rol de lectura del chat en cada entorno. No registrar la URL en logs. El rol y sus exclusiones están definidos en `scripts/create-chat-readonly-role.ts`; su creación ya se realizó (#187).
