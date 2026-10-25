@@ -87,7 +87,7 @@ Los nulos no pisan cifras previas, los años íntegramente a cero no se cargan y
 El lote y sus fuentes están en [Protección pasiva](PROTECCION_PASIVA.md). La migración aditiva de pasiva debe estar aplicada antes de desplegar código que lea esas columnas. El script no descubre empresas automáticamente: recibe filas previamente revisadas.
 
 ```powershell
-node --env-file=.env.local --import tsx scripts/import-pasiva.ts docs/research/pasiva-validada-ampliacion7-2026-10-25.json
+node --env-file=.env.local --import tsx scripts/import-pasiva.ts docs/research/pasiva-validada-ampliacion8-2026-10-25.json
 ```
 
 Simula por defecto. La escritura requiere `--apply`, revalida el cruce en una transacción y usa un advisory lock para serializar importaciones de pasiva. Si queda una fila `revisar`, se aborta todo el lote. Bloquea CIF duplicados o ambiguos, dominios asociados a otro CIF, leads anónimos y revisiones negativas previas. Las altas exigen identidad fiscal, localización y `permitirAlta=true`; se crean fuera de perímetro y con estado SABI sin consultar.
@@ -97,6 +97,8 @@ Los enriquecimientos conservan sector, perímetro, CRM, cuentas y fuente origina
 La octava tanda completa solo la web vacía de Samuel Martínez Arriero / Conesam (4078), con identidad pública contrastada. Se conservan Argés y sus coordenadas frente a las direcciones comerciales de Talavera/Pepino; no se traslada la ficha por descubrir una web alternativa.
 
 La novena tanda completa únicamente la web vacía de Ignisvérica (3057), con CIF del aviso corporativo. Se conservan Carcaixent y sus coordenadas frente a la dirección comercial de Almussafes. La búsqueda en otras 15 fichas sin web no escribe pasiva ni completa dominios cuando no acredita actividad e identidad suficientes.
+
+La décima tanda no completa campos ajenos a pasiva en las seis existentes. Puertas y cortinas cortafuegos irrigadas se registran con `puertas`; conductos resistentes al fuego, con `conductos`. Extracción, exutorios o cortinas de humo genéricos no confirman pasiva sin evidencia específica. Se admite fabricante con instalación propia acreditada. Los centros municipales y, para Portes Bisbal, el centro de localidad de Cruïlles tienen precisión documentada; no son coordenadas de portal. Ver [alcance técnico](PROTECCION_PASIVA.md#alcance-de-cierres-y-conductos).
 
 Cada escritura deja `AuditLog` con valores anteriores y posteriores, lote e identidad de fuente. Disponer de un respaldo de los campos afectados y revisar el informe antes de aplicar. Repetir la misma versión del lote debe devolver `sin_cambios` para todas las filas; no ejecutar la importación como cron. En el corte actual ya está aplicada.
 

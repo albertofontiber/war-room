@@ -1,0 +1,523 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "alcance": "Décima tanda: puertas y cortinas cortafuegos, incluidas irrigadas, y conductos resistentes al fuego. Fuentes asociativas y regiones; instaladoras/aplicadoras en España. Cobertura parcial.",
+  "criterio": "Identidad fiscal primaria, ejecución acreditada y cruce por CIF/NIF normalizado con el universo. No se crean fichas por marcas, delegaciones o páginas regionales.",
+  "geocodificacion": "Centros municipales y, para Portes Bisbal, centro de la localidad de Cruïlles; no precisión de portal.",
+  "empresas": [
+    {
+      "cif": "32816931W",
+      "nombre": "MIGUEL NAVEIRA MARTÍNEZ / AUTOMATISMOS NAVEIRA",
+      "web": "https://www.automatismosnaveira.com/",
+      "identidadUrl": "https://www.automatismosnaveira.com/aviso-legal.aspx",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.automatismosnaveira.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su equipo declara montaje y automatización de puertas, incluidas puertas cortafuegos, para viviendas, locales y organismos públicos. Se confirma ejecución por ese servicio concreto."
+        }
+      ],
+      "localidad": "Oleiros",
+      "provincia": "A Coruña",
+      "ccaa": "Galicia",
+      "direccion": "Rúa O Barbanza, 2, nave 4, Polígono Industrial Iñás",
+      "codigoPostal": "15171",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.automatismosnaveira.com/aviso-legal.aspx"
+      ],
+      "descubrimiento": "https://www.automatismosnaveira.com/",
+      "observaciones": "El aviso identifica a Miguel Naveira Martínez con NIF público profesional 32816931W. Se utiliza el titular real, como en el universo de activa, sin crear una SL por la marca Automatismos Naveira.",
+      "lat": 43.3548372,
+      "lng": -8.3290882,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Oleiros%2C+A+Coru%C3%B1a%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Oleiros, A Coruña, Galicia, España",
+        "osmType": "relation",
+        "osmId": 346497
+      }
+    },
+    {
+      "cif": "A17476409",
+      "nombre": "KRODE, S.A.",
+      "web": "https://www.krode.com/",
+      "identidadUrl": "https://www.krode.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.krode.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Fabrica, vende e instala puertas cortafuegos, incluidas correderas para cierre y sectorización de huecos. Declara control del proceso hasta la instalación y reparaciones propias."
+        }
+      ],
+      "localidad": "Olot",
+      "provincia": "Girona",
+      "ccaa": "Cataluña",
+      "direccion": "Calle Compositor Pep Ventura, 58",
+      "codigoPostal": "17800",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.krode.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://www.krode.com/",
+      "observaciones": "El aviso identifica A17476409 y Olot. La condición de fabricante no excluye su alta, porque la web acredita también instalación propia; no se deduce pasiva de sus puertas seccionales ordinarias.",
+      "lat": 42.1822177,
+      "lng": 2.4890211,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Olot%2C+Girona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Olot, Garrotxa, Girona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 348970
+      }
+    },
+    {
+      "cif": "A19199892",
+      "nombre": "CONTROL IGNIFUGO SOLUCIONES AVANZADAS SA",
+      "web": "https://controlignifugo.es/",
+      "identidadUrl": "https://controlignifugo.es/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.controlignifugo.es/soluciones/conductos-de-ventilacion-y-extraccion-de-humos/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta conductos de ventilación y extracción resistentes al fuego con paneles de silicato, mortero o lana de roca. Su obra del Bernabéu acredita conductos resistentes al fuego; se añade protección de conductos."
+        }
+      ],
+      "empresaIdEsperada": 5794,
+      "fuentesIdentidadLocalizacion": [
+        "https://controlignifugo.es/",
+        "https://www.controlignifugo.es/obras/estadio-santiago-bernabeu/"
+      ],
+      "descubrimiento": "https://www.controlignifugo.es/soluciones/conductos-de-ventilacion-y-extraccion-de-humos/",
+      "observaciones": "Se amplía la ficha 5794, CISA, ya confirmada. El conducto resistente al fuego se representa en el servicio existente conductos; no se asigna PCI activa por esta aplicación ni se cambia esquema o filtro."
+    },
+    {
+      "cif": "B15494230",
+      "nombre": "AFICON SEGURIDAD Y CONTRAINCENDIOS, S.L.",
+      "web": "https://www.aficon.com/",
+      "identidadUrl": "https://www.aficon.com/aviso-legal.html",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.aficon.com/produtos-contraincendios-coru%C3%B1a.html",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su oferta de productos incluye puertas cortafuegos con estructura de acero y cierre; declara instalación y mantenimiento de los productos suministrados, además de la venta."
+        }
+      ],
+      "empresaIdEsperada": 2781,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.aficon.com/aviso-legal.html",
+        "https://www.aficon.com/"
+      ],
+      "descubrimiento": "https://www.aficon.com/produtos-contraincendios-coru%C3%B1a.html",
+      "observaciones": "Nueva confirmación de la ficha 2781 por instalación de cierres cortafuegos. No se añade calificación por su certificado de calidad ni pasiva por vender mantas u otros equipos."
+    },
+    {
+      "cif": "B17956459",
+      "nombre": "CREANI",
+      "web": "https://creani.net/",
+      "identidadUrl": "https://creani.net/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://creani.net/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece instalación y mantenimiento de cerramientos cortafuego de vidrio y perfilería, puertas y cortinas. Publica proyectos propios de puertas EI y cortinas de sectorización, además de mantenimiento de estas instalaciones."
+        }
+      ],
+      "localidad": "Granollers",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Calle Enric Granados, 18",
+      "codigoPostal": "08403",
+      "fuentesIdentidadLocalizacion": [
+        "https://creani.net/politica-de-privacidad/",
+        "https://creani.net/servicios/",
+        "https://creani.net/contacto/"
+      ],
+      "descubrimiento": "https://creani.net/",
+      "observaciones": "La política de privacidad, leída en navegador, identifica B17956459 y domicilio en Granollers. Se conserva el nombre publicado CREANI; no se crean entidades por sus sedes internacionales. La fuente de actividad es instalación y mantenimiento propios, no la mera fabricación de vidrio.",
+      "lat": 41.6079555,
+      "lng": 2.2876008,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Granollers%2C+Barcelona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Granollers, Vallès Oriental, Barcelona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 346608
+      }
+    },
+    {
+      "cif": "B19555473",
+      "nombre": "NEVADA FIRE S.L.",
+      "web": "https://www.nevadafire.es/",
+      "identidadUrl": "https://www.nevadafire.es/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.nevadafire.es/puertas-cortafuegos.html",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara distribución e instalación propia de puertas cortafuegos batientes, correderas, guillotina y a medida. Distingue expresamente instalación del suministro."
+        }
+      ],
+      "empresaIdEsperada": 3090,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.nevadafire.es/"
+      ],
+      "descubrimiento": "https://www.nevadafire.es/puertas-cortafuegos.html",
+      "observaciones": "Nueva confirmación en la ficha 3090, dominio único ya vinculado. Se conservan sus datos y no se confunde con Ingeniería Nevada B18699520."
+    },
+    {
+      "cif": "B23785546",
+      "nombre": "SISTEMAS GUADALQUIVIR SLU",
+      "web": "https://www.sistemasguadalquivir.com/",
+      "identidadUrl": "https://www.sistemasguadalquivir.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://contraincendios.sistemasguadalquivir.com/sistemas-de-sectorizacion-en-jaen/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara instalación de sistemas de sectorización en Jaén, con puertas y cortinas cortafuegos y sellados de pasos de instalaciones."
+        }
+      ],
+      "empresaIdEsperada": 2652,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.sistemasguadalquivir.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://contraincendios.sistemasguadalquivir.com/sistemas-de-sectorizacion-en-jaen/",
+      "observaciones": "Nueva confirmación de la ficha 2652 con CIF corporativo B23785546. No se atribuye al registro 4675, que comparte nombre pero tiene NIF 15513528M; no se fusionan ni se modifica esa otra ficha."
+    },
+    {
+      "cif": "B34186320",
+      "nombre": "DRHUMO SOLUCIONES Y SERVICIOS, S.L.",
+      "web": "https://doctorhumo.com/",
+      "identidadUrl": "https://doctorhumo.com/content/2-aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://doctorhumo.com/content/10-gases-y-ventilacion-conductos-ei",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Diseña y monta conductos con resistencia al fuego EI-30, EI-60 y EI-120 para extracción y ventilación; publica certificación del trabajo realizado. Pasiva se acredita por la resistencia al fuego del conducto, no por la extracción genérica."
+        }
+      ],
+      "localidad": "Villalobón",
+      "provincia": "Palencia",
+      "ccaa": "Castilla y León",
+      "direccion": "Calle del Mesón, 29",
+      "codigoPostal": "34419",
+      "fuentesIdentidadLocalizacion": [
+        "https://doctorhumo.com/content/2-aviso-legal",
+        "https://doctorhumo.com/content/3-politica-de-privacidad",
+        "https://www.drhumo.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://doctorhumo.com/content/10-gases-y-ventilacion-conductos-ei",
+      "observaciones": "Se agrupan doctorhumo.com y drhumo.com por el mismo titular y CIF B34186320. B34254045 corresponde al proveedor informático citado en privacidad y no se incorpora. El RITE declarado no se transforma en RIPCI ni acredita automáticamente PCI activa.",
+      "lat": 42.0306729,
+      "lng": -4.5036687,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Villalob%C3%B3n%2C+Palencia%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Villalobón, Palencia, Castilla y León, España",
+        "osmType": "relation",
+        "osmId": 346165
+      }
+    },
+    {
+      "cif": "B35749340",
+      "nombre": "COLLBAIX CANARIAS, S.L.",
+      "web": "https://collbaix.com/canarias/",
+      "identidadUrl": "https://collbaix.com/canarias/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://guia.aenaga.com/ver-empresa-TVRFNQ%3D%3D",
+          "fuente": "AENAGA / Guía de la Zona Industrial de Arinaga",
+          "tipo": "asociacion",
+          "fecha": "2026-10-25",
+          "descripcion": "El perfil de la empresa en AENAGA declara diseño, fabricación e instalación de puertas cortafuegos, entre otros accesos. La web de la sociedad canaria confirma instalación propia; no se atribuye la actividad por el catálogo del grupo."
+        }
+      ],
+      "localidad": "Agüimes",
+      "provincia": "Las Palmas",
+      "ccaa": "Canarias",
+      "direccion": "Calle Las Mimosas, 41 B, Polígono Industrial de Arinaga",
+      "codigoPostal": "35118",
+      "fuentesIdentidadLocalizacion": [
+        "https://collbaix.com/canarias/aviso-legal/",
+        "https://collbaix.com/canarias/"
+      ],
+      "descubrimiento": "https://guia.aenaga.com/ver-empresa-TVRFNQ%3D%3D",
+      "observaciones": "Aviso corporativo leído en navegador con B35749340, titular canario y domicilio de Agüimes. La asociación identifica expresamente a esa sociedad y su instalación de puertas cortafuegos. No se da de alta una delegación ni la cabecera peninsular bajo el mismo CIF.",
+      "lat": 27.9049541,
+      "lng": -15.4445131,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Ag%C3%BCimes%2C+Las+Palmas%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Agüimes, Las Palmas, Canarias, España",
+        "osmType": "relation",
+        "osmId": 345127
+      }
+    },
+    {
+      "cif": "B55123806",
+      "nombre": "PORTES BISBAL, S.L. / ÀNGEL MIR",
+      "web": "https://www.angelmir.com/",
+      "identidadUrl": "https://angelmir.com/index.php/es/aviso-legal.html",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.angelmir.com/es-mx/empresa.html",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Diseña, fabrica y monta puertas industriales, incluidas cortafuegos, con servicio de entrega e instalación. Se confirma pasiva por los cierres resistentes al fuego de su oferta propia."
+        }
+      ],
+      "localidad": "Cruïlles, Monells i Sant Sadurní de l'Heura",
+      "provincia": "Girona",
+      "ccaa": "Cataluña",
+      "direccion": "Barrio Bordeta, s/n",
+      "codigoPostal": "17116",
+      "fuentesIdentidadLocalizacion": [
+        "https://angelmir.com/index.php/es/aviso-legal.html"
+      ],
+      "descubrimiento": "https://www.angelmir.com/es-mx/empresa.html",
+      "observaciones": "El aviso identifica B-55.123.806 y Cruïlles, Girona. Àngel Mir es la marca del titular Portes Bisbal. La página de empresa pertenece al dominio corporativo y describe expresamente la operación española; no se crea una entidad extranjera por el prefijo de idioma /es-mx/ ni fichas por delegaciones. Coordenadas del centro de la localidad de Cruïlles (no del portal), identificada por municipio y código postal en Nominatim.",
+      "lat": 41.9558251,
+      "lng": 3.0114014,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Cru%C3%AFlles%2C+Monells+i+Sant+Sadurn%C3%AD+de+l%27Heura%2C+Girona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "localidad",
+        "fecha": "2026-10-25",
+        "resultado": "Cruïlles, Sant Sadurní de l'Heura, Cruïlles, Monells i Sant Sadurní de l'Heura, Baix Empordà, Girona, Catalunya, 17116, España",
+        "osmType": "node",
+        "osmId": 8490074468
+      }
+    },
+    {
+      "cif": "B60510096",
+      "nombre": "METALOCONSTRUCCIONES MECOSA, S.L.",
+      "web": "https://www.grupomecosa.com/",
+      "identidadUrl": "https://www.grupomecosa.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.grupomecosa.com/FACS/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Fabrica e instala cierres de sectorización: puertas cortafuegos y cortinas textiles EI irrigadas y sin irrigación. Ofrece montaje y puesta en marcha; la evidencia se precisa para incluir expresamente cortinas irrigadas."
+        }
+      ],
+      "empresaIdEsperada": 5899,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.grupomecosa.com/"
+      ],
+      "descubrimiento": "https://clusterincendis.com/es/mecosa-entrevista-jose-pajares/",
+      "observaciones": "La ficha 5899 ya estaba confirmada con compartimentación y puertas. Se precisa la evidencia, sin sumar otra confirmación ni crear un servicio nuevo para irrigadas. Se mantienen domicilio y coordenadas existentes frente a otras plantas del grupo."
+    },
+    {
+      "cif": "B85276855",
+      "nombre": "PROYBOR PROTECCIÓN PASIVA, S.L.",
+      "web": "https://proybor.com/",
+      "identidadUrl": "https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?DocumentIdParam=d166314a-496b-474c-b3fb-d2cc8c6364e1&cmpntname=GetDocumentsById&source=library&srv=cmpnt",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "puertas",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://proybor.com/proteccion-pasiva-contra-incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Instala protección estructural y de forjados, aleros cortafuegos, puertas cortafuegos, sellados de pasos y conductos resistentes al fuego. Un contrato público documenta además trabajos de cierre RF y activación de irrigación."
+        }
+      ],
+      "localidad": "Getafe",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle Torneros, 34",
+      "fuentesIdentidadLocalizacion": [
+        "https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?DocumentIdParam=d166314a-496b-474c-b3fb-d2cc8c6364e1&cmpntname=GetDocumentsById&source=library&srv=cmpnt",
+        "https://proybor.com/aviso-legal/",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2023-75-28"
+      ],
+      "descubrimiento": "https://proybor.com/proteccion-pasiva-contra-incendios/",
+      "observaciones": "El aviso web está incompleto (campos de plantilla), por lo que no se utiliza para fiscalidad. El anuncio oficial 2018IN000125 del INAEM identifica B85276855. BORME 20/04/2023 publica Torneros 34, Getafe, posterior a Ciudad de Frías en la web. Se usa ese domicilio registral; se omite código postal no corroborado. Los documentos históricos no acreditan estado legal actual.",
+      "lat": 40.3070639,
+      "lng": -3.7331808,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Getafe%2C+Madrid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Getafe, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 345003
+      }
+    },
+    {
+      "cif": "B87700670",
+      "nombre": "ENERGIMAC SEGURIDAD Y CONFORT SL",
+      "web": "https://energimac.es/",
+      "identidadUrl": "https://energimac.es/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://energimac.es/servicios/cortinas-de-cantonamiento/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Incluye cortinas de sectorización y cortafuegos en su oferta de servicios, junto con montaje y servicio técnico propios. La confirmación se basa en los cierres cortafuegos, no en exutorios, ventiladores o simples cortinas de humo."
+        }
+      ],
+      "empresaIdEsperada": 1386,
+      "fuentesIdentidadLocalizacion": [
+        "https://energimac.es/",
+        "https://energimac.es/sobre-nosotros/",
+        "https://energimac.es/servicios/"
+      ],
+      "descubrimiento": "https://energimac.es/servicios/cortinas-de-cantonamiento/",
+      "observaciones": "Nueva confirmación en la ficha 1386 por su dominio único ya vinculado. Se conserva PCI activa derivada del universo previo; no se infiere una nueva habilitación ni se clasifica toda evacuación de humos como pasiva."
+    },
+    {
+      "cif": "B94134285",
+      "nombre": "TECOMSA GESTIÓN, S.L.",
+      "web": "https://tecomsa.es/",
+      "identidadUrl": "https://tecomsa.es/legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://tecomsa.es/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta construcción e instalaciones industriales y declara instalación de sistemas PCI, puertas RF y cortinas irrigadas para industrias. Se acredita pasiva por los cierres sectorizadores, sin inferir otras especialidades."
+        }
+      ],
+      "localidad": "O Grove",
+      "provincia": "Pontevedra",
+      "ccaa": "Galicia",
+      "direccion": "Monte da Vila, 3",
+      "codigoPostal": "36980",
+      "fuentesIdentidadLocalizacion": [
+        "https://tecomsa.es/legal/"
+      ],
+      "descubrimiento": "https://tecomsa.es/",
+      "observaciones": "El aviso identifica B-94.134.285, normalizado B94134285. No se confunde con Tecomsa Maquinaria del Levante, ni con otras sociedades homónimas. Una sola alta por su titular, sin otra ficha para la delegación de Madrid.",
+      "lat": 42.4701381,
+      "lng": -8.8961829,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=O+Grove%2C+Pontevedra%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "O Grove, O Salnés, Pontevedra, Galicia, España",
+        "osmType": "relation",
+        "osmId": 346268
+      }
+    }
+  ]
+}

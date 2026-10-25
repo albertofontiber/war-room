@@ -10,7 +10,7 @@ Dashboard interno M&A de Fontiber para PCI y seguridad electrónica en España. 
 
 El universo incluye empresas independientes y de grupos, con diferentes situaciones legales. `enPerimetro` expresa el criterio de inversión: no equivale a estado legal, sector, pertenencia a grupo o presencia en el CRM.
 
-La ampliación a protección pasiva se centra en instaladoras/aplicadoras, incluidas empresas existentes que también hacen pasiva. El diseño y la evidencia están en [Protección pasiva](docs/PROTECCION_PASIVA.md). No crear una empresa por cada marca, delegación o web regional.
+La ampliación a protección pasiva se centra en instaladoras/aplicadoras, incluidas empresas existentes que también hacen pasiva. El diseño y la evidencia están en [Protección pasiva](docs/PROTECCION_PASIVA.md). No crear una empresa por cada marca, delegación o web regional. La búsqueda incluye puertas y cortinas cortafuegos, también irrigadas de sectorización, y conductos de ventilación/extracción resistentes al fuego. Extracción o cortinas de humo genéricos no confirman por sí solos pasiva; usar los servicios existentes `puertas` y `conductos` según la evidencia.
 
 ## 2. Mapa del código
 

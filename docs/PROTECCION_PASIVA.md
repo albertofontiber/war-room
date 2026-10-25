@@ -1,10 +1,36 @@
 # Protección pasiva: actividad transversal y ampliación del universo
 
-Revisión: **25/10/2026, Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y nueve lotes están aplicados en producción: **291 entidades con pasiva confirmada**.
+Revisión: **25/10/2026, Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y diez lotes están aplicados en producción: **303 entidades con pasiva confirmada**.
 
 ## Resultado aplicado
 
-La novena tanda del 25/10 revisa **35 casos** —incluidas **16 fichas existentes sin web**— y aplica **3 altas y 3 enriquecimientos**. El universo pasa de **5.880 a 5.883 empresas** y las confirmadas de PCI pasiva, de **286 a 291**. El [noveno lote](research/pasiva-validada-ampliacion7-2026-10-25.json) conserva identidad fiscal primaria, ejecución, fuentes y coordenadas municipales. El [seguimiento vigente](research/pasiva-ampliacion7-seguimiento-2026-10-25.json) distingue seis fichas modificadas, cuatro ya confirmadas sin escritura, 23 casos sin confirmación suficiente y dos distribuidores sin ejecución propia contrastada. No son 35 altas ni un barrido de todas las fichas sin web.
+La décima tanda del 25/10 revisa **32 candidatas y fichas** con foco en puertas y cortinas cortafuegos —incluidas irrigadas— y conductos resistentes al fuego. Aplica **8 altas y 6 enriquecimientos**: el universo pasa de **5.883 a 5.891 empresas** y las confirmadas de PCI pasiva, de **291 a 303**. El [décimo lote](research/pasiva-validada-ampliacion8-2026-10-25.json) conserva identidad fiscal, ejecución y localización; el [seguimiento vigente](research/pasiva-ampliacion8-seguimiento-2026-10-25.json) distingue 14 fichas modificadas, cuatro ya confirmadas sin escritura, 13 casos sin confirmación suficiente y un fabricante sin ejecución de pasiva contrastada.
+
+Las ocho altas son **Creani, Tecomsa Gestión, Proybor Protección Pasiva, Krode, Portes Bisbal / Àngel Mir, DrHumo Soluciones y Servicios, Miguel Naveira Martínez / Automatismos Naveira y Collbaix Canarias**. No existían por CIF/NIF, nombre o dominio en el universo previo. Se incorporan bajo el titular real, también el autónomo, sin fichas por marcas o delegaciones. Proybor usa CIF de una adjudicación oficial y domicilio de Getafe publicado en BORME en 2023, posterior al de la web; se omite código postal no corroborado. Los documentos históricos no acreditan estado legal actual.
+
+**Aficon (2781), Nevada Fire (3090), Sistemas Guadalquivir (2652) y Energimac (1386)** se confirman por primera vez como pasiva. **CISA / Control Ignífugo (5794)** ya estaba confirmada y añade protección de conductos; **Mecosa (5899)** precisa la evidencia de cortinas irrigadas y sin irrigación en el servicio actual de puertas. Se conserva la otra ficha homónima de Sistemas Guadalquivir, con NIF distinto. Catorce fichas trabajadas añaden doce confirmaciones.
+
+La simulación no dejó filas para revisar. Se generaron **14 auditorías** y repetir el lote devuelve `sin_cambios=14`, sin nuevas escrituras. Se conservan por huella todos los campos ajenos a pasiva de las seis existentes, sus cuentas, CRM y recuentos de tareas/notas/contactos; permanecen las **23.620** filas financieras. Las altas quedan fuera de perímetro y sin estado SABI. Pasan los **11 tests** de pasiva/importador. La API de producción comprueba 14 CIF/NIF únicos en lite/full, sus 14 fichas con fuentes, 16 combinaciones y exportación de **303** confirmadas.
+
+La cobertura aumenta en nueve provincias; Zamora sigue sin confirmadas en nuestra base, sin inferir ausencia de oferta. Las coordenadas nuevas son centros municipales salvo Portes Bisbal, que usa el centro de la localidad de Cruïlles; ninguna tiene precisión de portal. Gruman queda pendiente porque su web actual devuelve una plantilla/404 frente al contenido del índice. Insonotec requiere atribuir fiscalmente el nuevo dominio antes de trasladar servicios. Las consultas acotadas de Global Fire, AMS/ASM, Parfoc, Igniva y PYL Bages no resuelven sus identidades; no se reconsultan todos los pendientes históricos.
+
+## Alcance de cierres y conductos
+
+La aclaración de Alberto del 25/10 incorpora expresamente estas vías a la búsqueda, manteniendo los campos y servicios actuales:
+
+| Evidencia de ejecución propia | Servicio actual |
+|---|---|
+| Instalación o mantenimiento de puertas y cortinas cortafuegos, incluidas cortinas irrigadas de sectorización | `puertas` — Puertas y cortinas cortafuegos; la irrigación se describe en la evidencia |
+| Instalación o protección de conductos de ventilación/extracción con resistencia al fuego acreditada | `conductos` — Protección de conductos |
+| Ventiladores, exutorios, presurización, extracción genérica o cortinas de humo sin resistencia al fuego acreditada | No confirman por sí solos PCI pasiva |
+
+La [nota de UNE y Tecnifuego](https://www.une.org/salainformaciondocumentos/NP%20Norma%20UNE%20Tecnifuego%20sept-19.pdf) incluye cortinas cortafuegos irrigadas en instalación y mantenimiento. La [guía de conductos de Tecnifuego](https://ant.tecnifuego.org/GuiaConductos/GuiaConductos2018.pdf) distingue la resistencia al fuego de los conductos; el ejemplo de [CISA](https://www.controlignifugo.es/soluciones/conductos-de-ventilacion-y-extraccion-de-humos/) entra por esa propiedad. Los sistemas de control de humos y calor figuran en el [RIPCI, anexo I, sección 13](https://www.boe.es/buscar/act.php?id=BOE-A-2017-6606). No se etiqueta toda ventilación como pasiva ni se infiere habilitación o actividad activa en una alta de investigación. Fabricantes con montaje propio acreditado pueden incorporarse; el suministro por sí solo no basta.
+
+## Histórico de tandas
+
+### Novena tanda (histórico)
+
+La novena tanda del 25/10 revisa **35 casos** —incluidas **16 fichas existentes sin web**— y aplica **3 altas y 3 enriquecimientos**. El universo pasa de **5.880 a 5.883 empresas** y las confirmadas de PCI pasiva, de **286 a 291**. El [noveno lote](research/pasiva-validada-ampliacion7-2026-10-25.json) conserva identidad fiscal primaria, ejecución, fuentes y coordenadas municipales. El [seguimiento de la novena tanda](research/pasiva-ampliacion7-seguimiento-2026-10-25.json) distingue seis fichas modificadas, cuatro ya confirmadas sin escritura, 23 casos sin confirmación suficiente y dos distribuidores sin ejecución propia contrastada. No son 35 altas ni un barrido de todas las fichas sin web.
 
 Las tres altas son **Garrepal** (Fuentes de Valdepero, Palencia), **Cerrajes y Metálicas Arranz** (Torrecilla del Pinar, Segovia) y **Montajes Segovia** (Humanes de Madrid, Madrid). No existían por CIF, nombre o dominio en el universo previo. Metálicas Arranz deja de estar pendiente: el aviso legal y el anuncio oficial del contrato municipal 89/2024 de Pinarejos identifican B40147118. El contrato de carpintería acredita identidad histórica; la ejecución de pasiva se acredita en la web corporativa actual. Montajes Segovia se localiza en Madrid, con servicios generales de ignifugación sin especialidad inferida.
 
