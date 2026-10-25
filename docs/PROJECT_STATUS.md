@@ -1,6 +1,6 @@
 # Estado actual del proyecto
 
-Corte: **25 de octubre de 2026, Europe/Madrid**. Base de código: [#206](https://github.com/albertofontiber/war-room/pull/206), fusionada en `26b1f1e`, con soporte de descripción en nuevas altas. Datos: duodécimo lote y complemento de descripción de Fugoroba aplicados y verificados en producción, además de los lotes anteriores. Es una instantánea fechada, no un contador en vivo.
+Corte: **25 de octubre de 2026, Europe/Madrid**. Base de código: [#207](https://github.com/albertofontiber/war-room/pull/207), fusionada en `dfdaad0`. Datos: decimotercer lote y dos descripciones iniciales completadas, aplicados y verificados en producción, además de los lotes anteriores. Es una instantánea fechada, no un contador en vivo.
 
 ## Datos comprobados
 
@@ -8,23 +8,23 @@ Consulta a la base configurada para producción mediante Prisma dentro de una tr
 
 | Métrica | Resultado | Definición |
 |---|---:|---|
-| Empresas del universo | 5.901 | `Empresa` con `esAnonima=false` |
-| Sector PCI | 4.663 | Valor `PCI` |
+| Empresas del universo | 5.920 | `Empresa` con `esAnonima=false` |
+| Sector PCI | 4.682 | Valor `PCI` |
 | Seguridad electrónica | 770 | Valor `seguridad_electronica` |
 | Mixtas | 468 | PCI y seguridad electrónica; no significa activa y pasiva |
-| Pasiva confirmada | 317 | `proteccionPasiva=true`; cobertura parcial, no censo del mercado |
-| Fichas de pasiva con descripción inicial | 317 | Cero descripciones vacías; tres nuevas con resumen y descripción de Fugoroba completada; 312 textos previos conservados |
+| Pasiva confirmada | 341 | `proteccionPasiva=true`; cobertura parcial, no censo del mercado |
+| Fichas de pasiva con descripción inicial | 341 | Cero vacías; 19 nuevas con resumen y dos vacías completadas; 317 textos previos conservados |
 | Actividad PCI activa | 4.994 | Universo PCI/mixto previo y categorías RIPCI válidas; excluye altas de investigación pasiva sin evidencia de activa |
 | Actividad seguridad electrónica | 1.238 | Sectores `seguridad_electronica` o `mixto` |
-| PCI activa y PCI pasiva | 178 | Ambas actividades; pueden prestar también seguridad electrónica |
+| PCI activa y PCI pasiva | 183 | Ambas actividades; pueden prestar también seguridad electrónica |
 | Las tres actividades | 28 | PCI activa, PCI pasiva y seguridad electrónica |
-| Solo PCI pasiva acreditada | 138 | Lista de actividades con únicamente pasiva; no constituye revisión negativa de las otras actividades |
+| Solo PCI pasiva acreditada | 157 | Lista de actividades con únicamente pasiva; no constituye revisión negativa de las otras actividades |
 | Años de cuentas | 23.620 | Filas de `Financiero`; no número de empresas |
 | Cuentas del ejercicio 2025 | 2.725 | Filas con `anio=2025`, todas las fuentes |
 | Años de cuentas de la extracción SABI de octubre | 15.766 | Filas con `fuente=sabi_2610` |
-| Empresas con web no nula | 3.468 | El dato no acredita que todas las webs funcionen o estén validadas |
+| Empresas con web no nula | 3.487 | El dato no acredita que todas las webs funcionen o estén validadas |
 | En perímetro sin web | 1.491 | `enPerimetro=true`, web nula o vacía y no anónima |
-| Empresas con coordenadas en las API de mapa/tabla | 5.269 | Las listas geográficas excluyen coordenadas nulas; no es el total del universo |
+| Empresas con coordenadas en las API de mapa/tabla | 5.288 | Las listas geográficas excluyen coordenadas nulas; no es el total del universo |
 | Empresas con áreas Cepreven de pasiva guardadas | 3 | Algún código `PAS-COMP`, `PAS-REAC` o `PAS-ESTR`; separado de la nueva actividad transversal |
 
 ### Estado legal SABI
@@ -40,7 +40,7 @@ Consulta a la base configurada para producción mediante Prisma dentro de una tr
 | Inactiva | 9 |
 | Situación desconocida | 46 |
 | No encontrada en SABI | 1.278 |
-| Sin consultar | 138 |
+| Sin consultar | 157 |
 
 El total de estados coincide con el universo del corte. No encontrada en SABI no implica inactividad. Las altas de pasiva conservan `estado=null` hasta una consulta SABI; no se han clasificado como activas por su web. Las métricas de actividad se solapan y no deben sumarse como sectores excluyentes. Su [criterio compartido](ACTIVIDADES.md) incorpora la aclaración de Alberto del 24/10 sobre PCI activa en el universo previo.
 
@@ -48,7 +48,17 @@ Las diez migraciones versionadas hasta `20261023140000_proteccion_pasiva` consta
 
 ### Cambio respecto al corte anterior
 
-La duodécima tanda revisa **40 candidatas y fichas**, incluidas las **15 pendientes de la undécima**, mediante AISLA, Tecnifuego, AD’IP, Cepreven y búsqueda regional. Aplica **3 altas y 3 enriquecimientos**: el universo pasa de **5.898 a 5.901 empresas** y las confirmadas de PCI pasiva, de **312 a 317**. El [duodécimo lote](research/pasiva-validada-ampliacion10-2026-10-25.json) incluye descripción inicial en todas las altas; el [seguimiento vigente](research/pasiva-ampliacion10-seguimiento-2026-10-25.json) documenta una decisión por cada pendiente anterior y los demás casos revisados.
+La decimotercera tanda aplica **19 altas y 6 enriquecimientos**, hasta **5.920 empresas y 341 confirmadas de PCI pasiva**. Las altas pertenecen a once comunidades y no existían por CIF/NIF, nombre ni dominio. Todas tienen descripción inicial; **Visufoc (2468)** y **Seyman (2363)** completan además su resumen vacío. Los **317 textos anteriores** se conservan exactamente. Ver [lote aplicado](research/pasiva-validada-ampliacion11-2026-10-25.json), [descripciones completadas](research/descripciones-pasiva-ampliacion11-2026-10-25.json) y [seguimiento vigente](research/pasiva-ampliacion11-seguimiento-2026-10-25.json).
+
+**Tecfire Continental (5943)** queda resuelta: B45841814 se verifica mediante coincidencia de nombre y dirección en VIES, el BORME recoge el cambio desde Tecfire Middle East y las obras corporativas de Santander y Alicante acreditan instalación propia. **Gernikaplac** se valida con el registro de cooperativas de Euskadi y **Roper** con fiscalidad primaria y equipo propio de montaje. **Visufoc, Echeman, Seyman, SOS Extintores Tenerife y Extincise** reciben su primera confirmación en las fichas existentes; **SIEF-2 (946)** ya estaba confirmada y añade reacción al fuego y evidencia de su dominio renovado. No se duplican marcas, sedes o autónomos bajo sociedades inventadas.
+
+El barrido conjunto cubre **once fuentes asociativas y 76 consultas en 17 comunidades, Ceuta y Melilla**. Se consolidan y reconsultan técnicamente **147 dominios con incidencias históricas**; cuatro se resuelven en el lote. El seguimiento distingue **59 decisiones manuales** del rastreo técnico y recoge los límites de cada directorio. No se presenta como censo exhaustivo: APICI carece de listado equivalente en la ruta antigua, ASIME no muestra socios y algunos perfiles de ANSPI fallan. Quedan [trece dudas prioritarias para el repaso](research/pasiva-dudas-2026-10-25.md), además del archivo técnico, sin marcar actividad negativa. Zamora sigue sin confirmadas domiciliadas entre las cincuenta provincias; también Ceuta y Melilla permanecen sin fichas confirmadas con sede propia.
+
+Se generan **25 auditorías de actividad y 2 de descripción**; repetir devuelve `sin_cambios=25` y `sin_cambios=2`. Las huellas verifican la conservación de los campos ajenos a pasiva de las seis existentes, con la única excepción de los dos resúmenes vacíos completados. Se mantienen **23.620 filas financieras**. Las altas quedan fuera de perímetro, sin estado SABI ni activa inferida y con centro municipal documentado. Pasan **11 tests** de pasiva/importador; la API de producción comprueba **25 CIF/NIF únicos**, sus fichas con fuentes y descripción, las **16 combinaciones** de actividades y exportación de **341** confirmadas. Acceso sin sesión: 401.
+
+### Corte histórico de la duodécima tanda
+
+La duodécima tanda revisa **40 candidatas y fichas**, incluidas las **15 pendientes de la undécima**, mediante AISLA, Tecnifuego, AD’IP, Cepreven y búsqueda regional. Aplica **3 altas y 3 enriquecimientos**: el universo pasa de **5.898 a 5.901 empresas** y las confirmadas de PCI pasiva, de **312 a 317**. El [duodécimo lote](research/pasiva-validada-ampliacion10-2026-10-25.json) incluye descripción inicial en todas las altas; el [seguimiento de la duodécima tanda](research/pasiva-ampliacion10-seguimiento-2026-10-25.json) documenta una decisión por cada pendiente anterior y los demás casos revisados.
 
 Las tres altas resuelven candidatas pendientes: **Aislamientos Eduardo Castillo / Aislamientos Zaragoza**, **Incopac 90** y **Revestimientos de Pinturas y Espumas Aislantes / Redepesa**. No existían por CIF/NIF, nombre ni dominio. Incopac aporta obras propias en su blog técnico histórico, enlazado desde el dominio corporativo, y mantiene oferta actual de pasiva. Redepesa ejecuta ignifugación estructural; fuentes oficiales enlazan titular y marca. Se utiliza su domicilio de Sevilla publicado en BORME en 2022, posterior al de Jazmines 43 de Osuna; el contacto operativo de la web en Osuna queda documentado. No se crean entidades por puntos de venta o áreas atendidas.
 
@@ -56,7 +66,7 @@ Las tres altas resuelven candidatas pendientes: **Aislamientos Eduardo Castillo 
 
 El lote de actividad genera **6 auditorías** y repetir devuelve `sin_cambios=6`; no hay identidades ambiguas. Se conservan por huella cuentas, CRM y recuentos relacionados de las tres existentes, con **23.620** filas financieras sin variación. Las tres altas quedan fuera de perímetro y sin estado SABI, con coordenadas municipales. Pasan los **11 tests** de pasiva/importador; la API de producción verifica seis CIF/NIF únicos, sus seis fichas con fuentes y descripción, 16 combinaciones y exportación de **317** confirmadas. El barrido de las 317 encuentra cero descripciones vacías y conserva los 312 textos previos exactamente.
 
-De las quince pendientes anteriores, tres se incorporan y doce no reciben alta: nueve mantienen una validación concreta pendiente; ZAT, Aislatodo y Tabinorba quedan fuera del alta inmediata en este corte, sin clasificación negativa en la base. Para ZAT, el BOE acredita una revocación histórica del NIF en 2022, sin deducir situación vigente ni ausencia de rehabilitación; falta además ejecución primaria actual. Tecfire se añade como nueva candidata pendiente de identidad fiscal primaria. Zamora sigue sin confirmadas domiciliadas; la cobertura del mercado continúa siendo parcial.
+De las quince pendientes anteriores, tres se incorporan y doce no reciben alta: nueve mantienen una validación concreta pendiente; ZAT, Aislatodo y Tabinorba quedan fuera del alta inmediata en este corte, sin clasificación negativa en la base. Para ZAT, el BOE acredita una revocación histórica del NIF en 2022, sin deducir situación vigente ni ausencia de rehabilitación; falta además ejecución primaria actual. En ese corte Tecfire se añadió como pendiente fiscal; queda resuelta y dada de alta en la decimotercera tanda. Zamora sigue sin confirmadas domiciliadas; la cobertura del mercado continúa siendo parcial.
 
 ### Corte histórico de la undécima tanda
 
@@ -196,7 +206,7 @@ Versiones declaradas: Next.js 15.5.18, React/React DOM 19.2.4, Prisma 5.22, Next
 - Filtro de actividades: **713 tests correctos en 63 archivos**, TypeScript y build locales correctos. Las pruebas cubren todas las combinaciones de las tres actividades, ambas modalidades, exclusión de activa en altas de pasiva sin RIPCI, consistencia de lite/full/ficha/exportación y filtrado/conteos de pipeline. Sin migración ni nuevas escrituras de datos.
 - Verificación histórica de APIs en #195, antes de la cuarta tanda: 5.192 registros, 16 combinaciones coherentes, 22 con las tres actividades, 160 con activa y pasiva y 222 con pasiva. Fichas de Plasfoc, Naes, IPS, Sella2, Técnicas de Refractarios y Project TGN y exportación coherentes; acceso anónimo 401.
 - Verificación visual de #195, antes de la cuarta tanda: 22 con las tres, 160 con activa y pasiva, 222 con pasiva y 5.192 al elegir cualquiera de las tres. Controles y resultados revisados en 375 px, 768 px y escritorio; sin desbordamiento del nuevo control. La tabla completa conserva su desplazamiento horizontal en tablet. #196 verifica en esos tamaños la posición y el color de «Limpiar» junto a Actividades y que no borre la provincia. La cuarta tanda modifica datos/documentación, sin cambios de UI.
-- API de producción de la tercera tanda: lite/full y exportación con **222** de pasiva y los 38 CIF exactamente una vez; fichas de Plasfoc, Naes, Blinders, IPS Incendio, Gestiplac, Brapesa Canarias, Sella2, Técnicas de Refractarios, Escadur y Project TGN verificadas. Es una comprobación histórica, anterior al recuento actual de 291.
+- API de producción de la tercera tanda: lite/full y exportación con **222** de pasiva y los 38 CIF exactamente una vez; fichas de Plasfoc, Naes, Blinders, IPS Incendio, Gestiplac, Brapesa Canarias, Sella2, Técnicas de Refractarios, Escadur y Project TGN verificadas. Es una comprobación histórica, anterior a las ampliaciones posteriores.
 - La CI del repositorio aplica migraciones, compara el esquema y ejecuta tests, typecheck y build; su resultado y el despliegue se enlazan desde la PR de esta entrega.
 - Repositorio público en este corte. La confidencialidad de los datos depende de la autenticación y permisos de la aplicación.
 
@@ -204,6 +214,7 @@ Versiones declaradas: Next.js 15.5.18, React/React DOM 19.2.4, Prisma 5.22, Next
 
 | Fecha | Entrega | Evidencia |
 |---|---|---|
+| 25/10/2026 | Barrido conjunto de once fuentes y diecinueve territorios: 19 altas, 6 enriquecimientos y dos resúmenes completados; Tecfire, Gernikaplac y Roper resueltas; 341 confirmadas | [Decimotercer lote](research/pasiva-validada-ampliacion11-2026-10-25.json), [seguimiento](research/pasiva-ampliacion11-seguimiento-2026-10-25.json), [dudas para el repaso](research/pasiva-dudas-2026-10-25.md) |
 | 25/10/2026 | 35 casos y 16 fichas sin web revisados: 3 altas y 3 enriquecimientos; Metálicas Arranz resuelto y 291 confirmadas. Lugo, Palencia y Segovia incorporan su primera ficha confirmada | [Noveno lote](research/pasiva-validada-ampliacion7-2026-10-25.json), [seguimiento y cobertura](research/pasiva-ampliacion7-seguimiento-2026-10-25.json) |
 | 25/10/2026 | Revisión dirigida por huecos provinciales: 34 candidatas/fichas, 9 altas, 5 enriquecimientos; Aplicanor y Conesam resueltos, 286 confirmadas | [Octavo lote](research/pasiva-validada-ampliacion6-2026-10-25.json), [seguimiento y cobertura](research/pasiva-ampliacion6-seguimiento-2026-10-25.json) |
 | 25/10/2026 | Quinta ampliación asociativa/regional: 5 altas y 4 enriquecimientos dentro del modelo actual; Borja resuelto y 274 confirmadas acumuladas | [Séptimo lote](research/pasiva-validada-ampliacion5-2026-10-25.json), [seguimiento de la séptima tanda](research/pasiva-ampliacion5-seguimiento-2026-10-25.json) |

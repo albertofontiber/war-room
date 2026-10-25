@@ -1,0 +1,1004 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "alcance": "Decimotercera tanda: barrido conjunto de asociaciones, 17 comunidades autónomas, Ceuta y Melilla y pendientes históricos, incluida Tecfire. Cobertura de búsqueda documentada, no censo exhaustivo de operadores.",
+  "criterio": "Identidad fiscal primaria y ejecución contrastada; cruce por CIF/NIF, denominación y dominio. Altas con descripción inicial y localización; se conservan identidad, descripciones no vacías y datos operativos de las existentes.",
+  "geocodificacion": "Centros municipales de domicilios publicados, sin precisión de portal.",
+  "empresas": [
+    {
+      "cif": "07961536V",
+      "nombre": "FRANCISCO JAVIER PORTELA GARCÍA / METALKILAMA",
+      "web": "https://www.metalkilama.com/",
+      "identidadUrl": "https://www.metalkilama.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.metalkilama.com/servicios/puertas/puertas-industriales/puertas-correderas-cortafuego/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa se presenta como instaladora de puertas y cerramientos y ofrece puertas correderas cortafuegos de una y dos hojas dentro de su gama industrial."
+        }
+      ],
+      "localidad": "Salamanca",
+      "provincia": "Salamanca",
+      "ccaa": "Castilla y León",
+      "direccion": "Calle Colombia, 18, bajo",
+      "codigoPostal": "37003",
+      "descripcion": "Instalación de ventanas, puertas, acristalamientos y cerramientos. Su oferta incluye puertas industriales correderas cortafuegos, automatismos y soluciones de protección solar.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.metalkilama.com/aviso-legal",
+        "https://www.metalkilama.com/",
+        "https://www.metalkilama.com/empresa/"
+      ],
+      "descubrimiento": "https://www.metalkilama.com/servicios/puertas/puertas-industriales/puertas-correderas-cortafuego/",
+      "observaciones": "Titular autónomo identificado con NIF profesional público en el aviso; no se inventa una SL. La ejecución se contrasta en la presentación corporativa como instaladora y la especialidad en su servicio de puertas correderas cortafuegos.",
+      "lat": 40.9651572,
+      "lng": -5.6640182,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Salamanca%2C+Salamanca%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Salamanca, Castilla y León, España",
+        "osmType": "relation",
+        "osmId": 344342
+      }
+    },
+    {
+      "cif": "39646668G",
+      "nombre": "JOSEP M. PUIG PRATS / AÏLLAMENTS PIRINEU",
+      "web": "https://www.aillamentspirineu.com/",
+      "identidadUrl": "https://www.aillamentspirineu.com/es/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.aillamentspirineu.com/es/servicios/proteccion-contra-incendios",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara ejecución de protección pasiva de estructuras metálicas, forjados y elementos constructivos con mortero proyectado y lana de roca."
+        }
+      ],
+      "localidad": "Arbeca",
+      "provincia": "Lleida",
+      "ccaa": "Cataluña",
+      "direccion": "Avenida Miralcamp, 1",
+      "codigoPostal": "25140",
+      "descripcion": "Instalación de aislamientos térmicos y acústicos mediante proyección e insuflado e impermeabilización. Ejecuta protección pasiva de estructuras y forjados con morteros y lana de roca.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.aillamentspirineu.com/es/aviso-legal"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/",
+      "observaciones": "El aviso y la política identifican expresamente al titular autónomo y su NIF profesional público. Se conserva la forma abreviada Josep M. publicada por el titular; no se inventa una denominación social.",
+      "lat": 41.5342106,
+      "lng": 0.9396108,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Arbeca%2C+Lleida%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Arbeca, Garrigues, Lleida, Catalunya, 25140, España",
+        "osmType": "relation",
+        "osmId": 347860
+      }
+    },
+    {
+      "cif": "70242480C",
+      "nombre": "MIGUEL FRANCISCO SAN ANTONIO CONTRERAS / AISLAPOL",
+      "web": "https://www.aislapol.es/",
+      "identidadUrl": "https://www.aislapol.es/index.php?seccion=LEGAL",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.aislapol.es/index.php?seccion=IGNIF",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Publica instalación de protección pasiva en estructuras, conductos y forjados, proyección de morteros, aplicación de pinturas intumescentes, franjas cortafuegos y divisiones con placas. Incluye una galería de trabajos ejecutados."
+        }
+      ],
+      "localidad": "Yuncler",
+      "provincia": "Toledo",
+      "ccaa": "Castilla-La Mancha",
+      "direccion": "Calle Artesanía, 9, Polígono Las Atalayas",
+      "codigoPostal": "45529",
+      "descripcion": "Aplicación de aislamientos de poliuretano e ignifugaciones. Ejecuta protección de estructuras, conductos y forjados con morteros, pinturas intumescentes y placas, además de franjas cortafuegos.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.aislapol.es/index.php?seccion=LEGAL"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/",
+      "observaciones": "Titular autónomo identificado con NIF profesional público 70242480C en el aviso. El parser técnico detectó un falso F70242480 por el texto «CIF»; se corrige manualmente al NIF literal, con letra de control verificada. No se inventa una cooperativa ni una SL.",
+      "lat": 40.0440004,
+      "lng": -3.9008053,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Yuncler%2C+Toledo%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Yuncler, Toledo, Castilla-La Mancha, 45529, España",
+        "osmType": "relation",
+        "osmId": 341891
+      }
+    },
+    {
+      "cif": "A50228733",
+      "nombre": "ECHEMAN, S.A.",
+      "web": "https://echeman.es/",
+      "identidadUrl": "https://echeman.es/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://echeman.es/servicios/instalaciones-contra-incendios",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La página de instalaciones contra incendios incluye puertas cortafuegos y accesorios e ignifugación. Se confirma la actividad y puertas, sin inferir otras especialidades de ignifugación no detalladas."
+        }
+      ],
+      "empresaIdEsperada": 1312,
+      "fuentesIdentidadLocalizacion": [
+        "https://echeman.es/aviso-legal"
+      ],
+      "descubrimiento": "https://echeman.es/servicios/instalaciones-contra-incendios",
+      "observaciones": "Se reutiliza la ficha 1312 y se conserva su web histórica echeman.com, además de descripción, ubicación, estado y CRM. El aviso de echeman.es identifica el mismo A50228733."
+    },
+    {
+      "cif": "B10444495",
+      "nombre": "ECCOAISLA EXTREMADURA, S.L.",
+      "web": "https://eccoaisla.com/",
+      "identidadUrl": "https://eccoaisla.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://eccoaisla.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La instaladora incluye aislamientos proyectados y protección pasiva de forjados de garaje y estructuras metálicas en su oferta. Se conserva confirmación general al no desarrollar en la página de proyectados el sistema resistente al fuego de cada caso."
+        }
+      ],
+      "localidad": "Cáceres",
+      "provincia": "Cáceres",
+      "ccaa": "Extremadura",
+      "direccion": "Calle Tejedores, parcela 323, Polígono Las Capellanías",
+      "codigoPostal": "10005",
+      "descripcion": "Instalación de aislamientos térmicos y acústicos, tratamientos de humedades e impermeabilización. Su oferta incluye aislamientos proyectados y protección pasiva para forjados y estructuras metálicas.",
+      "fuentesIdentidadLocalizacion": [
+        "https://eccoaisla.com/aviso-legal/",
+        "https://eccoaisla.com/aislamientos-proyectados/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/",
+      "observaciones": "Se atribuye la oferta al titular fiscal del sitio y la sede de Cáceres. La red comercial y las páginas provinciales no se convierten en empresas independientes ni prueban sedes en Zamora u otras provincias.",
+      "lat": 39.4745175,
+      "lng": -6.3716761,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=C%C3%A1ceres%2C+C%C3%A1ceres%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Cáceres, Extremadura, España",
+        "osmType": "relation",
+        "osmId": 1899973
+      }
+    },
+    {
+      "cif": "B12019659",
+      "nombre": "BAYGAR, S.L.",
+      "web": "https://baygar.com/",
+      "identidadUrl": "https://baygar.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://baygar.com/puertas-y-herrajes/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara suministro y colocación de puertas cortafuegos y sus herrajes. Documenta puertas de guillotina, correderas y batientes instaladas en Galicia, además de referencias en edificios públicos y hospitales."
+        }
+      ],
+      "localidad": "Vilagarcía de Arousa",
+      "provincia": "Pontevedra",
+      "ccaa": "Galicia",
+      "direccion": "Lugar de Ande, s/n, Rubianes",
+      "codigoPostal": "36619",
+      "descripcion": "Venta y alquiler de maquinaria y equipos para construcción e industria. Suministra e instala puertas cortafuegos, multiusos y de vivienda, con sus herrajes y soluciones de control de accesos.",
+      "fuentesIdentidadLocalizacion": [
+        "https://baygar.com/aviso-legal/",
+        "https://baygar.com/gl/aviso-legal/"
+      ],
+      "descubrimiento": "https://baygar.com/puertas-y-herrajes/",
+      "observaciones": "Se distingue su actividad de suministro de maquinaria de la colocación propia de puertas, expresamente documentada. Las delegaciones de Vigo y Ourense no generan altas separadas.",
+      "lat": 42.5950502,
+      "lng": -8.7430537,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Vilagarc%C3%ADa+de+Arousa%2C+Pontevedra%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Vilagarcía de Arousa, O Salnés, Pontevedra, Galicia, España",
+        "osmType": "relation",
+        "osmId": 345680
+      }
+    },
+    {
+      "cif": "B25233487",
+      "nombre": "SIEF 2 SL",
+      "web": "https://www.sief2.com/",
+      "identidadUrl": "https://www.sief2.com/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.sief2.com/servicios/proteccion-contra-incendios-pasiva",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La oferta de ejecución con personal propio incluye tratamiento ignífugo de madera y textiles, además de las especialidades ya confirmadas. La obra de La Gatassa documenta ignifugación de forjados con mortero sobre malla."
+        }
+      ],
+      "empresaIdEsperada": 946,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.sief2.com/politica-de-privacidad",
+        "https://www.sief2.com/proyectos/proyecto-residencia-gatassa-mataro"
+      ],
+      "descubrimiento": "https://www.sief2.com/servicios/proteccion-contra-incendios-pasiva",
+      "observaciones": "Se resuelve el dominio renovado sief2.com mediante B25233487. La ficha 946 ya tenía pasiva; se añade reacción al fuego y evidencia, conservando web histórica sief2.es, descripción, grupo y CRM. No se crean fichas por Barcelona, Tarragona o Vielha ni se atribuye conductos a partir de compuertas genéricas."
+    },
+    {
+      "cif": "B30265599",
+      "nombre": "EXTINCION CONTRA INCENDIOS Y SEGURIDAD S.L.",
+      "web": "https://www.extincise.com/",
+      "identidadUrl": "https://www.extincise.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://extincise.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa declara instalación y mantenimiento de sistemas tanto de protección activa como pasiva. Se confirma pasiva general, sin derivar especialidades de los equipos que fabrica o comercializa."
+        }
+      ],
+      "empresaIdEsperada": 1534,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.extincise.com/"
+      ],
+      "descubrimiento": "https://extincise.com/",
+      "observaciones": "Se reutiliza la ficha 1534 por su dominio único. Se conservan descripción, actividad de fabricación, web, financieros y CRM."
+    },
+    {
+      "cif": "B36157584",
+      "nombre": "YESOS GALICIA, S.L.",
+      "web": "https://yesosgalicia.com/",
+      "identidadUrl": "https://yesosgalicia.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://yesosgalicia.com/nuestras-soluciones/proteccion-frente-al-fuego/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta protección frente al fuego de estructuras y forjados, franjas y sectorización mediante yeso laminado y placas reforzadas con fibras, y recubrimientos de mortero de perlita y vermiculita."
+        }
+      ],
+      "localidad": "Meis",
+      "provincia": "Pontevedra",
+      "ccaa": "Galicia",
+      "direccion": "Santo Tomé de Nogueira, Arcos",
+      "codigoPostal": "36637",
+      "descripcion": "Ejecución de revestimientos, falsos techos, tabiquería seca y rehabilitación de edificios. Realiza protección pasiva de estructuras y forjados, franjas cortafuegos y sectorización con placas y morteros.",
+      "fuentesIdentidadLocalizacion": [
+        "https://yesosgalicia.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://www.adip-as.com/asociados/",
+      "observaciones": "CIF primario en aviso corporativo; se usa el domicilio publicado de Meis. La actividad se acredita en la página propia de soluciones, sin inferirla del mero hecho de pertenecer a AD’IP.",
+      "lat": 42.4996133,
+      "lng": -8.7249365,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Meis%2C+Pontevedra%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Meis, O Salnés, Pontevedra, Galicia, España",
+        "osmType": "relation",
+        "osmId": 346266
+      }
+    },
+    {
+      "cif": "B36816098",
+      "nombre": "TÉCNICA Y PORTALES, S.L.",
+      "web": "https://www.tecnicayportales.com/",
+      "identidadUrl": "https://www.tecnicayportales.com/aviso-legal.aspx",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.tecnicayportales.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa ofrece instalación, mantenimiento y reparación de puertas y automatismos con servicio técnico propio. Incluye expresamente puertas industriales y peatonales cortafuegos entre las instalaciones que realiza."
+        }
+      ],
+      "localidad": "Vigo",
+      "provincia": "Pontevedra",
+      "ccaa": "Galicia",
+      "direccion": "Rúa de Aragón, 66, bajo",
+      "codigoPostal": "36206",
+      "descripcion": "Instalación, mantenimiento y reparación de puertas, automatismos y cerramientos. Trabaja con puertas industriales y peatonales, incluidos cierres cortafuegos, barreras y controles de acceso.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.tecnicayportales.com/aviso-legal.aspx"
+      ],
+      "descubrimiento": "https://www.tecnicayportales.com/",
+      "observaciones": "El aviso identifica titular fiscal, CIF y Vigo. La propia web declara pertenencia a ACEGAL; la asociación sirve como pista, sin inferir certificaciones.",
+      "lat": 42.1986395,
+      "lng": -8.727956,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Vigo%2C+Pontevedra%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Vigo, Pontevedra, Galicia, España",
+        "osmType": "relation",
+        "osmId": 341381
+      }
+    },
+    {
+      "cif": "B38211157",
+      "nombre": "CERRAJERÍA ADRIÁN, S.L.",
+      "web": "https://www.cerrajeriaadrian.com/",
+      "identidadUrl": "https://cerrajeriaadrian.com/contacto.html",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.cerrajeriaadrian.com/productos/puertas/98-puertas-residenciales-.html",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece puertas peatonales y cortafuegos con instalación profesional en Canarias. También suministra e instala accesorios para completar, adaptar y mantener puertas cortafuego."
+        }
+      ],
+      "localidad": "Tacoronte",
+      "provincia": "Santa Cruz de Tenerife",
+      "ccaa": "Canarias",
+      "direccion": "Carretera Tacoronte-Tejina, 163-B",
+      "codigoPostal": "38350",
+      "descripcion": "Fabricación e instalación de puertas, estructuras y cerramientos de cerrajería y carpintería metálica. Instala puertas cortafuegos y sus accesorios, además de puertas de garaje y automatismos.",
+      "fuentesIdentidadLocalizacion": [
+        "https://cerrajeriaadrian.com/contacto.html",
+        "https://www.cerrajeriaadrian.com/catalogo/accesorios-cortafuegos.html"
+      ],
+      "descubrimiento": "https://www.cerrajeriaadrian.com/productos/puertas/98-puertas-residenciales-.html",
+      "observaciones": "El bloque legal de Contacto identifica expresamente a la sociedad, B38211157 y Tacoronte. La delegación de Guamasa no genera otra alta.",
+      "lat": 28.478974,
+      "lng": -16.397723,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Tacoronte%2C+Santa+Cruz+de+Tenerife%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Tacoronte, Santa Cruz de Tenerife, Canarias, España",
+        "osmType": "relation",
+        "osmId": 340736
+      }
+    },
+    {
+      "cif": "B39015722",
+      "nombre": "PUERTAS ROPER, S.L.",
+      "web": "https://puertasroper.com/",
+      "identidadUrl": "https://puertasroper.com/aviso-legal-6/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://puertasroper.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La web corporativa describe fabricación de puertas cortafuegos y un equipo propio de montaje e instalación especializada. CIF Cantabria documenta asimismo instalación de puertas Roper en un hospital de Panamá."
+        }
+      ],
+      "localidad": "Camargo",
+      "provincia": "Cantabria",
+      "ccaa": "Cantabria",
+      "direccion": "Polígono Industrial Trascueto, parcela F-3, Revilla de Camargo",
+      "codigoPostal": "39600",
+      "descripcion": "Fabricación e instalación de puertas metálicas, automatismos y paneles sándwich. Su gama incluye puertas batientes, correderas y registros cortafuegos, con equipo de montaje propio.",
+      "fuentesIdentidadLocalizacion": [
+        "https://puertasroper.com/aviso-legal-6/",
+        "https://cifcantabria.com/",
+        "https://cifcantabria.com/noticias.html"
+      ],
+      "descubrimiento": "https://cifcantabria.com/",
+      "observaciones": "Se cierra la duda de fabricante frente a instalador: el apartado Instalación especializada de la web vigente menciona expresamente su equipo de montaje y empleados, además del caso asociativo fechado 10/08/2021. CIF y domicilio se leen en su aviso corporativo indexado; HTTP y navegador no recuperan el dominio en esta consulta. No se usa el mero catálogo para confirmar ejecución ni se presupone fecha reciente para el hospital.",
+      "lat": 43.4301,
+      "lng": -3.86163,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Camargo%2C+Cantabria%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Camargo, Cantabria, España",
+        "osmType": "relation",
+        "osmId": 339825
+      }
+    },
+    {
+      "cif": "B43427921",
+      "nombre": "PUERTAS CANO, S.L.",
+      "web": "https://puertascano.com/",
+      "identidadUrl": "https://puertascano.com/politicas-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://puertascano.com/puertas-tecnicas/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece venta e instalación de puertas técnicas e incluye puertas cortafuegos EI2 60 y EI2 120, junto con puertas acústicas, de trastero y de seguridad."
+        }
+      ],
+      "localidad": "La Canonja",
+      "provincia": "Tarragona",
+      "ccaa": "Cataluña",
+      "direccion": "Polígono Industrial La Coma, 1, carretera N-340",
+      "codigoPostal": "43110",
+      "descripcion": "Venta e instalación de puertas de interior, exterior, seguridad y uso técnico. Incluye puertas cortafuegos y acústicas para edificios residenciales, comercios e instalaciones profesionales.",
+      "fuentesIdentidadLocalizacion": [
+        "https://puertascano.com/politicas-de-privacidad"
+      ],
+      "descubrimiento": "https://puertascano.com/puertas-tecnicas/",
+      "observaciones": "Se usa La Canonja del aviso fiscal frente a la referencia comercial a Tarragona; no se crea otra entidad por el municipio atendido.",
+      "lat": 41.120408,
+      "lng": 1.1820704,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=La+Canonja%2C+Tarragona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "la Canonja, Tarragonès, Tarragona, Catalunya, 43100, España",
+        "osmType": "relation",
+        "osmId": 1809117
+      }
+    },
+    {
+      "cif": "B43951912",
+      "nombre": "AISLADUR BAIX CAMP, S.L.",
+      "web": "https://aisladur.com/",
+      "identidadUrl": "https://aisladur.com/politica-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://aisladur.com/servicio/proteccion-pasiva-contra-el-fuego/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece instalación de sistemas de construcción seca y protección pasiva, con falsos techos resistentes al fuego y elementos para compartimentar los espacios."
+        }
+      ],
+      "localidad": "Reus",
+      "provincia": "Tarragona",
+      "ccaa": "Cataluña",
+      "direccion": "Calle Santiago Rusiñol, 54",
+      "codigoPostal": "43206",
+      "descripcion": "Instalación de sistemas de yeso laminado, tabiquería, trasdosados y falsos techos. Realiza aislamientos térmicos y acústicos y soluciones de compartimentación resistentes al fuego.",
+      "fuentesIdentidadLocalizacion": [
+        "https://aisladur.com/politica-privacidad",
+        "https://aisladur.com/contacto/"
+      ],
+      "descubrimiento": "https://aisladur.com/servicio/proteccion-pasiva-contra-el-fuego/",
+      "observaciones": "Se utiliza el domicilio operativo actual de Contacto. La política identifica el mismo CIF con domicilio fiscal en Sol i Ortega, 8, Reus; no se confunden ambas direcciones ni se crean dos fichas.",
+      "lat": 41.1555564,
+      "lng": 1.1076133,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Reus%2C+Tarragona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Reus, Baix Camp, Tarragona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 340853
+      }
+    },
+    {
+      "cif": "B45841814",
+      "nombre": "TECFIRE CONTINENTAL, S.L.",
+      "web": "https://tecfire.com/es/",
+      "identidadUrl": "https://ec.europa.eu/taxation_customs/vies/",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://tecfire.com/es/news/tecfire-fabrica-e-instala-los-sistemas-de-vidrio-cortafuegos-para-un-referente-cultural-en-espana-el-museo-reina-sofia-de-santander/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa documenta fabricación e instalación de puertas acristaladas resistentes al fuego en el Museo Reina Sofía de Santander y de puertas correderas y particiones fijas EI60 en la EUIPO de Alicante."
+        }
+      ],
+      "localidad": "Yuncler",
+      "provincia": "Toledo",
+      "ccaa": "Castilla-La Mancha",
+      "direccion": "Calle Ventorrillo, 1, Polígono Industrial Sector 9",
+      "codigoPostal": "45529",
+      "descripcion": "Ingeniería, fabricación e instalación de sistemas acristalados resistentes al fuego. Desarrolla puertas y particiones de vidrio para la sectorización de edificios, con sede y fábrica en Yuncler.",
+      "fuentesIdentidadLocalizacion": [
+        "https://ec.europa.eu/taxation_customs/vies/",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2026-49-45",
+        "https://tecfire.com/es/news/tecfire-fabrica-e-instala-soluciones-certificadas-de-vidrio-resistente-al-fuego-para-el-proyecto-de-european-union-intellectual-property-office-en-alicante-espana/",
+        "https://tecfire.com/es/"
+      ],
+      "descubrimiento": "https://tecfire.com/es/news/tecfire-fabrica-e-instala-los-sistemas-de-vidrio-cortafuegos-para-un-referente-cultural-en-espana-el-museo-reina-sofia-de-santander/",
+      "observaciones": "Resuelve Tecfire. VIES verifica B45841814 y devuelve VALID para la coincidencia de TECFIRE CONTINENTAL SL, Calle Ventorrillo 1, 45529 Yuncler; respuesta conservada en el anexo fiscal. El BORME de 12/03/2026, acto 127605, publica el cambio desde TECFIRE MIDDLE EAST SL. Las noticias corporativas de obras en España acreditan instalación propia, además de fabricación. No se crean entidades por filiales internacionales ni por tecfires.com.",
+      "lat": 40.0440004,
+      "lng": -3.9008053,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Yuncler%2C+Toledo%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Yuncler, Toledo, Castilla-La Mancha, 45529, España",
+        "osmType": "relation",
+        "osmId": 341891
+      }
+    },
+    {
+      "cif": "B47739842",
+      "nombre": "SUMINISTROS BELVI 2015, S.L. / PUERTAS BELVI",
+      "web": "https://www.puertasbelvi.es/",
+      "identidadUrl": "https://www.puertasbelvi.es/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.puertasbelvi.es/puertas-cortafuegos/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa ofrece venta e instalación propia de puertas correderas cortafuegos Hörmann en naves industriales y otros inmuebles."
+        }
+      ],
+      "localidad": "La Cistérniga",
+      "provincia": "Valladolid",
+      "ccaa": "Castilla y León",
+      "direccion": "Calle Chopo, 10, Polígono La Mora",
+      "codigoPostal": "47193",
+      "descripcion": "Venta e instalación de puertas automáticas, de garaje y de uso industrial, con servicio técnico. Instala puertas correderas cortafuegos y puertas de emergencia.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.puertasbelvi.es/aviso-legal"
+      ],
+      "descubrimiento": "https://www.puertasbelvi.es/puertas-cortafuegos/",
+      "observaciones": "Se da de alta el titular Suministros Belvi 2015, con su marca Puertas Belvi, y no una sociedad inventada por el nombre comercial.",
+      "lat": 41.6121464,
+      "lng": -4.6851558,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=La+Cist%C3%A9rniga%2C+Valladolid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "La Cistérniga, Valladolid, Castilla y León, 47193, España",
+        "osmType": "relation",
+        "osmId": 345107
+      }
+    },
+    {
+      "cif": "B62260062",
+      "nombre": "ARNELA COLL, S.L.",
+      "web": "https://www.arnelacoll.com/",
+      "identidadUrl": "https://www.arnelacoll.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.arnelacoll.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La oferta de puertas cortafuegos separa comercialización, instalación profesional y mantenimiento. Se acredita ejecución propia además del suministro de materiales de construcción y ferretería."
+        }
+      ],
+      "localidad": "Barcelona",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Calle Santander, 68",
+      "codigoPostal": "08020",
+      "descripcion": "Comercialización de materiales de construcción y ferretería. Suministra, instala y mantiene puertas cortafuegos para la protección y sectorización de edificios.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.arnelacoll.com/politica-de-privacidad/"
+      ],
+      "descubrimiento": "https://www.arnelacoll.com/",
+      "observaciones": "La política conserva un párrafo de plantilla vacío, pero el bloque desarrollado identifica de forma expresa ARNELA COLL SL, B62260062, domicilio y contacto; se usa ese bloque completo.",
+      "lat": 41.3825802,
+      "lng": 2.177073,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Barcelona%2C+Barcelona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Barcelona, Barcelonès, Barcelona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 347950
+      }
+    },
+    {
+      "cif": "B65712770",
+      "nombre": "CATFOC IGNÍFUGO, S.L.",
+      "web": "https://catfoc.es/",
+      "identidadUrl": "https://catfoc.es/condiciones-de-la-lopd",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://catfoc.es/conocenos-catfoc",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara ser aplicadora directa de sistemas de protección pasiva y entregar certificados de aplicación. La lista de fabricantes y materiales no se convierte automáticamente en todas las especialidades del modelo."
+        }
+      ],
+      "localidad": "Vallirana",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Calle Mayor, 97, nave 3",
+      "codigoPostal": "08759",
+      "descripcion": "Aplicación de materiales y sistemas de protección pasiva contra incendios en edificios. Ejecuta soluciones con morteros, lana de roca, placas y otros materiales de protección al fuego.",
+      "fuentesIdentidadLocalizacion": [
+        "https://catfoc.es/condiciones-de-la-lopd",
+        "https://catfoc.es/contacta-catfoc"
+      ],
+      "descubrimiento": "https://catfoc.es/conocenos-catfoc",
+      "observaciones": "Identidad fiscal en aviso y razón social desarrollada en Quiénes somos. Se confirma pasiva general sin asignar servicios por una relación de proveedores.",
+      "lat": 41.3877623,
+      "lng": 1.9320806,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Vallirana%2C+Barcelona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Vallirana, Baix Llobregat, Barcelona, Catalunya, 08759, España",
+        "osmType": "relation",
+        "osmId": 341899
+      }
+    },
+    {
+      "cif": "B66177619",
+      "nombre": "VISUFOC SL",
+      "web": "https://visufoc.com/",
+      "identidadUrl": "https://visufoc.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://visufoc.com/nuestros-servicios/instalacion-y-mantenimiento/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su página de instalación y mantenimiento incluye protección estructural con placas, morteros y pinturas intumescentes, sellados de pasos y puertas cortafuego peatonales, correderas, guillotinas y enrollables."
+        }
+      ],
+      "empresaIdEsperada": 2468,
+      "fuentesIdentidadLocalizacion": [
+        "https://visufoc.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://clusterincendis.com/soci/visufoc/",
+      "observaciones": "Se reutiliza la ficha 2468 y se completa aparte su descripción inicial vacía. No se crea otra entidad por la variante del dominio sin www."
+    },
+    {
+      "cif": "B71311690",
+      "nombre": "SEYMAN SERVICIOS Y EQUIPOS DE PROTECCION CONTRA INCENDIOS SLL",
+      "web": "https://seyman.es/",
+      "identidadUrl": "https://seyman.es/wp-content/uploads/2024/10/CERTIFICADO-INDUSTRIA-MANTENEDORA-INSTALADORA.pdf",
+      "identidadMetodo": "documento_corporativo",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://seyman.es/servicios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece expresamente ajuste y sustitución de puertas cortafuegos y colocación de barras antipánico y muelles cierrapuertas dentro de sus servicios de instalación y mantenimiento."
+        }
+      ],
+      "empresaIdEsperada": 2363,
+      "fuentesIdentidadLocalizacion": [
+        "https://seyman.es/wp-content/uploads/2024/10/CERTIFICADO-INDUSTRIA-MANTENEDORA-INSTALADORA.pdf"
+      ],
+      "descubrimiento": "https://seyman.es/servicios/",
+      "observaciones": "Se reutiliza la ficha 2363 y se completa aparte su descripción vacía. El certificado publicado por la empresa identifica el CIF y la razón social, sin convertir el RIPCI en prueba de pasiva."
+    },
+    {
+      "cif": "B71461115",
+      "nombre": "BY DOORS2022, S.L.U.",
+      "web": "https://bydoors.es/",
+      "identidadUrl": "https://bydoors.es/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://bydoors.es/servicios/instalacion-de-puertas-automaticas/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa detalla instalación de puertas y cortinas cortafuegos dentro de su servicio propio de puertas automáticas y cerramientos industriales."
+        }
+      ],
+      "localidad": "Berriozar",
+      "provincia": "Navarra",
+      "ccaa": "Comunidad Foral de Navarra",
+      "direccion": "Paseo de la Habana, 1-3",
+      "descripcion": "Instalación, reparación y mantenimiento de puertas y automatismos industriales y residenciales. Incluye puertas y cortinas cortafuegos, muelles de carga, persianas y barreras de acceso.",
+      "fuentesIdentidadLocalizacion": [
+        "https://bydoors.es/politica-privacidad/",
+        "https://bydoors.es/contacto/"
+      ],
+      "descubrimiento": "https://bydoors.es/servicios/instalacion-de-puertas-automaticas/",
+      "observaciones": "Se usa el centro operativo de Berriozar publicado en Contacto. El aviso fiscal conserva otro domicilio en Camino del Soto, 1, 31195 Navarra; se omite CP del centro operativo para no mezclar direcciones.",
+      "lat": 42.83565,
+      "lng": -1.6745719,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Berriozar%2C+Navarra%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Berriozar, Iruñerria, Navarra, Navarra / Nafarroa, España",
+        "osmType": "relation",
+        "osmId": 339677
+      }
+    },
+    {
+      "cif": "B76757202",
+      "nombre": "SOS EXTINTORES TENERIFE, S.L.",
+      "web": "https://www.sosextintorestenerife.com/",
+      "identidadUrl": "https://www.sosextintorestenerife.com/servicios",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.sosextintorestenerife.com/servicios",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara instalación y mantenimiento de sellados de pasos de instalaciones y puertas cortafuegos y otros cierres mecánicos. La mención genérica a aplicación de morteros y pinturas no se convierte en una especialidad estructural concreta."
+        }
+      ],
+      "empresaIdEsperada": 3358,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.sosextintorestenerife.com/servicios"
+      ],
+      "descubrimiento": "https://www.sosextintorestenerife.com/servicios",
+      "observaciones": "Dominio único ya atribuido a la ficha 3358. Se conserva su descripción y toda la identidad anterior; no se deduce una nueva habilitación a partir de las actividades de pasiva."
+    },
+    {
+      "cif": "B80190556",
+      "nombre": "REVESTIMIENTOS PARA EL FUTURO, S.L.",
+      "web": "https://www.rfuturo.es/",
+      "identidadUrl": "https://www.rfuturo.es/legal/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.rfuturo.es/ppci/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Se especializa en realización y aplicación de protección pasiva mediante proyección de morteros de vermiculita, pinturas y revestimientos intumescentes y sellado de pasos de instalaciones."
+        }
+      ],
+      "localidad": "Madrid",
+      "provincia": "Madrid",
+      "ccaa": "Comunidad de Madrid",
+      "direccion": "Calle Berlanas, 5, local B",
+      "codigoPostal": "28047",
+      "descripcion": "Aplicación de pavimentos continuos, revestimientos y pintura industrial. Ejecuta protección pasiva de estructuras y forjados con morteros y pinturas intumescentes, y sellados cortafuegos.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.rfuturo.es/legal/aviso-legal/",
+        "https://www.rfuturo.es/contacto/"
+      ],
+      "descubrimiento": "https://www.rfuturo.es/ppci/",
+      "observaciones": "El aviso contiene marcadores en los datos registrales, que no se usan. Nombre, CIF, domicilio y contacto están completos y coinciden con la web corporativa.",
+      "lat": 40.416782,
+      "lng": -3.703507,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Madrid%2C+Madrid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Madrid, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 5326784
+      }
+    },
+    {
+      "cif": "B99179194",
+      "nombre": "ARMINOR ARAGONESA DE MONTAJES INDUSTRIALES, S.L.",
+      "web": "https://arminor.es/",
+      "identidadUrl": "https://arminor.es/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://arminor.es/servicios",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Suministra puertas y cerramientos cortafuegos y declara montaje propio de los formatos descritos. Ofrece mantenimiento preventivo/correctivo y ejecución llave en mano de los cerramientos."
+        }
+      ],
+      "localidad": "Zaragoza",
+      "provincia": "Zaragoza",
+      "ccaa": "Aragón",
+      "direccion": "Calle Isla de Fuerteventura, 8, local",
+      "codigoPostal": "50015",
+      "descripcion": "Suministro, montaje y mantenimiento de puertas, automatismos y cerramientos metálicos. Instala soluciones industriales, comerciales y residenciales, incluidas puertas y cierres cortafuegos.",
+      "fuentesIdentidadLocalizacion": [
+        "https://arminor.es/aviso-legal",
+        "https://arminor.es/politica-privacidad",
+        "https://arminor.es/contacto"
+      ],
+      "descubrimiento": "https://arminor.es/servicios",
+      "observaciones": "El aviso identifica B99179194 y el nombre social completo se contrasta en privacidad y pie corporativo. No se atribuye condición de fabricante de todas las puertas que monta.",
+      "lat": 41.6915847,
+      "lng": -0.9101268,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Zaragoza%2C+Zaragoza%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Zaragoza, Aragón, España",
+        "osmType": "relation",
+        "osmId": 345740
+      }
+    },
+    {
+      "cif": "F95644803",
+      "nombre": "GERNIKAPLAC, S. COOP.",
+      "web": "https://www.gernikaplac.net/",
+      "identidadUrl": "https://www.euskadi.eus/entidad/gernikaplac-s-coop/web01-ejeduki/eu/",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://gernikaplac.net/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La cooperativa se presenta como instaladora de sistemas de placa de yeso y falsos techos e incluye aislamientos ignífugos entre sus servicios ejecutados. Se confirma pasiva general sin deducir especialidades concretas de las obras de construcción."
+        }
+      ],
+      "localidad": "Gernika-Lumo",
+      "provincia": "Bizkaia",
+      "ccaa": "País Vasco",
+      "direccion": "Ibarra Kalea, 19, pabellón 11",
+      "codigoPostal": "48300",
+      "descripcion": "Instalación de placas de yeso laminado, tabiques, trasdosados y falsos techos. Realiza aislamientos térmicos, acústicos e ignífugos, fachadas y soleras secas.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.euskadi.eus/entidad/gernikaplac-s-coop/web01-ejeduki/eu/"
+      ],
+      "descubrimiento": "https://www.adip-as.com/asociados/",
+      "observaciones": "Resuelve Gernikaplac mediante el registro primario de cooperativas de Euskadi, que identifica F95644803 y Gernika-Lumo. Se utiliza el domicilio operativo publicado por la cooperativa. El estado del registro no se traslada al campo SABI.",
+      "lat": 43.3143976,
+      "lng": -2.6778593,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Gernika-Lumo%2C+Bizkaia%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Gernika-Lumo, Bizkaia, Euskadi, 48300, España",
+        "osmType": "relation",
+        "osmId": 344365
+      }
+    }
+  ]
+}
