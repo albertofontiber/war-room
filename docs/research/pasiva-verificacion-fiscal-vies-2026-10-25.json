@@ -1,0 +1,38 @@
+{
+  "fuente": "Comisión Europea, VIES",
+  "consultaUrl": "https://ec.europa.eu/taxation_customs/vies/",
+  "endpoint": "https://ec.europa.eu/taxation_customs/vies/rest-api/check-vat-number",
+  "metodo": "POST de consulta pública. VIES oculta nombre/domicilio de España, pero devuelve el resultado de coincidencia de los valores consultados. Se conserva la petición junto con la respuesta para distinguir datos aportados y datos verificados.",
+  "limites": "La respuesta válida acredita el NIF-IVA y la coincidencia indicada, no habilitación PCI ni estado SABI. Una respuesta valid=false no demostraría que el NIF español fuese inexistente: puede no estar inscrito en el ROI.",
+  "validaciones": [
+    {
+      "request": {
+        "countryCode": "ES",
+        "vatNumber": "B45841814",
+        "traderName": "TECFIRE CONTINENTAL SL",
+        "traderStreet": "CALLE VENTORRILLO 1",
+        "traderPostalCode": "45529",
+        "traderCity": "YUNCLER"
+      },
+      "response": {
+        "countryCode": "ES",
+        "vatNumber": "B45841814",
+        "requestDate": "2026-10-25T20:56:06.536Z",
+        "valid": true,
+        "requestIdentifier": "",
+        "name": "---",
+        "address": "---",
+        "traderName": "TECFIRE CONTINENTAL SL",
+        "traderStreet": "CALLE VENTORRILLO 1",
+        "traderPostalCode": "45529",
+        "traderCity": "YUNCLER",
+        "traderNameMatch": "VALID",
+        "traderStreetMatch": "VALID",
+        "traderPostalCodeMatch": "VALID",
+        "traderCityMatch": "VALID",
+        "traderCompanyTypeMatch": "NOT_PROCESSED"
+      },
+      "consultadoAt": "2026-10-25T20:56:04.845Z"
+    }
+  ]
+}

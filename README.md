@@ -17,6 +17,7 @@ Aplicación de inteligencia y gestión M&A para Fontiber Industrial Partners: un
 | [Responsive](docs/RESPONSIVE.md) | Breakpoints, componentes y comportamiento móvil |
 | [Trabajo abierto](docs/ROADMAP.md) | Encargos actuales, limitaciones y propuestas por priorizar |
 | [Protección pasiva](docs/PROTECCION_PASIVA.md) | Investigación, fuentes y ampliación del universo sin duplicados |
+| [Dudas de pasiva para el repaso](docs/research/pasiva-dudas-2026-10-25.md) | Resultado del barrido conjunto, dudas concretas y límites de cobertura |
 | [Actividades](docs/ACTIVIDADES.md) | PCI activa, PCI pasiva y seguridad electrónica; criterio y filtros combinables |
 
 Las cifras cambiantes se publican únicamente en el estado actual, con fecha y método. El historial de implementaciones está en Git y en las PR; una propuesta antigua no equivale a un pendiente aprobado.

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "alcance": "Descripciones iniciales vacías de dos fichas existentes confirmadas en la decimotercera tanda.",
+  "empresas": [
+    {
+      "empresaId": 2468,
+      "cif": "B66177619",
+      "nombre": "VISUFOC SL",
+      "descripcion": "Ingeniería, instalación y mantenimiento de sistemas de protección contra incendios. Realiza protección pasiva de estructuras, sellado de pasos de instalaciones y montaje de puertas cortafuegos, además de formación y auditorías.",
+      "fuentes": [
+        "https://visufoc.com/nuestros-servicios/instalacion-y-mantenimiento/",
+        "https://visufoc.com/aviso-legal/"
+      ],
+      "criterio": "Completar únicamente la descripción inicial vacía. No sustituir resúmenes existentes ni modificar otras columnas."
+    },
+    {
+      "empresaId": 2363,
+      "cif": "B71311690",
+      "nombre": "SEYMAN SERVICIOS Y EQUIPOS DE PROTECCION CONTRA INCENDIOS SLL",
+      "descripcion": "Suministro, instalación y mantenimiento de equipos de detección y extinción de incendios. Incluye ajuste y sustitución de puertas cortafuegos, sistemas de seguridad y otros servicios de mantenimiento.",
+      "fuentes": [
+        "https://seyman.es/servicios/",
+        "https://seyman.es/wp-content/uploads/2024/10/CERTIFICADO-INDUSTRIA-MANTENEDORA-INSTALADORA.pdf"
+      ],
+      "criterio": "Completar únicamente la descripción inicial vacía. No sustituir resúmenes existentes ni modificar otras columnas."
+    }
+  ]
+}
