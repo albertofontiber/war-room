@@ -1,6 +1,6 @@
 # Protección pasiva: actividad transversal y ampliación del universo
 
-Revisión: **25/10/2026, Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y diez lotes están aplicados en producción: **303 entidades con pasiva confirmada**.
+Revisión: **25/10/2026, Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y diez lotes están aplicados en producción: **303 entidades con pasiva confirmada**, todas con descripción inicial.
 
 ## Resultado aplicado
 
@@ -19,6 +19,12 @@ La cobertura aumenta en nueve provincias; Zamora sigue sin confirmadas en nuestr
 El 25/10 se completan los resúmenes iniciales de las ocho altas de la décima tanda y de CISA, Mecosa y Energimac, que también tenían `descripcion` vacía. El [lote de descripciones](research/descripciones-pasiva-ampliacion8-2026-10-25.json) conserva los once textos y sus fuentes. Las descripciones de Aficon, Nevada Fire y Sistemas Guadalquivir se mantienen: las catorce fichas de la tanda tienen ahora resumen general, además de la evidencia específica de pasiva.
 
 El complemento genera once auditorías; repetirlo no escribe cambios ni nuevas auditorías. Se comprueban por huella los campos ajenos a `descripcion` y los datos relacionados de las catorce fichas, y los once textos se verifican en sus API de producción. Se mantienen 5.891 empresas, 303 con pasiva y 23.620 filas financieras. El importador admite `descripcion` en las altas nuevas; al enriquecer conserva las descripciones existentes.
+
+### Descripciones de las tandas anteriores
+
+La revisión de las 303 fichas confirmadas detecta 173 descripciones vacías de las tandas primera a novena. Se completan con resúmenes breves de actividad y servicios acreditados, siguiendo el criterio de PCI activa; se conservan las 130 descripciones existentes. El [lote histórico de descripciones](research/descripciones-pasiva-historicas-2026-10-25.json) recoge cada texto y sus fuentes, con referencias a los lotes de actividad y reparto por primera tanda para no duplicar empresas. El alcance general se conserva cuando las fuentes no permiten concretar especialidades; pertenencia asociativa, materiales y áreas guardadas no se convierten en habilitaciones o calificaciones vigentes.
+
+La aplicación genera 173 auditorías y la repetición devuelve `sin_cambios=173`. Se verifican por huella los campos ajenos a descripción, cuentas, CRM y recuentos de tareas/notas/contactos de las 303 fichas; los 130 textos previos se mantienen exactamente. La API de producción devuelve las 303 descripciones esperadas y cada CIF/NIF una sola vez en la lista. Quedan cero fichas confirmadas sin resumen, con 5.891 empresas y 23.620 filas financieras sin variación. No se revalidan todos los estados legales ni se cambian actividad, servicios, fuentes de pasiva, web, domicilio o perímetro.
 
 ## Alcance de cierres y conductos
 

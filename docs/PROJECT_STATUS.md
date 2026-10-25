@@ -1,6 +1,6 @@
 # Estado actual del proyecto
 
-Corte: **25 de octubre de 2026, Europe/Madrid**. Base de código: [#203](https://github.com/albertofontiber/war-room/pull/203), fusionada en `6b443d9`, más soporte de descripción en nuevas altas de pasiva. Datos: décimo lote y complemento de once descripciones aplicados y verificados en producción. Es una instantánea fechada, no un contador en vivo.
+Corte: **25 de octubre de 2026, Europe/Madrid**. Base de código: [#204](https://github.com/albertofontiber/war-room/pull/204), fusionada en `4ff6d5e`, con soporte de descripción en nuevas altas de pasiva. Datos: décimo lote y complementos de descripciones de la décima tanda y anteriores aplicados y verificados en producción. Es una instantánea fechada, no un contador en vivo.
 
 ## Datos comprobados
 
@@ -13,6 +13,7 @@ Consulta a la base configurada para producción mediante Prisma dentro de una tr
 | Seguridad electrónica | 770 | Valor `seguridad_electronica` |
 | Mixtas | 468 | PCI y seguridad electrónica; no significa activa y pasiva |
 | Pasiva confirmada | 303 | `proteccionPasiva=true`; cobertura parcial, no censo del mercado |
+| Fichas de pasiva con descripción inicial | 303 | Descripción general no nula ni vacía tras completar 173 pendientes de tandas anteriores; 130 textos existentes conservados |
 | Actividad PCI activa | 4.994 | Universo PCI/mixto previo y categorías RIPCI válidas; excluye altas de investigación pasiva sin evidencia de activa |
 | Actividad seguridad electrónica | 1.238 | Sectores `seguridad_electronica` o `mixto` |
 | PCI activa y PCI pasiva | 174 | Ambas actividades; pueden prestar también seguridad electrónica |
@@ -60,6 +61,12 @@ La cobertura aumenta en nueve provincias; Zamora sigue sin confirmadas en nuestr
 ### Complemento de resúmenes de empresa
 
 Las ocho altas de la décima tanda y CISA, Mecosa y Energimac carecían del resumen inicial en `descripcion`. Se completan con once textos breves y [fuentes documentadas](research/descripciones-pasiva-ampliacion8-2026-10-25.json); las tres descripciones ya existentes se conservan. Las catorce fichas de esa tanda tienen ahora resumen. Se generan once auditorías y la repetición devuelve `sin_cambios=11`; se conservan por huella el resto de campos y datos relacionados de las catorce fichas. La API de producción devuelve los once textos guardados. No cambian los recuentos anteriores ni las actividades, cuentas, CRM, perímetro o estados SABI.
+
+### Resúmenes de las tandas anteriores
+
+Se revisan las **303 fichas con PCI pasiva confirmada** y se completan **173 descripciones vacías** de las tandas primera a novena, conservando las **130 existentes**. Quedan **cero fichas de pasiva confirmada sin descripción inicial**. El [lote de resúmenes históricos](research/descripciones-pasiva-historicas-2026-10-25.json) conserva textos, fuentes, antecedentes y un reparto por primera tanda sin duplicar empresas reconsultadas.
+
+El criterio es el de PCI activa: una o dos frases de actividad y servicios acreditados, con alcance general cuando no hay detalle suficiente. No se añaden habilitaciones, calificaciones vigentes, cifras ni especialidades inferidas. Se generan **173 auditorías**; repetir devuelve `sin_cambios=173` sin nuevas escrituras. Se conservan por huella los campos ajenos a descripción, las cuentas, el CRM y los recuentos de tareas/notas/contactos de las **303 fichas**. La API de producción verifica las **303 descripciones**, incluidos los 130 textos conservados, y una sola ficha por CIF/NIF en la lista. Se mantienen 5.891 empresas y 23.620 filas financieras.
 
 ### Corte histórico de la novena tanda
 

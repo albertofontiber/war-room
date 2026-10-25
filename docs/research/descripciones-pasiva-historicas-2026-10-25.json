@@ -1,0 +1,2392 @@
+{
+  "fechaRevision": "2026-10-25",
+  "alcance": "Revisión de las 303 fichas no anónimas con PCI pasiva confirmada después de la décima tanda. Se completan 173 descripciones vacías de las tandas primera a novena; las 130 descripciones existentes, incluidas las de la décima tanda, se conservan.",
+  "criterio": "Mismo campo descripcion y estilo de las fichas de PCI activa: una o dos frases breves de actividad y servicios acreditados. Se mantiene el alcance general cuando no hay detalle suficiente. No se trasladan notas de validación a la ficha ni se añaden cifras, antigüedad, exclusividad, habilitaciones o calificaciones no corroboradas.",
+  "metodo": "Redacción revisada individualmente a partir de la evidencia de actividad de los lotes y las fichas. Reconsulta corporativa/asociativa complementaria en Acciona Facility Services, Vyapec, Valdoviño, PIC, Aistercom, Apolinar Cócera/Passivhaus Cuenca y Aterki. Fuegodiez se describe por las áreas de instalación guardadas, sin afirmar vigencia de calificación.",
+  "resumen": {
+    "fichasRevisadas": 303,
+    "descripcionesExistentesConservadas": 130,
+    "descripcionesVaciasAntes": 173,
+    "descripcionesNuevas": 173,
+    "descripcionesVaciasDespues": 0,
+    "empresasNuevas": 0
+  },
+  "limites": [
+    "Completar solo descripciones vacías y respetar la coincidencia de ID y CIF/NIF; abortar ante una descripción concurrente diferente.",
+    "No modificar identidad, webs, actividad, servicios ni evidencias de pasiva, ubicación, sector, perímetro, grupos, estado SABI, cuentas o CRM.",
+    "La redacción no constituye una nueva validación fiscal, habilitación ni revisión del estado legal de la empresa.",
+    "La asociación se usa solo cuando el antecedente identifica servicios de esa empresa concreta. Las páginas sobre casas pasivas no acreditan por sí solas protección contra incendios.",
+    "El detalle de los servicios se describe en texto sin cambiar etiquetas. Los ámbitos geográficos nuevos solo se incorporan si constan en las fuentes; domicilio no equivale a territorio de servicio."
+  ],
+  "porTanda": [
+    {
+      "tanda": 1,
+      "lote": "pasiva-validada-2026-10-23.json",
+      "descripcionesCompletadas": 26
+    },
+    {
+      "tanda": 2,
+      "lote": "pasiva-validada-2026-10-24.json",
+      "descripcionesCompletadas": 44
+    },
+    {
+      "tanda": 3,
+      "lote": "pasiva-validada-regional-2026-10-24.json",
+      "descripcionesCompletadas": 37
+    },
+    {
+      "tanda": 4,
+      "lote": "pasiva-validada-ampliacion2-2026-10-24.json",
+      "descripcionesCompletadas": 20
+    },
+    {
+      "tanda": 5,
+      "lote": "pasiva-validada-ampliacion3-2026-10-25.json",
+      "descripcionesCompletadas": 14
+    },
+    {
+      "tanda": 6,
+      "lote": "pasiva-validada-ampliacion4-2026-10-25.json",
+      "descripcionesCompletadas": 12
+    },
+    {
+      "tanda": 7,
+      "lote": "pasiva-validada-ampliacion5-2026-10-25.json",
+      "descripcionesCompletadas": 4
+    },
+    {
+      "tanda": 8,
+      "lote": "pasiva-validada-ampliacion6-2026-10-25.json",
+      "descripcionesCompletadas": 12
+    },
+    {
+      "tanda": 9,
+      "lote": "pasiva-validada-ampliacion7-2026-10-25.json",
+      "descripcionesCompletadas": 4
+    },
+    {
+      "tanda": 10,
+      "lote": "pasiva-validada-ampliacion8-2026-10-25.json",
+      "descripcionesCompletadas": 0
+    }
+  ],
+  "verificacion": {
+    "fechaAplicacion": "2026-10-25T18:37:11.723Z",
+    "escrituras": 173,
+    "auditorias": 173,
+    "repeticion": {
+      "sin_cambios": 173,
+      "escrituras": 0,
+      "auditoriasAdicionales": 0
+    },
+    "fichasConCamposProtegidosConservados": 303,
+    "metodoPreservacion": "Huella SHA-256 de todos los campos de empresa, salvo descripcion y updatedAt, junto con cuentas ordenadas, CRM y recuentos de tareas/notas/contactos. Comparación adicional de las 130 descripciones previas con el respaldo.",
+    "countsAntes": {
+      "universo": 5891,
+      "pasiva": 303,
+      "financieros": 23620,
+      "fin2025": 2725,
+      "finSabi": 15766
+    },
+    "countsDespues": {
+      "universo": 5891,
+      "pasiva": 303,
+      "financieros": 23620,
+      "fin2025": 2725,
+      "finSabi": 15766
+    },
+    "api": {
+      "fecha": "2026-10-25T18:37:56.327Z",
+      "host": "https://warroom.fontiber.com",
+      "fichasConResumen": 303,
+      "completadas": 173,
+      "existentesConservadas": 130,
+      "cifsUnicosEnLista": 303,
+      "sinSesion": 401
+    }
+  },
+  "empresas": [
+    {
+      "empresaId": 44,
+      "cif": "B93588275",
+      "nombre": "AISLAMIENTOS E IGNIFUGACIONES LOS MONTES S.L.",
+      "descripcion": "Instalación de aislamientos e ignifugación para protección pasiva contra incendios. Incluye tratamientos ignífugos de textiles y madera.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://www.aislamientoslosmontes.com/"
+      ]
+    },
+    {
+      "empresaId": 196,
+      "cif": "B98701881",
+      "nombre": "RADA IGNIFUGACION SOCIEDAD LIMITADA",
+      "descripcion": "Aplicación de ignifugaciones para proteger estructuras y forjados frente al fuego. Ubicada en Bétera (Valencia).",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://radaignifugacion.es/"
+      ]
+    },
+    {
+      "empresaId": 294,
+      "cif": "B85618700",
+      "nombre": "SOLUCIONES CONTRA INCENDIOS S.L.U.",
+      "descripcion": "Suministro, instalación y mantenimiento de protección pasiva: protección estructural, compartimentación, conductos, sellados y cerramientos cortafuegos de vidrio y textil.",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://sci-sl.com/"
+      ]
+    },
+    {
+      "empresaId": 327,
+      "cif": "A79252219",
+      "nombre": "SECURITAS SEGURIDAD ESPAÑA S.A",
+      "descripcion": "Servicios de seguridad e instalación de protección contra incendios activa y pasiva con técnicos propios. Incluye barreras cortafuegos y sellados técnicos.",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.securitas.es/servicios/seguridad-contra-incendios/instalacion-de-sistemas-pci/"
+      ]
+    },
+    {
+      "empresaId": 338,
+      "cif": "A08175994",
+      "nombre": "ACCIONA FACILITY SERVICES, S.A.",
+      "descripcion": "Servicios técnicos y mantenimiento de edificios e instalaciones industriales. Su actividad contra incendios incluye ingeniería, instalación y mantenimiento de protección pasiva.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+        "https://www.tecnifuego.org/acciona-facility-service-sa",
+        "https://mediacdn.acciona.com/media/1004079/facility_es.pdf"
+      ]
+    },
+    {
+      "empresaId": 569,
+      "cif": "A43708106",
+      "nombre": "PLASFOC . SA",
+      "descripcion": "Instalación de protección pasiva contra incendios en edificios y estructuras, con soluciones de protección estructural y compartimentación.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://www.plasfoc.com/servicios/instalaciones-proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "empresaId": 694,
+      "cif": "B74024472",
+      "nombre": "PREVENCION DE INCENDIOS SEGURIDAD APL SL",
+      "descripcion": "Diseño y ejecución de instalaciones de protección contra incendios, incluida protección pasiva. Ubicada en Langreo (Asturias).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://previnsa.com/"
+      ]
+    },
+    {
+      "empresaId": 699,
+      "cif": "B48983746",
+      "nombre": "TECRESA PROTECCION PASIVA, S.L",
+      "descripcion": "Instalación de protección pasiva contra incendios bajo la oferta de Mercor Light & Vent. Ejecuta compartimentaciones con paneles resistentes al fuego y sellados de instalaciones.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://mercorlv.es/"
+      ]
+    },
+    {
+      "empresaId": 735,
+      "cif": "B79346920",
+      "nombre": "MONTAJES AGUERO, S.L.U.",
+      "descripcion": "Instalaciones de protección contra incendios que incluyen trabajos de ignifugación como protección pasiva. Ubicada en Madrid.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://agueroinstalaciones.es/"
+      ]
+    },
+    {
+      "empresaId": 965,
+      "cif": "B87795449",
+      "nombre": "MG AISLAMIENTOS SL",
+      "descripcion": "Instalación de sistemas resistentes al fuego: puertas, aleros cortafuegos, tabiques y techos. Aplica también morteros y pinturas para protección pasiva.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "http://www.mgaislamientos.es/"
+      ]
+    },
+    {
+      "empresaId": 994,
+      "cif": "B84794015",
+      "nombre": "TRIA FIRE AND SMOKE SOLUTIONS, S.L.",
+      "descripcion": "Instalación de cortinas automáticas cortafuegos y soluciones de compartimentación. Cuenta con trabajos ejecutados de sectorización mediante cierres textiles.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://tria-spain.com/laboratorios-normon/",
+        "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de"
+      ]
+    },
+    {
+      "empresaId": 1001,
+      "cif": "B73422586",
+      "nombre": "SUPRA SEGURIDAD, S.L",
+      "descripcion": "Instalación de protección pasiva contra incendios: protección de estructuras, sectorización y sellado de pasos de instalaciones.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://gruposupra.es/protecion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 1165,
+      "cif": "B47266721",
+      "nombre": "CRESPO COMERCIAL ESPAï¿½OLA DE PROTECCION S.L.",
+      "descripcion": "Instalaciones de protección contra incendios que incluyen protección pasiva. Ubicada en Valladolid y opera bajo la marca Extintores Crespo.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.extintorescrespo.com/"
+      ]
+    },
+    {
+      "empresaId": 1267,
+      "cif": "B86091014",
+      "nombre": "TECNITEX FIRE SYSTEM S.L",
+      "descripcion": "Fabricación e instalación de sistemas de compartimentación mediante cortinas cortafuegos. Opera bajo la marca Tecnitex Fire.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://tecnitexfire.com/aplicaciones/sectorizacion-incendios-en-hoteles/"
+      ]
+    },
+    {
+      "empresaId": 1422,
+      "cif": "B40620874",
+      "nombre": "BLINDERS SOLUTIONS",
+      "descripcion": "Fabricación e instalación de cortinas cortafuegos con equipo propio, para compartimentar y sectorizar espacios frente al incendio. Opera bajo la marca Blinders.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://blinders.es/soluciones/cortinas-cortafuegos/"
+      ]
+    },
+    {
+      "empresaId": 1547,
+      "cif": "B94129368",
+      "nombre": "DESEÑO ENXEÑARIA E XESTIÓN DE OBRAS S.L.",
+      "descripcion": "Asesoramiento e instalación de sistemas de detección y extinción de incendios, junto con soluciones de protección pasiva. Opera bajo la marca Dexo.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://dexo.gal/"
+      ]
+    },
+    {
+      "empresaId": 1679,
+      "cif": "B21352323",
+      "nombre": "DOS FUENTES SLU",
+      "descripcion": "Montajes y mantenimiento industrial con soluciones de protección pasiva contra incendios para construcción e industria. Ubicada en Huelva.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.dosfuentes.net/"
+      ]
+    },
+    {
+      "empresaId": 1813,
+      "cif": "B48302335",
+      "nombre": "EUROFIRE, S.L.",
+      "descripcion": "Fabricación y aplicación de sistemas cortafuegos. Ejecuta sectorizaciones mediante puertas y cortinas resistentes al fuego.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.eurofire.net/soluciones-especiales-en-sectorizacion/"
+      ]
+    },
+    {
+      "empresaId": 1838,
+      "cif": "B84374131",
+      "nombre": "OBRAS Y REFORMAS COMA S.L.",
+      "descripcion": "Obras, reformas e instalaciones que incluyen ejecución de protección pasiva contra incendios. Opera bajo la marca Grupo Coma.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://grupocoma.es/proteccion-pasiva-madrid-centro/"
+      ]
+    },
+    {
+      "empresaId": 1855,
+      "cif": "B18577015",
+      "nombre": "BERBELPORCEL ASOCIADOS S.L.",
+      "descripcion": "Aplicación de protección pasiva: ignifugación estructural, franjas cortafuegos y sellados. Realiza también tratamientos ignífugos de revestimientos decorativos de madera.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json",
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://berbelporcel.com/",
+        "https://berbelporcel.com/project/ignifugacion-barniz-discoteca-granada/",
+        "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de"
+      ]
+    },
+    {
+      "empresaId": 1888,
+      "cif": "B06115190",
+      "nombre": "PROTECCION Y SEGURIDAD EXTREMEÑA S.L.",
+      "descripcion": "Servicios de protección contra incendios que incluyen protección pasiva. Ubicada en Zafra (Badajoz) y opera bajo la marca Proysex.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "http://www.proysex.es/"
+      ]
+    },
+    {
+      "empresaId": 1896,
+      "cif": "B45273406",
+      "nombre": "ZENITH TOLEDO, S.L.",
+      "descripcion": "Instalación de protección pasiva con lana de roca, pintura intumescente y sistemas de silicato. Incluye protección de estructuras y pasos de instalaciones.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://zenithtoledo.com/proteccion-contra-incendios/proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 1959,
+      "cif": "B31552680",
+      "nombre": "SERCOIN NAVARRA SL",
+      "descripcion": "Instalación de detección y protección contra incendios activa y pasiva. Ubicada en Galar (Navarra).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "http://www.sercoin.info/"
+      ]
+    },
+    {
+      "empresaId": 2002,
+      "cif": "B15851231",
+      "nombre": "TERMODINAIR, SL",
+      "descripcion": "Diseño, fabricación, instalación y mantenimiento de sistemas de sectorización y barreras cortafuegos. Ubicada en Carballo (A Coruña).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "http://termodinair.com/specialists.php"
+      ]
+    },
+    {
+      "empresaId": 2055,
+      "cif": "B60645785",
+      "nombre": "FOC I SEGURETAT SL",
+      "descripcion": "Servicios integrales de protección contra incendios con un área de protección pasiva. Opera bajo la marca Fiseg.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://fiseg.com/"
+      ]
+    },
+    {
+      "empresaId": 2062,
+      "cif": "B56068976",
+      "nombre": "AF PROTECCION, S.L.",
+      "descripcion": "Diseño, instalación y mantenimiento de protección pasiva: estructuras, sectorización, franjas cortafuegos, sellados y puertas y cortinas resistentes al fuego.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://afproteccion.com/servicios/proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 2082,
+      "cif": "B67057083",
+      "nombre": "SISTEMAS DE SEGURIDAD Y CONTRAINCENDIOS-INTEGRAS S.L.",
+      "descripcion": "Ingeniería e instalaciones que incluyen soluciones de protección pasiva contra incendios. Opera bajo la marca Integras.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://integras.es/servicios/proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 2083,
+      "cif": "B40593774",
+      "nombre": "INCOVAL PROTECCION CONTRA INCENDIOS, S.L.",
+      "descripcion": "Instalación de protección pasiva contra incendios: puertas cortafuegos, franjas perimetrales, sellados de pasos y proyección de morteros.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.incovalproteccioncontraincendios.es/producto/proteccion-pasiva-contra-incendios"
+      ]
+    },
+    {
+      "empresaId": 2116,
+      "cif": "B29855897",
+      "nombre": "MECOL INSTALACIONES ELECTRICAS S.L.",
+      "descripcion": "Instalaciones de protección contra incendios que incluyen soluciones de protección pasiva. Opera bajo la marca Mecol.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://mecol.es/"
+      ]
+    },
+    {
+      "empresaId": 2123,
+      "cif": "B59810093",
+      "nombre": "ECA SEGURIDAD INTEGRAL CONTRA INCENDIOS, S.L.",
+      "descripcion": "Instalación y mantenimiento de sistemas de protección contra incendios, con servicios de protección pasiva. Ubicada en Granollers (Barcelona).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.ecasici.com/"
+      ]
+    },
+    {
+      "empresaId": 2346,
+      "cif": "B14220073",
+      "nombre": "SINELEC FIRE PROTECCION, S.L",
+      "descripcion": "Instalación de barreras y elementos de protección pasiva contra el fuego. Incluye protección de estructuras con pintura intumescente y puertas cortafuegos.",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://sinelec.com/sistemas-de-proteccion-pasiva-contra-el-fuego/"
+      ]
+    },
+    {
+      "empresaId": 2371,
+      "cif": "B62449954",
+      "nombre": "INSTALACIONES GARCIA ROBLES SL",
+      "descripcion": "Diseño e instalación de sistemas de protección pasiva contra incendios. Ubicada en Sant Andreu de la Barca (Barcelona).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.garciarobles.com/"
+      ]
+    },
+    {
+      "empresaId": 2465,
+      "cif": "B44258911",
+      "nombre": "SEGUPROT GOBER, S.L.",
+      "descripcion": "Instalación y mantenimiento de protección contra incendios, incluidos sistemas de protección pasiva. Ubicada en Teruel.",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://seguprot.com/incendios/"
+      ]
+    },
+    {
+      "empresaId": 2505,
+      "cif": "B02908523",
+      "nombre": "PCI TUDEMANA 2021 S.L.",
+      "descripcion": "Instalación de sistemas de seguridad y soluciones de puertas cortafuegos. Ubicada en Dénia (Alicante) y opera bajo la marca Tu Demana.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://tudemana.com/servicios/puertas-cortafuegos-luminarias-y-cctv"
+      ]
+    },
+    {
+      "empresaId": 2516,
+      "cif": "B01179795",
+      "nombre": "ETXEGUREN ZERBITZUAK, S.L.",
+      "descripcion": "Instalaciones de protección contra incendios con diseño y proyectos de protección activa y pasiva. Ubicada en Amurrio (Álava).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.etxeguren.com/"
+      ]
+    },
+    {
+      "empresaId": 2610,
+      "cif": "B13464847",
+      "nombre": "SIDEXTIN, S.L.",
+      "descripcion": "Instalación de protección pasiva mediante puertas cortafuegos, pinturas intumescentes e ignifugaciones. Ubicada en Tomelloso (Ciudad Real).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://sidextin.com/productos/proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 2620,
+      "cif": "B63960744",
+      "nombre": "INSTAFOC BARCELONA SL",
+      "descripcion": "Instalaciones de protección contra incendios que incluyen trabajos de ignifugación. Opera bajo la marca Instafoc Barcelona.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.extintoresbarcelona.es/"
+      ]
+    },
+    {
+      "empresaId": 2643,
+      "cif": "B97838577",
+      "nombre": "RADA INSTALACIONES Y PREVENCIONES, S.L.",
+      "descripcion": "Instalación de sistemas de protección contra incendios y ejecución de ignifugaciones. Ubicada en Bétera (Valencia).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://radainstalaciones.wordpress.com/"
+      ]
+    },
+    {
+      "empresaId": 2648,
+      "cif": "B90168253",
+      "nombre": "TRIODO INGENIEROS, S.L.",
+      "descripcion": "Ingeniería e instalación de protección contra incendios, con soluciones de compartimentación. Ubicada en Alcalá de Guadaíra (Sevilla).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "http://www.triodoingenieros.com/"
+      ]
+    },
+    {
+      "empresaId": 2665,
+      "cif": "B81316275",
+      "nombre": "IBERCOIN INGENIEROS, S.L.",
+      "descripcion": "Instalación de protección pasiva con morteros, pinturas, placas y sistemas intumescentes para pasos de instalaciones. Opera bajo la marca Ibercoin.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://ibercoiningenieros.es/proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 2863,
+      "cif": "B98250319",
+      "nombre": "FUEGODIEZ, S.L.",
+      "descripcion": "Instalación de protección pasiva contra incendios: compartimentación, protección estructural y tratamientos de reacción al fuego.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://www.calificacioncepreven.com/Descarga-Documentos.html"
+      ],
+      "observaciones": "El resumen describe las áreas de instalación registradas. No afirma ni renueva la vigencia de una calificación Cepreven."
+    },
+    {
+      "empresaId": 2962,
+      "cif": "B64735285",
+      "nombre": "BCN & SOS C.I.  S.L.",
+      "descripcion": "Ejecución de protección pasiva de estructuras, franjas, sectorizaciones y sellados. Incluye conductos y puertas cortafuegos.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "http://www.bcnsos.com/"
+      ]
+    },
+    {
+      "empresaId": 2970,
+      "cif": "B55593750",
+      "nombre": "MONTAJES VIKEL SL",
+      "descripcion": "Montaje de sistemas de sectorización con cortinas cortafuegos y barreras de humo y fuego. Ubicada en Calafell (Tarragona).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://montajesvikel.com/servicio/8/57/cortinas-cortafuegos-o-de-sectorizacion-de-humos"
+      ]
+    },
+    {
+      "empresaId": 3057,
+      "cif": "B98541931",
+      "nombre": "IGNISVERICA SEGURIDAD Y PREVENCIÓN, S.L.",
+      "descripcion": "Instalación de protección pasiva contra incendios y aplicación de tratamientos de ignifugación adaptados a cada proyecto. Opera bajo la marca Ignisvérica.",
+      "primeraTanda": 9,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion7-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://ignisverica.com/proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 3157,
+      "cif": "B23725005",
+      "nombre": "COYMA FUEGO SL",
+      "descripcion": "Ejecución de ignifugaciones con proyectados y pinturas intumescentes, franjas y sellados. Instala también puertas y cortinas cortafuegos.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "http://www.grupocoyma.es/proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "empresaId": 3310,
+      "cif": "B55638399",
+      "nombre": "MCG GLOBAL SECURITY SOCIEDAD LIMITADA",
+      "descripcion": "Instalación de protección pasiva: estructuras, sellados, sectorizaciones y puertas cortafuegos batientes. Ubicada en Salou (Tarragona).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.mcgglobalsecurity.com/proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 3311,
+      "cif": "B24490997",
+      "nombre": "JOSMAG, S.S.C.I., SL",
+      "descripcion": "Instalación y mantenimiento de protección contra incendios activa y pasiva. Ubicada en Astorga (León).",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://josmagsl.com/quienes-somos-josmag-leon"
+      ]
+    },
+    {
+      "empresaId": 3434,
+      "cif": "B76582642",
+      "nombre": "INSTALACIONES Y SERVICIOS TENSUR, S.L.",
+      "descripcion": "Instalación de protección pasiva estructural, compartimentación y tratamientos ignífugos. Ubicada en Granadilla de Abona (Tenerife).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.tensur.es/servicio/proteccion-pasiva-contra-incendios"
+      ]
+    },
+    {
+      "empresaId": 3597,
+      "cif": "B61033239",
+      "nombre": "Seguridad y proteccion contra incendios exb",
+      "descripcion": "Instalación de protección pasiva con proyectados, revestimientos, collarines y sellados. Incluye puertas y compuertas cortafuegos.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.exb.es/instalaciones-proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 3663,
+      "cif": "B06255715",
+      "nombre": "COMERCIAL EXTREMEÑA DE EXTINTORES S.L.",
+      "descripcion": "Instalación y mantenimiento de protección contra incendios activa y pasiva. Ubicada en Arroyo de San Serván (Badajoz).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://extintoresextremadura.com/"
+      ]
+    },
+    {
+      "empresaId": 3962,
+      "cif": "B90280454",
+      "nombre": "PROMATEC SERVICIOS INTEGRALES, S.L.U.",
+      "descripcion": "Aplicación de protección pasiva con equipo propio: estructuras, franjas cortafuegos y tratamiento de pasos de instalaciones. Instala también puertas cortafuegos.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://ignifugacionespromatec.es/"
+      ]
+    },
+    {
+      "empresaId": 4078,
+      "cif": "04218768Q",
+      "nombre": "SAMUEL MARTINEZ ARRIERO",
+      "descripcion": "Aplicación de ignifugaciones con morteros, intumescentes y placas bajo la marca Conesam. Ejecuta sectorizaciones, sellados y puertas y cortinas resistentes al fuego.",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://conesam.com/ignifugaciones.php"
+      ]
+    },
+    {
+      "empresaId": 5503,
+      "cif": "B24755019",
+      "nombre": "EXTINHOUSE GROUP, S.L.",
+      "descripcion": "Instalación de protección pasiva con morteros, pinturas intumescentes, placas, puertas y sellados cortafuegos. Opera bajo la marca Extinhouse Group.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://extinhouse.es/proteccion-pasiva-contra-incendios-ignifugados/"
+      ]
+    },
+    {
+      "empresaId": 5624,
+      "cif": "B54917844",
+      "nombre": "IGNIFUGADOS ARMERO, SL",
+      "descripcion": "Aplicación de ignifugaciones, franjas y sellados cortafuegos. Ubicada en Ibi (Alicante) y opera bajo la marca Armero.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://ignifugadosarmero.com/"
+      ]
+    },
+    {
+      "empresaId": 5702,
+      "cif": "B88668009",
+      "nombre": "INSTALACIONES Y PROYECTOS DE SISTEMAS DE INCENDIO",
+      "descripcion": "Instalación de protección pasiva con técnicos propios: sectorizaciones, ignifugación estructural, sellados y protección de conductos de extracción. Opera bajo la marca IPS Incendio.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://ipsincendio.es/"
+      ]
+    },
+    {
+      "empresaId": 5795,
+      "cif": "B03987823",
+      "nombre": "VYAPEC SL",
+      "descripcion": "Trabajos de aislamiento, impermeabilización, pavimentos continuos y rehabilitación. Su oferta incluye instalación de protección pasiva contra incendios.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://www.aisla.org/instaladores/",
+        "https://www.vyapec.es/empresa/",
+        "https://www.vyapec.es/"
+      ]
+    },
+    {
+      "empresaId": 5796,
+      "cif": "B12744033",
+      "nombre": "AISLAMIENTOS Y PROYECTADOS LEVANTE SL",
+      "descripcion": "Aplicación de impermeabilización, aislamiento e ignifugación. Ubicada en Burriana (Castellón).",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "http://www.aplevante.es/especialistas-en-impermeabilizar-ignifugar-y-aislamientos/"
+      ]
+    },
+    {
+      "empresaId": 5797,
+      "cif": "B15925860",
+      "nombre": "REVESTIMIENTOS VALDOVIÑO SL",
+      "descripcion": "Instalación de aislamiento térmico mediante insuflado y proyección bajo la marca Aislamientos Valdoviño. Incluye servicios de protección pasiva contra incendios.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://www.aisla.org/instaladores/",
+        "https://www.aislamientosvaldovino.es/",
+        "https://www.aislamientosvaldovino.es/aislamiento-termico-insuflado.aspx"
+      ]
+    },
+    {
+      "empresaId": 5798,
+      "cif": "B16757601",
+      "nombre": "S'EUBALLO SL",
+      "descripcion": "Aplicación de tratamientos de ignifugación para protección pasiva de construcciones. Ubicada en Palma (Baleares).",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://seuballo.es/ignifugaciones-para-construcciones/"
+      ]
+    },
+    {
+      "empresaId": 5799,
+      "cif": "B18777482",
+      "nombre": "APLICACIONES APISUR SL",
+      "descripcion": "Ejecución de protección pasiva mediante ignifugación, sectorización y sellados cortafuegos. Ubicada en Otura (Granada).",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://aplicacionesapisur.com/ignifugaciones-barcelona/"
+      ]
+    },
+    {
+      "empresaId": 5800,
+      "cif": "B23865140",
+      "nombre": "TENALBA OP 3 SERVICIOS INTEGRALES SL",
+      "descripcion": "Instalación de sistemas de protección pasiva contra incendios. Ubicada en Torrejón de Ardoz (Madrid).",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://www.aisla.org/instaladores/"
+      ]
+    },
+    {
+      "empresaId": 5801,
+      "cif": "B36235380",
+      "nombre": "AISLAMOS SL",
+      "descripcion": "Instalación de aislamiento ignífugo, pinturas intumescentes y placas resistentes al fuego. Ubicada en Meis (Pontevedra).",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://www.aislamos.com/aislamiento-ignifugo/"
+      ]
+    },
+    {
+      "empresaId": 5802,
+      "cif": "B44668531",
+      "nombre": "IGNIFUGACIONES IBERICAS SL",
+      "descripcion": "Aplicación de sistemas de ignifugación y protección pasiva contra incendios. Ubicada en Gines (Sevilla).",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://ignifugacionesibericas.com/"
+      ]
+    },
+    {
+      "empresaId": 5803,
+      "cif": "B54593710",
+      "nombre": "ENESA CONTINENTAL SL",
+      "descripcion": "Aplicación de protección pasiva estructural con morteros ignífugos, incluidos trabajos industriales frente a fuego de hidrocarburos. Ejecuta franjas cortafuegos y sellados de pasos y juntas.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json",
+        "pasiva-validada-ampliacion3-2026-10-25.json",
+        "pasiva-validada-ampliacion7-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://enesacontinental.com/ignifugacion-proteccion-pasiva-contra-el-fuego",
+        "https://enesacontinental.com/portfolio/planta-de-regasificacion",
+        "https://enesacontinental.com/sectorizacion-contra-incendios"
+      ]
+    },
+    {
+      "empresaId": 5804,
+      "cif": "B56082860",
+      "nombre": "IGESUR SOLUCIONES TECNICAS SL",
+      "descripcion": "Aplicación de protección pasiva con morteros, pinturas intumescentes y tratamientos ignífugos. Ejecuta franjas, sectorizaciones y sellados de instalaciones.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json",
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.igesur.com/",
+        "https://www.igesur.com/proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 5805,
+      "cif": "B61849295",
+      "nombre": "DIATERM FOC SL",
+      "descripcion": "Instalación y distribución de soluciones de protección pasiva para estructuras, divisiones, pasos de instalaciones y conductos. Incluye puertas cortafuegos batientes, correderas y de guillotina.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json",
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://diatermfoc.com/otros-productos/",
+        "https://diatermfoc.com/soluciones-proteccion-pasiva-fuego/"
+      ]
+    },
+    {
+      "empresaId": 5806,
+      "cif": "B64404809",
+      "nombre": "IGNITOR PRODUCTOS IGNIFUGOS SL",
+      "descripcion": "Aplicación de tratamientos ignífugos decorativos y estructurales, junto con venta de productos para protección contra el fuego.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://ignifugacionesignitor.com/"
+      ]
+    },
+    {
+      "empresaId": 5807,
+      "cif": "B71014898",
+      "nombre": "PROTECCIONES IGNIFUGAS DEL CENTRO SL",
+      "descripcion": "Aplicación de protección pasiva con morteros y pinturas intumescentes, sellados y franjas cortafuegos. Opera bajo la marca PIC Protecciones.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://www.tecnifuego.org/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+        "https://picprotecciones.es/"
+      ]
+    },
+    {
+      "empresaId": 5808,
+      "cif": "B78098324",
+      "nombre": "AISTERCOM SL",
+      "descripcion": "Trabajos de construcción, aislamiento industrial y de edificación, impermeabilización y revestimientos. Incluye instalación de protección pasiva contra incendios.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://www.aisla.org/instaladores/",
+        "https://aistercom.com/"
+      ]
+    },
+    {
+      "empresaId": 5809,
+      "cif": "B78670049",
+      "nombre": "TECNICAS Y PROYECTOS IGNIFUGOS SL",
+      "descripcion": "Instalación de protección pasiva mediante ignifugación, compartimentación y sellado de pasos de instalaciones. Opera bajo la marca Teprosol.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://teprosol.com/"
+      ]
+    },
+    {
+      "empresaId": 5810,
+      "cif": "B84147198",
+      "nombre": "APLIYES SLU",
+      "descripcion": "Aplicación de sistemas de protección pasiva contra incendios. Ubicada en Parla (Madrid).",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://www.apliyes.com/proteccion-pasiva-contra-incendios.html"
+      ]
+    },
+    {
+      "empresaId": 5811,
+      "cif": "B90411471",
+      "nombre": "ENGINEERING PROPACON SL",
+      "descripcion": "Planificación e instalación de sistemas de protección pasiva contra incendios. Ubicada en Sevilla.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json"
+      ],
+      "fuentes": [
+        "https://propacon.com/ignifugacion-en-sevilla/"
+      ]
+    },
+    {
+      "empresaId": 5812,
+      "cif": "B98892631",
+      "nombre": "PROYECTOS Y SERVICIOS CAVAL SL",
+      "descripcion": "Aplicación de protección pasiva de estructuras, sellados y revestimiento de conductos bajo la marca Procaval. Ejecuta trabajos en infraestructuras, industria, edificios y centros comerciales.",
+      "primeraTanda": 1,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-23.json",
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://procaval.es/",
+        "https://procaval.es/aislamientos-ignifugos/"
+      ]
+    },
+    {
+      "empresaId": 5813,
+      "cif": "B04853214",
+      "nombre": "PERFILEA SL",
+      "descripcion": "Suministro y montaje de puertas cortafuegos a medida, con asistencia técnica. Ubicada en El Ejido (Almería).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://puertascontraincendios.com/empresa-2/"
+      ]
+    },
+    {
+      "empresaId": 5814,
+      "cif": "B16153199",
+      "nombre": "APOLINAR COCERA SL",
+      "descripcion": "Construcción y rehabilitación energética bajo la marca Passivhaus Cuenca. Incluye servicios de protección pasiva contra incendios.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.aisla.org/instaladores/",
+        "https://passivhauscuenca.es/"
+      ]
+    },
+    {
+      "empresaId": 5815,
+      "cif": "B20503579",
+      "nombre": "ATERKI ISOLA SL",
+      "descripcion": "Trabajos de impermeabilización, aislamiento y pavimentos. Su oferta incluye aislamiento frente al fuego y protección pasiva contra incendios.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.aisla.org/instaladores/",
+        "https://www.aterki.com/es/"
+      ]
+    },
+    {
+      "empresaId": 5816,
+      "cif": "B24319535",
+      "nombre": "AISTEPOL SL",
+      "descripcion": "Aplicación de tratamientos de protección pasiva y sistemas de ignifugación. Ubicada en Valdefresno (León).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://aistepol.com/"
+      ]
+    },
+    {
+      "empresaId": 5817,
+      "cif": "B31678931",
+      "nombre": "AISLAMIENTOS EUNA SL",
+      "descripcion": "Instalación de protección pasiva de estructuras y sistemas de compartimentación. Ubicada en Ribaforada (Navarra).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://euna.es/productos-y-servicios/proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "empresaId": 5818,
+      "cif": "B48729842",
+      "nombre": "AISLAMIENTOS VASCOS ISOVAS SL",
+      "descripcion": "Instalación de aislamientos y protección pasiva contra incendios. Ubicada en Urduliz (Bizkaia).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://isovas.com/proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "empresaId": 5819,
+      "cif": "B59590406",
+      "nombre": "TERPOLAR AILLAMENTS SLU",
+      "descripcion": "Aplicación de sistemas de ignifugación y aislamiento frente al fuego. Ubicada en Torelló (Barcelona).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://terpolar.com/ignifugacions-la-proteccio-passiva-contra-el-foc/"
+      ]
+    },
+    {
+      "empresaId": 5820,
+      "cif": "B63550073",
+      "nombre": "INTROPOL SL",
+      "descripcion": "Aplicación de morteros ignífugos para protección de estructuras metálicas y de madera. Ubicada en Montmeló (Barcelona).",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.intropol.es/ignifugados/"
+      ]
+    },
+    {
+      "empresaId": 5821,
+      "cif": "B85441772",
+      "nombre": "MARTINEZ FRANCO INGENIERIA Y TECNICAS DE PROTECCION PASIVA SL",
+      "descripcion": "Instalación y aplicación de protección pasiva de estructuras y sellados de pasos de instalaciones. Ubicada en Madrid.",
+      "primeraTanda": 2,
+      "lotesAntecedentes": [
+        "pasiva-validada-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.ignitor-martinezfranco.com/"
+      ]
+    },
+    {
+      "empresaId": 5822,
+      "cif": "A48190839",
+      "nombre": "TÉCNICAS DE REFRACTARIOS, S.A.U.",
+      "descripcion": "Diseño y ejecución de protección pasiva industrial con morteros, intumescentes, placas y sellados. Incluye sectorización de conducciones y opera bajo la marca Tecresa.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.tecresa.com/index.php/es/actividades/proteccion-pasiva"
+      ]
+    },
+    {
+      "empresaId": 5823,
+      "cif": "B02579548",
+      "nombre": "PINTURAS LACAPIN, S.L.",
+      "descripcion": "Aplicación de pinturas intumescentes para protección de estructuras metálicas frente al fuego. Ubicada en Villarrobledo (Albacete).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://lacapin.com/servicios/"
+      ]
+    },
+    {
+      "empresaId": 5824,
+      "cif": "B16756884",
+      "nombre": "MONTAJES Y AISLAMIENTOS EN PYL, S.L.",
+      "descripcion": "Instalación de tabiquería y ejecución de reformas con servicios de protección pasiva contra incendios. Ubicada en Terrassa (Barcelona).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.mapyl.es/servicios"
+      ]
+    },
+    {
+      "empresaId": 5825,
+      "cif": "B25801770",
+      "nombre": "GESTIPLAC GESTIÓ D’OBRES, S.L.U.",
+      "descripcion": "Construcción en seco e instalación de sistemas de yeso laminado y aislamiento. Incluye protección pasiva contra incendios.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://gestiplac.cat/"
+      ]
+    },
+    {
+      "empresaId": 5826,
+      "cif": "B33495516",
+      "nombre": "CARGAS Y LUCIDOS HERMANOS LEONESES, S.L.",
+      "descripcion": "Ejecución de obras y aplicación de yesos y morteros, con trabajos de protección pasiva contra incendios en Asturias.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.hermanosleoneses.com/"
+      ]
+    },
+    {
+      "empresaId": 5827,
+      "cif": "B33998584",
+      "nombre": "ATENÚA, S.L.",
+      "descripcion": "Instalación de protección pasiva estructural con morteros y pinturas intumescentes. Ejecuta sellados de bajantes y pasos de cables con collarines, masillas y morteros.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json",
+        "pasiva-validada-ampliacion5-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://cys-atenua.com/"
+      ]
+    },
+    {
+      "empresaId": 5828,
+      "cif": "B39743760",
+      "nombre": "FUOTUR CANTABRIA",
+      "descripcion": "Instalación de aislamientos y ejecución de trabajos de protección pasiva contra incendios con equipo propio. Ubicada en San Felices de Buelna (Cantabria).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.fuoturcantabria.com/"
+      ]
+    },
+    {
+      "empresaId": 5829,
+      "cif": "B40519100",
+      "nombre": "APLICFIRE, S.L.",
+      "descripcion": "Aplicación de morteros y pinturas intumescentes e instalación de placas para protección pasiva. Ejecuta franjas cortafuegos y sellados.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.aplicfire.es/proteccion-pasiva"
+      ]
+    },
+    {
+      "empresaId": 5830,
+      "cif": "B57034324",
+      "nombre": "INSTALACIONES COBI BALEAR, S.L.",
+      "descripcion": "Aplicación de protección estructural con pinturas intumescentes, morteros de vermiculita y placas resistentes al fuego. Ubicada en Santa Maria del Camí (Baleares).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://cobibalear.es/servicios/ignifugacion-de-estructuras/"
+      ]
+    },
+    {
+      "empresaId": 5831,
+      "cif": "B57998965",
+      "nombre": "OBRAS Y SISTEMAS CONTRAINCENDIOS GLOBAL PROYECT, S.L.U.",
+      "descripcion": "Instalaciones contra incendios con trabajos de proyección ignífuga, franjas cortafuegos y panelados. Aplica también pinturas intumescentes.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.globalproyect.com/proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "empresaId": 5832,
+      "cif": "B59304998",
+      "nombre": "DIVISIONES INTERIORES, S.L.",
+      "descripcion": "Instalación de sistemas interiores con soluciones de protección pasiva resistentes al fuego. Ubicada en Sant Adrià de Besòs (Barcelona).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://divinter.es/"
+      ]
+    },
+    {
+      "empresaId": 5833,
+      "cif": "B61933214",
+      "nombre": "OPERSIS 1999, S.L.",
+      "descripcion": "Diseño e instalación de construcción en seco, con soluciones y detalles constructivos de protección pasiva contra incendios.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://opersis.es/"
+      ]
+    },
+    {
+      "empresaId": 5834,
+      "cif": "B61989638",
+      "nombre": "IGNIFUGACIONS GENERALS, S.L.",
+      "descripcion": "Aplicación de protección pasiva para estructuras, sectorización, sellados y conductos. Incluye tratamientos de elementos de madera.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.ignifugacionesgenerales.com/"
+      ]
+    },
+    {
+      "empresaId": 5835,
+      "cif": "B65850877",
+      "nombre": "DECOPLAC MARESME, S.L.",
+      "descripcion": "Instalación de tabiquería seca y ejecución de protección estructural y sectorización frente al fuego con placas y morteros.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "http://www.decoplacmaresme.com/"
+      ]
+    },
+    {
+      "empresaId": 5836,
+      "cif": "B66204579",
+      "nombre": "APLACAT SBD, S.L.",
+      "descripcion": "Instalación de sistemas de yeso laminado, aislamiento y protección pasiva contra incendios. Ubicada en Sabadell (Barcelona).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://aplacat.cat/"
+      ]
+    },
+    {
+      "empresaId": 5837,
+      "cif": "B66999079",
+      "nombre": "TABIC MON, S.L.",
+      "descripcion": "Ejecución de sectorizaciones con yeso laminado e instalación de collarines, sellados intumescentes, puertas, rejillas y trampillas resistentes al fuego.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://tabicmon.com/servicios/ignifugacion"
+      ]
+    },
+    {
+      "empresaId": 5838,
+      "cif": "B70529128",
+      "nombre": "TERRANOVA OBRAS Y SERVICIOS, S.L.",
+      "descripcion": "Instalación de protección pasiva con revestimientos y soluciones para proteger elementos estructurales frente al fuego. Ubicada en Narón (A Coruña).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.grupoterranova.es/"
+      ]
+    },
+    {
+      "empresaId": 5839,
+      "cif": "B73896383",
+      "nombre": "IGNIFUGACIONES SALINAS MUÑOZ, S.L.",
+      "descripcion": "Aplicación de protección pasiva mediante ignifugación de estructuras, franjas y sellados cortafuegos. Ubicada en Yecla (Murcia).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://ignifugacionessalinas.es/empresa/"
+      ]
+    },
+    {
+      "empresaId": 5840,
+      "cif": "B76056753",
+      "nombre": "BRAPESA CANARIAS, S.L.",
+      "descripcion": "Aplicación de morteros y pinturas intumescentes e instalación de paneles y placas resistentes al fuego. Ejecuta compartimentaciones y sellados de pasos.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.brapesacanarias.com/"
+      ]
+    },
+    {
+      "empresaId": 5841,
+      "cif": "B76122415",
+      "nombre": "JLD SERVICIOS E INGENIO, S.L.U.",
+      "descripcion": "Aplicación de protección pasiva estructural con lana de roca proyectada, pinturas intumescentes y morteros. Ubicada en Agüimes (Las Palmas).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.grupojld.es/servicios/"
+      ]
+    },
+    {
+      "empresaId": 5842,
+      "cif": "B76689801",
+      "nombre": "RSI TENERIFE, S.L.",
+      "descripcion": "Ejecución y aplicación de protección pasiva para estructuras metálicas, naves y sectores de incendio. Incluye protección de conductos metálicos con paneles de lana mineral.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json",
+        "pasiva-validada-ampliacion5-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://cys-rsitenerife.com/proteccion-pasiva-contra-incendios",
+        "https://rsitenerife.com/pladur/proteccion-pasiva-de-conductos-de-instalaciones/"
+      ]
+    },
+    {
+      "empresaId": 5843,
+      "cif": "B80566342",
+      "nombre": "URBANIZACIONES COBESA, S.L.",
+      "descripcion": "Ejecución de protección pasiva mediante ignifugación de estructuras, compartimentaciones y sellados. Ubicada en Madrid.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://ucobesa.es/proteccion-pasiva-incendios/quienes-somos/"
+      ]
+    },
+    {
+      "empresaId": 5844,
+      "cif": "B80826662",
+      "nombre": "IGNIFUGADOS Y REVESTIMIENTOS, S.L.",
+      "descripcion": "Instalación de sistemas intumescentes y aplicación de morteros ignífugos. Incluye sellados de pasos y collarines cortafuegos.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.ignifugadosyrevestimientos.com/"
+      ]
+    },
+    {
+      "empresaId": 5845,
+      "cif": "B84318849",
+      "nombre": "SELLA2 PROTECCIÓN PASIVA, S.L.",
+      "descripcion": "Instalación de protección pasiva de estructuras, sellados, franjas y compartimentaciones. Incluye protección de conductos frente al fuego.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://sella2.com/"
+      ]
+    },
+    {
+      "empresaId": 5846,
+      "cif": "B87595633",
+      "nombre": "TÉCNICAS Y DINÁMICAS DE INTERIORES, S.L.",
+      "descripcion": "Ejecución de trabajos de protección pasiva contra incendios. Ubicada en Coslada (Madrid).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://tecdi.es/category/proteccion-pasiva-contra-fuego/"
+      ]
+    },
+    {
+      "empresaId": 5847,
+      "cif": "B95484945",
+      "nombre": "NEWCONS AISLAMIENTOS, S.L.",
+      "descripcion": "Instalación de sistemas de protección pasiva contra incendios. Ubicada en Bilbao (Bizkaia).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.newcons.es/proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 5848,
+      "cif": "B96881180",
+      "nombre": "APLICACIONES ANTUNEZ, S.L.",
+      "descripcion": "Aplicación de ignifugaciones estructurales con morteros y pinturas intumescentes bajo la marca Aplan. Realiza tratamientos de protección contra incendios.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.ignifugaciones-valencia.com/"
+      ]
+    },
+    {
+      "empresaId": 5849,
+      "cif": "B97844054",
+      "nombre": "IGNIFOC AISLAMIENTOS INTEGRALES, S.L.",
+      "descripcion": "Aplicación de protección pasiva de estructuras mediante morteros y pinturas intumescentes. Ubicada en Silla (Valencia).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://ignifoc.com/ignifugacion"
+      ]
+    },
+    {
+      "empresaId": 5850,
+      "cif": "B98151467",
+      "nombre": "TÉCNICAS APLICADAS DEL MEDITERRÁNEO, S.L.",
+      "descripcion": "Trabajos de construcción y tabiquería seca que incluyen ejecución de protección pasiva contra incendios. Ubicada en Puçol (Valencia).",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.tecnicasaplicadas.es/empresa"
+      ]
+    },
+    {
+      "empresaId": 5851,
+      "cif": "B98823735",
+      "nombre": "SISTEMAS DE PROTECCIÓN FIREPROF, S.L.",
+      "descripcion": "Aplicación de protección pasiva en estructuras metálicas de establecimientos industriales. Opera bajo la marca Fireproof.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://empresadeignifugaciones.es/empresa/"
+      ]
+    },
+    {
+      "empresaId": 5852,
+      "cif": "B99067936",
+      "nombre": "TÉCNICAS DE SEGURIDAD PASIVA CONTRA INCENDIOS, S.L.",
+      "descripcion": "Instalación y aplicación de protección pasiva para estructuras, sectorización, sellados y conductos resistentes al fuego. Opera bajo la marca Tecoin.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.tecoin.es/"
+      ]
+    },
+    {
+      "empresaId": 5853,
+      "cif": "E42824722",
+      "nombre": "ESCADUR",
+      "descripcion": "Aplicación de protección pasiva con morteros y pinturas, montaje de paneles, sellado de pasos y protección de conductos. Opera bajo las marcas Ignaria y Proyecta Verm.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json",
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://ignifugados.net/",
+        "https://vermiculitaproyectada.com/empresa/"
+      ]
+    },
+    {
+      "empresaId": 5854,
+      "cif": "J43963792",
+      "nombre": "PROJECT TGN, S.C.P.",
+      "descripcion": "Ejecución de protección pasiva con intumescentes, morteros, paneles y franjas cortafuegos. Incluye sellados, tratamientos de madera y conductos resistentes al fuego.",
+      "primeraTanda": 3,
+      "lotesAntecedentes": [
+        "pasiva-validada-regional-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://projecttgn.com/proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "empresaId": 5855,
+      "cif": "B09570748",
+      "nombre": "APLYTEC APLICACIONES INDUSTRIALES, S.L.",
+      "descripcion": "Aplicación de pintura industrial y recubrimientos para protección pasiva contra incendios. Incluye pinturas intumescentes e ignífugas.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.aplytec.eu/"
+      ]
+    },
+    {
+      "empresaId": 5856,
+      "cif": "B16544926",
+      "nombre": "CALIDAD CROMÁTICA, S.L.",
+      "descripcion": "Ejecución de trabajos de ignifugación y protección pasiva contra incendios bajo la marca Qromia. Cuenta con obras realizadas en el aeropuerto de Palma y edificios públicos.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.qromia.com/qromia_carboline_proteccion_pasiva_contra_el_fuego/"
+      ]
+    },
+    {
+      "empresaId": 5857,
+      "cif": "B17944034",
+      "nombre": "VIMAT IGNIFUGATS, S.L.U.",
+      "descripcion": "Aplicación de protección pasiva de estructuras, compartimentación y sellado de pasos. Incluye protección de conductos de ventilación.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "http://vimat-ignifugats.com/ca/empresa/"
+      ]
+    },
+    {
+      "empresaId": 5858,
+      "cif": "B31378326",
+      "nombre": "PROTECCIONES INDUSTRIALES Y DECORATIVAS",
+      "descripcion": "Aplicación de tratamientos contra incendios con morteros ignífugos y pinturas intumescentes. Opera bajo la marca Proind y dispone de personal y maquinaria propios.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://proind.es/informacion-empresa/"
+      ]
+    },
+    {
+      "empresaId": 5859,
+      "cif": "B39467493",
+      "nombre": "AISLAMIENTOS SAN FELICES",
+      "descripcion": "Aplicación de protección pasiva de estructuras mediante proyección de mortero de perlita y vermiculita. Ubicada en San Felices de Buelna (Cantabria).",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.aislamientossanfelices.es/proteccion-pasiva"
+      ]
+    },
+    {
+      "empresaId": 5860,
+      "cif": "B44903037",
+      "nombre": "VENTASUELOS, S.L.",
+      "descripcion": "Aplicación de tratamientos ignífugos de tejidos, decoración y estructuras bajo la marca Hidra Floors. Entrega documentación de los trabajos realizados.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://ventasuelos.com/ignifugaciones/"
+      ]
+    },
+    {
+      "empresaId": 5861,
+      "cif": "B47503511",
+      "nombre": "OLIDETEC, S.L.",
+      "descripcion": "Aplicación de pintura industrial, incluidas pinturas intumescentes para proteger estructuras metálicas frente al fuego. Ubicada en Valladolid.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://olidetec.es/"
+      ]
+    },
+    {
+      "empresaId": 5862,
+      "cif": "B60512134",
+      "nombre": "LA INSTALADORA DE SISTEMAS Y AISLAMIENTOS, S.L.",
+      "descripcion": "Instalación de elementos constructivos de protección frente al fuego. Ejecuta compartimentaciones y sectorizaciones verticales y horizontales.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.lainstaladoradesistemas.es/proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "empresaId": 5863,
+      "cif": "B66198995",
+      "nombre": "IGNIFUGACIONES LOTOR, S.L.",
+      "descripcion": "Diseño y ejecución de proyectos de aislamiento y protección pasiva con morteros, intumescentes y placas. Incluye franjas cortafuegos y sellados de instalaciones.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.ignifugacioneslotor.com/"
+      ]
+    },
+    {
+      "empresaId": 5864,
+      "cif": "B66443763",
+      "nombre": "IGNIFUGACIONES PPCI, S.L.",
+      "descripcion": "Ejecución de ignifugaciones con morteros e intumescentes, franjas y sectorizaciones. Realiza también sellados de pasos de instalaciones.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://ignifugaciones.barcelona/"
+      ]
+    },
+    {
+      "empresaId": 5865,
+      "cif": "B76605815",
+      "nombre": "GRUPO REFRIPECA 2005, S.L.",
+      "descripcion": "Ejecución de protección pasiva de estructuras, sellados y collarines cortafuegos. Incluye revestimiento de conductos en Tenerife y Canarias.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.refripeca.com/en/proteccion-pasiva"
+      ]
+    },
+    {
+      "empresaId": 5866,
+      "cif": "B86850062",
+      "nombre": "AZUL COBALTO DECORACIÓN, S.L.",
+      "descripcion": "Aplicación de protección pasiva bajo la marca PIMED: intumescentes y morteros, sectorizaciones y sellados. Incluye protección de conductos y tratamientos ignífugos de madera.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://pimed.es/empresa-de-proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 5867,
+      "cif": "B87121018",
+      "nombre": "IGNIDEC AISLAMIENTOS, S.L.",
+      "descripcion": "Aplicación de pinturas intumescentes y morteros e instalación de paneles resistentes al fuego. Ejecuta franjas, sellados y protección de conductos.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.ignidec.com/ignidec-aislamientos-ignifugos-madrid.html"
+      ]
+    },
+    {
+      "empresaId": 5868,
+      "cif": "B90250879",
+      "nombre": "MARTÍNEZ SOLUCIONES CONSTRUCTIVAS, S.L.",
+      "descripcion": "Diseño y ejecución de protección pasiva con morteros y pinturas intumescentes. Incluye trabajos de ignifugación e instalación de cortinas contra incendios.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://grupo-martinez.es/proteccion-pasiva-contra-incendios/proyectados-para-proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 5869,
+      "cif": "B91111955",
+      "nombre": "TRILLO GRUPO 2000, S.L.",
+      "descripcion": "Aplicación de morteros, pinturas intumescentes y tratamientos ignífugos de madera. Instala paneles y ejecuta sellados de pasos.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://www.pinturastrillo.com/proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "empresaId": 5870,
+      "cif": "B93127645",
+      "nombre": "IMPERESPUMA MÁLAGA, S.L.",
+      "descripcion": "Ignifugación de estructuras metálicas, paredes y techos de edificios industriales y comerciales. Ubicada en Cártama (Málaga).",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://imperespumamalaga.com/servicios/"
+      ]
+    },
+    {
+      "empresaId": 5871,
+      "cif": "B97642284",
+      "nombre": "ACUSFOC, S.L.",
+      "descripcion": "Ejecución de ignifugaciones de estructuras metálicas y cerramientos. Incluye sellado de pasos de instalaciones con collarines, rejillas y masillas intumescentes.",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json",
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.acusfoc.com/ignifugacion/",
+        "https://www.acusfoc.com/ignifugaciones-en-valencia/"
+      ]
+    },
+    {
+      "empresaId": 5872,
+      "cif": "B99427791",
+      "nombre": "APLICACIONES ALAGÓN",
+      "descripcion": "Instalación de aislamiento industrial y comercial con servicios de protección pasiva contra incendios. Ubicada en Alagón (Zaragoza).",
+      "primeraTanda": 4,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion2-2026-10-24.json"
+      ],
+      "fuentes": [
+        "https://aplicacionesalagon.es/"
+      ]
+    },
+    {
+      "empresaId": 5873,
+      "cif": "A08861221",
+      "nombre": "ISAPHONE, S.A.",
+      "descripcion": "Instalación de sistemas interiores con protección estructural mediante placas y compartimentación. Ejecuta revestimiento de conductos y sellado de huecos.",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://isaphone.es/productos/proteccion-pasiva-contra-el-fuego/"
+      ]
+    },
+    {
+      "empresaId": 5874,
+      "cif": "A39087887",
+      "nombre": "PINTURAS SABI, S.A.",
+      "descripcion": "Aplicación de pintura intumescente y mortero ignífugo para protección pasiva contra incendios. Realiza también sellado de penetraciones.",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.pinturassabi.com/servicios/"
+      ]
+    },
+    {
+      "empresaId": 5875,
+      "cif": "B02509636",
+      "nombre": "PROTEC-ALBA",
+      "descripcion": "Servicios de aplicación en construcción con trabajos de protección pasiva de edificios y estructuras. Opera bajo la marca Protec-Alba.",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://protecalba.com/proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "empresaId": 5876,
+      "cif": "B05119144",
+      "nombre": "JULIO BARBERO MORENO, S.L.",
+      "descripcion": "Protección pasiva de estructuras metálicas y de hormigón mediante morteros y pinturas intumescentes. Incluye protección de conductos de ventilación y extracción.",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://grupojuliobarbero.com/proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 5877,
+      "cif": "B12681623",
+      "nombre": "LA PLANA TECHOS Y TABIQUES, S.L.",
+      "descripcion": "Instalación de sistemas constructivos que incluyen protección pasiva contra el fuego. Ubicada en Altura (Castellón).",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.laplanatechosytabiques.es/"
+      ]
+    },
+    {
+      "empresaId": 5878,
+      "cif": "B13669676",
+      "nombre": "GRUPO ENDOZER, S.L.U.",
+      "descripcion": "Aplicación de pintura intumescente sobre estructuras metálicas con personal propio. Incluye control de espesores y documentación de los trabajos.",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.endozer.com/sobre-nosotros/"
+      ]
+    },
+    {
+      "empresaId": 5879,
+      "cif": "B45813565",
+      "nombre": "AISLAMIENTOS INSUFLADOS",
+      "descripcion": "Ignifugación de estructuras con pinturas intumescentes y morteros proyectados. Ejecuta también franjas cortafuegos.",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://aislamientosinsuflados.es/aislamiento-ignifugo/ignifugado-de-estructuras-en-naves-y-edificios/"
+      ]
+    },
+    {
+      "empresaId": 5880,
+      "cif": "B47370705",
+      "nombre": "PINTURAS MARCELINO GONZÁLEZ, S.L.",
+      "descripcion": "Trabajos de pintura industrial que incluyen protección pasiva contra incendios. Ubicada en Valladolid.",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.pinturasmgonzalez.es/"
+      ]
+    },
+    {
+      "empresaId": 5881,
+      "cif": "B64976954",
+      "nombre": "VARMANY, S.L.",
+      "descripcion": "Aplicación de protección pasiva con pinturas intumescentes y ablativas. Entrega documentación de los tratamientos realizados.",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://varmany.com/ignifugaciones-terrassa/"
+      ]
+    },
+    {
+      "empresaId": 5882,
+      "cif": "B85095701",
+      "nombre": "PLADISER MONTAJES E INSTALACIONES, S.L.",
+      "descripcion": "Instalación de construcción seca con soluciones de protección pasiva contra incendios. Ubicada en Alcorcón (Madrid).",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://pladiser-mi.com/"
+      ]
+    },
+    {
+      "empresaId": 5883,
+      "cif": "B90413287",
+      "nombre": "PINTORES GONZÁLEZ Y LEÓN, S.L.",
+      "descripcion": "Aplicación de pintura con equipo propio, incluidos tratamientos ignífugos e intumescentes para protección pasiva contra incendios.",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://pintoresgonzalezleon.com/tratamientos-de-ingnifugados-e-intumescentes/"
+      ]
+    },
+    {
+      "empresaId": 5884,
+      "cif": "B91732289",
+      "nombre": "GUSOLIN UTRERA, S.L.",
+      "descripcion": "Instalación de tabiquería seca y aislamiento con trabajos de protección pasiva contra el fuego. Ubicada en Utrera (Sevilla).",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "http://www.gusolin.es/pladur-en-sevilla/5/0/la-empresa/"
+      ]
+    },
+    {
+      "empresaId": 5885,
+      "cif": "B98961600",
+      "nombre": "IGNIWOOL, S.L.U.",
+      "descripcion": "Aplicación de protección pasiva de estructuras metálicas y de madera. Ejecuta sellados cortafuegos, compartimentaciones y protección de conductos.",
+      "primeraTanda": 5,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion3-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://igniwool.com/delegaciones/zaragoza/"
+      ]
+    },
+    {
+      "empresaId": 5886,
+      "cif": "A28933083",
+      "nombre": "CERRAMIENTO Y PROTECCIÓN, S.A.",
+      "descripcion": "Comercialización, instalación y mantenimiento de puertas resistentes al fuego con equipo técnico propio. Opera bajo la marca CYPSA.",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://cypsa.net/"
+      ]
+    },
+    {
+      "empresaId": 5887,
+      "cif": "B10242188",
+      "nombre": "CAMPÓN GIBELLO, S.L.",
+      "descripcion": "Distribución de materiales y ejecución de protección pasiva mediante proyección de mortero de vermiculita sobre estructuras metálicas.",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.campongibello.com/proteccion-pasiva-de-incendios/"
+      ]
+    },
+    {
+      "empresaId": 5888,
+      "cif": "B10338192",
+      "nombre": "POLITEX AISLAMIENTOS, S.L.",
+      "descripcion": "Aplicación de aislamiento y protección pasiva con morteros ignífugos y franjas cortafuegos para sectorización. Ubicada en Navalmoral de la Mata (Cáceres).",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.politexaislamientos.es/franjas-cortafuego/",
+        "https://www.politexaislamientos.es/obras/colegio-registradores-alcala-540-madrid/"
+      ]
+    },
+    {
+      "empresaId": 5889,
+      "cif": "B26161547",
+      "nombre": "RIOMADER, S.L.",
+      "descripcion": "Carpintería y tratamientos de madera que incluyen ignifugado. Ubicada en Logroño (La Rioja).",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://riomader.com/servicios-madera-logrono/"
+      ]
+    },
+    {
+      "empresaId": 5890,
+      "cif": "B26431866",
+      "nombre": "CENTROPUERTAS NORTE 2007, S.L.",
+      "descripcion": "Suministro, instalación y mantenimiento de puertas cortafuegos con equipo propio. Ofrece también puertas y automatismos generales.",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://centropuertasnorte.es/puertas-cortafuegos/"
+      ]
+    },
+    {
+      "empresaId": 5891,
+      "cif": "B26571133",
+      "nombre": "PUERTAS AUTOMATICOS ÁNGEL, S.L.U.",
+      "descripcion": "Montaje de puertas y automatismos para clientes industriales y particulares. Incluye instalación de puertas cortafuegos.",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://puertasautomaticasangel.es/puertas-automaticas-y-automatismos-angel-logrono"
+      ]
+    },
+    {
+      "empresaId": 5892,
+      "cif": "B39663109",
+      "nombre": "J. L. HOLANDA FERNÁNDEZ, S.L.",
+      "descripcion": "Trabajos de pintura, reformas e instalación de sistemas de construcción seca. Incluye soluciones de protección pasiva contra incendios.",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.holandafernandez.com/"
+      ]
+    },
+    {
+      "empresaId": 5893,
+      "cif": "B48545172",
+      "nombre": "NORATEK, S.L.",
+      "descripcion": "Instalación de soluciones de protección contra el fuego, incluidos cerramientos acristalados cortafuegos. Ubicada en Galdakao (Bizkaia).",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://noratek.es/portfolio-item/pabellon-reyno-de-navarra-pamplona/"
+      ]
+    },
+    {
+      "empresaId": 5894,
+      "cif": "B50502368",
+      "nombre": "AISLAMIENTOS ROGILCAR, S.L.",
+      "descripcion": "Aplicación de aislamiento y recubrimientos con protección de estructuras mediante pinturas intumescentes, morteros y paneles ignífugos.",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://rogilcar.com/servicios/poteccion-pasiva-contra-el-fuego/"
+      ]
+    },
+    {
+      "empresaId": 5895,
+      "cif": "B63711865",
+      "nombre": "AISLAMIENTOS SISTEMPLAC, S.L.",
+      "descripcion": "Instalación de construcción seca, aislamiento y revestimientos con equipo técnico propio. Incluye sistemas de protección pasiva contra incendios.",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://sistemplac.es/ignifugacion/"
+      ]
+    },
+    {
+      "empresaId": 5896,
+      "cif": "B96716212",
+      "nombre": "LEMARA RESTAURACIONES, S.L.",
+      "descripcion": "Tratamientos e impermeabilización de construcciones con servicios de sellado ignífugo de pasos de instalaciones y huecos entre sectores.",
+      "primeraTanda": 6,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion4-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.lemara.es/sellado-ignifugo/"
+      ]
+    },
+    {
+      "empresaId": 5897,
+      "cif": "14634487R",
+      "nombre": "ANTONIO JESÚS BORJA RIVERA / IGNIFUGADOS BORJA",
+      "descripcion": "Aplicación de protección pasiva de estructuras y elementos constructivos con morteros ignífugos, placas de fibrosilicato y lana de roca. Opera bajo la marca Ignifugados Borja.",
+      "primeraTanda": 7,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion5-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.ignifugadosborja.es/es/proteccion-pasiva-contra-incendios-ecija"
+      ]
+    },
+    {
+      "empresaId": 5898,
+      "cif": "B54628110",
+      "nombre": "NEW-TOTMATIC, S.L.",
+      "descripcion": "Instalación, automatización y mantenimiento de puertas cortafuegos. Ofrece también cerramientos y compartimentaciones ignífugas.",
+      "primeraTanda": 7,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion5-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.totmatic.es/productos-cortafuegos/"
+      ]
+    },
+    {
+      "empresaId": 5900,
+      "cif": "B72133259",
+      "nombre": "VELIOL, S.L.",
+      "descripcion": "Aplicación de aislamiento ignífugo con lana de roca, vermiculita y pinturas intumescentes para viviendas, locales y naves.",
+      "primeraTanda": 7,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion5-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://veliol.es/servicios/"
+      ]
+    },
+    {
+      "empresaId": 5901,
+      "cif": "B85866325",
+      "nombre": "THERMAN MANTENIMIENTO INDUSTRIAL, S.L.",
+      "descripcion": "Ejecución de protección pasiva estructural con morteros y placas de fibrosilicato. Incluye trasdosados, techos resistentes al fuego, sellados y protección de conductos.",
+      "primeraTanda": 7,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion5-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.therman.com/servicios/proteccion-pasiva/"
+      ]
+    },
+    {
+      "empresaId": 5902,
+      "cif": "71008164B",
+      "nombre": "MIGUEL ÁNGEL CARRASCO BORGES / CARRASCO PINTORES",
+      "descripcion": "Trabajos de pintura y recubrimientos industriales bajo la marca Carrasco Pintores. Aplica pinturas intumescentes e ignífugas e instala placas cortafuegos para techos, divisiones y pilares.",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.carrascopintores.com/areas-de-actuacion/trabajos-industriales/aplicaciones-industriales"
+      ]
+    },
+    {
+      "empresaId": 5903,
+      "cif": "B13556030",
+      "nombre": "PRYCO REVESTIMIENTOS, S.L.",
+      "descripcion": "Aplicación de pinturas intumescentes sobre acero y ejecución de cortafuegos con placas y mortero ignífugo. Ubicada en Tomelloso (Ciudad Real).",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.prycorevestimientos.com/"
+      ]
+    },
+    {
+      "empresaId": 5904,
+      "cif": "B15847262",
+      "nombre": "INCOGA NORTE, S.L.",
+      "descripcion": "Ejecución de protección pasiva bajo la marca Aplicanor, con mortero de lana de roca y de perlita y vermiculita sobre cubiertas y estructuras metálicas.",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.aplicanor.com/proyecto/centro-de-formacion-profesional-del-grupo-ilerna"
+      ]
+    },
+    {
+      "empresaId": 5905,
+      "cif": "B22404370",
+      "nombre": "SOMONPLAK, S.L.",
+      "descripcion": "Instalación de franjas cortafuegos con placas o mortero proyectado. Protege estructuras metálicas con morteros y pinturas intumescentes.",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://somonplak.com/servicio/franjas-cortafuegos-en-instalaciones-industriales/"
+      ]
+    },
+    {
+      "empresaId": 5906,
+      "cif": "B32498917",
+      "nombre": "THERMO METAL, S.L.",
+      "descripcion": "Proyección de mortero ignífugo de lana de roca sobre vigas, pilares, forjados y otros elementos constructivos. Ubicada en Bande (Ourense).",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://thermo-metal.com/proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "empresaId": 5907,
+      "cif": "B39355508",
+      "nombre": "RIAL SANTANDER, S.L.",
+      "descripcion": "Aplicación de protección pasiva con morteros y pinturas intumescentes. Incluye franjas, sectorización, sellados y protección de conductos de chapa.",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://rialaislamientos.com/proteccion-pasiva-contra-el-fuego-en-cantabria/"
+      ]
+    },
+    {
+      "empresaId": 5908,
+      "cif": "B42185520",
+      "nombre": "PINTURAS LA DEMANDA, S.L.",
+      "descripcion": "Venta de materiales y ejecución de trabajos de pintura industrial. Aplica pinturas intumescentes para proteger estructuras metálicas frente al fuego.",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.pinturaslademanda.com/servicios"
+      ]
+    },
+    {
+      "empresaId": 5909,
+      "cif": "B48229306",
+      "nombre": "INDUPIME, S.L.",
+      "descripcion": "Trabajos de pintura y rehabilitación que incluyen aplicación de pinturas intumescentes para protección pasiva contra incendios.",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.indupime.com/rehabilitacion-de-fachadas/"
+      ]
+    },
+    {
+      "empresaId": 5910,
+      "cif": "B85747707",
+      "nombre": "AISLA Y AHORRA, S.L.",
+      "descripcion": "Aplicación de aislamiento y protección pasiva estructural con lana mineral proyectada. Ubicada en Colmenarejo (Madrid).",
+      "primeraTanda": 8,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion6-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://aislayahorra.es/proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "empresaId": 5911,
+      "cif": "B09957135",
+      "nombre": "GARREPAL S.L.",
+      "descripcion": "Instalación de tabiquería seca, franjas cortafuegos y protección pasiva en naves industriales, comunidades y edificios públicos.",
+      "primeraTanda": 9,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion7-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://pladurenpalencia.com/servicios/"
+      ]
+    },
+    {
+      "empresaId": 5912,
+      "cif": "B40147118",
+      "nombre": "CERRAJES Y METALICAS ARRANZ SL",
+      "descripcion": "Fabricación y montaje de estructuras metálicas con aplicación de pinturas intumescentes y morteros ignífugos para protección contra incendios.",
+      "primeraTanda": 9,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion7-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://metalicasarranz.com/productos/estructuras-metalicas/"
+      ]
+    },
+    {
+      "empresaId": 5913,
+      "cif": "B86463544",
+      "nombre": "MONTAJES SEGOVIA, S.L.",
+      "descripcion": "Trabajos de aislamiento y montaje que incluyen ignifugaciones y tratamientos para mejorar la resistencia de los materiales frente al fuego.",
+      "primeraTanda": 9,
+      "lotesAntecedentes": [
+        "pasiva-validada-ampliacion7-2026-10-25.json"
+      ],
+      "fuentes": [
+        "https://www.montajes-segovia.com/"
+      ]
+    }
+  ]
+}
