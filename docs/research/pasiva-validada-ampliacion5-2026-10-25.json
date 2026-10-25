@@ -1,0 +1,333 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "alcance": "Séptima tanda: ampliación por fuentes asociativas y regiones; instaladoras/aplicadoras en España. Cobertura parcial.",
+  "criterio": "Identidad fiscal primaria, ejecución acreditada y cruce por CIF/NIF normalizado con el universo. No se crean fichas por marcas, delegaciones o páginas regionales.",
+  "geocodificacion": "Centroides de municipios de domicilios contrastados; no geolocalización exacta de las direcciones.",
+  "empresas": [
+    {
+      "cif": "14634487R",
+      "nombre": "ANTONIO JESÚS BORJA RIVERA / IGNIFUGADOS BORJA",
+      "web": "https://www.ignifugadosborja.es/",
+      "identidadUrl": "https://www.ignifugadosborja.es/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.ignifugadosborja.es/es/proteccion-pasiva-contra-incendios-ecija",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplica protección pasiva de estructuras y elementos constructivos con morteros ignífugos, placas de fibrosilicato y lana de roca, con profesionales y maquinaria de aplicación propios."
+        }
+      ],
+      "localidad": "Écija",
+      "provincia": "Sevilla",
+      "ccaa": "Andalucía",
+      "direccion": "Calle Comunidad de Madrid, 20, Polígono Industrial La Campiña",
+      "codigoPostal": "41400",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.ignifugadosborja.es/politica-de-privacidad"
+      ],
+      "descubrimiento": "https://www.ignifugadosborja.es/es/proteccion-pasiva-contra-incendios-ecija",
+      "observaciones": "Pendiente de identidad resuelto: el aviso identifica a una persona física titular del negocio, no a una SL. El modelo actual acepta NIF y el universo de partida ya contiene 516 identificadores de persona física; se conserva ese criterio de PCI activa sin inventar una sociedad. Código postal del domicilio fiscal del aviso; la página comercial publica 41409. No se toma el CIF de QDQ, proveedor de la web, ni se crean fichas por sus páginas de Córdoba.",
+      "lat": 37.5406007,
+      "lng": -5.079589,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=%C3%89cija%2C+Sevilla%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Écija, Sevilla, Andalucía, España",
+        "osmType": "relation",
+        "osmId": 341614
+      }
+    },
+    {
+      "cif": "B01971274",
+      "nombre": "IGNOFOC SISTEMAS SL",
+      "web": "https://ignofocsistemas.com/",
+      "identidadUrl": "https://ignofocsistemas.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "servicios": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ignofocsistemas.com/cortafuegos-rf",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara instalación propia de franjas cortafuegos, puertas cortafuegos y cortinas textiles para sectorizar naves, además de la ignifugación estructural ya acreditada."
+        }
+      ],
+      "empresaIdEsperada": 2191,
+      "fuentesIdentidadLocalizacion": [
+        "https://ignofocsistemas.com/",
+        "https://ignofocsistemas.com/puertas-cortafuegos-barcelona"
+      ],
+      "descubrimiento": "https://ignofocsistemas.com/cortafuegos-rf",
+      "observaciones": "Se amplía la ficha 2191 por su dominio único ya vinculado al CIF, sin volver a dar de alta la marca ni alterar identidad."
+    },
+    {
+      "cif": "B25233487",
+      "nombre": "SIEF 2 SL",
+      "web": "https://www.sief2.com/",
+      "identidadUrl": "https://www.sief2.es/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "servicios": [
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.sief2.com/servicios/proteccion-contra-incendios-pasiva",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta con personal propio sellados de bandejas eléctricas, pasos de tuberías y juntas constructivas, además de la sectorización, protección estructural y puertas ya documentadas."
+        }
+      ],
+      "empresaIdEsperada": 946,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.sief2.es/"
+      ],
+      "descubrimiento": "https://www.sief2.com/servicios/proteccion-contra-incendios-pasiva",
+      "observaciones": "El dominio .es ya vinculado a la ficha 946 redirige al dominio .com. La evidencia .com ya estaba asociada al mismo CIF. Se amplía sellados sin crear otra ficha ni asumir reacción al fuego por una mención genérica a tratamientos ignífugos."
+    },
+    {
+      "cif": "B33998584",
+      "nombre": "ATENÚA, S.L.",
+      "web": "https://cys-atenua.com/",
+      "identidadUrl": "https://cys-atenua.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "servicios": [
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://cys-atenua.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su equipo instala protección pasiva en Asturias, incluidos sellados de bajantes de PVC y pasos de cables con collarines, masillas y morteros, y protección estructural con mortero ignífugo y pinturas intumescentes."
+        }
+      ],
+      "empresaIdEsperada": 5827,
+      "fuentesIdentidadLocalizacion": [
+        "https://cys-atenua.com/"
+      ],
+      "descubrimiento": "https://cys-atenua.com/",
+      "observaciones": "La ficha 5827 ya estaba confirmada sin especialidades. Se documentan sistemas concretos en su dominio existente; no se cambian domicilio ni otros datos."
+    },
+    {
+      "cif": "B54628110",
+      "nombre": "NEW-TOTMATIC, S.L.",
+      "web": "https://www.totmatic.es/",
+      "identidadUrl": "https://www.totmatic.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "puertas",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.totmatic.es/productos-cortafuegos/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Instala, automatiza y mantiene puertas cortafuegos y ofrece cerramientos y compartimentaciones ignífugas. La instalación profesional se declara expresamente para estos sistemas."
+        }
+      ],
+      "localidad": "Villajoyosa",
+      "provincia": "Alicante",
+      "ccaa": "Comunidad Valenciana",
+      "direccion": "Calle Menadors, 38, Polígono Industrial El Torres",
+      "codigoPostal": "03570",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.totmatic.es/politica-de-privacidad/"
+      ],
+      "descubrimiento": "https://www.totmatic.es/productos-cortafuegos/",
+      "observaciones": "La privacidad identifica NEW-TOTMATIC SL y NIF. La sede de Calpe no genera una segunda entidad. La oferta comercial de automatismos no implica por sí sola actividad de seguridad electrónica ni PCI activa en la derivación del War Room.",
+      "lat": 38.5100778,
+      "lng": -0.2296202,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Villajoyosa%2C+Alicante%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "la Vila Joiosa / Villajoyosa, la Marina Baixa, Alacant / Alicante, Comunitat Valenciana, 03570, España",
+        "osmType": "relation",
+        "osmId": 341241
+      }
+    },
+    {
+      "cif": "B60510096",
+      "nombre": "METALOCONSTRUCCIONES MECOSA, S.L.",
+      "web": "https://www.grupomecosa.com/",
+      "identidadUrl": "https://www.grupomecosa.com/terminos_y_condiciones/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.grupomecosa.com/FACS/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Fabrica e instala sistemas de protección pasiva para sectorización: puertas cortafuegos metálicas y de vidrio, guillotinas y cortinas textiles. Su web distingue el montaje y puesta en marcha del suministro."
+        }
+      ],
+      "localidad": "Viladecans",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Calle Andorra, 65, Polígono Can Calderon",
+      "codigoPostal": "08840",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.grupomecosa.com/terminos_y_condiciones/",
+        "https://www.grupomecosa.com/",
+        "https://www.grupomecosa.com/productos/",
+        "https://www.grupomecosa.com/contacto/"
+      ],
+      "descubrimiento": "https://www.grupomecosa.es/uploads/catalogo.pdf",
+      "observaciones": "El aviso de .com identifica B60510096 y el dominio .es. Una sola ficha para ambos dominios y las instalaciones de Barcelona y Toledo. La actividad de montaje está expresamente descrita; no se incorpora solo por fabricar. Se usa el domicilio fiscal de Viladecans, coincidente con contacto corporativo.",
+      "lat": 41.3163083,
+      "lng": 2.0156034,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Viladecans%2C+Barcelona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Viladecans, Baix Llobregat, Barcelona, Catalunya, 08840, España",
+        "osmType": "relation",
+        "osmId": 344522
+      }
+    },
+    {
+      "cif": "B72133259",
+      "nombre": "VELIOL, S.L.",
+      "web": "https://veliol.es/",
+      "identidadUrl": "https://www.zonafrancacadiz.com/wp-content/uploads/2023/03/Contratos-2021-Menores.pdf",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://veliol.es/servicios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplica aislamiento ignífugo con lana de roca, vermiculita y pintura intumescente para protección pasiva o estructural de viviendas, locales y naves."
+        }
+      ],
+      "localidad": "Chiclana de la Frontera",
+      "provincia": "Cádiz",
+      "ccaa": "Andalucía",
+      "direccion": "Calle Federico García Lorca, s/n",
+      "codigoPostal": "11130",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.zonafrancacadiz.com/wp-content/uploads/2023/03/Contratos-2021-Menores.pdf",
+        "https://veliol.es/nosotros/",
+        "https://veliol.es/",
+        "https://veliol.es/2025/"
+      ],
+      "descubrimiento": "https://veliol.es/servicios/",
+      "observaciones": "La relación oficial de contratos del Consorcio Zona Franca de Cádiz identifica Veliol SL y NIF en CO-0033-2021-00-B; solo se utiliza para identidad. La actividad de pasiva y localización proceden de la web corporativa actual, que identifica Veliol SL en su contacto. No se infiere vigencia legal de la adjudicación de 2021 ni se incorpora una calificación por declaraciones comerciales.",
+      "lat": 36.4191096,
+      "lng": -6.1460683,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Chiclana+de+la+Frontera%2C+C%C3%A1diz%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Chiclana de la Frontera, Bahía de Cádiz, Cádiz, Andalucía, España",
+        "osmType": "relation",
+        "osmId": 346951
+      }
+    },
+    {
+      "cif": "B76689801",
+      "nombre": "RSI TENERIFE, S.L.",
+      "web": "https://rsitenerife.com/",
+      "identidadUrl": "https://www.avisosprotecciondedatos.es/avisos/aixa3353pd02335190715/3353pd02335190715-aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "servicios": [
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://rsitenerife.com/pladur/proteccion-pasiva-de-conductos-de-instalaciones/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Publica su proyecto de protección ignífuga de conductos de instalaciones de El Corte Inglés en Santa Cruz de Tenerife, con paneles de lana mineral para resistencia al fuego de conductos metálicos."
+        }
+      ],
+      "empresaIdEsperada": 5842,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.avisosprotecciondedatos.es/avisos/aixa3353pd02335190715/3353pd02335190715-aviso-legal/"
+      ],
+      "descubrimiento": "https://rsitenerife.com/pladur/proteccion-pasiva-de-conductos-de-instalaciones/",
+      "observaciones": "El aviso legal enlazado desde rsitenerife.com identifica expresamente a RSI Tenerife SL y B76689801. Se enriquece la ficha 5842, cuyo otro dominio es cys-rsitenerife.com; no se duplica por la web alternativa ni se modifica su domicilio. El proyecto es histórico (2021); la fecha de revisión no es la de ejecución."
+    },
+    {
+      "cif": "B85866325",
+      "nombre": "THERMAN MANTENIMIENTO INDUSTRIAL, S.L.",
+      "web": "https://www.therman.com/",
+      "identidadUrl": "https://www.therman.com/files/THERMAN_MANTENIMIENTO_INDUSTRIAL_SL_Aviso_legal.pdf",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.therman.com/servicios/proteccion-pasiva/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta protección de estructuras metálicas con morteros y placas de fibrosilicato, trasdosados y techos resistentes al fuego, sellados de pasos y protección de conductos de ventilación."
+        }
+      ],
+      "localidad": "Madrid",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle Isabel Colbrand, 8, 2º A",
+      "codigoPostal": "28050",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.therman.com/files/THERMAN_MANTENIMIENTO_INDUSTRIAL_SL_Aviso_legal.pdf",
+        "https://www.therman.com/proyectos/"
+      ],
+      "descubrimiento": "https://international.asturex.org/metal/assets/data/pdf/catalog_metal_es.pdf",
+      "observaciones": "El aviso legal en PDF identifica a Therman con B85866325. El CIF de Acorán Consultoría en el encabezado pertenece al autor del documento y no se incorpora. Las delegaciones no generan altas adicionales; el domicilio fiscal y el pie corporativo actual coinciden en Madrid.",
+      "lat": 40.416782,
+      "lng": -3.703507,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Madrid%2C+Madrid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Madrid, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 5326784
+      }
+    }
+  ]
+}

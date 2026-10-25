@@ -1,0 +1,623 @@
+{
+  "fechaRevision": "2026-10-25",
+  "alcance": "Séptima tanda: ampliar evidencia de servicios en fichas existentes y continuar descubrimiento regional/asociativo, dentro del modelo actual.",
+  "lote": "pasiva-validada-ampliacion5-2026-10-25.json",
+  "antecedente": "pasiva-ampliacion4-seguimiento-2026-10-25.json",
+  "criterio": "CIF/NIF normalizado y ejecución contrastada. El modelo admite titulares persona física igual que el universo de PCI activa. No se añaden campos o etiquetas de especialización ni información financiera externa.",
+  "viasDeBusqueda": [
+    {
+      "fuente": "CLÚSIC y documentación corporativa",
+      "url": "https://clusterincendis.com/socis/",
+      "resultado": "Mecosa: identidad y montaje contrastados en su web, una sola entidad para sus plantas."
+    },
+    {
+      "fuente": "Asturex, catálogo regional del metal",
+      "url": "https://international.asturex.org/metal/assets/data/pdf/catalog_metal_es.pdf",
+      "resultado": "Descubrimiento de Therman; identidad fiscal y ejecución contrastadas en la web y aviso legal corporativos."
+    },
+    {
+      "fuente": "Búsqueda regional",
+      "regiones": [
+        "Andalucía",
+        "Asturias",
+        "Canarias",
+        "Comunidad Valenciana",
+        "Baleares"
+      ],
+      "resultado": "Cinco altas y cuatro enriquecimientos; la zona de servicio no se convierte en una sede."
+    }
+  ],
+  "resumen": {
+    "universoAnterior": 5866,
+    "universoActual": 5871,
+    "pasivaAnterior": 269,
+    "pasivaActual": 274,
+    "altas": 5,
+    "enriquecimientos": 4,
+    "confirmacionesNuevasEnExistentes": 0,
+    "confirmadasYaExistentesEnriquecidas": 4,
+    "dominiosConDecisionManual": 24,
+    "altasSociedades": 4,
+    "altaTitularPersonaFisica": 1
+  },
+  "entidades": [
+    {
+      "cif": "14634487R",
+      "nombre": "ANTONIO JESÚS BORJA RIVERA / IGNIFUGADOS BORJA",
+      "empresaId": 5897,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.ignifugadosborja.es/es/proteccion-pasiva-contra-incendios-ecija",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplica protección pasiva de estructuras y elementos constructivos con morteros ignífugos, placas de fibrosilicato y lana de roca, con profesionales y maquinaria de aplicación propios."
+        }
+      ],
+      "identidadUrl": "https://www.ignifugadosborja.es/politica-de-privacidad",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "Pendiente de identidad resuelto: el aviso identifica a una persona física titular del negocio, no a una SL. El modelo actual acepta NIF y el universo de partida ya contiene 516 identificadores de persona física; se conserva ese criterio de PCI activa sin inventar una sociedad. Código postal del domicilio fiscal del aviso; la página comercial publica 41409. No se toma el CIF de QDQ, proveedor de la web, ni se crean fichas por sus páginas de Córdoba."
+    },
+    {
+      "cif": "B01971274",
+      "nombre": "IGNOFOC SISTEMAS SL",
+      "empresaId": 2191,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": false,
+      "serviciosAnteriores": [
+        "estructura"
+      ],
+      "serviciosAñadidos": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ignofocsistemas.com/cortafuegos-rf",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara instalación propia de franjas cortafuegos, puertas cortafuegos y cortinas textiles para sectorizar naves, además de la ignifugación estructural ya acreditada."
+        }
+      ],
+      "identidadUrl": "https://ignofocsistemas.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "observaciones": "Se amplía la ficha 2191 por su dominio único ya vinculado al CIF, sin volver a dar de alta la marca ni alterar identidad."
+    },
+    {
+      "cif": "B25233487",
+      "nombre": "SIEF 2 SL",
+      "empresaId": 946,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": false,
+      "serviciosAnteriores": [
+        "compartimentacion",
+        "estructura",
+        "puertas"
+      ],
+      "serviciosAñadidos": [
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.sief2.com/servicios/proteccion-contra-incendios-pasiva",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta con personal propio sellados de bandejas eléctricas, pasos de tuberías y juntas constructivas, además de la sectorización, protección estructural y puertas ya documentadas."
+        }
+      ],
+      "identidadUrl": "https://www.sief2.es/",
+      "identidadMetodo": "universo_cif_dominio",
+      "observaciones": "El dominio .es ya vinculado a la ficha 946 redirige al dominio .com. La evidencia .com ya estaba asociada al mismo CIF. Se amplía sellados sin crear otra ficha ni asumir reacción al fuego por una mención genérica a tratamientos ignífugos."
+    },
+    {
+      "cif": "B33998584",
+      "nombre": "ATENÚA, S.L.",
+      "empresaId": 5827,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": false,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://cys-atenua.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su equipo instala protección pasiva en Asturias, incluidos sellados de bajantes de PVC y pasos de cables con collarines, masillas y morteros, y protección estructural con mortero ignífugo y pinturas intumescentes."
+        }
+      ],
+      "identidadUrl": "https://cys-atenua.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "observaciones": "La ficha 5827 ya estaba confirmada sin especialidades. Se documentan sistemas concretos en su dominio existente; no se cambian domicilio ni otros datos."
+    },
+    {
+      "cif": "B54628110",
+      "nombre": "NEW-TOTMATIC, S.L.",
+      "empresaId": 5898,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.totmatic.es/productos-cortafuegos/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Instala, automatiza y mantiene puertas cortafuegos y ofrece cerramientos y compartimentaciones ignífugas. La instalación profesional se declara expresamente para estos sistemas."
+        }
+      ],
+      "identidadUrl": "https://www.totmatic.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "La privacidad identifica NEW-TOTMATIC SL y NIF. La sede de Calpe no genera una segunda entidad. La oferta comercial de automatismos no implica por sí sola actividad de seguridad electrónica ni PCI activa en la derivación del War Room."
+    },
+    {
+      "cif": "B60510096",
+      "nombre": "METALOCONSTRUCCIONES MECOSA, S.L.",
+      "empresaId": 5899,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.grupomecosa.com/FACS/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Fabrica e instala sistemas de protección pasiva para sectorización: puertas cortafuegos metálicas y de vidrio, guillotinas y cortinas textiles. Su web distingue el montaje y puesta en marcha del suministro."
+        }
+      ],
+      "identidadUrl": "https://www.grupomecosa.com/terminos_y_condiciones/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "El aviso de .com identifica B60510096 y el dominio .es. Una sola ficha para ambos dominios y las instalaciones de Barcelona y Toledo. La actividad de montaje está expresamente descrita; no se incorpora solo por fabricar. Se usa el domicilio fiscal de Viladecans, coincidente con contacto corporativo."
+    },
+    {
+      "cif": "B72133259",
+      "nombre": "VELIOL, S.L.",
+      "empresaId": 5900,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://veliol.es/servicios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplica aislamiento ignífugo con lana de roca, vermiculita y pintura intumescente para protección pasiva o estructural de viviendas, locales y naves."
+        }
+      ],
+      "identidadUrl": "https://www.zonafrancacadiz.com/wp-content/uploads/2023/03/Contratos-2021-Menores.pdf",
+      "identidadMetodo": "registro_publico",
+      "observaciones": "La relación oficial de contratos del Consorcio Zona Franca de Cádiz identifica Veliol SL y NIF en CO-0033-2021-00-B; solo se utiliza para identidad. La actividad de pasiva y localización proceden de la web corporativa actual, que identifica Veliol SL en su contacto. No se infiere vigencia legal de la adjudicación de 2021 ni se incorpora una calificación por declaraciones comerciales."
+    },
+    {
+      "cif": "B76689801",
+      "nombre": "RSI TENERIFE, S.L.",
+      "empresaId": 5842,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": false,
+      "serviciosAnteriores": [
+        "compartimentacion",
+        "estructura"
+      ],
+      "serviciosAñadidos": [
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://rsitenerife.com/pladur/proteccion-pasiva-de-conductos-de-instalaciones/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Publica su proyecto de protección ignífuga de conductos de instalaciones de El Corte Inglés en Santa Cruz de Tenerife, con paneles de lana mineral para resistencia al fuego de conductos metálicos."
+        }
+      ],
+      "identidadUrl": "https://www.avisosprotecciondedatos.es/avisos/aixa3353pd02335190715/3353pd02335190715-aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "El aviso legal enlazado desde rsitenerife.com identifica expresamente a RSI Tenerife SL y B76689801. Se enriquece la ficha 5842, cuyo otro dominio es cys-rsitenerife.com; no se duplica por la web alternativa ni se modifica su domicilio. El proyecto es histórico (2021); la fecha de revisión no es la de ejecución."
+    },
+    {
+      "cif": "B85866325",
+      "nombre": "THERMAN MANTENIMIENTO INDUSTRIAL, S.L.",
+      "empresaId": 5901,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "compartimentacion",
+        "conductos",
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.therman.com/servicios/proteccion-pasiva/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta protección de estructuras metálicas con morteros y placas de fibrosilicato, trasdosados y techos resistentes al fuego, sellados de pasos y protección de conductos de ventilación."
+        }
+      ],
+      "identidadUrl": "https://www.therman.com/files/THERMAN_MANTENIMIENTO_INDUSTRIAL_SL_Aviso_legal.pdf",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "El aviso legal en PDF identifica a Therman con B85866325. El CIF de Acorán Consultoría en el encabezado pertenece al autor del documento y no se incorpora. Las delegaciones no generan altas adicionales; el domicilio fiscal y el pie corporativo actual coinciden en Madrid."
+    }
+  ],
+  "resueltosDeSeguimientosAnteriores": [
+    {
+      "dominio": "ignifugadosborja.es",
+      "resultado": "Identidad fiscal recuperada en privacidad; alta bajo el NIF del titular real. No se inventa SL."
+    }
+  ],
+  "decisionDeAlcance": {
+    "fecha": "2026-10-25",
+    "origen": "Aclaración de Alberto y OK posterior",
+    "resultado": "Enriquecer actividades, servicios y fuentes con los campos existentes. Retirada la propuesta de extender perfilOfertaPasiva. Se conservan los metadatos históricos de la sexta tanda sin continuarlos. SABI y tamaño/facturación se dejan para acceso y carga específicos."
+  },
+  "verificacion": {
+    "camposProtegidosAlterados": [],
+    "sinClasificar": [],
+    "altas": 5,
+    "altasInvalidas": [],
+    "complementosIncorrectos": [],
+    "auditorias": 9,
+    "repeticion": "sin_cambios=9",
+    "totalFinancierosAntes": 23620,
+    "totalFinancierosDespues": 23620,
+    "testsImportadorYPasiva": 11,
+    "api": {
+      "host": "https://warroom.fontiber.com",
+      "geograficas": 5239,
+      "cifsUnicos": 9,
+      "fichasConEvidencia": 9,
+      "combinacionesActividades": 16,
+      "exportacionPasiva": 274,
+      "anonimo": 401
+    },
+    "actividades": {
+      "total": 5871,
+      "pci_activa": 4994,
+      "pci_pasiva": 274,
+      "seguridad_electronica": 1238,
+      "activaYPasiva": 165,
+      "tres": 24,
+      "soloPasiva": 108
+    }
+  },
+  "rastreoTecnico": {
+    "urlsIntentadas": 77,
+    "dominiosIntentados": 40,
+    "advertencia": "Rastreo técnico complementado con lecturas y resultados indexados de páginas primarias. Una respuesta breve de verificación no valida una empresa ni prueba ausencia de actividad. Solo las decisiones manuales se enumeran a continuación."
+  },
+  "limites": [
+    "Cobertura parcial: no se han reconsultado todos los 143 dominios del seguimiento anterior. Los pendientes y resueltos no incluidos aquí conservan su resultado fechado en el antecedente.",
+    "Sin revisiones negativas ni clasificación por peso económico, especialización o tamaño.",
+    "Las nuevas fichas quedan fuera de perímetro y sin consulta SABI; los campos ajenos a pasiva de las existentes se conservaron por huella.",
+    "Coordenadas de municipio, no precisión de portal. Las discrepancias de código postal y atribución quedan en las observaciones del lote."
+  ],
+  "dominios": [
+    {
+      "dominio": "afproteccion.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "ya_confirmada_sin_nueva_escritura",
+      "revisionManual": true,
+      "motivo": "La reconsulta no aporta una especialidad nueva suficientemente documentada respecto a la ficha positiva existente. No se cuenta como alta ni enriquecimiento.",
+      "fuentesConsultadas": [
+        "https://afproteccion.com/servicios/proteccion-pasiva/"
+      ],
+      "cif": "B56068976",
+      "empresaId": 2062
+    },
+    {
+      "dominio": "angelmir.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_ejecucion_pendientes",
+      "revisionManual": true,
+      "motivo": "La recuperación actual devuelve verificación de acceso; no se atribuye la marca a una entidad ni se da por validado el montaje.",
+      "fuentesConsultadas": [
+        "https://angelmir.com/es/"
+      ]
+    },
+    {
+      "dominio": "crmgia.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_primaria_pendiente",
+      "revisionManual": true,
+      "motivo": "Se recupera la privacidad corporativa, pero identifica solo la marca y dirección, sin NIF. Ejecución de ignifugación observada; no se crea ficha.",
+      "fuentesConsultadas": [
+        "https://crmgia.com/politica-de-privacidad/",
+        "https://crmgia.com/ignifugaciones/"
+      ]
+    },
+    {
+      "dominio": "cys-atenua.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B33998584",
+      "empresaId": 5827,
+      "motivo": "La ficha 5827 ya estaba confirmada sin especialidades. Se documentan sistemas concretos en su dominio existente; no se cambian domicilio ni otros datos.",
+      "fuentesConsultadas": [
+        "https://cys-atenua.com/"
+      ]
+    },
+    {
+      "dominio": "cys-rsitenerife.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "dominio_alternativo_resuelto",
+      "revisionManual": true,
+      "motivo": "La nueva evidencia de rsitenerife.com pertenece al mismo CIF de la ficha existente; se conserva su web anterior.",
+      "fuentesConsultadas": [
+        "https://www.avisosprotecciondedatos.es/avisos/aixa3353pd02335190715/3353pd02335190715-aviso-legal/"
+      ],
+      "cif": "B76689801",
+      "empresaId": 5842
+    },
+    {
+      "dominio": "detex-espana.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "ejecucion_propia_pendiente",
+      "revisionManual": true,
+      "motivo": "Las categorías y explicación genérica de pasiva no documentan suficientemente trabajos propios. Se conserva null en la ficha 2227; no se añade toda la lista de ejemplos como servicios ejecutados.",
+      "fuentesConsultadas": [
+        "https://www.detex-espana.com/",
+        "https://www.detex-espana.com/instalaciones"
+      ],
+      "cif": "B86993169",
+      "empresaId": 2227
+    },
+    {
+      "dominio": "exyde.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "actividad_no_concluyente",
+      "revisionManual": true,
+      "motivo": "La web corporativa no aporta contenido útil en la reconsulta; la ficha existente 1359 sigue sin clasificación positiva. No se convierte falta de acceso en revisión negativa.",
+      "fuentesConsultadas": [
+        "https://www.exyde.com/",
+        "https://clusterincendis.com/wp-content/uploads/2021/07/2021_CATALEG_EMPRESESv2_CAST_2_pw_bx.pdf"
+      ],
+      "cif": "B66596834",
+      "empresaId": 1359
+    },
+    {
+      "dominio": "globalfireingenieria.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_primaria_pendiente",
+      "revisionManual": true,
+      "motivo": "La web describe aplicación de intumescentes, sellados y sectorización en España; no se recupera identidad fiscal primaria del operador.",
+      "fuentesConsultadas": [
+        "https://globalfireingenieria.com/",
+        "https://globalfireingenieria.com/proteccion-pasiva-contra-incendios/"
+      ]
+    },
+    {
+      "dominio": "grupomecosa.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B60510096",
+      "empresaId": 5899,
+      "motivo": "El aviso de .com identifica B60510096 y el dominio .es. Una sola ficha para ambos dominios y las instalaciones de Barcelona y Toledo. La actividad de montaje está expresamente descrita; no se incorpora solo por fabricar. Se usa el domicilio fiscal de Viladecans, coincidente con contacto corporativo.",
+      "fuentesConsultadas": [
+        "https://www.grupomecosa.com/terminos_y_condiciones/",
+        "https://www.grupomecosa.com/FACS/",
+        "https://www.grupomecosa.com/",
+        "https://www.grupomecosa.com/productos/",
+        "https://www.grupomecosa.com/contacto/"
+      ]
+    },
+    {
+      "dominio": "grupomecosa.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "dominio_alternativo_resuelto",
+      "revisionManual": true,
+      "motivo": "Mismo titular fiscal que .com; no se crea otra ficha por dominio ni planta de Toledo.",
+      "fuentesConsultadas": [
+        "https://www.grupomecosa.com/terminos_y_condiciones/"
+      ],
+      "cif": "B60510096",
+      "empresaId": 5899
+    },
+    {
+      "dominio": "ignifugadosborja.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "14634487R",
+      "empresaId": 5897,
+      "motivo": "Pendiente de identidad resuelto: el aviso identifica a una persona física titular del negocio, no a una SL. El modelo actual acepta NIF y el universo de partida ya contiene 516 identificadores de persona física; se conserva ese criterio de PCI activa sin inventar una sociedad. Código postal del domicilio fiscal del aviso; la página comercial publica 41409. No se toma el CIF de QDQ, proveedor de la web, ni se crean fichas por sus páginas de Córdoba.",
+      "fuentesConsultadas": [
+        "https://www.ignifugadosborja.es/politica-de-privacidad",
+        "https://www.ignifugadosborja.es/es/proteccion-pasiva-contra-incendios-ecija"
+      ]
+    },
+    {
+      "dominio": "ignofocsistemas.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B01971274",
+      "empresaId": 2191,
+      "motivo": "Se amplía la ficha 2191 por su dominio único ya vinculado al CIF, sin volver a dar de alta la marca ni alterar identidad.",
+      "fuentesConsultadas": [
+        "https://ignofocsistemas.com/",
+        "https://ignofocsistemas.com/cortafuegos-rf",
+        "https://ignofocsistemas.com/puertas-cortafuegos-barcelona"
+      ]
+    },
+    {
+      "dominio": "incopac90.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "ejecucion_propia_pendiente",
+      "revisionManual": true,
+      "motivo": "La privacidad identifica Incopac 90 SL, B10222875. La web ofrece productos y servicios de protección pasiva sin precisar montaje propio; no basta para alta como aplicadora.",
+      "fuentesConsultadas": [
+        "https://incopac90.com/",
+        "https://incopac90.com/politica-de-privacidad/"
+      ]
+    },
+    {
+      "dominio": "proexpci.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "ya_confirmada_sin_nueva_escritura",
+      "revisionManual": true,
+      "motivo": "La reconsulta no aporta una especialidad nueva suficientemente documentada respecto a la ficha positiva existente. No se cuenta como alta ni enriquecimiento.",
+      "fuentesConsultadas": [
+        "https://www.proexpci.com/nosotros/"
+      ],
+      "cif": "B07680127",
+      "empresaId": 2431
+    },
+    {
+      "dominio": "refriclim.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "atribucion_ejecucion_pendientes",
+      "revisionManual": true,
+      "motivo": "El catálogo incluye puertas cortafuegos y ofrece instalación de frío industrial; falta atribuir ejecución específica de pasiva y conciliar titular fiscal de los formularios antes de incorporar.",
+      "fuentesConsultadas": [
+        "https://refriclim.com/productos/otros-productos/prevencion-de-incendios/",
+        "https://refriclim.com/instalaciones/almacenes-frigorificos/"
+      ]
+    },
+    {
+      "dominio": "rsitenerife.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B76689801",
+      "empresaId": 5842,
+      "motivo": "El aviso legal enlazado desde rsitenerife.com identifica expresamente a RSI Tenerife SL y B76689801. Se enriquece la ficha 5842, cuyo otro dominio es cys-rsitenerife.com; no se duplica por la web alternativa ni se modifica su domicilio. El proyecto es histórico (2021); la fecha de revisión no es la de ejecución.",
+      "fuentesConsultadas": [
+        "https://www.avisosprotecciondedatos.es/avisos/aixa3353pd02335190715/3353pd02335190715-aviso-legal/",
+        "https://rsitenerife.com/pladur/proteccion-pasiva-de-conductos-de-instalaciones/"
+      ]
+    },
+    {
+      "dominio": "sief2.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B25233487",
+      "empresaId": 946,
+      "motivo": "El dominio .es ya vinculado a la ficha 946 redirige al dominio .com. La evidencia .com ya estaba asociada al mismo CIF. Se amplía sellados sin crear otra ficha ni asumir reacción al fuego por una mención genérica a tratamientos ignífugos.",
+      "fuentesConsultadas": [
+        "https://www.sief2.es/",
+        "https://www.sief2.com/servicios/proteccion-contra-incendios-pasiva"
+      ]
+    },
+    {
+      "dominio": "sief2.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "dominio_alternativo_resuelto",
+      "revisionManual": true,
+      "motivo": "El dominio existente redirige a sief2.com. Se conserva la ficha 946.",
+      "fuentesConsultadas": [
+        "https://www.sief2.es/",
+        "https://www.sief2.com/servicios/proteccion-contra-incendios-pasiva"
+      ],
+      "cif": "B25233487",
+      "empresaId": 946
+    },
+    {
+      "dominio": "sofoca.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "ya_confirmada_sin_nueva_escritura",
+      "revisionManual": true,
+      "motivo": "La reconsulta no aporta una especialidad nueva suficientemente documentada respecto a la ficha positiva existente. No se cuenta como alta ni enriquecimiento.",
+      "fuentesConsultadas": [
+        "https://www.sofoca.es/proteccion-pasiva-contra-incendios-asturias/"
+      ],
+      "cif": "B33970211",
+      "empresaId": 2941
+    },
+    {
+      "dominio": "spanivuit.net",
+      "fechaRevision": "2026-10-25",
+      "estado": "ya_confirmada_sin_nueva_escritura",
+      "revisionManual": true,
+      "motivo": "La reconsulta no aporta una especialidad nueva suficientemente documentada respecto a la ficha positiva existente. No se cuenta como alta ni enriquecimiento.",
+      "fuentesConsultadas": [
+        "https://www.spanivuit.net/pasiva"
+      ],
+      "cif": "B64844228",
+      "empresaId": 2992
+    },
+    {
+      "dominio": "tensur.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "ya_confirmada_sin_nueva_escritura",
+      "revisionManual": true,
+      "motivo": "La reconsulta no aporta una especialidad nueva suficientemente documentada respecto a la ficha positiva existente. No se cuenta como alta ni enriquecimiento.",
+      "fuentesConsultadas": [
+        "https://www.tensur.es/"
+      ],
+      "cif": "B76582642",
+      "empresaId": 3434
+    },
+    {
+      "dominio": "therman.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B85866325",
+      "empresaId": 5901,
+      "motivo": "El aviso legal en PDF identifica a Therman con B85866325. El CIF de Acorán Consultoría en el encabezado pertenece al autor del documento y no se incorpora. Las delegaciones no generan altas adicionales; el domicilio fiscal y el pie corporativo actual coinciden en Madrid.",
+      "fuentesConsultadas": [
+        "https://www.therman.com/files/THERMAN_MANTENIMIENTO_INDUSTRIAL_SL_Aviso_legal.pdf",
+        "https://www.therman.com/servicios/proteccion-pasiva/",
+        "https://www.therman.com/proyectos/"
+      ]
+    },
+    {
+      "dominio": "totmatic.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B54628110",
+      "empresaId": 5898,
+      "motivo": "La privacidad identifica NEW-TOTMATIC SL y NIF. La sede de Calpe no genera una segunda entidad. La oferta comercial de automatismos no implica por sí sola actividad de seguridad electrónica ni PCI activa en la derivación del War Room.",
+      "fuentesConsultadas": [
+        "https://www.totmatic.es/politica-de-privacidad/",
+        "https://www.totmatic.es/productos-cortafuegos/"
+      ]
+    },
+    {
+      "dominio": "veliol.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B72133259",
+      "empresaId": 5900,
+      "motivo": "La relación oficial de contratos del Consorcio Zona Franca de Cádiz identifica Veliol SL y NIF en CO-0033-2021-00-B; solo se utiliza para identidad. La actividad de pasiva y localización proceden de la web corporativa actual, que identifica Veliol SL en su contacto. No se infiere vigencia legal de la adjudicación de 2021 ni se incorpora una calificación por declaraciones comerciales.",
+      "fuentesConsultadas": [
+        "https://www.zonafrancacadiz.com/wp-content/uploads/2023/03/Contratos-2021-Menores.pdf",
+        "https://veliol.es/servicios/",
+        "https://veliol.es/nosotros/",
+        "https://veliol.es/",
+        "https://veliol.es/2025/"
+      ]
+    }
+  ]
+}
