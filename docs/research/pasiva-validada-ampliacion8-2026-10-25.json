@@ -45,7 +45,8 @@
         "resultado": "Oleiros, A Coruña, Galicia, España",
         "osmType": "relation",
         "osmId": 346497
-      }
+      },
+      "descripcion": "Instalación y automatización de puertas en Oleiros (A Coruña), incluidas puertas cortafuegos. Trabaja con viviendas, locales y organismos públicos."
     },
     {
       "cif": "A17476409",
@@ -87,7 +88,8 @@
         "resultado": "Olot, Garrotxa, Girona, Catalunya, España",
         "osmType": "relation",
         "osmId": 348970
-      }
+      },
+      "descripcion": "Fabricación e instalación de puertas industriales en Olot (Girona), incluidas puertas cortafuegos correderas. Ofrece también reparación de puertas."
     },
     {
       "cif": "A19199892",
@@ -188,7 +190,8 @@
         "resultado": "Granollers, Vallès Oriental, Barcelona, Catalunya, España",
         "osmType": "relation",
         "osmId": 346608
-      }
+      },
+      "descripcion": "Instalación y mantenimiento de cerramientos cortafuegos de vidrio y perfilería, puertas y cortinas de sectorización. Ubicada en Granollers (Barcelona)."
     },
     {
       "cif": "B19555473",
@@ -287,7 +290,8 @@
         "resultado": "Villalobón, Palencia, Castilla y León, España",
         "osmType": "relation",
         "osmId": 346165
-      }
+      },
+      "descripcion": "Diseño y montaje de sistemas de ventilación y extracción en Villalobón (Palencia), incluidos conductos resistentes al fuego."
     },
     {
       "cif": "B35749340",
@@ -330,7 +334,8 @@
         "resultado": "Agüimes, Las Palmas, Canarias, España",
         "osmType": "relation",
         "osmId": 345127
-      }
+      },
+      "descripcion": "Diseño, fabricación e instalación de puertas y sistemas de cierre en Canarias, incluidas puertas cortafuegos. Ubicada en Agüimes (Las Palmas)."
     },
     {
       "cif": "B55123806",
@@ -372,7 +377,8 @@
         "resultado": "Cruïlles, Sant Sadurní de l'Heura, Cruïlles, Monells i Sant Sadurní de l'Heura, Baix Empordà, Girona, Catalunya, 17116, España",
         "osmType": "node",
         "osmId": 8490074468
-      }
+      },
+      "descripcion": "Diseño, fabricación e instalación de puertas industriales bajo la marca Àngel Mir, incluidas puertas cortafuegos. Ubicada en Cruïlles (Girona)."
     },
     {
       "cif": "B60510096",
@@ -446,7 +452,8 @@
         "resultado": "Getafe, Comunidad de Madrid, España",
         "osmType": "relation",
         "osmId": 345003
-      }
+      },
+      "descripcion": "Instalación de protección pasiva contra incendios: protección estructural, compartimentación, puertas cortafuegos, sellados y conductos resistentes al fuego. Ubicada en Madrid."
     },
     {
       "cif": "B87700670",
@@ -517,7 +524,8 @@
         "resultado": "O Grove, O Salnés, Pontevedra, Galicia, España",
         "osmType": "relation",
         "osmId": 346268
-      }
+      },
+      "descripcion": "Construcción e instalaciones industriales en Galicia. Instala sistemas de protección contra incendios, puertas RF y cortinas irrigadas."
     }
   ]
 }

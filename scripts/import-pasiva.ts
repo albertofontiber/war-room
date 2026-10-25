@@ -34,6 +34,7 @@ async function main() {
       const empresa = p.accion === "alta"
         ? await tx.empresa.create({ data: {
             cif: p.fila.cif, nombre: p.fila.nombre, web: p.fila.web,
+            descripcion: p.fila.descripcion,
             localidad: p.fila.localidad, provincia: p.fila.provincia, ccaa: p.fila.ccaa,
             direccion: p.fila.direccion, codigoPostal: p.fila.codigoPostal,
             lat: p.fila.lat, lng: p.fila.lng,

@@ -1,6 +1,6 @@
 # Estado actual del proyecto
 
-Corte: **25 de octubre de 2026, Europe/Madrid**. Base de código: [#202](https://github.com/albertofontiber/war-room/pull/202), fusionada en `fde201d`. Datos: décimo lote de pasiva aplicado y verificado en producción. Es una instantánea fechada, no un contador en vivo.
+Corte: **25 de octubre de 2026, Europe/Madrid**. Base de código: [#203](https://github.com/albertofontiber/war-room/pull/203), fusionada en `6b443d9`, más soporte de descripción en nuevas altas de pasiva. Datos: décimo lote y complemento de once descripciones aplicados y verificados en producción. Es una instantánea fechada, no un contador en vivo.
 
 ## Datos comprobados
 
@@ -56,6 +56,10 @@ Las ocho altas son **Creani, Tecomsa Gestión, Proybor Protección Pasiva, Krode
 La simulación no dejó filas para revisar. Se generaron **14 auditorías** y repetir el lote devuelve `sin_cambios=14`, sin nuevas escrituras. Se conservan por huella todos los campos ajenos a pasiva de las seis existentes, sus cuentas, CRM y recuentos de tareas/notas/contactos; permanecen las **23.620** filas financieras. Las altas quedan fuera de perímetro y sin estado SABI. Pasan los **11 tests** de pasiva/importador. La API de producción comprueba 14 CIF/NIF únicos en lite/full, sus 14 fichas con fuentes, 16 combinaciones y exportación de **303** confirmadas.
 
 La cobertura aumenta en nueve provincias; Zamora sigue sin confirmadas en nuestra base, sin inferir ausencia de oferta. Las coordenadas nuevas son centros municipales salvo Portes Bisbal, que usa el centro de la localidad de Cruïlles; ninguna tiene precisión de portal. Gruman queda pendiente porque su web actual devuelve una plantilla/404 frente al contenido del índice. Insonotec requiere atribuir fiscalmente el nuevo dominio antes de trasladar servicios. Las consultas acotadas de Global Fire, AMS/ASM, Parfoc, Igniva y PYL Bages no resuelven sus identidades; no se reconsultan todos los pendientes históricos.
+
+### Complemento de resúmenes de empresa
+
+Las ocho altas de la décima tanda y CISA, Mecosa y Energimac carecían del resumen inicial en `descripcion`. Se completan con once textos breves y [fuentes documentadas](research/descripciones-pasiva-ampliacion8-2026-10-25.json); las tres descripciones ya existentes se conservan. Las catorce fichas de esa tanda tienen ahora resumen. Se generan once auditorías y la repetición devuelve `sin_cambios=11`; se conservan por huella el resto de campos y datos relacionados de las catorce fichas. La API de producción devuelve los once textos guardados. No cambian los recuentos anteriores ni las actividades, cuentas, CRM, perímetro o estados SABI.
 
 ### Corte histórico de la novena tanda
 

@@ -83,7 +83,7 @@ Laterales: on_hold, muerto
 ## 6. Universo, estados y financieros
 
 - `Empresa.cif` es único. Priorizar CIF para cruzar fuentes; nombre y web sirven para revisar candidatos, no para fusionar automáticamente entidades distintas.
-- Las altas ordinarias proceden de fuentes verificadas. Para la nueva prospección de pasiva, conservar identidad y evidencia antes de incorporarla; una mención en un directorio es un candidato, no una habilitación industrial.
+- Las altas ordinarias proceden de fuentes verificadas. Para la nueva prospección de pasiva, conservar identidad y evidencia antes de incorporarla; una mención en un directorio es un candidato, no una habilitación industrial. Preparar también el resumen inicial de actividad en `descripcion`, como en las fichas existentes: texto breve basado en fuentes contrastadas, separado de la evidencia de pasiva. El importador lo guarda en las altas nuevas y conserva las descripciones al enriquecer.
 - Los sectores actuales son `PCI`, `seguridad_electronica` y `mixto`; este último combina PCI y seguridad electrónica. No reutilizarlo para «activa + pasiva».
 - El filtro visible usa actividades combinables: **PCI activa**, **PCI pasiva** y **Seguridad electrónica**, con modos todas/cualquiera. Criterio confirmado por Alberto el 24/10: el universo previo PCI/mixto acredita activa. Las altas `investigacion_pasiva_*` no la reciben por su sector de compatibilidad; un RIPCI válido sí la acredita. Derivar con `src/lib/actividades.ts`, sin duplicar la lógica en cada API. Ver [Actividades](docs/ACTIVIDADES.md).
 - `enPerimetro` y el CRM no se deben alterar por descubrir una nueva actividad. El origen de una empresa tampoco debe perderse al enriquecerla.
