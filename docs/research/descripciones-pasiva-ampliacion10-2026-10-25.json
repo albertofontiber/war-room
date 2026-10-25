@@ -1,0 +1,19 @@
+{
+  "fechaRevision": "2026-10-25",
+  "alcance": "Resumen inicial de Fugoroba, ficha existente sin descripcion en la duodécima tanda.",
+  "criterio": "Solo descripcion vacía; se conserva el resto de datos. Mismo criterio de actividad y servicios acreditados que PCI activa.",
+  "loteActividad": "pasiva-validada-ampliacion10-2026-10-25.json",
+  "empresas": [
+    {
+      "empresaId": 995,
+      "cif": "B47652227",
+      "nombre": "FUGOROBA INSTALACIONES Y SERVICIOS, S.L.",
+      "descripcion": "Ingeniería, instalación y mantenimiento de sistemas de protección contra incendios. Su oferta incluye soluciones de protección pasiva junto con sistemas de detección, extinción y abastecimiento de agua.",
+      "fuentes": [
+        "https://www.fugoroba.es/pci",
+        "https://www.fugoroba.es/assets/media/LOPD.pdf",
+        "https://www.fugoroba.es/contacto"
+      ]
+    }
+  ]
+}

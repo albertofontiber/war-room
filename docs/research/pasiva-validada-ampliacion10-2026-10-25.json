@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "alcance": "Duodécima tanda: asociaciones AISLA, Tecnifuego y Cepreven, búsqueda regional y pendientes de tandas anteriores. Instaladoras/aplicadoras de pasiva en España; cobertura parcial.",
+  "criterio": "Titular fiscal primario, ejecución contrastada y cruce por CIF/NIF, nombre y dominio. Toda alta incluye descripción inicial, identidad y localización; no se crean empresas por marcas o delegaciones.",
+  "geocodificacion": "Centros municipales de domicilios contrastados; no precisión de portal.",
+  "empresas": [
+    {
+      "cif": "B10222875",
+      "nombre": "INCOPAC 90, S.L.",
+      "web": "https://incopac90.com/",
+      "identidadUrl": "https://incopac90.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "compartimentacion",
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://incopac90.blogspot.com/p/proteccion-pasiva-contra-incendios.html",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "El blog corporativo documenta instalación de franja medianera-cubierta con placas resistentes al fuego y protección de cubierta, estructura metálica y forjado colaborante con lana de roca. La web actual mantiene el servicio de protección pasiva."
+        }
+      ],
+      "localidad": "Cáceres",
+      "provincia": "Cáceres",
+      "ccaa": "Extremadura",
+      "direccion": "Calle Labradores, 14, Polígono Industrial Las Capellanías",
+      "codigoPostal": "10005",
+      "descripcion": "Suministro y ejecución de aislamientos, impermeabilizaciones, cubiertas y sistemas de tabiquería. Realiza franjas cortafuegos y protección pasiva de estructuras y forjados.",
+      "fuentesIdentidadLocalizacion": [
+        "https://incopac90.com/aviso-legal/",
+        "https://incopac90.com/productos-servicios/",
+        "https://incopac90.com/productos-servicios/impermeabilizaciones-de-piscinas/011_11_2.html"
+      ],
+      "descubrimiento": "https://incopac90.com/productos-servicios/",
+      "observaciones": "Resuelve el pendiente de ejecución: la galería técnica de su blog muestra trabajos propios y coincide en marca y teléfonos con la web actual; la página antigua del propio dominio enlaza ese blog. No se atribuye ejecución por el mero catálogo de venta ni se crean entidades por Plasencia o Salamanca. El blog es histórico sin fecha de obra; la oferta actual de pasiva se contrasta en la web vigente.",
+      "lat": 39.4745175,
+      "lng": -6.3716761,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=C%C3%A1ceres%2C+C%C3%A1ceres%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Cáceres, Extremadura, España",
+        "osmType": "relation",
+        "osmId": 1899973
+      }
+    },
+    {
+      "cif": "B47652227",
+      "nombre": "FUGOROBA INSTALACIONES Y SERVICIOS, S.L.",
+      "web": "https://www.fugoroba.es/",
+      "identidadUrl": "https://www.fugoroba.es/assets/media/LOPD.pdf",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.fugoroba.es/pci",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece ingeniería, instalación y mantenimiento de sistemas de protección contra incendios e incluye protección pasiva, con sellados cortafuegos, tratamientos ignífugos y puertas resistentes al fuego. Se conserva confirmación general sin añadir especialidades por el catálogo introductorio."
+        }
+      ],
+      "empresaIdEsperada": 995,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.fugoroba.es/assets/media/LOPD.pdf",
+        "https://www.fugoroba.es/contacto"
+      ],
+      "descubrimiento": "https://tulicitacionfacil.com/busqueda/69fba94bbc43ae6fe1a5e358",
+      "observaciones": "Nueva pista regional de Valladolid. La página corporativa de PCI acredita el servicio propio; PDF legal, página 2, identifica B47652227, y el contacto publica el CIF como B47/652227 y Helio 14. Lectura mediante fuente primaria indexada por límites de acceso HTTP. Los agregadores citan una adjudicación Renfe de instalación de puertas, con grafía Fugoraba; se usa solo como descubrimiento, no como prueba primaria ni para etiquetar puertas o declarar obra ejecutada. Se usa el domicilio operativo de aviso y contacto, sin inferir vigencia registral de directorios."
+    },
+    {
+      "cif": "B60214095",
+      "nombre": "ADELL BOLDE SEGURIDAD I SL",
+      "web": "https://www.abseguridad.com/",
+      "identidadUrl": "https://www.abseguridad.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "sellados",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.abseguridad.com/proteccion-contra-incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara ser especialista en instalación de protección pasiva y ofrece ignifugación de estructuras, sellado de pasos de instalaciones y compartimentación con pladur RF. Cepreven recoge también estas actuaciones en la presentación de AB Seguridad."
+        }
+      ],
+      "empresaIdEsperada": 1143,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.abseguridad.com/",
+        "https://www.cepreven.com/ab-seguridad-asociado-cepreven-1130"
+      ],
+      "descubrimiento": "https://www.cepreven.com/ab-seguridad-asociado-cepreven-1130",
+      "observaciones": "Nueva confirmación en la ficha 1143, B60214095, dominio único ya atribuido. La noticia de Cepreven es una presentación de asociado, no una calificación; la ejecución se acredita en el servicio corporativo. Se conservan web, denominación, descripción, grupo, ubicación y datos operativos."
+    },
+    {
+      "cif": "B91826750",
+      "nombre": "REVESTIMIENTOS DE PINTURAS Y ESPUMAS AISLANTES, S.L. / REDEPESA",
+      "web": "https://www.redepesa.com/",
+      "identidadUrl": "https://www.dipusevilla.es/export/bop/201211/24.pdf",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.redepesa.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa ejecuta revestimientos y proyecciones y publica como servicio la aplicación de vermiculita para ignifugación de estructuras metálicas, con una galería de trabajos diferenciada de poliuretanos e impermeabilización."
+        }
+      ],
+      "localidad": "Sevilla",
+      "provincia": "Sevilla",
+      "ccaa": "Andalucía",
+      "direccion": "Calle Manuel Ledesma, 31",
+      "descripcion": "Aplicación de revestimientos, pinturas, espuma de poliuretano y poliurea e impermeabilización. Incluye ignifugación de estructuras metálicas con mortero de vermiculita.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.dipusevilla.es/export/bop/201211/24.pdf",
+        "https://www.juntadeandalucia.es/sites/default/files/2025-03/Listado_de_empresas_con_autorizacion_de_publicidad_riesgo_amianto_14022025.pdf",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2022-231-41",
+        "https://www.aisla.org/instaladores/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/",
+      "observaciones": "Resuelve REDEPESA: el BOP identifica B91826750 y el nombre fiscal con variante singular; el listado oficial de Andalucía identifica la razón social completa y el teléfono 677173707, coincidente con la marca y web. BORME 05/12/2022, acto 534496, publica traslado a Manuel Ledesma 31, Sevilla, posterior a Jazmines 43 de Osuna; se usa ese domicilio registral y se omite CP. La web publica contacto operativo Collalba Negra 4, Osuna. No se confunde ubicación comercial con otra empresa ni se infiere estado legal actual de documentos históricos. Leída la oferta actual en navegador tras la verificación automática de acceso.",
+      "lat": 37.3886303,
+      "lng": -5.9953403,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Sevilla%2C+Sevilla%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Sevilla, Andalucía, España",
+        "osmType": "relation",
+        "osmId": 342563
+      }
+    },
+    {
+      "cif": "B96881180",
+      "nombre": "APLICACIONES ANTUNEZ, S.L.",
+      "web": "https://aplan.es/",
+      "identidadUrl": "https://aplan.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://aplan.es/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La oferta y los trabajos propios de Aplan incluyen compartimentaciones RF y franjas cortafuegos en naves de Silla y Alzira, además de la protección estructural ya confirmada."
+        }
+      ],
+      "empresaIdEsperada": 5848,
+      "fuentesIdentidadLocalizacion": [
+        "https://aplan.es/aviso-legal/"
+      ],
+      "descubrimiento": "https://aplan.es/",
+      "observaciones": "Se resuelve Aplan como marca de Aplicaciones Antúnez, B96881180, publicado en el aviso. Se reutiliza la ficha 5848, que ya tenía estructura; no se crea otra empresa ni se sustituye su web o descripción. Se añade compartimentación por los trabajos propios documentados."
+    },
+    {
+      "cif": "B99125676",
+      "nombre": "AISLAMIENTOS EDUARDO CASTILLO, S.L. / AISLAMIENTOS ZARAGOZA",
+      "web": "https://aislamientoszaragoza.com/",
+      "identidadUrl": "https://aislamientoszaragoza.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "compartimentacion",
+        "conductos",
+        "estructura",
+        "puertas",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://aislamientoszaragoza.com/proteccion-pasiva/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara instalación propia de tabiques y franjas cortafuegos, protección de estructuras y conductos, collarines intumescentes, sellado de pasos de cable y puertas RF. Se contrasta ejecución, además de los materiales utilizados."
+        }
+      ],
+      "localidad": "La Muela",
+      "provincia": "Zaragoza",
+      "ccaa": "Aragón",
+      "direccion": "Calle Nicaragua, s/n, parcela 8.2, nave 1, Polígono Industrial Centrovía",
+      "codigoPostal": "50196",
+      "descripcion": "Instalación de aislamientos térmicos y acústicos y sistemas de construcción seca. Ejecuta protección pasiva de estructuras y conductos, compartimentación, sellados y puertas cortafuegos.",
+      "fuentesIdentidadLocalizacion": [
+        "https://aislamientoszaragoza.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/",
+      "observaciones": "Resuelve Aislamientos Zaragoza: el aviso identifica al titular B99125676, sin alta separada por marca. Aviso, contacto y AISLA coinciden en La Muela; se utiliza CP 50196 de la web frente a 50198 del directorio asociativo. No se infiere una calificación o habilitación por el sello AISLA.",
+      "lat": 41.580472,
+      "lng": -1.1161953,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=La+Muela%2C+Zaragoza%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "La Muela, Valdejalón, Zaragoza, Aragón, España",
+        "osmType": "relation",
+        "osmId": 346638
+      }
+    }
+  ]
+}

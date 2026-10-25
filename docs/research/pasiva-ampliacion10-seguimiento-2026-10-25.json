@@ -1,0 +1,1459 @@
+{
+  "fechaRevision": "2026-10-25",
+  "alcance": "Duodécima tanda: revisión de las 15 pendientes de la undécima y ampliación por AISLA, Tecnifuego, AD’IP, Cepreven y regiones. Cuarenta decisiones manuales, cobertura parcial.",
+  "lote": "pasiva-validada-ampliacion10-2026-10-25.json",
+  "loteDescripciones": "descripciones-pasiva-ampliacion10-2026-10-25.json",
+  "antecedente": "pasiva-ampliacion9-seguimiento-2026-10-25.json",
+  "metodo": "Validación manual de identidad primaria y ejecución propia. Cruce por CIF/NIF, nombre y dominio con 5.898 empresas; no se crean marcas/delegaciones ni se confunde actividad genérica del asociado con ejecución de pasiva. Sin cambios de esquema ni carga SABI.",
+  "resumen": {
+    "candidatasYFichasRevisadas": 40,
+    "pendientesAnterioresRevisadas": 15,
+    "pendientesAnterioresDadasDeAlta": 3,
+    "pendientesAnterioresSinAlta": 12,
+    "altas": 3,
+    "enriquecimientos": 3,
+    "confirmacionesNuevasEnExistentes": 2,
+    "confirmadasPreviasConEvidenciaAmpliada": 1,
+    "yaConfirmadasSinEscritura": 4,
+    "otrosCasosSinEscritura": 30,
+    "universoAntes": 5898,
+    "universoDespues": 5901,
+    "pasivaAntes": 312,
+    "pasivaDespues": 317,
+    "altasConDescripcionInicial": 3,
+    "descripcionExistenteCompletada": 1,
+    "descripcionesPreviasConfirmadasConservadas": 312
+  },
+  "criteriosDeActividad": [
+    {
+      "actividad": "Puertas y cortinas cortafuegos, incluidas irrigadas",
+      "servicio": "puertas",
+      "criterio": "Instalación, montaje o mantenimiento propio de cierres resistentes al fuego/sectorización. La irrigación se describe en evidencia; no crea categoría nueva.",
+      "fuente": "https://www.une.org/salainformaciondocumentos/NP%20Norma%20UNE%20Tecnifuego%20sept-19.pdf"
+    },
+    {
+      "actividad": "Conductos de ventilación y extracción resistentes al fuego",
+      "servicio": "conductos",
+      "criterio": "Instalación o protección de conductos con resistencia al fuego acreditada, como CISA y DrHumo. No basta ventilación genérica.",
+      "fuentes": [
+        "https://www.controlignifugo.es/soluciones/conductos-de-ventilacion-y-extraccion-de-humos/",
+        "https://ant.tecnifuego.org/GuiaConductos/GuiaConductos2018.pdf"
+      ]
+    },
+    {
+      "actividad": "Extracción, exutorios, presurización o cortinas de humo genéricos",
+      "criterio": "No confirman automáticamente pasiva. SCTEH figura entre los sistemas de protección activa del RIPCI; se necesita evidencia específica de barrera/elemento resistente al fuego. No se infiere habilitación ni activa para altas de investigación.",
+      "fuente": "https://www.boe.es/buscar/act.php?id=BOE-A-2017-6606"
+    }
+  ],
+  "revisionPendientesAnteriores": [
+    {
+      "candidata": "Insonotec",
+      "dominio": "insonotec.com",
+      "estado": "pendiente_atribucion_dominio",
+      "revisionManual": true,
+      "motivo": "Se prueban el nuevo dominio con/sin www y su aviso/privacidad, sin recuperar CIF primario. Conserva la confirmación anterior, web y servicios; no se traslada contenido del índice.",
+      "fuentesConsultadas": [
+        "https://www.insonotec.com/",
+        "https://www.insonotec.com/aviso-legal/",
+        "https://www.insonotec.com/politica-de-privacidad/",
+        "https://insonotec.es/"
+      ],
+      "empresaId": 2248,
+      "cif": "B40226151",
+      "antecedenteEstado": "pendiente_atribucion_dominio",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Placas Yeso Laminado del Bages / PYL Bages",
+      "dominio": "pylbages.es",
+      "estado": "pendiente_identidad",
+      "revisionManual": true,
+      "motivo": "Página propia y AD’IP acreditan el nombre y ejecución de sectorización, pero no aparece un CIF primario. El B09713207 y el cambio de domicilio de directorios siguen siendo pistas; búsquedas fiscales y de contratación pública acotadas no los resuelven.",
+      "fuentesConsultadas": [
+        "https://pylbages.es/",
+        "https://pylbages.es/aviso-legal/",
+        "https://pylbages.es/politica-de-privacidad/",
+        "https://www.adip-as.com/placas-yeso-laminado-del-bages-nueva-empresa-asociada/"
+      ],
+      "antecedenteEstado": "pendiente_identidad",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "CRM Gia",
+      "dominio": "crmgia.com",
+      "estado": "pendiente_identidad",
+      "revisionManual": true,
+      "motivo": "Lectura en navegador de privacidad: identifica la marca crmgia y una dirección de Ciudad Real, pero no CIF/NIF ni titular jurídico completo; conserva partes de plantilla. El aviso separado devuelve 404. No se asigna CIF por marca.",
+      "fuentesConsultadas": [
+        "https://crmgia.com/ignifugaciones/",
+        "https://crmgia.com/aviso-legal/",
+        "https://crmgia.com/politica-de-privacidad/"
+      ],
+      "antecedenteEstado": "pendiente_identidad",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Incopac 90",
+      "dominio": "incopac90.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "empresaId": 5929,
+      "cif": "B10222875",
+      "motivo": "Resuelve el pendiente de ejecución: la galería técnica de su blog muestra trabajos propios y coincide en marca y teléfonos con la web actual; la página antigua del propio dominio enlaza ese blog. No se atribuye ejecución por el mero catálogo de venta ni se crean entidades por Plasencia o Salamanca. El blog es histórico sin fecha de obra; la oferta actual de pasiva se contrasta en la web vigente.",
+      "fuentesConsultadas": [
+        "https://incopac90.com/aviso-legal/",
+        "https://incopac90.blogspot.com/p/proteccion-pasiva-contra-incendios.html",
+        "https://incopac90.com/productos-servicios/",
+        "https://incopac90.com/productos-servicios/impermeabilizaciones-de-piscinas/011_11_2.html"
+      ],
+      "antecedenteEstado": "pendiente_ejecucion_identidad",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Serfitasa",
+      "dominio": "serfitasa.com",
+      "estado": "pendiente_identidad_ejecucion",
+      "revisionManual": true,
+      "motivo": "Se encuentra pista secundaria B15079445, pero la web y rutas fiscales no responden. La oferta de montaje/sectorización procede de directorios; consultas acotadas de fuente fiscal primaria/contratación no permiten alta.",
+      "fuentesConsultadas": [
+        "https://www.serfitasa.com/",
+        "https://serfitasa.com/",
+        "https://www.serfitasa.com/aviso-legal/",
+        "https://www.serfitasa.com/privacidad.html"
+      ],
+      "antecedenteEstado": "pendiente_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "ZAT / Zamorana de Aislamientos Termoacústicos",
+      "dominio": "infoconstruccion.es",
+      "estado": "sin_alta_hasta_contraste_actual",
+      "revisionManual": true,
+      "motivo": "El BOE de 2022 acredita identidad B49184856 y una revocación de NIF de 28/09/2022. No se toma como estado legal vigente sin consultar eventuales rehabilitaciones. El dominio histórico no responde y falta ejecución primaria actual. Se retira del alta inmediata, sin clasificarla como inactiva ni trasladar ese dato a SABI.",
+      "fuentesConsultadas": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-19061",
+        "https://zataislamientos.es/",
+        "https://www.infoconstruccion.es/empresas/zamorana-de-aislamientos-termoacusticos"
+      ],
+      "antecedenteEstado": "pendiente_fuente_primaria",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "AISLATODO",
+      "dominio": "aislatodo.com",
+      "estado": "sin_indicio_pasiva_en_corte",
+      "revisionManual": true,
+      "motivo": "Se reconsulta aviso fiscal B56379969 y oferta actual. Se acreditan aislamiento e impermeabilización, sin ejecución específica de pasiva; material ignífugo y pertenencia a AISLA no bastan. No se escribe actividad negativa ni se mantiene como alta fiscal pendiente.",
+      "fuentesConsultadas": [
+        "https://www.aislatodo.com/aviso-legal/",
+        "https://aislatodo.com/"
+      ],
+      "antecedenteEstado": "actividad_pasiva_no_acreditada",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Tabinorba",
+      "dominio": "tabinorba.es",
+      "estado": "sin_indicio_pasiva_en_corte",
+      "revisionManual": true,
+      "motivo": "La oferta revisada sigue centrada en yesos, revestimientos y rehabilitación. Rutas publicadas de servicios/privacidad no recuperables; no se acredita pasiva propia por la pertenencia a AISLA. No se escribe revisión negativa.",
+      "fuentesConsultadas": [
+        "https://www.tabinorba.es/",
+        "https://www.tabinorba.es/Servicios.aspx",
+        "https://www.tabinorba.es/privacy.aspx"
+      ],
+      "antecedenteEstado": "pendiente_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Proyección Vallés",
+      "dominio": "proyeccionvalles.com",
+      "estado": "pendiente_identidad",
+      "revisionManual": true,
+      "motivo": "Se recupera oferta primaria indexada de mortero ignífugo estructural y franjas, pero el sitio no responde en HTTP ni navegador y no se obtiene aviso fiscal. B64107741 sigue como pista secundaria; consultas públicas acotadas no la convierten en identidad primaria.",
+      "fuentesConsultadas": [
+        "https://proyeccionvalles.com/mortero-ignifugado/",
+        "https://proyeccionvalles.com/rf/",
+        "https://proyeccionvalles.com/aviso-legal/",
+        "https://proyeccionvalles.com/politica-de-privacidad/"
+      ],
+      "antecedenteEstado": "pendiente_acceso_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Aislamientos ISPOL",
+      "dominio": "aislamientosispol.com",
+      "estado": "pendiente_acceso_identidad_ejecucion",
+      "revisionManual": true,
+      "motivo": "Se prueban variantes https/http y con/sin www. El dominio www falla en resolución DNS; sin fuente primaria recuperable de titular o pasiva. La ficha AISLA es pista de instalador de aislamiento, no prueba de pasiva.",
+      "fuentesConsultadas": [
+        "https://www.aislamientosispol.com/",
+        "https://aislamientosispol.com/",
+        "http://www.aislamientosispol.com/",
+        "https://www.aisla.org/instaladores/"
+      ],
+      "antecedenteEstado": "pendiente_acceso_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "REDEPESA",
+      "dominio": "redepesa.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "empresaId": 5930,
+      "cif": "B91826750",
+      "motivo": "Resuelve REDEPESA: el BOP identifica B91826750 y el nombre fiscal con variante singular; el listado oficial de Andalucía identifica la razón social completa y el teléfono 677173707, coincidente con la marca y web. BORME 05/12/2022, acto 534496, publica traslado a Manuel Ledesma 31, Sevilla, posterior a Jazmines 43 de Osuna; se usa ese domicilio registral y se omite CP. La web publica contacto operativo Collalba Negra 4, Osuna. No se confunde ubicación comercial con otra empresa ni se infiere estado legal actual de documentos históricos. Leída la oferta actual en navegador tras la verificación automática de acceso.",
+      "fuentesConsultadas": [
+        "https://www.dipusevilla.es/export/bop/201211/24.pdf",
+        "https://www.redepesa.com/",
+        "https://www.juntadeandalucia.es/sites/default/files/2025-03/Listado_de_empresas_con_autorizacion_de_publicidad_riesgo_amianto_14022025.pdf",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2022-231-41",
+        "https://www.aisla.org/instaladores/"
+      ],
+      "antecedenteEstado": "pendiente_acceso_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Aislamientos Zaragoza",
+      "dominio": "aislamientoszaragoza.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "empresaId": 5931,
+      "cif": "B99125676",
+      "motivo": "Resuelve Aislamientos Zaragoza: el aviso identifica al titular B99125676, sin alta separada por marca. Aviso, contacto y AISLA coinciden en La Muela; se utiliza CP 50196 de la web frente a 50198 del directorio asociativo. No se infiere una calificación o habilitación por el sello AISLA.",
+      "fuentesConsultadas": [
+        "https://aislamientoszaragoza.com/aviso-legal/",
+        "https://aislamientoszaragoza.com/proteccion-pasiva/"
+      ],
+      "antecedenteEstado": "pendiente_acceso_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "SA Ignífugos Castilla y León",
+      "dominio": "ignifugacionesgenerales.es",
+      "estado": "pendiente_identidad",
+      "revisionManual": true,
+      "motivo": "B37539879 y oferta de ignifugación en Salamanca aparecen en directorio secundario. Las variantes del dominio no se recuperan ni se obtiene fiscalidad primaria. No se confunde con Ignifugaciones Generales de Girona, B61989638, de dominio .com.",
+      "fuentesConsultadas": [
+        "https://www.ignifugacionesgenerales.es/",
+        "https://ignifugacionesgenerales.es/",
+        "https://www.ignifugacionesgenerales.com/aviso-legal/"
+      ],
+      "antecedenteEstado": "pendiente_identidad",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Ignifugaciones Andalucía",
+      "dominio": "ignifugacionesandalucia.com",
+      "estado": "pendiente_identidad_plantilla",
+      "revisionManual": true,
+      "motivo": "Aviso y privacidad siguen con CIF y dirección sin rellenar. El servicio anunciado no resuelve al titular ejecutor; no se convierten las páginas provinciales en sociedades ni se acepta una habilitación de plantilla.",
+      "fuentesConsultadas": [
+        "https://ignifugacionesandalucia.com/",
+        "https://ignifugacionesandalucia.com/aviso-legal/",
+        "https://ignifugacionesandalucia.com/politica-privacidad/"
+      ],
+      "antecedenteEstado": "pendiente_identidad_plantilla",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Ignifugaciones del Norte",
+      "dominio": "ignifugacionesdelnorte.com",
+      "estado": "pendiente_identidad",
+      "revisionManual": true,
+      "motivo": "La web mantiene oferta propia y cobertura regional, pero no se recupera CIF/NIF del operador. Las páginas de Navarra y otras provincias no crean entidades; el código S94698372 deriva del teléfono y se descarta.",
+      "fuentesConsultadas": [
+        "https://ignifugacionesdelnorte.com/",
+        "https://ignifugacionesdelnorte.com/navarra/"
+      ],
+      "antecedenteEstado": "pendiente_identidad",
+      "pendienteAnterior": true
+    }
+  ],
+  "entidades": [
+    {
+      "cif": "B10222875",
+      "empresaId": 5929,
+      "nombre": "INCOPAC 90, S.L.",
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "compartimentacion",
+        "estructura"
+      ],
+      "descripcionInicial": "Incluida en alta",
+      "evidencias": [
+        {
+          "url": "https://incopac90.blogspot.com/p/proteccion-pasiva-contra-incendios.html",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "El blog corporativo documenta instalación de franja medianera-cubierta con placas resistentes al fuego y protección de cubierta, estructura metálica y forjado colaborante con lana de roca. La web actual mantiene el servicio de protección pasiva."
+        }
+      ],
+      "identidadUrl": "https://incopac90.com/aviso-legal/",
+      "observaciones": "Resuelve el pendiente de ejecución: la galería técnica de su blog muestra trabajos propios y coincide en marca y teléfonos con la web actual; la página antigua del propio dominio enlaza ese blog. No se atribuye ejecución por el mero catálogo de venta ni se crean entidades por Plasencia o Salamanca. El blog es histórico sin fecha de obra; la oferta actual de pasiva se contrasta en la web vigente."
+    },
+    {
+      "cif": "B47652227",
+      "empresaId": 995,
+      "nombre": "FUGOROBA INSTALACIONES Y SERVICIOS, SL",
+      "accion": "enriquecimiento",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [],
+      "descripcionInicial": "Completada en lote de descripción",
+      "evidencias": [
+        {
+          "url": "https://www.fugoroba.es/pci",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece ingeniería, instalación y mantenimiento de sistemas de protección contra incendios e incluye protección pasiva, con sellados cortafuegos, tratamientos ignífugos y puertas resistentes al fuego. Se conserva confirmación general sin añadir especialidades por el catálogo introductorio."
+        }
+      ],
+      "identidadUrl": "https://www.fugoroba.es/assets/media/LOPD.pdf",
+      "observaciones": "Nueva pista regional de Valladolid. La página corporativa de PCI acredita el servicio propio; PDF legal, página 2, identifica B47652227, y el contacto publica el CIF como B47/652227 y Helio 14. Lectura mediante fuente primaria indexada por límites de acceso HTTP. Los agregadores citan una adjudicación Renfe de instalación de puertas, con grafía Fugoraba; se usa solo como descubrimiento, no como prueba primaria ni para etiquetar puertas o declarar obra ejecutada. Se usa el domicilio operativo de aviso y contacto, sin inferir vigencia registral de directorios."
+    },
+    {
+      "cif": "B60214095",
+      "empresaId": 1143,
+      "nombre": "ADELL BOLDE SEGURIDAD I SL",
+      "accion": "enriquecimiento",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "estructura",
+        "sellados",
+        "compartimentacion"
+      ],
+      "descripcionInicial": "Conservada exactamente",
+      "evidencias": [
+        {
+          "url": "https://www.abseguridad.com/proteccion-contra-incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara ser especialista en instalación de protección pasiva y ofrece ignifugación de estructuras, sellado de pasos de instalaciones y compartimentación con pladur RF. Cepreven recoge también estas actuaciones en la presentación de AB Seguridad."
+        }
+      ],
+      "identidadUrl": "https://www.abseguridad.com/",
+      "observaciones": "Nueva confirmación en la ficha 1143, B60214095, dominio único ya atribuido. La noticia de Cepreven es una presentación de asociado, no una calificación; la ejecución se acredita en el servicio corporativo. Se conservan web, denominación, descripción, grupo, ubicación y datos operativos."
+    },
+    {
+      "cif": "B91826750",
+      "empresaId": 5930,
+      "nombre": "REVESTIMIENTOS DE PINTURAS Y ESPUMAS AISLANTES, S.L. / REDEPESA",
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "estructura"
+      ],
+      "descripcionInicial": "Incluida en alta",
+      "evidencias": [
+        {
+          "url": "https://www.redepesa.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa ejecuta revestimientos y proyecciones y publica como servicio la aplicación de vermiculita para ignifugación de estructuras metálicas, con una galería de trabajos diferenciada de poliuretanos e impermeabilización."
+        }
+      ],
+      "identidadUrl": "https://www.dipusevilla.es/export/bop/201211/24.pdf",
+      "observaciones": "Resuelve REDEPESA: el BOP identifica B91826750 y el nombre fiscal con variante singular; el listado oficial de Andalucía identifica la razón social completa y el teléfono 677173707, coincidente con la marca y web. BORME 05/12/2022, acto 534496, publica traslado a Manuel Ledesma 31, Sevilla, posterior a Jazmines 43 de Osuna; se usa ese domicilio registral y se omite CP. La web publica contacto operativo Collalba Negra 4, Osuna. No se confunde ubicación comercial con otra empresa ni se infiere estado legal actual de documentos históricos. Leída la oferta actual en navegador tras la verificación automática de acceso."
+    },
+    {
+      "cif": "B96881180",
+      "empresaId": 5848,
+      "nombre": "APLICACIONES ANTUNEZ, S.L.",
+      "accion": "enriquecimiento",
+      "confirmacionNueva": false,
+      "serviciosAnteriores": [
+        "estructura"
+      ],
+      "serviciosAñadidos": [
+        "compartimentacion"
+      ],
+      "descripcionInicial": "Conservada exactamente",
+      "evidencias": [
+        {
+          "url": "https://aplan.es/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La oferta y los trabajos propios de Aplan incluyen compartimentaciones RF y franjas cortafuegos en naves de Silla y Alzira, además de la protección estructural ya confirmada."
+        }
+      ],
+      "identidadUrl": "https://aplan.es/aviso-legal/",
+      "observaciones": "Se resuelve Aplan como marca de Aplicaciones Antúnez, B96881180, publicado en el aviso. Se reutiliza la ficha 5848, que ya tenía estructura; no se crea otra empresa ni se sustituye su web o descripción. Se añade compartimentación por los trabajos propios documentados."
+    },
+    {
+      "cif": "B99125676",
+      "empresaId": 5931,
+      "nombre": "AISLAMIENTOS EDUARDO CASTILLO, S.L. / AISLAMIENTOS ZARAGOZA",
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "compartimentacion",
+        "conductos",
+        "estructura",
+        "puertas",
+        "sellados"
+      ],
+      "descripcionInicial": "Incluida en alta",
+      "evidencias": [
+        {
+          "url": "https://aislamientoszaragoza.com/proteccion-pasiva/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara instalación propia de tabiques y franjas cortafuegos, protección de estructuras y conductos, collarines intumescentes, sellado de pasos de cable y puertas RF. Se contrasta ejecución, además de los materiales utilizados."
+        }
+      ],
+      "identidadUrl": "https://aislamientoszaragoza.com/aviso-legal/",
+      "observaciones": "Resuelve Aislamientos Zaragoza: el aviso identifica al titular B99125676, sin alta separada por marca. Aviso, contacto y AISLA coinciden en La Muela; se utiliza CP 50196 de la web frente a 50198 del directorio asociativo. No se infiere una calificación o habilitación por el sello AISLA."
+    }
+  ],
+  "pendientesPrioritarios": [
+    {
+      "candidata": "Insonotec",
+      "estado": "pendiente_atribucion_dominio",
+      "motivo": "Se prueban el nuevo dominio con/sin www y su aviso/privacidad, sin recuperar CIF primario. Conserva la confirmación anterior, web y servicios; no se traslada contenido del índice."
+    },
+    {
+      "candidata": "Placas Yeso Laminado del Bages / PYL Bages",
+      "estado": "pendiente_identidad",
+      "motivo": "Página propia y AD’IP acreditan el nombre y ejecución de sectorización, pero no aparece un CIF primario. El B09713207 y el cambio de domicilio de directorios siguen siendo pistas; búsquedas fiscales y de contratación pública acotadas no los resuelven."
+    },
+    {
+      "candidata": "CRM Gia",
+      "estado": "pendiente_identidad",
+      "motivo": "Lectura en navegador de privacidad: identifica la marca crmgia y una dirección de Ciudad Real, pero no CIF/NIF ni titular jurídico completo; conserva partes de plantilla. El aviso separado devuelve 404. No se asigna CIF por marca."
+    },
+    {
+      "candidata": "Serfitasa",
+      "estado": "pendiente_identidad_ejecucion",
+      "motivo": "Se encuentra pista secundaria B15079445, pero la web y rutas fiscales no responden. La oferta de montaje/sectorización procede de directorios; consultas acotadas de fuente fiscal primaria/contratación no permiten alta."
+    },
+    {
+      "candidata": "Proyección Vallés",
+      "estado": "pendiente_identidad",
+      "motivo": "Se recupera oferta primaria indexada de mortero ignífugo estructural y franjas, pero el sitio no responde en HTTP ni navegador y no se obtiene aviso fiscal. B64107741 sigue como pista secundaria; consultas públicas acotadas no la convierten en identidad primaria."
+    },
+    {
+      "candidata": "Aislamientos ISPOL",
+      "estado": "pendiente_acceso_identidad_ejecucion",
+      "motivo": "Se prueban variantes https/http y con/sin www. El dominio www falla en resolución DNS; sin fuente primaria recuperable de titular o pasiva. La ficha AISLA es pista de instalador de aislamiento, no prueba de pasiva."
+    },
+    {
+      "candidata": "SA Ignífugos Castilla y León",
+      "estado": "pendiente_identidad",
+      "motivo": "B37539879 y oferta de ignifugación en Salamanca aparecen en directorio secundario. Las variantes del dominio no se recuperan ni se obtiene fiscalidad primaria. No se confunde con Ignifugaciones Generales de Girona, B61989638, de dominio .com."
+    },
+    {
+      "candidata": "Ignifugaciones Andalucía",
+      "estado": "pendiente_identidad_plantilla",
+      "motivo": "Aviso y privacidad siguen con CIF y dirección sin rellenar. El servicio anunciado no resuelve al titular ejecutor; no se convierten las páginas provinciales en sociedades ni se acepta una habilitación de plantilla."
+    },
+    {
+      "candidata": "Ignifugaciones del Norte",
+      "estado": "pendiente_identidad",
+      "motivo": "La web mantiene oferta propia y cobertura regional, pero no se recupera CIF/NIF del operador. Las páginas de Navarra y otras provincias no crean entidades; el código S94698372 deriva del teléfono y se descarta."
+    },
+    {
+      "candidata": "Tecfire",
+      "estado": "pendiente_identidad",
+      "motivo": "Ejecución propia expresa en proyecto de Santander. Falta CIF primario de la entidad española; B45841814 y denominación Continental son pistas secundarias. No se confunde con Global Tecfire de Lleida."
+    }
+  ],
+  "coberturaProvincial": {
+    "metodo": "Domicilio de ficha, no territorio de servicio ni censo; alias solo en análisis.",
+    "provinciasSinConfirmadasAntes": [
+      "Zamora"
+    ],
+    "provinciasSinConfirmadasDespues": [
+      "Zamora"
+    ],
+    "provincias": [
+      {
+        "provincia": "A Coruña",
+        "totalAntes": 179,
+        "pasivaAntes": 6,
+        "totalDespues": 179,
+        "pasivaDespues": 6
+      },
+      {
+        "provincia": "Álava",
+        "totalAntes": 30,
+        "pasivaAntes": 2,
+        "totalDespues": 30,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Albacete",
+        "totalAntes": 34,
+        "pasivaAntes": 4,
+        "totalDespues": 34,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Alicante",
+        "totalAntes": 213,
+        "pasivaAntes": 9,
+        "totalDespues": 213,
+        "pasivaDespues": 9
+      },
+      {
+        "provincia": "Almería",
+        "totalAntes": 68,
+        "pasivaAntes": 3,
+        "totalDespues": 68,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Asturias",
+        "totalAntes": 120,
+        "pasivaAntes": 6,
+        "totalDespues": 120,
+        "pasivaDespues": 6
+      },
+      {
+        "provincia": "Ávila",
+        "totalAntes": 9,
+        "pasivaAntes": 3,
+        "totalDespues": 9,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Badajoz",
+        "totalAntes": 64,
+        "pasivaAntes": 2,
+        "totalDespues": 64,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Baleares",
+        "totalAntes": 216,
+        "pasivaAntes": 7,
+        "totalDespues": 216,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Barcelona",
+        "totalAntes": 929,
+        "pasivaAntes": 37,
+        "totalDespues": 929,
+        "pasivaDespues": 38
+      },
+      {
+        "provincia": "Burgos",
+        "totalAntes": 34,
+        "pasivaAntes": 4,
+        "totalDespues": 34,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Cáceres",
+        "totalAntes": 40,
+        "pasivaAntes": 2,
+        "totalDespues": 41,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Cádiz",
+        "totalAntes": 100,
+        "pasivaAntes": 6,
+        "totalDespues": 100,
+        "pasivaDespues": 6
+      },
+      {
+        "provincia": "Cantabria",
+        "totalAntes": 53,
+        "pasivaAntes": 7,
+        "totalDespues": 53,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Castellón",
+        "totalAntes": 55,
+        "pasivaAntes": 2,
+        "totalDespues": 55,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Ceuta",
+        "totalAntes": 1,
+        "pasivaAntes": 0,
+        "totalDespues": 1,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Ciudad Real",
+        "totalAntes": 54,
+        "pasivaAntes": 2,
+        "totalDespues": 54,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Córdoba",
+        "totalAntes": 61,
+        "pasivaAntes": 4,
+        "totalDespues": 61,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Cuenca",
+        "totalAntes": 19,
+        "pasivaAntes": 2,
+        "totalDespues": 19,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Girona",
+        "totalAntes": 109,
+        "pasivaAntes": 5,
+        "totalDespues": 109,
+        "pasivaDespues": 5
+      },
+      {
+        "provincia": "Granada",
+        "totalAntes": 73,
+        "pasivaAntes": 4,
+        "totalDespues": 73,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Guadalajara",
+        "totalAntes": 20,
+        "pasivaAntes": 1,
+        "totalDespues": 20,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Guipúzcoa",
+        "totalAntes": 44,
+        "pasivaAntes": 1,
+        "totalDespues": 44,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Huelva",
+        "totalAntes": 39,
+        "pasivaAntes": 2,
+        "totalDespues": 39,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Huesca",
+        "totalAntes": 22,
+        "pasivaAntes": 1,
+        "totalDespues": 22,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Jaén",
+        "totalAntes": 76,
+        "pasivaAntes": 2,
+        "totalDespues": 76,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "La Rioja",
+        "totalAntes": 54,
+        "pasivaAntes": 3,
+        "totalDespues": 54,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Las Palmas",
+        "totalAntes": 152,
+        "pasivaAntes": 4,
+        "totalDespues": 152,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "León",
+        "totalAntes": 33,
+        "pasivaAntes": 3,
+        "totalDespues": 33,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Lleida",
+        "totalAntes": 62,
+        "pasivaAntes": 4,
+        "totalDespues": 62,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Lugo",
+        "totalAntes": 36,
+        "pasivaAntes": 1,
+        "totalDespues": 36,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Madrid",
+        "totalAntes": 960,
+        "pasivaAntes": 54,
+        "totalDespues": 960,
+        "pasivaDespues": 54
+      },
+      {
+        "provincia": "Málaga",
+        "totalAntes": 237,
+        "pasivaAntes": 7,
+        "totalDespues": 237,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Melilla",
+        "totalAntes": 1,
+        "pasivaAntes": 0,
+        "totalDespues": 1,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Murcia",
+        "totalAntes": 223,
+        "pasivaAntes": 8,
+        "totalDespues": 223,
+        "pasivaDespues": 8
+      },
+      {
+        "provincia": "Navarra",
+        "totalAntes": 93,
+        "pasivaAntes": 7,
+        "totalDespues": 93,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Ourense",
+        "totalAntes": 31,
+        "pasivaAntes": 1,
+        "totalDespues": 31,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Palencia",
+        "totalAntes": 15,
+        "pasivaAntes": 2,
+        "totalDespues": 15,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Pontevedra",
+        "totalAntes": 108,
+        "pasivaAntes": 6,
+        "totalDespues": 108,
+        "pasivaDespues": 6
+      },
+      {
+        "provincia": "Salamanca",
+        "totalAntes": 23,
+        "pasivaAntes": 2,
+        "totalDespues": 23,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Santa Cruz de Tenerife",
+        "totalAntes": 122,
+        "pasivaAntes": 7,
+        "totalDespues": 122,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Segovia",
+        "totalAntes": 16,
+        "pasivaAntes": 1,
+        "totalDespues": 16,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Sevilla",
+        "totalAntes": 257,
+        "pasivaAntes": 13,
+        "totalDespues": 258,
+        "pasivaDespues": 14
+      },
+      {
+        "provincia": "Sin provincia",
+        "totalAntes": 62,
+        "pasivaAntes": 0,
+        "totalDespues": 62,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Soria",
+        "totalAntes": 13,
+        "pasivaAntes": 1,
+        "totalDespues": 13,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Tarragona",
+        "totalAntes": 124,
+        "pasivaAntes": 5,
+        "totalDespues": 124,
+        "pasivaDespues": 5
+      },
+      {
+        "provincia": "Teruel",
+        "totalAntes": 14,
+        "pasivaAntes": 1,
+        "totalDespues": 14,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Toledo",
+        "totalAntes": 68,
+        "pasivaAntes": 8,
+        "totalDespues": 68,
+        "pasivaDespues": 8
+      },
+      {
+        "provincia": "Valencia",
+        "totalAntes": 275,
+        "pasivaAntes": 27,
+        "totalDespues": 275,
+        "pasivaDespues": 27
+      },
+      {
+        "provincia": "Valladolid",
+        "totalAntes": 47,
+        "pasivaAntes": 5,
+        "totalDespues": 47,
+        "pasivaDespues": 6
+      },
+      {
+        "provincia": "Vizcaya",
+        "totalAntes": 93,
+        "pasivaAntes": 8,
+        "totalDespues": 93,
+        "pasivaDespues": 8
+      },
+      {
+        "provincia": "Zamora",
+        "totalAntes": 11,
+        "pasivaAntes": 0,
+        "totalDespues": 11,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Zaragoza",
+        "totalAntes": 106,
+        "pasivaAntes": 10,
+        "totalDespues": 107,
+        "pasivaDespues": 11
+      }
+    ]
+  },
+  "viasDeDescubrimiento": [
+    {
+      "fuente": "AISLA",
+      "url": "https://www.aisla.org/instaladores/",
+      "resultado": "Resueltas Aislamientos Zaragoza y Redepesa. Se contrastan titular y obra propios; las otras instaladoras de aislamiento no reciben pasiva por asociación."
+    },
+    {
+      "fuente": "Tecnifuego / comité de ingeniería, instalación y mantenimiento de pasiva",
+      "url": "https://www.tecnifuego.org/index.php/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de",
+      "resultado": "Pistas contrastadas por ejecución; RG Green Systems, ASPOR, AS Firing y Kavidoors no se incorporan por la pertenencia genérica al comité."
+    },
+    {
+      "fuente": "Cepreven",
+      "url": "https://www.cepreven.com/ab-seguridad-asociado-cepreven-1130",
+      "resultado": "AB Seguridad se confirma en ficha existente con ejecución corporativa de estructuras, sellados y compartimentación. Ser asociado no equivale a calificación."
+    },
+    {
+      "fuente": "AD’IP",
+      "url": "https://www.adip-as.com/asociados/",
+      "resultado": "PYL Bages mantiene pendiente fiscal. Aplacat ya confirmada, sin nueva entidad por consulta repetida."
+    },
+    {
+      "fuente": "Búsqueda regional y fuentes corporativas",
+      "regiones": [
+        "Aragón",
+        "Extremadura",
+        "Andalucía",
+        "Castilla y León",
+        "Cataluña",
+        "Cantabria",
+        "Navarra",
+        "Comunidad Valenciana"
+      ],
+      "resultado": "Incopac resuelta por su blog técnico enlazado desde dominio corporativo histórico y oferta vigente. Fugoroba ya existente; Aplan es la marca de Aplicaciones Antúnez. Fuentes registrales de Redepesa distinguen sede y contacto operativo."
+    }
+  ],
+  "verificacion": {
+    "camposProtegidosAlterados": [],
+    "sinClasificar": [],
+    "altas": 3,
+    "altasInvalidas": [],
+    "complementosIncorrectos": [],
+    "auditorias": 6,
+    "repeticionActividad": "sin_cambios=6",
+    "descripcion": {
+      "lote": "descripciones-pasiva-ampliacion10-2026-10-25.json",
+      "completadas": 1,
+      "auditorias": 1,
+      "repeticion": "sin_cambios=1",
+      "soloCampoDescripcion": true
+    },
+    "excepcionProteccionCampos": "Solo descripcion de Fugoroba (995), previamente vacía, completada en lote separado con auditoría. El resto de campos de las tres existentes y relaciones conservados por huella.",
+    "testsPasivaImportador": 11,
+    "financierosAntes": 23620,
+    "financierosDespues": 23620,
+    "actividades": {
+      "total": 5901,
+      "pci_activa": 4994,
+      "pci_pasiva": 317,
+      "seguridad_electronica": 1238,
+      "activaYPasiva": 178,
+      "tres": 28,
+      "soloPasiva": 138
+    },
+    "api": {
+      "host": "https://warroom.fontiber.com",
+      "cifsNifsUnicos": 6,
+      "fichasConFuentesYDescripcion": 6,
+      "geograficas": 5269,
+      "combinaciones": 16,
+      "exportacionPasiva": 317,
+      "anonimo": 401
+    },
+    "descripciones": {
+      "confirmadas": 317,
+      "vacias": 0,
+      "previasConservadas": 312,
+      "previasAlteradas": 0
+    }
+  },
+  "rastreoTecnico": {
+    "urlsIntentadas": 142,
+    "dominiosIntentados": 64,
+    "adicional": "Lectura en navegador de CRM Gia y Redepesa, incluidas privacidad y detalle de vermiculita. Proyección Vallés no responde tampoco en navegador. Fuente primaria indexada para Fugoroba y PDF legal; límites de acceso documentados.",
+    "limite": "Los intentos HTTP incluyen auxiliares, URLs erróneas, homónimos, WAF y páginas inaccesibles. No son número de empresas validadas."
+  },
+  "limites": [
+    "Se reconsultan las quince pendientes de la undécima: tres altas resueltas; doce casos sin alta. Nueve mantienen una validación pendiente concreta; ZAT, Aislatodo y Tabinorba quedan fuera del alta inmediata en este corte, sin revisión negativa de actividad en la base.",
+    "No se afirman identidades primarias de PYL Bages, Proyección Vallés o Serfitasa a partir de directorios. No se confunden las Ignifugaciones Generales de Castilla y León (.es) y Girona (.com).",
+    "La revocación de NIF de ZAT es un hecho histórico de 2022; no acredita estado actual ni ausencia de una rehabilitación. No se escribe estado SABI ni se añade entidad sin ejecución actual.",
+    "Las tres nuevas no existían por CIF/NIF, nombre o dominio y llevan descripcion. Fugoroba ya existía por CIF con descripción vacía; se conserva su ficha 995 y se completa ese campo con evidencia.",
+    "Las altas quedan fuera de perímetro, con estado null. Se conservan fuentes, ubicación, web, grupos, cuentas y CRM de existentes; no se infiere activa en altas de investigación por el sector de compatibilidad.",
+    "Coordenadas nuevas de centros municipales. Se utiliza domicilio registral de Sevilla de Redepesa publicado en BORME en 2022, posterior al de Jazmines 43 en Osuna; el contacto operativo actual en Osuna queda explícito, sin duplicar entidad."
+  ],
+  "casos": [
+    {
+      "candidata": "Insonotec",
+      "dominio": "insonotec.com",
+      "estado": "pendiente_atribucion_dominio",
+      "revisionManual": true,
+      "motivo": "Se prueban el nuevo dominio con/sin www y su aviso/privacidad, sin recuperar CIF primario. Conserva la confirmación anterior, web y servicios; no se traslada contenido del índice.",
+      "fuentesConsultadas": [
+        "https://www.insonotec.com/",
+        "https://www.insonotec.com/aviso-legal/",
+        "https://www.insonotec.com/politica-de-privacidad/",
+        "https://insonotec.es/"
+      ],
+      "empresaId": 2248,
+      "cif": "B40226151",
+      "antecedenteEstado": "pendiente_atribucion_dominio",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Placas Yeso Laminado del Bages / PYL Bages",
+      "dominio": "pylbages.es",
+      "estado": "pendiente_identidad",
+      "revisionManual": true,
+      "motivo": "Página propia y AD’IP acreditan el nombre y ejecución de sectorización, pero no aparece un CIF primario. El B09713207 y el cambio de domicilio de directorios siguen siendo pistas; búsquedas fiscales y de contratación pública acotadas no los resuelven.",
+      "fuentesConsultadas": [
+        "https://pylbages.es/",
+        "https://pylbages.es/aviso-legal/",
+        "https://pylbages.es/politica-de-privacidad/",
+        "https://www.adip-as.com/placas-yeso-laminado-del-bages-nueva-empresa-asociada/"
+      ],
+      "antecedenteEstado": "pendiente_identidad",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "CRM Gia",
+      "dominio": "crmgia.com",
+      "estado": "pendiente_identidad",
+      "revisionManual": true,
+      "motivo": "Lectura en navegador de privacidad: identifica la marca crmgia y una dirección de Ciudad Real, pero no CIF/NIF ni titular jurídico completo; conserva partes de plantilla. El aviso separado devuelve 404. No se asigna CIF por marca.",
+      "fuentesConsultadas": [
+        "https://crmgia.com/ignifugaciones/",
+        "https://crmgia.com/aviso-legal/",
+        "https://crmgia.com/politica-de-privacidad/"
+      ],
+      "antecedenteEstado": "pendiente_identidad",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Incopac 90",
+      "dominio": "incopac90.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "empresaId": 5929,
+      "cif": "B10222875",
+      "motivo": "Resuelve el pendiente de ejecución: la galería técnica de su blog muestra trabajos propios y coincide en marca y teléfonos con la web actual; la página antigua del propio dominio enlaza ese blog. No se atribuye ejecución por el mero catálogo de venta ni se crean entidades por Plasencia o Salamanca. El blog es histórico sin fecha de obra; la oferta actual de pasiva se contrasta en la web vigente.",
+      "fuentesConsultadas": [
+        "https://incopac90.com/aviso-legal/",
+        "https://incopac90.blogspot.com/p/proteccion-pasiva-contra-incendios.html",
+        "https://incopac90.com/productos-servicios/",
+        "https://incopac90.com/productos-servicios/impermeabilizaciones-de-piscinas/011_11_2.html"
+      ],
+      "antecedenteEstado": "pendiente_ejecucion_identidad",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Serfitasa",
+      "dominio": "serfitasa.com",
+      "estado": "pendiente_identidad_ejecucion",
+      "revisionManual": true,
+      "motivo": "Se encuentra pista secundaria B15079445, pero la web y rutas fiscales no responden. La oferta de montaje/sectorización procede de directorios; consultas acotadas de fuente fiscal primaria/contratación no permiten alta.",
+      "fuentesConsultadas": [
+        "https://www.serfitasa.com/",
+        "https://serfitasa.com/",
+        "https://www.serfitasa.com/aviso-legal/",
+        "https://www.serfitasa.com/privacidad.html"
+      ],
+      "antecedenteEstado": "pendiente_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "ZAT / Zamorana de Aislamientos Termoacústicos",
+      "dominio": "infoconstruccion.es",
+      "estado": "sin_alta_hasta_contraste_actual",
+      "revisionManual": true,
+      "motivo": "El BOE de 2022 acredita identidad B49184856 y una revocación de NIF de 28/09/2022. No se toma como estado legal vigente sin consultar eventuales rehabilitaciones. El dominio histórico no responde y falta ejecución primaria actual. Se retira del alta inmediata, sin clasificarla como inactiva ni trasladar ese dato a SABI.",
+      "fuentesConsultadas": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-19061",
+        "https://zataislamientos.es/",
+        "https://www.infoconstruccion.es/empresas/zamorana-de-aislamientos-termoacusticos"
+      ],
+      "antecedenteEstado": "pendiente_fuente_primaria",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "AISLATODO",
+      "dominio": "aislatodo.com",
+      "estado": "sin_indicio_pasiva_en_corte",
+      "revisionManual": true,
+      "motivo": "Se reconsulta aviso fiscal B56379969 y oferta actual. Se acreditan aislamiento e impermeabilización, sin ejecución específica de pasiva; material ignífugo y pertenencia a AISLA no bastan. No se escribe actividad negativa ni se mantiene como alta fiscal pendiente.",
+      "fuentesConsultadas": [
+        "https://www.aislatodo.com/aviso-legal/",
+        "https://aislatodo.com/"
+      ],
+      "antecedenteEstado": "actividad_pasiva_no_acreditada",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Tabinorba",
+      "dominio": "tabinorba.es",
+      "estado": "sin_indicio_pasiva_en_corte",
+      "revisionManual": true,
+      "motivo": "La oferta revisada sigue centrada en yesos, revestimientos y rehabilitación. Rutas publicadas de servicios/privacidad no recuperables; no se acredita pasiva propia por la pertenencia a AISLA. No se escribe revisión negativa.",
+      "fuentesConsultadas": [
+        "https://www.tabinorba.es/",
+        "https://www.tabinorba.es/Servicios.aspx",
+        "https://www.tabinorba.es/privacy.aspx"
+      ],
+      "antecedenteEstado": "pendiente_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Proyección Vallés",
+      "dominio": "proyeccionvalles.com",
+      "estado": "pendiente_identidad",
+      "revisionManual": true,
+      "motivo": "Se recupera oferta primaria indexada de mortero ignífugo estructural y franjas, pero el sitio no responde en HTTP ni navegador y no se obtiene aviso fiscal. B64107741 sigue como pista secundaria; consultas públicas acotadas no la convierten en identidad primaria.",
+      "fuentesConsultadas": [
+        "https://proyeccionvalles.com/mortero-ignifugado/",
+        "https://proyeccionvalles.com/rf/",
+        "https://proyeccionvalles.com/aviso-legal/",
+        "https://proyeccionvalles.com/politica-de-privacidad/"
+      ],
+      "antecedenteEstado": "pendiente_acceso_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Aislamientos ISPOL",
+      "dominio": "aislamientosispol.com",
+      "estado": "pendiente_acceso_identidad_ejecucion",
+      "revisionManual": true,
+      "motivo": "Se prueban variantes https/http y con/sin www. El dominio www falla en resolución DNS; sin fuente primaria recuperable de titular o pasiva. La ficha AISLA es pista de instalador de aislamiento, no prueba de pasiva.",
+      "fuentesConsultadas": [
+        "https://www.aislamientosispol.com/",
+        "https://aislamientosispol.com/",
+        "http://www.aislamientosispol.com/",
+        "https://www.aisla.org/instaladores/"
+      ],
+      "antecedenteEstado": "pendiente_acceso_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "REDEPESA",
+      "dominio": "redepesa.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "empresaId": 5930,
+      "cif": "B91826750",
+      "motivo": "Resuelve REDEPESA: el BOP identifica B91826750 y el nombre fiscal con variante singular; el listado oficial de Andalucía identifica la razón social completa y el teléfono 677173707, coincidente con la marca y web. BORME 05/12/2022, acto 534496, publica traslado a Manuel Ledesma 31, Sevilla, posterior a Jazmines 43 de Osuna; se usa ese domicilio registral y se omite CP. La web publica contacto operativo Collalba Negra 4, Osuna. No se confunde ubicación comercial con otra empresa ni se infiere estado legal actual de documentos históricos. Leída la oferta actual en navegador tras la verificación automática de acceso.",
+      "fuentesConsultadas": [
+        "https://www.dipusevilla.es/export/bop/201211/24.pdf",
+        "https://www.redepesa.com/",
+        "https://www.juntadeandalucia.es/sites/default/files/2025-03/Listado_de_empresas_con_autorizacion_de_publicidad_riesgo_amianto_14022025.pdf",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2022-231-41",
+        "https://www.aisla.org/instaladores/"
+      ],
+      "antecedenteEstado": "pendiente_acceso_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Aislamientos Zaragoza",
+      "dominio": "aislamientoszaragoza.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "empresaId": 5931,
+      "cif": "B99125676",
+      "motivo": "Resuelve Aislamientos Zaragoza: el aviso identifica al titular B99125676, sin alta separada por marca. Aviso, contacto y AISLA coinciden en La Muela; se utiliza CP 50196 de la web frente a 50198 del directorio asociativo. No se infiere una calificación o habilitación por el sello AISLA.",
+      "fuentesConsultadas": [
+        "https://aislamientoszaragoza.com/aviso-legal/",
+        "https://aislamientoszaragoza.com/proteccion-pasiva/"
+      ],
+      "antecedenteEstado": "pendiente_acceso_identidad_ejecucion",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "SA Ignífugos Castilla y León",
+      "dominio": "ignifugacionesgenerales.es",
+      "estado": "pendiente_identidad",
+      "revisionManual": true,
+      "motivo": "B37539879 y oferta de ignifugación en Salamanca aparecen en directorio secundario. Las variantes del dominio no se recuperan ni se obtiene fiscalidad primaria. No se confunde con Ignifugaciones Generales de Girona, B61989638, de dominio .com.",
+      "fuentesConsultadas": [
+        "https://www.ignifugacionesgenerales.es/",
+        "https://ignifugacionesgenerales.es/",
+        "https://www.ignifugacionesgenerales.com/aviso-legal/"
+      ],
+      "antecedenteEstado": "pendiente_identidad",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Ignifugaciones Andalucía",
+      "dominio": "ignifugacionesandalucia.com",
+      "estado": "pendiente_identidad_plantilla",
+      "revisionManual": true,
+      "motivo": "Aviso y privacidad siguen con CIF y dirección sin rellenar. El servicio anunciado no resuelve al titular ejecutor; no se convierten las páginas provinciales en sociedades ni se acepta una habilitación de plantilla.",
+      "fuentesConsultadas": [
+        "https://ignifugacionesandalucia.com/",
+        "https://ignifugacionesandalucia.com/aviso-legal/",
+        "https://ignifugacionesandalucia.com/politica-privacidad/"
+      ],
+      "antecedenteEstado": "pendiente_identidad_plantilla",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "Ignifugaciones del Norte",
+      "dominio": "ignifugacionesdelnorte.com",
+      "estado": "pendiente_identidad",
+      "revisionManual": true,
+      "motivo": "La web mantiene oferta propia y cobertura regional, pero no se recupera CIF/NIF del operador. Las páginas de Navarra y otras provincias no crean entidades; el código S94698372 deriva del teléfono y se descarta.",
+      "fuentesConsultadas": [
+        "https://ignifugacionesdelnorte.com/",
+        "https://ignifugacionesdelnorte.com/navarra/"
+      ],
+      "antecedenteEstado": "pendiente_identidad",
+      "pendienteAnterior": true
+    },
+    {
+      "candidata": "FUGOROBA INSTALACIONES Y SERVICIOS, S.L.",
+      "dominio": "fugoroba.es",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "empresaId": 995,
+      "cif": "B47652227",
+      "motivo": "Nueva pista regional de Valladolid. La página corporativa de PCI acredita el servicio propio; PDF legal, página 2, identifica B47652227, y el contacto publica el CIF como B47/652227 y Helio 14. Lectura mediante fuente primaria indexada por límites de acceso HTTP. Los agregadores citan una adjudicación Renfe de instalación de puertas, con grafía Fugoraba; se usa solo como descubrimiento, no como prueba primaria ni para etiquetar puertas o declarar obra ejecutada. Se usa el domicilio operativo de aviso y contacto, sin inferir vigencia registral de directorios.",
+      "fuentesConsultadas": [
+        "https://www.fugoroba.es/assets/media/LOPD.pdf",
+        "https://www.fugoroba.es/pci",
+        "https://www.fugoroba.es/contacto"
+      ]
+    },
+    {
+      "candidata": "ADELL BOLDE SEGURIDAD I SL",
+      "dominio": "abseguridad.com",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "empresaId": 1143,
+      "cif": "B60214095",
+      "motivo": "Nueva confirmación en la ficha 1143, B60214095, dominio único ya atribuido. La noticia de Cepreven es una presentación de asociado, no una calificación; la ejecución se acredita en el servicio corporativo. Se conservan web, denominación, descripción, grupo, ubicación y datos operativos.",
+      "fuentesConsultadas": [
+        "https://www.abseguridad.com/",
+        "https://www.abseguridad.com/proteccion-contra-incendios/",
+        "https://www.cepreven.com/ab-seguridad-asociado-cepreven-1130"
+      ]
+    },
+    {
+      "candidata": "APLICACIONES ANTUNEZ, S.L.",
+      "dominio": "aplan.es",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "empresaId": 5848,
+      "cif": "B96881180",
+      "motivo": "Se resuelve Aplan como marca de Aplicaciones Antúnez, B96881180, publicado en el aviso. Se reutiliza la ficha 5848, que ya tenía estructura; no se crea otra empresa ni se sustituye su web o descripción. Se añade compartimentación por los trabajos propios documentados.",
+      "fuentesConsultadas": [
+        "https://aplan.es/aviso-legal/",
+        "https://aplan.es/"
+      ]
+    },
+    {
+      "candidata": "APLACAT SBD, S.L.",
+      "dominio": "aplacat.cat",
+      "estado": "ya_confirmada_sin_escritura",
+      "revisionManual": true,
+      "motivo": "La oferta propia y AD’IP reiteran instalación de protección pasiva general ya guardada, sin sistema nuevo que añadir.",
+      "fuentesConsultadas": [
+        "https://aplacat.cat/"
+      ],
+      "empresaId": 5836,
+      "cif": "B66204579"
+    },
+    {
+      "candidata": "PROTECCIONES INDUSTRIALES Y DECORATIVAS",
+      "dominio": "proind.es",
+      "estado": "ya_confirmada_sin_escritura",
+      "revisionManual": true,
+      "motivo": "La ejecución de tratamientos ignífugos reitera estructura ya confirmada; no se modifica la ficha.",
+      "fuentesConsultadas": [
+        "https://proind.es/informacion-empresa/"
+      ],
+      "empresaId": 5858,
+      "cif": "B31378326"
+    },
+    {
+      "candidata": "AISLAMIENTOS SAN FELICES",
+      "dominio": "aislamientossanfelices.es",
+      "estado": "ya_confirmada_sin_escritura",
+      "revisionManual": true,
+      "motivo": "Se conserva estructura por aplicación de mortero. Los objetivos genéricos de compartimentación y sellados no acreditan ejecución nueva suficiente.",
+      "fuentesConsultadas": [
+        "https://www.aislamientossanfelices.es/proteccion-pasiva"
+      ],
+      "empresaId": 5859,
+      "cif": "B39467493"
+    },
+    {
+      "candidata": "PROTECCIONES IGNIFUGAS DEL CENTRO SL",
+      "dominio": "picprotecciones.es",
+      "estado": "ya_confirmada_sin_escritura",
+      "revisionManual": true,
+      "motivo": "Sigue confirmada. El acceso está limitado por verificación automática; la asociación no añade por sí sola un servicio específico.",
+      "fuentesConsultadas": [
+        "https://www.picprotecciones.es/"
+      ],
+      "empresaId": 5807,
+      "cif": "B71014898"
+    },
+    {
+      "candidata": "Aislamientos Gainza",
+      "dominio": "gainza.com",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "Oferta de poliuretano y rehabilitación térmica, sin pasiva específica contrastada.",
+      "fuentesConsultadas": [
+        "https://www.gainza.com/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/"
+    },
+    {
+      "candidata": "Aislabin",
+      "dominio": "aislabin.com",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "Colocación de aislamiento térmico/acústico; lana mineral y divisorias no acreditan por sí solas sistemas resistentes al fuego.",
+      "fuentesConsultadas": [
+        "https://www.aislabin.com/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/"
+    },
+    {
+      "candidata": "Aislamientos de Castilla / Aiscasa",
+      "dominio": "aiscasa.com",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "Web no recuperada; la asociación no basta para pasiva.",
+      "fuentesConsultadas": [
+        "https://www.aiscasa.com/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/"
+    },
+    {
+      "candidata": "Crusol",
+      "dominio": "crusol.com",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "El dominio actual publica instalaciones solares y puntos de carga; no se traslada la descripción de otro perfil asociativo sin resolver identidad y actividad.",
+      "fuentesConsultadas": [
+        "https://www.crusol.com/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/"
+    },
+    {
+      "candidata": "SACSA Naval",
+      "dominio": "sacsanaval.com",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "Oferta naval de aislamientos, puertas y ventilación, sin resistencia al fuego/ejecución específica contrastada en esta consulta.",
+      "fuentesConsultadas": [
+        "https://www.sacsanaval.com/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/"
+    },
+    {
+      "candidata": "Taraspol",
+      "dominio": "taraspol.es",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "Servicios de aislamiento e impermeabilización, sin pasiva específica contrastada.",
+      "fuentesConsultadas": [
+        "https://www.taraspol.es/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/"
+    },
+    {
+      "candidata": "Policat Aïllaments",
+      "dominio": "policataillaments.com",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "Acceso limitado por verificación; sin titular y ejecución suficientes en este corte.",
+      "fuentesConsultadas": [
+        "https://www.policataillaments.com/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/"
+    },
+    {
+      "candidata": "Torregra Aplicaciones",
+      "dominio": "torregraaplicaciones.com",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "Oferta actual de aislamiento térmico y humedad; no se confirma pasiva por pertenencia a AISLA.",
+      "fuentesConsultadas": [
+        "https://www.torregraaplicaciones.com/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/"
+    },
+    {
+      "candidata": "Prolisur",
+      "dominio": "prolisur.com",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "Oferta de aislamiento, acústica e impermeabilización sin ejecución específica de pasiva contrastada.",
+      "fuentesConsultadas": [
+        "https://www.prolisur.com/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/"
+    },
+    {
+      "candidata": "Aislafutur",
+      "dominio": "aislafutur.com",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "Aislamiento e insuflado sin ejecución de pasiva contrastada.",
+      "fuentesConsultadas": [
+        "https://www.aislafutur.com/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/"
+    },
+    {
+      "candidata": "RG Green Systems",
+      "dominio": "rg-systems.com",
+      "estado": "ejecucion_pasiva_no_acreditada",
+      "revisionManual": true,
+      "motivo": "El dominio ofrece sistemas de extinción activos. Pertenecer al comité de pasiva de Tecnifuego no basta para atribuir ejecución pasiva.",
+      "fuentesConsultadas": [
+        "https://www.rg-systems.com/"
+      ],
+      "descubrimiento": "https://www.tecnifuego.org/index.php/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de"
+    },
+    {
+      "candidata": "ASPOR",
+      "dominio": "aspor.es",
+      "estado": "ejecucion_pasiva_no_acreditada",
+      "revisionManual": true,
+      "motivo": "Oferta de ingeniería, gestión y supervisión de obra; no se acredita instalación propia de pasiva en esta consulta.",
+      "fuentesConsultadas": [
+        "https://aspor.es/"
+      ],
+      "descubrimiento": "https://www.tecnifuego.org/index.php/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de"
+    },
+    {
+      "candidata": "AS Firing",
+      "dominio": "asfiring.es",
+      "estado": "ejecucion_pasiva_no_acreditada",
+      "revisionManual": true,
+      "motivo": "Ingeniería y consultoría de PCI; no se acredita ejecución propia de pasiva.",
+      "fuentesConsultadas": [
+        "https://www.asfiring.es/"
+      ],
+      "descubrimiento": "https://www.tecnifuego.org/index.php/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de"
+    },
+    {
+      "candidata": "Kavidoors",
+      "dominio": "kavidoors.com",
+      "estado": "ejecucion_pasiva_no_acreditada",
+      "revisionManual": true,
+      "motivo": "Fabricación y suministro de puertas cortafuegos; falta prueba de instalación propia para entrar en este alcance.",
+      "fuentesConsultadas": [
+        "https://www.kavidoors.com/"
+      ],
+      "descubrimiento": "https://www.tecnifuego.org/index.php/asociados-y-comites/comite-sectorial-de-ingenieria-instalacion-y-mantenimiento-de-sistemas-de"
+    },
+    {
+      "candidata": "Tecfire",
+      "dominio": "tecfire.com",
+      "estado": "pendiente_identidad",
+      "revisionManual": true,
+      "motivo": "Ejecución propia expresa en proyecto de Santander. Falta CIF primario de la entidad española; B45841814 y denominación Continental son pistas secundarias. No se confunde con Global Tecfire de Lleida.",
+      "fuentesConsultadas": [
+        "https://tecfire.com/es/news/tecfire-fabrica-e-instala-los-sistemas-de-vidrio-cortafuegos-para-un-referente-cultural-en-espana-el-museo-reina-sofia-de-santander/"
+      ]
+    },
+    {
+      "candidata": "Puertas Técnicas Barcelona",
+      "dominio": "puertastecnicasbcn.com",
+      "estado": "ejecucion_pasiva_no_acreditada",
+      "revisionManual": true,
+      "motivo": "Aviso primario identifica B66054487, pero fabricación y referencias de puertas no atribuyen montaje propio con suficiente claridad. No se da de alta solo por producto.",
+      "fuentesConsultadas": [
+        "https://www.puertastecnicasbcn.com/"
+      ]
+    },
+    {
+      "candidata": "Aqua-limp / Servipuertas",
+      "dominio": "servipuertas.es",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "Aviso identifica B55589246 e instalación propia de puertas blindadas/acorazadas. No se acredita resistencia al fuego; seguridad física no equivale a pasiva.",
+      "fuentesConsultadas": [
+        "https://servipuertas.es/"
+      ]
+    },
+    {
+      "candidata": "Proextin",
+      "dominio": "proextin.com",
+      "estado": "sin_confirmacion_suficiente",
+      "revisionManual": true,
+      "motivo": "La ficha 2799 permanece: oferta de detección y extinción activa sin pasiva propia acreditada en la página consultada.",
+      "fuentesConsultadas": [
+        "https://proextin.com/incendios/"
+      ],
+      "empresaId": 2799,
+      "cif": "B02362556"
+    }
+  ]
+}
