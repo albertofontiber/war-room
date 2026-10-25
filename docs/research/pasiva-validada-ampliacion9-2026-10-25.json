@@ -1,0 +1,394 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "alcance": "Undécima tanda: asociaciones AISLA y ASIME, búsqueda regional y pendientes de tandas anteriores. Instaladoras/aplicadoras de pasiva en España; cobertura parcial.",
+  "criterio": "Titular fiscal primario, ejecución contrastada y cruce por CIF/NIF, nombre y dominio. Toda alta incluye descripción inicial, identidad y localización; no se crean empresas por marcas o delegaciones.",
+  "geocodificacion": "Centros municipales de domicilios contrastados; no precisión de portal.",
+  "empresas": [
+    {
+      "cif": "44245365N",
+      "nombre": "SALVADOR LÓPEZ PARRA / LODIPAR INDUSTRIAL",
+      "web": "https://lodiparindustrial.es/",
+      "identidadUrl": "https://lodiparindustrial.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://lodiparindustrial.es/servicios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Dentro de sus aplicaciones industriales ofrece aplicación de pinturas intumescentes para protección pasiva contra el fuego. Se acredita ejecución por el servicio propio de aplicación, sin inferir un sustrato o sistema concreto."
+        }
+      ],
+      "localidad": "Pilas",
+      "provincia": "Sevilla",
+      "ccaa": "Andalucía",
+      "direccion": "Calle Manuel de Falla, 5",
+      "codigoPostal": "41840",
+      "descripcion": "Aplicaciones de pintura industrial, chorro de arena, impermeabilización y mantenimiento. Incluye aplicación de pinturas intumescentes para protección pasiva contra incendios.",
+      "fuentesIdentidadLocalizacion": [
+        "https://lodiparindustrial.es/aviso-legal/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/",
+      "observaciones": "El aviso identifica al titular profesional Salvador López Parra con NIF 44245365N y domicilio de Pilas, coincidente con AISLA. No se inventa una SL para la marca Lodipar. Los falsos positivos S68212096 del rastreador son parte del teléfono, no CIF, y se descartan. Servicios específicos vacíos por no acreditarse sustrato; se mantiene confirmación general.",
+      "lat": 37.3012094,
+      "lng": -6.3027773,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Pilas%2C+Sevilla%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Pilas, Sevilla, Andalucía, 41840, España",
+        "osmType": "relation",
+        "osmId": 340891
+      }
+    },
+    {
+      "cif": "B05182985",
+      "nombre": "EMPRESA MANTENEDORA DE EXTINTORES Y SEGURIDAD SL",
+      "web": "https://emexseguridad.com/",
+      "identidadUrl": "https://emexseguridad.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://emexseguridad.com/incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara instalación y mantenimiento de puertas cortafuegos batientes y correderas, registros y cortinas cortafuegos, diferenciados de mantas y equipos de extinción."
+        }
+      ],
+      "empresaIdEsperada": 2184,
+      "fuentesIdentidadLocalizacion": [
+        "https://emexseguridad.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://emexseguridad.com/incendios/",
+      "observaciones": "Nueva confirmación en la ficha 2184, NIF B05182985 del aviso. La web usa Emex Seguridad SL; se conserva el nombre de la ficha y la descripción existentes. No se infiere pasiva de mantas ignífugas ni se crea otra ficha por marca."
+    },
+    {
+      "cif": "B09256439",
+      "nombre": "AISLAMIENTOS BURGALESES, S.L.",
+      "web": "https://www.aislamientosburgaleses.com/",
+      "identidadUrl": "https://www.aislamientosburgaleses.com/aviso-legal.php",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.aislamientosburgaleses.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Además del almacén de materiales, declara ejecución de obras de aislamiento ignífugo con lana de roca y personal propio. La confirmación no deriva de la venta de materiales sino de esos trabajos ejecutados."
+        }
+      ],
+      "localidad": "Burgos",
+      "provincia": "Burgos",
+      "ccaa": "Castilla y León",
+      "direccion": "Calle La Ribera, s/n, Centro Industrial Río Pico, naves 13-14",
+      "codigoPostal": "09007",
+      "descripcion": "Venta de materiales y ejecución de aislamientos térmicos, acústicos e ignífugos con personal propio. Incluye ignifugado con lana de roca.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.aislamientosburgaleses.com/aviso-legal.php"
+      ],
+      "descubrimiento": "https://www.aislamientosburgaleses.com/",
+      "observaciones": "El aviso identifica B09256439 y domicilio de Burgos; omite datos de tomo/folio pero no identidad fiscal. El punto comercial de Valladolid no crea segunda empresa. La fuente no precisa sustrato del ignifugado; no se etiqueta protección estructural por inferencia ni calificación acústica como pasiva.",
+      "lat": 42.3448498,
+      "lng": -3.6812477,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Burgos%2C+Burgos%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Burgos, Castilla y León, España",
+        "osmType": "relation",
+        "osmId": 344165
+      }
+    },
+    {
+      "cif": "B18557710",
+      "nombre": "REVESTIMIENTOS JUNCARIL, S.L.",
+      "web": "https://www.revestimientosjuncaril.es/",
+      "identidadUrl": "https://www.revestimientosjuncaril.es/",
+      "identidadMetodo": "documento_corporativo",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.revestimientosjuncaril.es/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara ejecución propia de cerramientos y divisiones con sistemas constructivos cerámicos, incluidas soluciones de resistencia al fuego, sectorización y protección pasiva. Su cartera publica trabajos ejecutados para constructoras."
+        }
+      ],
+      "localidad": "Albolote",
+      "provincia": "Granada",
+      "ccaa": "Andalucía",
+      "direccion": "Avenida Reyes Católicos, 2, bajo",
+      "codigoPostal": "18220",
+      "descripcion": "Instalación de cerramientos, divisiones y revestimientos con sistemas cerámicos de gran formato. Incluye soluciones de sectorización y protección pasiva contra incendios.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.revestimientosjuncaril.es/",
+        "https://www.revestimientosjuncaril.es/docs/portfolio-soluciones.pdf"
+      ],
+      "descubrimiento": "https://www.revestimientosjuncaril.es/",
+      "observaciones": "Portada leída en navegador: contacto corporativo identifica B-18557710, domicilio y sociedad; se normaliza B18557710. La ejecución de protección pasiva se atribuye a la instaladora, no a un proveedor cerámico. Granada es domicilio; Málaga, Jaén y Almería son territorio de servicio, sin altas adicionales.",
+      "lat": 37.3051688,
+      "lng": -3.6615056,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Albolote%2C+Granada%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Albolote, Comarca de la Vega de Granada, Granada, Andalucía, España",
+        "osmType": "relation",
+        "osmId": 343443
+      }
+    },
+    {
+      "cif": "B21572862",
+      "nombre": "3 FUEGOS PCI, S.L.",
+      "web": "https://3fuegos.es/",
+      "identidadUrl": "https://3fuegos.es/legal/1/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://3fuegos.es/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Presenta protección activa y pasiva como servicios propios. Un anuncio de la empresa en la revista municipal de Ayamonte de 2024 publica instalación/mantenimiento PCI e ignifugaciones. Confirmación general, sin especialidad material inferida."
+        }
+      ],
+      "empresaIdEsperada": 2827,
+      "fuentesIdentidadLocalizacion": [
+        "https://3fuegos.es/legal/1/",
+        "https://ayamonte.es/wp-content/uploads/2024/01/revista-carnaval-2024.pdf"
+      ],
+      "descubrimiento": "https://3fuegos.es/",
+      "observaciones": "Nueva confirmación de la ficha 2827, B21572862 publicado en aviso legal. Se conserva su descripción inicial, domicilio, fuente y resto de datos. La publicidad corporativa se utiliza para ejecución de ignifugaciones, sin inferir una especialidad ni habilitación por el anuncio."
+    },
+    {
+      "cif": "B36655934",
+      "nombre": "CHORRO NAVAL, S.L.",
+      "web": "https://chorronaval.com/",
+      "identidadUrl": "https://ficheiros-web.xunta.gal/cei/aeroespazo-seguridade-defensa/guia-certificacions-cas.pdf",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://chorronaval.com/servicios-chorro-naval/aplicacion-de-pinturas/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplica pinturas intumescentes para protección pasiva de estructuras metálicas dentro de sus tratamientos de superficies en los sectores naval, industrial y construcción."
+        }
+      ],
+      "localidad": "Vigo",
+      "provincia": "Pontevedra",
+      "ccaa": "Galicia",
+      "direccion": "Avenida Eduardo Cabello, s/n, acceso Zona Franca de Bouzas",
+      "codigoPostal": "36208",
+      "descripcion": "Tratamiento de superficies en los sectores naval, industrial y construcción. Incluye aplicación de pinturas intumescentes para protección pasiva de estructuras metálicas.",
+      "fuentesIdentidadLocalizacion": [
+        "https://ficheiros-web.xunta.gal/cei/aeroespazo-seguridade-defensa/guia-certificacions-cas.pdf",
+        "https://chorronaval.com/empresa-chorro-naval/contactar/"
+      ],
+      "descubrimiento": "https://www.acebrongroup.com/wp-content/uploads/2020/08/Global-Industry-N05-1.pdf",
+      "observaciones": "Descubierta en directorio ASIME. La guía oficial Xunta de certificaciones 2026, página 80, identifica Chorro Naval SL, B36655934 y Vigo. La web atribuye ejecución actual y domicilio. La guía se usa para fiscalidad, no para inferir calificación PCI, pertenencia a grupo o estado SABI.",
+      "lat": 42.1986395,
+      "lng": -8.727956,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Vigo%2C+Pontevedra%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Vigo, Pontevedra, Galicia, España",
+        "osmType": "relation",
+        "osmId": 341381
+      }
+    },
+    {
+      "cif": "B45867686",
+      "nombre": "AISLA VIDA, S.L.",
+      "web": "https://aislavida.com/",
+      "identidadUrl": "https://aislavida.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://aislavida.com/proteccion-pasiva-proyectada/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplica con medios propios lana mineral mezclada con cemento y agua sobre estructuras de locales, naves, garajes, pilares y cerchas para protección pasiva frente al fuego."
+        }
+      ],
+      "localidad": "Valladolid",
+      "provincia": "Valladolid",
+      "ccaa": "Castilla y León",
+      "direccion": "Calle Tranque, 26, esquina con calle Argales",
+      "codigoPostal": "47013",
+      "descripcion": "Instalación de aislamiento térmico y acústico, tratamiento de humedades e iluminación natural. Aplica protección pasiva de estructuras mediante lana mineral proyectada.",
+      "fuentesIdentidadLocalizacion": [
+        "https://aislavida.com/aviso-legal/",
+        "https://aislavida.com/empresa-de-aislamientos/"
+      ],
+      "descubrimiento": "https://aislavida.com/proteccion-pasiva-proyectada/",
+      "observaciones": "El aviso identifica B45867686 y el domicilio de Valladolid. El contacto comercial muestra Argales 8; se utiliza Tranque 26 del aviso, en la misma localidad, sin atribuir domicilio en Zamora por su zona de servicio.",
+      "lat": 41.6200024,
+      "lng": -4.7259906,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Valladolid%2C+Valladolid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Valladolid, Castilla y León, España",
+        "osmType": "relation",
+        "osmId": 348849
+      }
+    },
+    {
+      "cif": "B56885767",
+      "nombre": "FISECO",
+      "web": "https://fiseco.es/",
+      "identidadUrl": "https://fiseco.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://fiseco.es/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece ejecución de protección pasiva estructural con morteros de lana de roca y vermiculita dentro de sus trabajos de rehabilitación, aislamiento e impermeabilización. La descripción de proceso incluye planificación y ejecución propia."
+        }
+      ],
+      "localidad": "Langreo",
+      "provincia": "Asturias",
+      "ccaa": "Asturias",
+      "direccion": "Polígono de Riaño, 10",
+      "descripcion": "Trabajos de rehabilitación, aislamiento e impermeabilización. Ejecuta protección pasiva de estructuras con morteros de lana de roca y vermiculita.",
+      "fuentesIdentidadLocalizacion": [
+        "https://fiseco.es/aviso-legal/",
+        "https://fiseco.es/politica-de-privacidad/"
+      ],
+      "descubrimiento": "https://www.aisla.org/instaladores/",
+      "observaciones": "Aviso y privacidad identifican B56885767. AISLA identifica a Fiseco en Langreo. Se conserva FISECO sin inventar razón social completa. Se omite código postal por discrepancia 33900 en web y 33920 en asociación. La página secundaria de servicio mantiene texto de plantilla; la ejecución se acredita en la portada y proceso propios, no en esa plantilla ni en un sello general.",
+      "lat": 43.2872504,
+      "lng": -5.7007057,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Langreo%2C+Asturias%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Langreo, Asturias / Asturies, España",
+        "osmType": "relation",
+        "osmId": 340716
+      }
+    },
+    {
+      "cif": "B78670049",
+      "nombre": "TECNICAS Y PROYECTOS IGNIFUGOS SL",
+      "web": "https://teprosol.com/",
+      "identidadUrl": "https://teprosol.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://teprosol.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Incluye ejecución de soluciones constructivas para conductos de ventilación y extracción dentro de su servicio de protección pasiva e ignifugación. Se añade protección de conductos a la ficha ya confirmada."
+        }
+      ],
+      "empresaIdEsperada": 5809,
+      "fuentesIdentidadLocalizacion": [
+        "https://teprosol.com/"
+      ],
+      "descubrimiento": "https://teprosol.com/",
+      "observaciones": "La ficha 5809 ya tiene estructura, compartimentación y sellados. El dominio único del universo permite ampliar actividad sin modificar identidad ni descripción. La versión indexada de la portada identifica el CIF; la lectura HTTP está limitada y se conserva ese límite de acceso."
+    },
+    {
+      "cif": "B99329781",
+      "nombre": "EBROPLAC SPAIN, S.L. / REVES",
+      "web": "https://reves.es/",
+      "identidadUrl": "https://reves.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "compartimentacion",
+        "conductos",
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://reves.es/instalacion-sistemas-contra-incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Instala tabiques, techos, trasdosados y franjas cortafuegos, conductos EI, collarines intumescentes y protección de vigas y pilares metálicos. Publica trabajos propios de tabiques cortafuegos."
+        }
+      ],
+      "localidad": "Zaragoza",
+      "provincia": "Zaragoza",
+      "ccaa": "Aragón",
+      "direccion": "Carretera de Castellón, km 3,7, Polígono La Unión II, nave 11",
+      "codigoPostal": "50013",
+      "descripcion": "Suministro e instalación de construcción seca y sistemas cortafuegos. Ejecuta compartimentaciones, protección de estructuras, conductos resistentes al fuego y sellados.",
+      "fuentesIdentidadLocalizacion": [
+        "https://reves.es/aviso-legal/",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2025-130-50",
+        "https://www.tragsa.es/es/Documents/contratos%20menores/tragsa/2021/Enero-Marzo%202021%20Tragsa.pdf"
+      ],
+      "descubrimiento": "docs/research/pasiva-ampliacion8-seguimiento-2026-10-25.json",
+      "observaciones": "Resuelve REVES, pendiente fiscal. Aviso leído en navegador con B99329781 y domicilio de Zaragoza; mantiene campos registrales sin completar, pero no el CIF. BORME 10/07/2025, acto 313023, publica el cambio Estructuras y Revés → Ebroplac Spain, con la misma hoja Z52457. Se utiliza nombre actual y marca, una sola entidad. El contrato Tragsa histórico identifica CIF y nombre anterior, no acredita estado legal actual. No se usa el domicilio de Telde mezclado por un agregador.",
+      "lat": 41.6915847,
+      "lng": -0.9101268,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Zaragoza%2C+Zaragoza%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Zaragoza, Aragón, España",
+        "osmType": "relation",
+        "osmId": 345740
+      }
+    }
+  ]
+}
