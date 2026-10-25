@@ -1,0 +1,1126 @@
+{
+  "fechaRevision": "2026-10-25",
+  "alcance": "Novena tanda: 35 casos de empresas y candidatas; fichas sin web, pendientes con pista concreta, asociaciones y búsqueda en Lugo, Palencia, Segovia y Zamora. Cobertura parcial.",
+  "lote": "pasiva-validada-ampliacion7-2026-10-25.json",
+  "antecedente": "pasiva-ampliacion6-seguimiento-2026-10-25.json",
+  "metodo": "CIF/NIF fiscal primario antes de alta o atribución de nueva web; ejecución propia acreditada y cruce con el universo completo. Fuentes asociativas para descubrimiento; registros públicos y webs corporativas para validación. Sin nuevos campos ni SABI.",
+  "resumen": {
+    "candidatasYFichasRevisadas": 35,
+    "altas": 3,
+    "enriquecimientos": 3,
+    "confirmacionesNuevasEnExistentes": 2,
+    "confirmadasPreviasConNuevosServicios": 1,
+    "yaConfirmadasSinEscritura": 4,
+    "casosSinConfirmacionSuficiente": 23,
+    "fueraDelLotePorRol": 2,
+    "fichasExistentesSinWebRevisadas": 16,
+    "websVaciasCompletadas": 1,
+    "universoAntes": 5880,
+    "universoDespues": 5883,
+    "pasivaAntes": 286,
+    "pasivaDespues": 291
+  },
+  "coberturaProvincial": {
+    "metodo": "Base previa de 5.880 registros, actualizada con las seis escrituras verificadas. Agrupa alias de provincia solo para análisis; no modifica fichas. Domicilio de ficha, no cobertura comercial ni censo.",
+    "provinciasSinConfirmadasAntes": [
+      "Lugo",
+      "Palencia",
+      "Segovia",
+      "Zamora"
+    ],
+    "provinciasSinConfirmadasDespues": [
+      "Zamora"
+    ],
+    "nuevasProvinciasConConfirmacion": [
+      "Lugo",
+      "Palencia",
+      "Segovia"
+    ],
+    "advertencia": "El cero en Zamora no prueba ausencia de actividad local. Ceuta y Melilla se separan de las 50 provincias; se conserva Sin provincia.",
+    "provincias": [
+      {
+        "provincia": "A Coruña",
+        "totalAntes": 178,
+        "pasivaAntes": 4,
+        "totalDespues": 178,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Albacete",
+        "totalAntes": 34,
+        "pasivaAntes": 4,
+        "totalDespues": 34,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Alicante",
+        "totalAntes": 213,
+        "pasivaAntes": 9,
+        "totalDespues": 213,
+        "pasivaDespues": 9
+      },
+      {
+        "provincia": "Almería",
+        "totalAntes": 68,
+        "pasivaAntes": 3,
+        "totalDespues": 68,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Asturias",
+        "totalAntes": 119,
+        "pasivaAntes": 5,
+        "totalDespues": 119,
+        "pasivaDespues": 5
+      },
+      {
+        "provincia": "Badajoz",
+        "totalAntes": 64,
+        "pasivaAntes": 2,
+        "totalDespues": 64,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Baleares",
+        "totalAntes": 216,
+        "pasivaAntes": 7,
+        "totalDespues": 216,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Barcelona",
+        "totalAntes": 928,
+        "pasivaAntes": 36,
+        "totalDespues": 928,
+        "pasivaDespues": 36
+      },
+      {
+        "provincia": "Burgos",
+        "totalAntes": 33,
+        "pasivaAntes": 3,
+        "totalDespues": 33,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Cantabria",
+        "totalAntes": 53,
+        "pasivaAntes": 7,
+        "totalDespues": 53,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Castellón",
+        "totalAntes": 55,
+        "pasivaAntes": 2,
+        "totalDespues": 55,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Ceuta",
+        "totalAntes": 1,
+        "pasivaAntes": 0,
+        "totalDespues": 1,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Ciudad Real",
+        "totalAntes": 54,
+        "pasivaAntes": 2,
+        "totalDespues": 54,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Cuenca",
+        "totalAntes": 19,
+        "pasivaAntes": 2,
+        "totalDespues": 19,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Cáceres",
+        "totalAntes": 40,
+        "pasivaAntes": 2,
+        "totalDespues": 40,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Cádiz",
+        "totalAntes": 100,
+        "pasivaAntes": 6,
+        "totalDespues": 100,
+        "pasivaDespues": 6
+      },
+      {
+        "provincia": "Córdoba",
+        "totalAntes": 61,
+        "pasivaAntes": 4,
+        "totalDespues": 61,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Girona",
+        "totalAntes": 107,
+        "pasivaAntes": 3,
+        "totalDespues": 107,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Granada",
+        "totalAntes": 72,
+        "pasivaAntes": 2,
+        "totalDespues": 72,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Guadalajara",
+        "totalAntes": 20,
+        "pasivaAntes": 1,
+        "totalDespues": 20,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Guipúzcoa",
+        "totalAntes": 44,
+        "pasivaAntes": 1,
+        "totalDespues": 44,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Huelva",
+        "totalAntes": 39,
+        "pasivaAntes": 1,
+        "totalDespues": 39,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Huesca",
+        "totalAntes": 22,
+        "pasivaAntes": 1,
+        "totalDespues": 22,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Jaén",
+        "totalAntes": 76,
+        "pasivaAntes": 1,
+        "totalDespues": 76,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "La Rioja",
+        "totalAntes": 54,
+        "pasivaAntes": 3,
+        "totalDespues": 54,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Las Palmas",
+        "totalAntes": 151,
+        "pasivaAntes": 3,
+        "totalDespues": 151,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "León",
+        "totalAntes": 33,
+        "pasivaAntes": 3,
+        "totalDespues": 33,
+        "pasivaDespues": 3
+      },
+      {
+        "provincia": "Lleida",
+        "totalAntes": 62,
+        "pasivaAntes": 4,
+        "totalDespues": 62,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Lugo",
+        "totalAntes": 36,
+        "pasivaAntes": 0,
+        "totalDespues": 36,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Madrid",
+        "totalAntes": 958,
+        "pasivaAntes": 51,
+        "totalDespues": 959,
+        "pasivaDespues": 52
+      },
+      {
+        "provincia": "Melilla",
+        "totalAntes": 1,
+        "pasivaAntes": 0,
+        "totalDespues": 1,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Murcia",
+        "totalAntes": 223,
+        "pasivaAntes": 8,
+        "totalDespues": 223,
+        "pasivaDespues": 8
+      },
+      {
+        "provincia": "Málaga",
+        "totalAntes": 237,
+        "pasivaAntes": 7,
+        "totalDespues": 237,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Navarra",
+        "totalAntes": 93,
+        "pasivaAntes": 7,
+        "totalDespues": 93,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Ourense",
+        "totalAntes": 31,
+        "pasivaAntes": 1,
+        "totalDespues": 31,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Palencia",
+        "totalAntes": 13,
+        "pasivaAntes": 0,
+        "totalDespues": 14,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Pontevedra",
+        "totalAntes": 106,
+        "pasivaAntes": 4,
+        "totalDespues": 106,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Salamanca",
+        "totalAntes": 23,
+        "pasivaAntes": 2,
+        "totalDespues": 23,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Santa Cruz de Tenerife",
+        "totalAntes": 122,
+        "pasivaAntes": 7,
+        "totalDespues": 122,
+        "pasivaDespues": 7
+      },
+      {
+        "provincia": "Segovia",
+        "totalAntes": 15,
+        "pasivaAntes": 0,
+        "totalDespues": 16,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Sevilla",
+        "totalAntes": 256,
+        "pasivaAntes": 12,
+        "totalDespues": 256,
+        "pasivaDespues": 12
+      },
+      {
+        "provincia": "Sin provincia",
+        "totalAntes": 62,
+        "pasivaAntes": 0,
+        "totalDespues": 62,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Soria",
+        "totalAntes": 13,
+        "pasivaAntes": 1,
+        "totalDespues": 13,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Tarragona",
+        "totalAntes": 124,
+        "pasivaAntes": 5,
+        "totalDespues": 124,
+        "pasivaDespues": 5
+      },
+      {
+        "provincia": "Teruel",
+        "totalAntes": 14,
+        "pasivaAntes": 1,
+        "totalDespues": 14,
+        "pasivaDespues": 1
+      },
+      {
+        "provincia": "Toledo",
+        "totalAntes": 68,
+        "pasivaAntes": 8,
+        "totalDespues": 68,
+        "pasivaDespues": 8
+      },
+      {
+        "provincia": "Valencia",
+        "totalAntes": 275,
+        "pasivaAntes": 26,
+        "totalDespues": 275,
+        "pasivaDespues": 27
+      },
+      {
+        "provincia": "Valladolid",
+        "totalAntes": 46,
+        "pasivaAntes": 4,
+        "totalDespues": 46,
+        "pasivaDespues": 4
+      },
+      {
+        "provincia": "Vizcaya",
+        "totalAntes": 93,
+        "pasivaAntes": 8,
+        "totalDespues": 93,
+        "pasivaDespues": 8
+      },
+      {
+        "provincia": "Zamora",
+        "totalAntes": 11,
+        "pasivaAntes": 0,
+        "totalDespues": 11,
+        "pasivaDespues": 0
+      },
+      {
+        "provincia": "Zaragoza",
+        "totalAntes": 105,
+        "pasivaAntes": 9,
+        "totalDespues": 105,
+        "pasivaDespues": 9
+      },
+      {
+        "provincia": "Álava",
+        "totalAntes": 30,
+        "pasivaAntes": 2,
+        "totalDespues": 30,
+        "pasivaDespues": 2
+      },
+      {
+        "provincia": "Ávila",
+        "totalAntes": 9,
+        "pasivaAntes": 2,
+        "totalDespues": 9,
+        "pasivaDespues": 2
+      }
+    ]
+  },
+  "viasDeDescubrimiento": [
+    {
+      "fuente": "Fichas existentes sin web",
+      "resultado": "16 fichas seleccionadas y consultadas. Ignisvérica confirma pasiva y completa web con CIF corporativo. Otros dominios quedan como pistas cuando no acreditan pasiva o titular."
+    },
+    {
+      "fuente": "Tecnifuego",
+      "url": "https://www.tecnifuego.org/sites/default/files/2025-06/memo_2024_web.pdf",
+      "resultado": "Se localiza Ignisvérica y se contrasta Apagal. Asociación no equivale a calificación."
+    },
+    {
+      "fuente": "AD’IP",
+      "url": "https://www.adip-as.com/deco-tebas-nueva-empresa-asociada/",
+      "resultado": "Se revisan cinco miembros: Deco-Teba’s, Aplacat, Montatek, Thermoacoustic y Solrigol. No se atribuye automáticamente a cada miembro el ámbito general de la asociación."
+    },
+    {
+      "fuente": "Búsqueda por provincias y trabajos",
+      "provincias": [
+        "Lugo",
+        "Palencia",
+        "Segovia",
+        "Zamora"
+      ],
+      "resultado": "Garrepal en Palencia, Metálicas Arranz en Segovia y Apagal en Lugo. Montajes Segovia tiene sede en Madrid; ZAT queda pendiente en Zamora."
+    },
+    {
+      "fuente": "Sede electrónica de Pinarejos",
+      "url": "https://pinarejos.sedelectronica.es/preview-document/9bb7dede-fd54-4225-84b4-2356f8c39934/",
+      "resultado": "Anuncio oficial del contrato 89/2024 con identificador B40147118. Atribución fiscal histórica corroborada por aviso actual de Metálicas Arranz. El contrato es de carpintería; no se usa para acreditar pasiva."
+    }
+  ],
+  "entidades": [
+    {
+      "cif": "B09957135",
+      "nombre": "GARREPAL S.L.",
+      "empresaId": 5911,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "compartimentacion"
+      ],
+      "webCompletada": false,
+      "evidencias": [
+        {
+          "url": "https://pladurenpalencia.com/servicios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta franjas cortafuegos y sistemas de protección pasiva en naves industriales, comunidades y edificios públicos, dentro de sus servicios de tabiquería seca."
+        }
+      ],
+      "identidadUrl": "https://pladurenpalencia.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "CIF, titular y domicilio leídos en aviso legal mediante navegador; la verificación automática del sitio impide la lectura HTTP simple. La página de servicios se revisa también en navegador y acredita expresamente la ejecución de franjas; no se infiere resistencia al fuego de cualquier tabique de yeso."
+    },
+    {
+      "cif": "B27459049",
+      "nombre": "APAGAL SEGURIDAD Y PROTECCIÓN CONTRA INCENDIOS, SL",
+      "empresaId": 2893,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "puertas"
+      ],
+      "webCompletada": false,
+      "evidencias": [
+        {
+          "url": "https://www.apagal.es/extincion-fuegos-lugo.aspx",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La instaladora de sistemas contra incendios de Lugo incluye puertas y cortinas cortafuegos en su oferta de sectorización; su web describe el servicio de instalación y la protección pasiva."
+        }
+      ],
+      "identidadUrl": "https://www.apagal.es/aviso-legal.aspx",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "Nueva confirmación en la ficha 2893, cuyo dominio y CIF ya pertenecen al universo. Las cortinas se representan en la categoría existente puertas/cierres; no se añade reacción al fuego por vender mantas ignífugas ni una calificación por su asociación."
+    },
+    {
+      "cif": "B40147118",
+      "nombre": "CERRAJES Y METALICAS ARRANZ SL",
+      "empresaId": 5912,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [
+        "estructura"
+      ],
+      "webCompletada": false,
+      "evidencias": [
+        {
+          "url": "https://metalicasarranz.com/productos/estructuras-metalicas/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplica pinturas intumescentes y morteros ignífugos a estructuras metálicas dentro de su actividad de fabricación y montaje de estructuras."
+        }
+      ],
+      "identidadUrl": "https://metalicasarranz.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "Pendiente resuelto. El aviso legal publica B40147118, titular y domicilio; el anuncio oficial municipal 89/2024 confirma el mismo identificador para Arranz Metálicas y Torrecilla del Pinar. Se conserva la denominación del aviso; los directorios usan una denominación más larga. El contrato de carpintería acredita identidad histórica, no ejecución de pasiva ni vigencia legal; esta actividad se acredita separadamente en la web."
+    },
+    {
+      "cif": "B54593710",
+      "nombre": "ENESA CONTINENTAL SL",
+      "empresaId": 5803,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": false,
+      "serviciosAnteriores": [
+        "estructura"
+      ],
+      "serviciosAñadidos": [
+        "compartimentacion",
+        "sellados"
+      ],
+      "webCompletada": false,
+      "evidencias": [
+        {
+          "url": "https://enesacontinental.com/sectorizacion-contra-incendios",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su oferta de sectorización incluye franjas cortafuegos y sellado de pasos de instalaciones y juntas con collarines, almohadillas, masillas y paneles. Se añaden compartimentación y sellados a la estructura ya documentada."
+        }
+      ],
+      "identidadUrl": "https://enesacontinental.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "observaciones": "Se amplían servicios en la ficha 5803 por el dominio único ya vinculado. No se crean fichas por sus talleres o delegaciones ni se modifica identidad, ubicación, estado o perímetro."
+    },
+    {
+      "cif": "B86463544",
+      "nombre": "MONTAJES SEGOVIA, S.L.",
+      "empresaId": 5913,
+      "accion": "alta",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [],
+      "webCompletada": false,
+      "evidencias": [
+        {
+          "url": "https://www.montajes-segovia.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Incluye ignifugaciones y tratamientos para mejorar la resistencia de los materiales al fuego entre los trabajos propios de aislamiento y montaje. No detalla sustratos o sistemas suficientes para asignar una especialidad."
+        }
+      ],
+      "identidadUrl": "https://www.montajes-segovia.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "El nombre Segovia no determina la provincia. Aviso legal y contacto identifican B86463544 y Humanes de Madrid. No se crea una ficha en Segovia ni una por cada territorio atendido."
+    },
+    {
+      "cif": "B98541931",
+      "nombre": "IGNISVERICA SEGURIDAD Y PREVENCIÓN, S.L.",
+      "empresaId": 3057,
+      "accion": "enriquecimiento",
+      "confirmacionNueva": true,
+      "serviciosAnteriores": [],
+      "serviciosAñadidos": [],
+      "webCompletada": true,
+      "evidencias": [
+        {
+          "url": "https://ignisverica.com/proteccion-pasiva/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara ejecución de tratamientos y métodos de ignifugación adaptados al proyecto y prestación de instalación de protección pasiva. No detalla materiales o sustratos para etiquetar servicios concretos."
+        }
+      ],
+      "identidadUrl": "https://ignisverica.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "observaciones": "Se confirma pasiva y se completa únicamente web vacía de la ficha 3057. El aviso legal identifica B98541931 y Carcaixent; la web comercial publica Almussafes. Se conservan nombre, Carcaixent, coordenadas y demás campos existentes. No se crea otra sociedad por IgnisVerica ni por el dominio .com frente al correo .es."
+    }
+  ],
+  "resueltosDeSeguimientosAnteriores": [
+    {
+      "caso": "Metálicas Arranz",
+      "resultado": "Alta única de B40147118 con aviso corporativo y adjudicación municipal; deja de ser pendiente fiscal del antecedente."
+    }
+  ],
+  "pendientesPrioritarios": [
+    {
+      "caso": "Global Fire Ingeniería",
+      "empresaId": 4358,
+      "siguienteEvidencia": "Documento fiscal corporativo o registro público que vincule E67738773 con el dominio; no crear otra empresa."
+    },
+    {
+      "caso": "AMS Madrid / ASM Andalucía",
+      "siguienteEvidencia": "Identificar por separado titulares fiscales que ejecutan pasiva; no atribuir ejecución a una sociedad de grupo solo por marca."
+    },
+    {
+      "caso": "Zamora / ZAT",
+      "siguienteEvidencia": "Localizar operador actual y prueba primaria de ejecución; revisar también otras aplicadoras locales. El directorio no basta para alta."
+    },
+    {
+      "caso": "Ignifugacions del Vallès / Igniva",
+      "empresaId": 4196,
+      "siguienteEvidencia": "Documento fiscal del titular actual del sitio para atribuir la actividad sin confundir marca y sociedad histórica."
+    }
+  ],
+  "verificacion": {
+    "camposProtegidosAlterados": [],
+    "sinClasificar": [],
+    "altas": 3,
+    "altasInvalidas": [],
+    "complementosIncorrectos": [],
+    "auditorias": 6,
+    "repeticion": "sin_cambios=6",
+    "testsPasivaImportador": 11,
+    "financierosAntes": 23620,
+    "financierosDespues": 23620,
+    "complementosVacios": [
+      {
+        "empresaId": 3057,
+        "campo": "web",
+        "motivo": "Aviso corporativo con B98541931. Se conservan Carcaixent y coordenadas previas frente a dirección comercial de Almussafes."
+      }
+    ],
+    "actividades": {
+      "total": 5883,
+      "pci_activa": 4994,
+      "pci_pasiva": 291,
+      "seguridad_electronica": 1238,
+      "activaYPasiva": 170,
+      "tres": 26,
+      "soloPasiva": 120
+    },
+    "api": {
+      "host": "https://warroom.fontiber.com",
+      "geograficas": 5251,
+      "cifsNifsUnicos": 6,
+      "fichasConFuente": 6,
+      "combinaciones": 16,
+      "exportacionPasiva": 291,
+      "anonimo": 401
+    }
+  },
+  "rastreoTecnico": {
+    "urlsIntentadas": 95,
+    "dominiosIntentados": 32,
+    "adicional": "Lectura en navegador de Garrepal e Igniva y navegación de contratos de Pinarejos; PDF municipal recuperado con sesión pública propia. Búsquedas indexadas de fuentes primarias complementan la lectura HTTP.",
+    "limite": "Son 35 decisiones manuales, no 35 altas. Los intentos técnicos incluyen páginas auxiliares, errores y redirecciones sin contenido útil."
+  },
+  "limites": [
+    "Solo se modifican seis fichas. Los otros 29 casos no reciben escritura de actividad negativa, web, estado o CRM.",
+    "La búsqueda de fichas sin web es una selección de 16 de las 2.433 sin web y sin confirmación de pasiva del corte previo; no es un barrido completo de ese conjunto.",
+    "No se reconsultan todos los pendientes históricos. PYL Bages, CRM Gia y los demás casos no revisados aquí mantienen el antecedente correspondiente.",
+    "Los 23 casos no concluyentes incluyen búsquedas sin web, falta de identidad fiscal, contenido inaccesible y oferta sin pasiva acreditada. No son 23 empresas validadas ni 23 revisiones negativas.",
+    "Sin perfiles de especialización, tamaño, cuentas nuevas ni cambios de estado SABI. Nuevas altas fuera de perímetro y estado null.",
+    "Coordenadas nuevas municipales. No se trasladan las fichas existentes por diferencias de domicilio ni se crea una sociedad por marca o delegación."
+  ],
+  "casos": [
+    {
+      "candidata": "Agrupación Empresarial Tabanera",
+      "dominio": "tabanera.com",
+      "estado": "fuera_del_lote_por_rol",
+      "revisionManual": true,
+      "motivo": "La página presenta distribución de materiales y catálogo de protección pasiva, sin ejecución propia contrastada. No se incorpora como aplicadora por vender productos.",
+      "fuentesConsultadas": [
+        "https://tabanera.com/"
+      ]
+    },
+    {
+      "candidata": "APAGAL SEGURIDAD Y PROTECCIÓN CONTRA INCENDIOS, SL",
+      "dominio": "apagal.es",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B27459049",
+      "empresaId": 2893,
+      "sinWebAntes": false,
+      "motivo": "Nueva confirmación en la ficha 2893, cuyo dominio y CIF ya pertenecen al universo. Las cortinas se representan en la categoría existente puertas/cierres; no se añade reacción al fuego por vender mantas ignífugas ni una calificación por su asociación.",
+      "fuentesConsultadas": [
+        "https://www.apagal.es/aviso-legal.aspx",
+        "https://www.apagal.es/extincion-fuegos-lugo.aspx",
+        "https://www.apagal.es/"
+      ]
+    },
+    {
+      "candidata": "Aplacat SBD",
+      "dominio": "aplacat.cat",
+      "estado": "ya_confirmada_sin_cambios",
+      "revisionManual": true,
+      "motivo": "Se conserva la confirmación general de la ficha 5836. No se deducen especialidades por ejecutar tabiquería seca.",
+      "fuentesConsultadas": [
+        "https://aplacat.cat/",
+        "https://www.adip-as.com/aplacat-sbd-nueva-empresa-asociada/"
+      ],
+      "cif": "B66204579",
+      "empresaId": 5836
+    },
+    {
+      "candidata": "Berbelporcel",
+      "dominio": "berbelporcel.com",
+      "estado": "ya_confirmada_sin_cambios",
+      "revisionManual": true,
+      "motivo": "La obra de pasiva en Villamuriel de Cerrato acredita servicio en Palencia de una ficha ya confirmada con sede en Granada. No se crea otra empresa por la obra ni se cuenta como sede palentina.",
+      "fuentesConsultadas": [
+        "https://berbelporcel.com/project/proteccion-pasiva-en-naves-de-palencia/"
+      ],
+      "cif": "B18577015",
+      "empresaId": 1855
+    },
+    {
+      "candidata": "CERRAJES Y METALICAS ARRANZ SL",
+      "dominio": "metalicasarranz.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B40147118",
+      "empresaId": 5912,
+      "sinWebAntes": false,
+      "motivo": "Pendiente resuelto. El aviso legal publica B40147118, titular y domicilio; el anuncio oficial municipal 89/2024 confirma el mismo identificador para Arranz Metálicas y Torrecilla del Pinar. Se conserva la denominación del aviso; los directorios usan una denominación más larga. El contrato de carpintería acredita identidad histórica, no ejecución de pasiva ni vigencia legal; esta actividad se acredita separadamente en la web.",
+      "fuentesConsultadas": [
+        "https://metalicasarranz.com/aviso-legal/",
+        "https://metalicasarranz.com/productos/estructuras-metalicas/",
+        "https://pinarejos.sedelectronica.es/preview-document/9bb7dede-fd54-4225-84b4-2356f8c39934/",
+        "https://metalicasarranz.com/contacto/"
+      ]
+    },
+    {
+      "candidata": "CF Sistemas de Seguridad Lugo",
+      "dominio": null,
+      "estado": "dominio_y_actividad_pendientes",
+      "revisionManual": true,
+      "motivo": "El directorio de descubrimiento identifica la sociedad y actividades genéricas de instalaciones; no se recupera web atribuida ni ejecución específica de pasiva.",
+      "fuentesConsultadas": [
+        "https://cincodias.elpais.com/directorio-empresas/empresa/8887035/cf-sistemas-de-seguridad-lugo"
+      ],
+      "cif": "B27513175",
+      "empresaId": 3334,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "Deco-Teba’s",
+      "dominio": "pladurlleida.com",
+      "estado": "identidad_y_actividad_pendientes",
+      "revisionManual": true,
+      "motivo": "AD’IP describe especialidad en pasivos contra fuego. La web asociada devuelve páginas legales ausentes y no permite cerrar atribución fiscal y ejecución concreta. B25316753 permanece como pista secundaria, sin alta.",
+      "fuentesConsultadas": [
+        "https://www.adip-as.com/deco-tebas-nueva-empresa-asociada/",
+        "https://pladurlleida.com/",
+        "https://pladurlleida.com/deco-tebas/que-hacemos/"
+      ]
+    },
+    {
+      "candidata": "DEX Sistemas Contra Incendios",
+      "dominio": null,
+      "estado": "dominio_y_actividad_pendientes",
+      "revisionManual": true,
+      "motivo": "La constitución BORME sitúa la sociedad en Hontoria, Segovia y contiene actividad de instalaciones. No se recuperan web corporativa atribuida ni ejecución específica de pasiva; no se deduce actividad por objeto social.",
+      "fuentesConsultadas": [
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2025-58-40"
+      ],
+      "cif": "B75980540",
+      "empresaId": 4055,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "ENESA CONTINENTAL SL",
+      "dominio": "enesacontinental.com",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B54593710",
+      "empresaId": 5803,
+      "sinWebAntes": false,
+      "motivo": "Se amplían servicios en la ficha 5803 por el dominio único ya vinculado. No se crean fichas por sus talleres o delegaciones ni se modifica identidad, ubicación, estado o perímetro.",
+      "fuentesConsultadas": [
+        "https://enesacontinental.com/",
+        "https://enesacontinental.com/sectorizacion-contra-incendios"
+      ]
+    },
+    {
+      "candidata": "Exignis Green",
+      "dominio": null,
+      "estado": "dominio_y_actividad_pendientes",
+      "revisionManual": true,
+      "motivo": "Se contrasta la constitución de la sociedad de Loja, con instalaciones eléctricas en su objeto. No se identifica ejecución de pasiva ni web atribuida. No se considera negativa ni se completa localización por esta revisión.",
+      "fuentesConsultadas": [
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2025-95-18"
+      ],
+      "cif": "B21828355",
+      "empresaId": 5267,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "GARREPAL S.L.",
+      "dominio": "pladurenpalencia.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B09957135",
+      "empresaId": 5911,
+      "sinWebAntes": false,
+      "motivo": "CIF, titular y domicilio leídos en aviso legal mediante navegador; la verificación automática del sitio impide la lectura HTTP simple. La página de servicios se revisa también en navegador y acredita expresamente la ejecución de franjas; no se infiere resistencia al fuego de cualquier tabique de yeso.",
+      "fuentesConsultadas": [
+        "https://pladurenpalencia.com/aviso-legal/",
+        "https://pladurenpalencia.com/servicios/"
+      ]
+    },
+    {
+      "candidata": "Global Fire Ingeniería",
+      "dominio": "globalfireingenieria.com",
+      "estado": "atribucion_fiscal_pendiente",
+      "revisionManual": true,
+      "motivo": "Se reconsulta oferta de ejecución y contacto de Fortuna. La pista secundaria corresponde a la ficha 4358 sin web, pero no se recupera fuente fiscal primaria que atribuya el dominio a E67738773. No se crea otra ficha ni se cambia la existente.",
+      "fuentesConsultadas": [
+        "https://globalfireingenieria.com/",
+        "https://globalfireingenieria.com/contacto/",
+        "https://globalfireingenieria.com/proteccion-pasiva-contra-incendios/"
+      ],
+      "cif": "E67738773",
+      "empresaId": 4358,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "Grupo AMS / AMS Madrid y ASM Andalucía",
+      "dominio": "grupo-ams.com",
+      "estado": "atribucion_fiscal_pendiente",
+      "revisionManual": true,
+      "motivo": "La web identifica AMS y ASM como instaladores de protección pasiva, pero el aviso y contacto no resuelven sus titulares fiscales. No se usa el CIF secundario de Fachadas y Cubiertas Técnicas ni el de un grupo homónimo de automatismos.",
+      "fuentesConsultadas": [
+        "https://www.grupo-ams.com/especialidades/proteccion-pasiva/",
+        "https://www.grupo-ams.com/aviso-legal/",
+        "https://www.grupo-ams.com/contacto/"
+      ]
+    },
+    {
+      "candidata": "Hermanos Pérez Catalina / Extintores Campoo",
+      "dominio": "extintorescampoo.com",
+      "estado": "actividad_no_acreditada",
+      "revisionManual": true,
+      "motivo": "La política de calidad corporativa vincula Extintores Campoo a Hermanos Pérez Catalina en Aguilar de Campoo. No acredita ejecución de pasiva; no se confunden venta de equipos y seguridad contra incendios con esa actividad.",
+      "fuentesConsultadas": [
+        "https://extintorescampoo.com/politica-de-calidad/"
+      ],
+      "cif": "B34208132",
+      "empresaId": 3347,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "Ignifugaciones del Norte",
+      "dominio": "ignifugacionesdelnorte.com",
+      "estado": "atribucion_fiscal_pendiente",
+      "revisionManual": true,
+      "motivo": "La web anuncia ejecución propia y muchas páginas regionales, incluida Palencia; no publica CIF recuperado ni domicilio de operador atribuible. Se mantiene una candidata, sin una alta por provincia o landing.",
+      "fuentesConsultadas": [
+        "https://ignifugacionesdelnorte.com/",
+        "https://ignifugacionesdelnorte.com/sobre-nosotros/",
+        "https://ignifugacionesdelnorte.com/contacto/",
+        "https://ignifugacionesdelnorte.com/palencia/"
+      ]
+    },
+    {
+      "candidata": "Ignifugacions del Vallès / Igniva",
+      "dominio": "ignifugacionsdelvalles.com",
+      "estado": "atribucion_fiscal_pendiente",
+      "revisionManual": true,
+      "motivo": "La web describe ejecución, contacto de Rubí y certificados, pero no se recupera identificación fiscal actual del titular. No se completa la web de 4196 solo por el nombre; el BORME histórico registra una anotación de fallido en la sociedad homónima, sin concluir su situación actual ni cambiar SABI.",
+      "fuentesConsultadas": [
+        "https://ignifugacionsdelvalles.com/",
+        "https://ignifugacionsdelvalles.com/contacte/",
+        "https://ignifugacionsdelvalles.com/certificados-y-documentacion/",
+        "https://www.boe.es/borme/dias/2024/06/24/pdfs/BORME-A-2024-120-08.pdf"
+      ],
+      "cif": "B67089490",
+      "empresaId": 4196,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "Ignifugados Armero",
+      "dominio": "ignifugadosarmero.com",
+      "estado": "ya_confirmada_sin_cambios",
+      "revisionManual": true,
+      "motivo": "La ficha 5624 ya documenta estructura, compartimentación y sellados. Sus servicios actuales no justifican otra escritura.",
+      "fuentesConsultadas": [
+        "https://ignifugadosarmero.com/servicios/"
+      ],
+      "cif": "B54917844",
+      "empresaId": 5624
+    },
+    {
+      "candidata": "Ignifugar Tela",
+      "dominio": "ignifugartela.com",
+      "estado": "atribucion_fiscal_pendiente",
+      "revisionManual": true,
+      "motivo": "La página corporativa indexada describe tratamientos de textiles y tapicerías, pero la lectura directa queda en verificación automática y no resuelve titular fiscal. Sus delegaciones anunciadas no generan sociedades adicionales.",
+      "fuentesConsultadas": [
+        "https://ignifugartela.com/"
+      ]
+    },
+    {
+      "candidata": "IGNISVERICA SEGURIDAD Y PREVENCIÓN, S.L.",
+      "dominio": "ignisverica.com",
+      "estado": "enriquecimiento_aplicado",
+      "revisionManual": true,
+      "cif": "B98541931",
+      "empresaId": 3057,
+      "sinWebAntes": true,
+      "motivo": "Se confirma pasiva y se completa únicamente web vacía de la ficha 3057. El aviso legal identifica B98541931 y Carcaixent; la web comercial publica Almussafes. Se conservan nombre, Carcaixent, coordenadas y demás campos existentes. No se crea otra sociedad por IgnisVerica ni por el dominio .com frente al correo .es.",
+      "fuentesConsultadas": [
+        "https://ignisverica.com/aviso-legal/",
+        "https://ignisverica.com/proteccion-pasiva/"
+      ]
+    },
+    {
+      "candidata": "Javier T&T Seguridad",
+      "dominio": "t-tseguridad.com",
+      "estado": "actividad_no_acreditada",
+      "revisionManual": true,
+      "motivo": "El listado oficial de Policía identifica CIF y correo del dominio de T&T Seguridad en Toro. Esa inscripción es de seguridad privada y no acredita pasiva; se conserva la ficha sin nueva clasificación.",
+      "fuentesConsultadas": [
+        "https://www.policia.es/miscelanea/seguridad_privada/sector/empresas_inscritas_03_09_2025.pdf"
+      ],
+      "cif": "B49236888",
+      "empresaId": 3211,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "Lafuente Segovia",
+      "dominio": "lafuentespain.com",
+      "estado": "fuera_del_lote_por_rol",
+      "revisionManual": true,
+      "motivo": "Su web declara fabricación de escayola y distribución de materiales, incluida pasiva. Está en Madrid; ni el apellido Segovia ni el catálogo acreditan instaladora con sede en esa provincia.",
+      "fuentesConsultadas": [
+        "https://lafuentespain.com/almacenes-lafuente-nosotros/"
+      ]
+    },
+    {
+      "candidata": "Lobato D.M.P.",
+      "dominio": null,
+      "estado": "dominio_y_actividad_pendientes",
+      "revisionManual": true,
+      "motivo": "La pista de un contrato de reparación de instalaciones/OCA en Palencia no identifica dominio corporativo ni demuestra ejecución de pasiva. La identidad y el contrato de un agregador sirven solo para orientar otra consulta primaria.",
+      "fuentesConsultadas": [
+        "https://sociedad.info/spain/supplier/lobato-d-m-p-s-l-es"
+      ],
+      "cif": "B10682524",
+      "empresaId": 3296,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "MONTAJES SEGOVIA, S.L.",
+      "dominio": "montajes-segovia.com",
+      "estado": "alta_aplicada",
+      "revisionManual": true,
+      "cif": "B86463544",
+      "empresaId": 5913,
+      "sinWebAntes": false,
+      "motivo": "El nombre Segovia no determina la provincia. Aviso legal y contacto identifican B86463544 y Humanes de Madrid. No se crea una ficha en Segovia ni una por cada territorio atendido.",
+      "fuentesConsultadas": [
+        "https://www.montajes-segovia.com/aviso-legal/",
+        "https://www.montajes-segovia.com/",
+        "https://www.montajes-segovia.com/contacto/"
+      ]
+    },
+    {
+      "candidata": "Montatek BDN",
+      "dominio": "montatek.com",
+      "estado": "identidad_y_actividad_pendientes",
+      "revisionManual": true,
+      "motivo": "AD’IP confirma instalación de construcción seca, techos y aislamiento. Su descripción general del ámbito de la asociación no acredita pasiva de este miembro; tampoco se obtiene identificación fiscal en la web consultada.",
+      "fuentesConsultadas": [
+        "https://www.adip-as.com/montatek-nueva-empresa-asociada/",
+        "https://www.adip-as.com/porfolio/montatek-bdn-sl/",
+        "https://montatek.com/"
+      ]
+    },
+    {
+      "candidata": "Neira Soto",
+      "dominio": "neirasoto.com",
+      "estado": "actividad_no_acreditada",
+      "revisionManual": true,
+      "motivo": "Se recuperan web y aviso legal con B27339472; la oferta revisada es eléctrica, climatización y seguridad. No se acredita pasiva, por lo que no se ejecuta el importador para completar solamente web.",
+      "fuentesConsultadas": [
+        "https://neirasoto.com/",
+        "https://neirasoto.com/aviso-legal/"
+      ],
+      "cif": "B27339472",
+      "empresaId": 240,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "Nertafire",
+      "dominio": "nertafire.com",
+      "estado": "dominio_y_actividad_pendientes",
+      "revisionManual": true,
+      "motivo": "Se localiza dominio solo en directorios. El cambio de domicilio BORME acredita la identidad nominal histórica, pero no se recupera ejecución de pasiva atribuible; no se modifica el estado SABI existente.",
+      "fuentesConsultadas": [
+        "https://cincodias.elpais.com/directorio-empresas/empresa/7264044/nertafire",
+        "https://www.boe.es/borme/dias/2018/12/07/pdfs/BORME-A-2018-234-08.pdf"
+      ],
+      "cif": "B66914102",
+      "empresaId": 3594,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "Parfoc Sistemas PCI",
+      "dominio": "parfoc.com",
+      "estado": "atribucion_fiscal_pendiente",
+      "revisionManual": true,
+      "motivo": "Su perfil corporativo público en LinkedIn declara aplicaciones de pasiva y enlaza parfoc.com; ese dominio redirige a venta de dominios. Falta fuente fiscal primaria que una la actividad a la ficha 2349. Se conserva la pista sin rellenar una web aparcada.",
+      "fuentesConsultadas": [
+        "https://es.linkedin.com/company/parfoc",
+        "http://www.parfoc.com/"
+      ],
+      "cif": "B67604686",
+      "empresaId": 2349,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "Procaval / Proyectos y Servicios Caval",
+      "dominio": "procaval.es",
+      "estado": "ya_confirmada_sin_cambios",
+      "revisionManual": true,
+      "motivo": "La web publica obras de ignifugación en túneles del AVE Zamora-Galicia. La entidad ya confirmada tiene sede en Cheste; el territorio de obra no genera nueva ficha en Zamora.",
+      "fuentesConsultadas": [
+        "https://procaval.es/"
+      ],
+      "cif": "B98892631",
+      "empresaId": 5812
+    },
+    {
+      "candidata": "Protese",
+      "dominio": "protese.com",
+      "estado": "actividad_no_acreditada",
+      "revisionManual": true,
+      "motivo": "Se localiza web con instalaciones y mantenimiento de detección/extinción y seguridad electrónica. No se recupera ejecución específica de pasiva en la página revisada. El hallazgo de web no provoca una confirmación ni escritura de pasiva.",
+      "fuentesConsultadas": [
+        "https://www.protese.com/servicios/instalacion-y-mantenimiento/",
+        "https://www.protese.com/contacto/"
+      ],
+      "cif": "B27151091",
+      "empresaId": 1527,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "Sarriana de Extintores",
+      "dominio": "sarrianadeextintores.com",
+      "estado": "acceso_y_actividad_pendientes",
+      "revisionManual": true,
+      "motivo": "Se descubre el dominio y se contrasta la ficha con el registro de la Xunta. No se obtiene contenido corporativo suficiente para acreditar pasiva. El registro RIPCI no se utiliza para inferirla.",
+      "fuentesConsultadas": [
+        "https://oficinavirtualindustria.xunta.gal/RUE-Portal/buscador/empresas?page=72",
+        "https://www.sarrianadeextintores.com/"
+      ],
+      "cif": "B27200708",
+      "empresaId": 3688,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "Sixfoc",
+      "dominio": "sixfoc.com",
+      "estado": "actividad_no_acreditada",
+      "revisionManual": true,
+      "motivo": "Se encuentra web oficial y contacto con B56287485. La oferta revisada es instalación y mantenimiento de equipos contra incendios sin ejecución específica de pasiva; no se completa web con el importador para crear una confirmación artificial.",
+      "fuentesConsultadas": [
+        "https://sixfoc.com/",
+        "https://sixfoc.com/contacte-2"
+      ],
+      "cif": "B56287485",
+      "empresaId": 177,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "Solrigol",
+      "dominio": "solrigol.com",
+      "estado": "actividad_no_acreditada",
+      "revisionManual": true,
+      "motivo": "La asociación y la política corporativa acreditan construcción y titular nominal, pero no se obtiene ejecución específica de pasiva ni fuente fiscal suficiente para alta.",
+      "fuentesConsultadas": [
+        "https://www.adip-as.com/solrigol-nueva-empresa-asociada/",
+        "https://www.solrigol.com/",
+        "https://www.solrigol.com/es-politicaprivacidad.php"
+      ]
+    },
+    {
+      "candidata": "Thermoacoustic Decoration 1976",
+      "dominio": null,
+      "estado": "identidad_y_actividad_pendientes",
+      "revisionManual": true,
+      "motivo": "El perfil asociativo describe sistemas de construcción seca en Badalona. La mención genérica de protección pasiva en la definición de AD’IP no se atribuye a la empresa. No se recupera fuente fiscal primaria ni ejecución propia específica.",
+      "fuentesConsultadas": [
+        "https://www.adip-as.com/thermoacoustic-decoration-1976-nueva-empresa-asociada/"
+      ]
+    },
+    {
+      "candidata": "Vignis",
+      "dominio": null,
+      "estado": "dominio_y_actividad_pendientes",
+      "revisionManual": true,
+      "motivo": "La búsqueda de denominación y CIF no recupera web ni ejecución específica de pasiva. La ficha de directorio es una pista, no validación; se conserva null.",
+      "fuentesConsultadas": [
+        "https://cincodias.elpais.com/directorio-empresas/empresa/11195432/vignis"
+      ],
+      "cif": "B21984323",
+      "empresaId": 3874,
+      "sinWebAntes": true
+    },
+    {
+      "candidata": "ZAT / Zamorana de Aislamientos Termo Acústicos",
+      "dominio": "zataislamientos.com",
+      "estado": "operador_actual_pendiente",
+      "revisionManual": true,
+      "motivo": "Se agrupan ambos nombres como una sola candidata: directorio con B49184856 y dominio sin contenido recuperable. El BORME histórico publica cierre provisional por revocación del NIF; falta identificar titular y ejecución actuales. No se concluye ausencia de empresas de pasiva en Zamora.",
+      "fuentesConsultadas": [
+        "https://www.infoconstruccion.es/empresas/zamorana-de-aislamientos-termoacusticos",
+        "https://www.infoconstruccion.es/empresas/zat-aislamientos",
+        "http://www.zataislamientos.com/",
+        "https://www.boe.es/borme/dias/2023/01/31/pdfs/BORME-A-2023-21-49.pdf"
+      ]
+    }
+  ]
+}
