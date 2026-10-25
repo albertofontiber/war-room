@@ -1,0 +1,490 @@
+{
+  "fechaRevision": "2026-10-25",
+  "alcance": "Revisión fiscal y corporativa de las 13 dudas prioritarias del barrido anterior, sin nueva ronda regional ni censo exhaustivo.",
+  "resumen": {
+    "dudasRevisadas": 13,
+    "resueltas": 8,
+    "pendientes": 5,
+    "altas": 7,
+    "enriquecimientos": 2,
+    "confirmadasNuevas": 9,
+    "totalEmpresas": 5927,
+    "pasivaConfirmada": 350,
+    "descripcionesVacias": 0
+  },
+  "casos": [
+    {
+      "candidata": "PYL Bages",
+      "estado": "pendiente",
+      "dominio": "pylbages.es",
+      "pistaFiscal": "PLACAS YESO LAMINADO DEL BAGES, S.L. / B09713207; CIF solo en fuentes secundarias",
+      "resultado": "BORME confirma sociedad y cambio de domicilio a Monistrol; AD’IP enlaza razón social y dominio. La web no publica NIF, VIES no confirma ROI y GLEIF/RELIC/PSCP no devuelven coincidencia en las consultas acotadas.",
+      "falta": "Documento fiscal primario que publique el NIF completo junto a la razón social, como certificado fiscal/REA o documento corporativo identificativo.",
+      "fuentes": [
+        "https://pylbages.es/",
+        "https://www.adip-as.com/porfolio/placas-yeso-laminado-del-bages-sl/",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2026-53-08"
+      ],
+      "sinEscritura": true
+    },
+    {
+      "candidata": "CRM Gia",
+      "estado": "pendiente",
+      "dominio": "crmgia.com",
+      "pistaFiscal": null,
+      "resultado": "Privacidad recuperada en navegador: marca y domicilio de Ciudad Real, sin titular completo ni CIF/NIF; partes de plantilla. Los contactos de Olías y la pista Trasteros GIA no prueban identidad fiscal.",
+      "falta": "Titular real y CIF/NIF en documento fiscal o corporativo que enlace la actividad y el dominio; no basta el nombre comercial.",
+      "fuentes": [
+        "https://crmgia.com/politica-de-privacidad/",
+        "https://crmgia.com/contacto/"
+      ],
+      "sinEscritura": true
+    },
+    {
+      "candidata": "Ignitegra",
+      "estado": "resuelta_aplicada",
+      "resolucion": "GLEIF identifica el NIF B19693639 y domicilio completo de Albolote. Se enlaza a la web y ejecución corporativas; se distingue el LEI histórico de otra identificación y no se importan estados legales ni antigüedad de marca.",
+      "fichas": [
+        {
+          "cif": "B19693639",
+          "id": 5953,
+          "accion": "alta",
+          "nombre": "IGNITEGRA, S.L.",
+          "identidadUrl": "https://api.gleif.org/api/v1/lei-records/894500RV4FK07CSLTH69",
+          "evidencias": [
+            "https://ignitegra.com/nuestros-servicios/",
+            "https://ignitegra.com/la-empresa/"
+          ]
+        }
+      ]
+    },
+    {
+      "candidata": "Asturfire",
+      "estado": "pendiente",
+      "dominio": "asturfire.es",
+      "pistaFiscal": "AISLAMIENTOS E IGNIFUGACIONES ASTURIAS, S.L. / B74385097; vínculo con la marca no acreditado",
+      "resultado": "Contratación del SEPEPA confirma nombre y NIF de la sociedad de Siero, pero no los vincula con Asturfire. La web usa referencias a Gijón/Oviedo/Avilés y correo asturfire.com sin identificación fiscal.",
+      "falta": "Documento que enlace expresamente Asturfire/dominio con el titular ejecutor y su CIF; el NIF de la sociedad de Siero ya cuenta con fuente pública, pero falta la atribución a la marca.",
+      "fuentes": [
+        "https://asturfire.es/",
+        "https://miprincipado.asturias.es/documents/37450/330138/Relaciones%2BTrimestrales%2BContratos%2BMenores%2BSERVICIO%2BPUBLICO%2BEMPLEO%2BPRINCIPADO%2BDE%2BASTURIAS%2B%2B%28SEPPEPA%29%2B4T-2023.pdf/7a6fbdc4-0530-1d37-d9bc-164d1546bff8?t=1709023249312"
+      ],
+      "sinEscritura": true
+    },
+    {
+      "candidata": "Aislamientos La Mancha / LCHPRO",
+      "estado": "resuelta_aplicada",
+      "resolucion": "Adjudicación oficial de Villamalea 1535072W identifica LCHPRO, el NIF correcto y correo del dominio de Aislamientos La Mancha. Se descarta para el alta el CIF de la agencia web publicado en su aviso.",
+      "fichas": [
+        {
+          "cif": "B02385441",
+          "id": 5952,
+          "accion": "alta",
+          "nombre": "LCHPRO, S.L.",
+          "identidadUrl": "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?cifrado=QUC1GjXXSiLkydRHJBmbpw%3D%3D&DocumentIdParam=DL0oQnlVBmYEu5MOdoO%2B7VtqC9tRsPgZ9yXCjMp8oR1Qs8SrBYDypdtOjRpfgTLF0xxRyz9nbhSew0ThMHHm%2B%2BQFudyL9pQQNMRcNu6%2BHnF7QB3HKyQaFUExmUVQCerk",
+          "evidencias": [
+            "https://www.aislamientoslamancha.com/ignifugacion/"
+          ]
+        }
+      ]
+    },
+    {
+      "candidata": "Goextín",
+      "estado": "resuelta_aplicada",
+      "resolucion": "Contrato oficial IMV Málaga 2021/30 y VIES coinciden en nombre, CIF y Caleta de Vélez 43-A. Servihogar Málaga B92603372 se mantiene separada y no se modifica.",
+      "fichas": [
+        {
+          "cif": "B92574854",
+          "id": 2428,
+          "accion": "enriquecimiento",
+          "nombre": "GOEXTIN, S.L.",
+          "identidadUrl": "https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?DocumentIdParam=757823df-eb0d-4bee-a7cb-fa8fbc1c8d94&cmpntname=GetDocumentsById&source=library&srv=cmpnt",
+          "evidencias": [
+            "https://goextin.es/servicios-de-ignifugacion/"
+          ]
+        }
+      ]
+    },
+    {
+      "candidata": "Solsureste Aislamientos",
+      "estado": "resuelta_aplicada",
+      "resolucion": "El aviso corporativo de solsureste.com publica razón social/NIF y Alarilla 3. El dominio de aislamiento comparte dirección, teléfono y correo; GLEIF confirma esa sede operativa y VIES el nombre fiscal.",
+      "fichas": [
+        {
+          "cif": "B73086043",
+          "id": 5954,
+          "accion": "alta",
+          "nombre": "SOL SURESTE, S.L.",
+          "identidadUrl": "https://www.solsureste.com/politica-privacidad/",
+          "evidencias": [
+            "https://solsuresteaislamientos.com/"
+          ]
+        }
+      ]
+    },
+    {
+      "candidata": "Confort Home",
+      "estado": "resuelta_aplicada",
+      "resolucion": "Ficha técnica corporativa con nombre, NIF, dominio, correo y teléfono vigente; Calvià corrobora razón social y NIF. Se crea una sola empresa, sin alta por cada isla.",
+      "fichas": [
+        {
+          "cif": "B57834095",
+          "id": 5951,
+          "accion": "alta",
+          "nombre": "DESIGN ARKON 2000, S.L.",
+          "identidadUrl": "https://www.conforthome.net/wp-content/uploads/2015/03/IMPER-POOL-CH.pdf",
+          "evidencias": [
+            "https://www.conforthome.net/ignifugacion/"
+          ]
+        }
+      ]
+    },
+    {
+      "candidata": "Grup Star / Starfoc",
+      "estado": "resuelta_aplicada",
+      "resolucion": "La política corporativa de calidad identifica Star Foc Anoia. Se cruza con el único CIF del dominio guardado y se asignan servicios específicos a la ficha 2128; no a otras sociedades o zonas de cobertura.",
+      "fichas": [
+        {
+          "cif": "B61445607",
+          "id": 2128,
+          "accion": "enriquecimiento",
+          "nombre": "STAR FOC ANOIA, S.L.U.",
+          "identidadUrl": "https://www.starfoc.com/politica-de-calidad-y-sst",
+          "evidencias": [
+            "https://www.starfoc.com/prevencion-seguridad-activa-pasiva/",
+            "https://www.starfoc.com/politica-de-calidad-y-sst"
+          ]
+        }
+      ]
+    },
+    {
+      "candidata": "AMS Madrid / ASM Andalucía",
+      "estado": "resuelta_aplicada",
+      "resolucion": "VIES confirma las dos identidades fiscales; la estructura corporativa, sus logotipos y las obras atribuyen ejecución separada a AMS Instalaciones y ASM Aislamientos y Sistemas Modulares. Se documenta el dominio compartido por dos sociedades reales. Para ASM se omite calle no validada; el CP inconsistente de Coslada no se traslada.",
+      "fichas": [
+        {
+          "cif": "B91141465",
+          "id": 5955,
+          "accion": "alta",
+          "nombre": "AISLAMIENTOS E INSTALACIONES MODULARES DEL SUR, S.L.",
+          "identidadUrl": "https://ec.europa.eu/taxation_customs/vies/#/vat-validation",
+          "evidencias": [
+            "https://www.grupo-ams.com/el-grupo/",
+            "https://www.grupo-ams.com/proyectos/hotel-en-madrid-san-fermin-bb/",
+            "https://www.grupo-ams.com/especialidades/proteccion-pasiva/"
+          ]
+        },
+        {
+          "cif": "B91571158",
+          "id": 5956,
+          "accion": "alta",
+          "nombre": "AISLAMIENTOS Y SISTEMAS MODULARES, S.L.",
+          "identidadUrl": "https://ec.europa.eu/taxation_customs/vies/#/vat-validation",
+          "evidencias": [
+            "https://www.grupo-ams.com/el-grupo/",
+            "https://www.grupo-ams.com/especialidades/proteccion-pasiva/"
+          ]
+        }
+      ]
+    },
+    {
+      "candidata": "Ignífugos Muñoz",
+      "estado": "pendiente",
+      "dominio": "ignifugosproyectados.com",
+      "pistaFiscal": "YESOS MUÑOZ E HIJOS, S.L. / B13209671, pista secundaria",
+      "resultado": "Web propia sin titular fiscal. El teléfono y domicilio de Villamanta aportan una pista de Yesos Muñoz e Hijos; fuentes públicas históricas ubican ese nombre allí. VIES no confirma ROI y no se obtiene NIF primario enlazado a la marca. No se confunde con Ignifugaciones Salinas Muñoz de Yecla.",
+      "falta": "Documento fiscal/corporativo del operador de ignifugosproyectados.com que publique su CIF/NIF; la coincidencia histórica de domicilio no basta para dar de alta B13209671.",
+      "fuentes": [
+        "https://ignifugosproyectados.com/contactar",
+        "https://origin-www.bocm.es/boletin/CM_Orden_BOCM/2010/09/14/BOCM-20100914-36.PDF"
+      ],
+      "sinEscritura": true
+    },
+    {
+      "candidata": "Ignifugados.cat",
+      "estado": "pendiente",
+      "dominio": "ignifugados.cat",
+      "pistaFiscal": null,
+      "resultado": "Servicios y contacto recuperados: Mas Estaper 4, Granollers, teléfono y correo. No aparece titular fiscal; permanecen textos de plantilla. Las consultas nominales en contratación de Cataluña no devuelven coincidencias.",
+      "falta": "Identidad fiscal completa del titular de la web y del equipo ejecutor, en aviso o documento corporativo identificativo.",
+      "fuentes": [
+        "https://www.ignifugados.cat/contact",
+        "https://www.ignifugados.cat/services"
+      ],
+      "sinEscritura": true
+    },
+    {
+      "candidata": "Montajes Implalusa",
+      "estado": "resuelta_aplicada",
+      "resolucion": "PSCP/Dades Obertes de Cataluña publica el CIF en el expediente de Rodonyà 4313250006-2026-0000082. VIES confirma nombre y domicilio de Barcelona; BORME y presentación propia distinguen la SL de la antigua SCP.",
+      "fichas": [
+        {
+          "cif": "B65954398",
+          "id": 5957,
+          "accion": "alta",
+          "nombre": "MONTAJES IMPLALUSA, S.L.",
+          "identidadUrl": "https://analisi.transparenciacatalunya.cat/resource/ybgg-dgi6.json?%24where=upper%28denominacio_adjudicatari%29+like+%27%25IMPLALUSA%25%27&%24select=identificacio_adjudicatari%2Cdenominacio_adjudicatari%2Cdenominacio%2Cnom_organ%2Ccodi_expedient%2Cenllac_publicacio&%24limit=15",
+          "evidencias": [
+            "https://montajesimplalusa.com/nosotros/"
+          ]
+        }
+      ]
+    }
+  ],
+  "verificacion": {
+    "base": {
+      "total": 5927,
+      "pasiva": 350,
+      "web": 3494,
+      "sinWebPerimetro": 1491,
+      "geo": 5295,
+      "financieros": 23620,
+      "fin2025": 2725,
+      "finSabi": 15766
+    },
+    "auditoriasActividad": 9,
+    "repeticion": {
+      "sin_cambios": 9
+    },
+    "camposProtegidosAlterados": [],
+    "descripciones": {
+      "fecha": "2026-10-25T21:40:11.782Z",
+      "confirmadas": 350,
+      "descripcionesVacias": 0,
+      "descripcionesPreviasConservadas": 341,
+      "cifsUnicos": 350
+    },
+    "actividades": {
+      "fecha": "2026-10-25T21:39:25.960Z",
+      "universo": {
+        "total": 5927,
+        "pci_activa": 4994,
+        "pci_pasiva": 350,
+        "seguridad_electronica": 1238,
+        "activaYPasiva": 185,
+        "tres": 28,
+        "soloPasiva": 164
+      },
+      "geografico": {
+        "total": 5295,
+        "pci_activa": 4380,
+        "pci_pasiva": 350,
+        "seguridad_electronica": 1220,
+        "activaYPasiva": 185,
+        "tres": 28,
+        "soloPasiva": 164
+      }
+    },
+    "api": {
+      "base": "https://warroom.fontiber.com",
+      "fecha": "2026-10-25T21:39:23.243Z",
+      "sinSesion": 401,
+      "empresas": 5295,
+      "combinacionesVerificadas": [
+        {
+          "seleccion": [],
+          "modo": "todas",
+          "total": 5295
+        },
+        {
+          "seleccion": [],
+          "modo": "cualquiera",
+          "total": 5295
+        },
+        {
+          "seleccion": [
+            "pci_activa"
+          ],
+          "modo": "todas",
+          "total": 4380
+        },
+        {
+          "seleccion": [
+            "pci_activa"
+          ],
+          "modo": "cualquiera",
+          "total": 4380
+        },
+        {
+          "seleccion": [
+            "pci_pasiva"
+          ],
+          "modo": "todas",
+          "total": 350
+        },
+        {
+          "seleccion": [
+            "pci_pasiva"
+          ],
+          "modo": "cualquiera",
+          "total": 350
+        },
+        {
+          "seleccion": [
+            "pci_activa",
+            "pci_pasiva"
+          ],
+          "modo": "todas",
+          "total": 185
+        },
+        {
+          "seleccion": [
+            "pci_activa",
+            "pci_pasiva"
+          ],
+          "modo": "cualquiera",
+          "total": 4545
+        },
+        {
+          "seleccion": [
+            "seguridad_electronica"
+          ],
+          "modo": "todas",
+          "total": 1220
+        },
+        {
+          "seleccion": [
+            "seguridad_electronica"
+          ],
+          "modo": "cualquiera",
+          "total": 1220
+        },
+        {
+          "seleccion": [
+            "pci_activa",
+            "seguridad_electronica"
+          ],
+          "modo": "todas",
+          "total": 469
+        },
+        {
+          "seleccion": [
+            "pci_activa",
+            "seguridad_electronica"
+          ],
+          "modo": "cualquiera",
+          "total": 5131
+        },
+        {
+          "seleccion": [
+            "pci_pasiva",
+            "seguridad_electronica"
+          ],
+          "modo": "todas",
+          "total": 29
+        },
+        {
+          "seleccion": [
+            "pci_pasiva",
+            "seguridad_electronica"
+          ],
+          "modo": "cualquiera",
+          "total": 1541
+        },
+        {
+          "seleccion": [
+            "pci_activa",
+            "pci_pasiva",
+            "seguridad_electronica"
+          ],
+          "modo": "todas",
+          "total": 28
+        },
+        {
+          "seleccion": [
+            "pci_activa",
+            "pci_pasiva",
+            "seguridad_electronica"
+          ],
+          "modo": "cualquiera",
+          "total": 5295
+        }
+      ],
+      "checks": [
+        {
+          "cif": "B57834095",
+          "id": 5951,
+          "actividades": [
+            "pci_pasiva"
+          ]
+        },
+        {
+          "cif": "B02385441",
+          "id": 5952,
+          "actividades": [
+            "pci_pasiva"
+          ]
+        },
+        {
+          "cif": "B19693639",
+          "id": 5953,
+          "actividades": [
+            "pci_pasiva"
+          ]
+        },
+        {
+          "cif": "B73086043",
+          "id": 5954,
+          "actividades": [
+            "pci_pasiva"
+          ]
+        },
+        {
+          "cif": "B91141465",
+          "id": 5955,
+          "actividades": [
+            "pci_pasiva"
+          ]
+        },
+        {
+          "cif": "B91571158",
+          "id": 5956,
+          "actividades": [
+            "pci_pasiva"
+          ]
+        },
+        {
+          "cif": "B65954398",
+          "id": 5957,
+          "actividades": [
+            "pci_pasiva"
+          ]
+        },
+        {
+          "cif": "B92574854",
+          "id": 2428,
+          "actividades": [
+            "pci_activa",
+            "pci_pasiva"
+          ]
+        },
+        {
+          "cif": "B61445607",
+          "id": 2128,
+          "actividades": [
+            "pci_activa",
+            "pci_pasiva"
+          ]
+        }
+      ],
+      "descripcionesVerificadas": 9,
+      "pasivaExport": 350,
+      "pipeline": [
+        {
+          "modo": "todas",
+          "total": 15
+        },
+        {
+          "modo": "cualquiera",
+          "total": 218
+        }
+      ]
+    }
+  },
+  "limites": [
+    "VIES valid=false no determina invalidez del NIF español ni estado legal.",
+    "Se conserva el modelo de actividad, servicios y fuentes; no se carga SABI ni se alteran CRM, grupo o perímetro.",
+    "El archivo técnico anterior no se da por revisado otra vez: esta pasada se limita a las 13 dudas.",
+    "La consulta a GLEIF, RELIC o PSCP sin resultados no acredita ausencia de empresa o actividad."
+  ]
+}

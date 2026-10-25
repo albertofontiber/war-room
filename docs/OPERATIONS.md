@@ -87,10 +87,12 @@ Los nulos no pisan cifras previas, los años íntegramente a cero no se cargan y
 El lote y sus fuentes están en [Protección pasiva](PROTECCION_PASIVA.md). La migración aditiva de pasiva debe estar aplicada antes de desplegar código que lea esas columnas. El script no descubre empresas automáticamente: recibe filas previamente revisadas. Preparar en cada nueva alta un resumen breve de actividad en `descripcion`, basado en las fuentes contrastadas. El importador lo guarda al crear la ficha; sigue siendo opcional para admitir lotes históricos y no sustituye las descripciones al enriquecer.
 
 ```powershell
-node --env-file=.env.local --import tsx scripts/import-pasiva.ts docs/research/pasiva-validada-ampliacion10-2026-10-25.json
+node --env-file=.env.local --import tsx scripts/import-pasiva.ts docs/research/pasiva-validada-ampliacion12-2026-10-25.json
 ```
 
 Simula por defecto. La escritura requiere `--apply`, revalida el cruce en una transacción y usa un advisory lock para serializar importaciones de pasiva. Si queda una fila `revisar`, se aborta todo el lote. Bloquea CIF duplicados o ambiguos, dominios asociados a otro CIF, leads anónimos y revisiones negativas previas. Las altas exigen identidad fiscal, localización y `permitirAlta=true`; se crean fuera de perímetro y con estado SABI sin consultar.
+
+Una web de grupo puede corresponder a varias sociedades reales, como AMS/ASM en la decimocuarta tanda. Tras contrastar cada identidad y su ejecución, el lote puede declarar `dominioCompartidoValidado: { cifs, fuenteUrl }`: debe enumerar exactamente todos los CIF de ese dominio en la base y el lote, sin repeticiones, con la misma declaración recíproca y fuente corporativa común en todas las filas. Cada alta exige fuente fiscal primaria; no admite `universo_cif_dominio` para suplirla ni el cruce con leads anónimos. La declaración queda en `AuditLog.metadata`. Sin ella se mantiene el bloqueo: compartir marca, región o dominio no autoriza un alta ni una fusión.
 
 Los enriquecimientos conservan sector, perímetro, CRM, cuentas y fuente original. Por defecto cambian solo los cuatro campos de pasiva. `completarVacios=true` permite, con fuente fiscal primaria, completar web, domicilio o localización ausentes; conserva cualquier dato ya presente y completa coordenadas solo como par. El lote del 23/10 lo usó para Armero; el segundo, para las webs de Extinhouse Group y PCI Tudemana 2021 y el domicilio/localización vacíos de Extinhouse Group. La tercera tanda completa las webs de Blinders, Promatec e IPS Incendio y el domicilio/localización vacíos de IPS Incendio. No actualiza la dirección previa de Blinders aunque difiera del aviso fiscal web. Las coordenadas municipales y su procedencia se documentan en cada lote.
 

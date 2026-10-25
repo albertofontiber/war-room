@@ -1,45 +1,40 @@
-# PCI pasiva: resultado del barrido y dudas para el repaso
+# PCI pasiva: revisión fiscal de las 13 dudas prioritarias
 
-Corte: **25/10/2026, Europe/Madrid**. Decimotercera tanda aplicada: **19 altas y 6 enriquecimientos**, hasta **341 confirmadas**. Las 19 nuevas tienen descripción inicial; Visufoc y Seyman completan la que tenían vacía. Se conservan los 317 resúmenes anteriores. [Lote](pasiva-validada-ampliacion11-2026-10-25.json) y [seguimiento completo](pasiva-ampliacion11-seguimiento-2026-10-25.json).
+Corte: **25/10/2026, Europe/Madrid**. Ocho dudas resueltas mediante documentación fiscal y corporativa, con **7 altas y 2 enriquecimientos** aplicados. AMS/ASM comprende dos sociedades distintas. El universo queda en **5.927 empresas y 350 confirmadas de PCI pasiva**, todas con descripción inicial. Se conservan exactamente las 341 descripciones anteriores.
 
-Las etiquetas de las altas usan Madrid, Navarra, Vizcaya y Lérida conforme a los filtros existentes. Los [cuatro ajustes de nomenclatura](pasiva-normalizacion-geografica-ampliacion11-2026-10-25.json) quedan auditados y conservan domicilio y coordenadas.
+[Lote aplicado](pasiva-validada-ampliacion12-2026-10-25.json), [consultas y documentos fiscales](pasiva-verificacion-fiscal-ampliacion12-2026-10-25.json) y [seguimiento de los trece casos](pasiva-ampliacion12-seguimiento-2026-10-25.json).
 
-## Lo que queda resuelto
+## Ocho dudas resueltas
 
-- **Tecfire Continental, S.L.**: alta 5943, B45841814. VIES confirma coincidencia de nombre y dirección; BORME documenta el cambio de denominación. Obras propias en Santander y Alicante acreditan ejecución.
-- **Gernikaplac**: alta 5950, con identidad fiscal del registro de cooperativas de Euskadi y oferta propia de aislamientos ignífugos.
-- **Puertas Roper**: alta 5940. Su web vigente declara equipo de montaje propio, además de fabricación; se conserva también la referencia histórica de instalación publicada por CIF Cantabria.
-- **Visufoc**: confirmación en su ficha 2468, con protección estructural, sellados y puertas; no se crea otra entidad.
-- **SIEF-2**: se atribuye el dominio renovado por CIF a la ficha 946; añade reacción al fuego y evidencia, conservando web, grupo y descripción anteriores.
+| Candidata | Fichas y CIF | Qué permite resolverla |
+|---|---|---|
+| Ignitegra | Alta 5953, **B19693639** | GLEIF identifica el NIF B19693639 y domicilio completo de Albolote. Se enlaza a la web y ejecución corporativas; se distingue el LEI histórico de otra identificación y no se importan estados legales ni antigüedad de marca. [Identidad](https://api.gleif.org/api/v1/lei-records/894500RV4FK07CSLTH69). |
+| Aislamientos La Mancha / LCHPRO | Alta 5952, **B02385441** | Adjudicación oficial de Villamalea 1535072W identifica LCHPRO, el NIF correcto y correo del dominio de Aislamientos La Mancha. Se descarta para el alta el CIF de la agencia web publicado en su aviso. [Identidad](https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?cifrado=QUC1GjXXSiLkydRHJBmbpw%3D%3D&DocumentIdParam=DL0oQnlVBmYEu5MOdoO%2B7VtqC9tRsPgZ9yXCjMp8oR1Qs8SrBYDypdtOjRpfgTLF0xxRyz9nbhSew0ThMHHm%2B%2BQFudyL9pQQNMRcNu6%2BHnF7QB3HKyQaFUExmUVQCerk). |
+| Goextín | Enriquecimiento 2428, **B92574854** | Contrato oficial IMV Málaga 2021/30 y VIES coinciden en nombre, CIF y Caleta de Vélez 43-A. Servihogar Málaga B92603372 se mantiene separada y no se modifica. [Identidad](https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?DocumentIdParam=757823df-eb0d-4bee-a7cb-fa8fbc1c8d94&cmpntname=GetDocumentsById&source=library&srv=cmpnt). |
+| Solsureste Aislamientos | Alta 5954, **B73086043** | El aviso corporativo de solsureste.com publica razón social/NIF y Alarilla 3. El dominio de aislamiento comparte dirección, teléfono y correo; GLEIF confirma esa sede operativa y VIES el nombre fiscal. [Identidad](https://www.solsureste.com/politica-privacidad/). |
+| Confort Home | Alta 5951, **B57834095** | Ficha técnica corporativa con nombre, NIF, dominio, correo y teléfono vigente; Calvià corrobora razón social y NIF. Se crea una sola empresa, sin alta por cada isla. [Identidad](https://www.conforthome.net/wp-content/uploads/2015/03/IMPER-POOL-CH.pdf). |
+| Grup Star / Starfoc | Enriquecimiento 2128, **B61445607** | La política corporativa de calidad identifica Star Foc Anoia. Se cruza con el único CIF del dominio guardado y se asignan servicios específicos a la ficha 2128; no a otras sociedades o zonas de cobertura. [Identidad](https://www.starfoc.com/politica-de-calidad-y-sst). |
+| AMS Madrid / ASM Andalucía | Alta 5955, **B91141465**; Alta 5956, **B91571158** | VIES confirma las dos identidades fiscales; la estructura corporativa, sus logotipos y las obras atribuyen ejecución separada a AMS Instalaciones y ASM Aislamientos y Sistemas Modulares. Se documenta el dominio compartido por dos sociedades reales. Para ASM se omite calle no validada; el CP inconsistente de Coslada no se traslada. [Identidad](https://ec.europa.eu/taxation_customs/vies/#/vat-validation). |
+| Montajes Implalusa | Alta 5957, **B65954398** | PSCP/Dades Obertes de Cataluña publica el CIF en el expediente de Rodonyà 4313250006-2026-0000082. VIES confirma nombre y domicilio de Barcelona; BORME y presentación propia distinguen la SL de la antigua SCP. [Identidad](https://analisi.transparenciacatalunya.cat/resource/ybgg-dgi6.json?%24where=upper%28denominacio_adjudicatari%29+like+%27%25IMPLALUSA%25%27&%24select=identificacio_adjudicatari%2Cdenominacio_adjudicatari%2Cdenominacio%2Cnom_organ%2Ccodi_expedient%2Cenllac_publicacio&%24limit=15). |
 
-## Dudas prioritarias
+Las nuevas son Confort Home / Design Arkon 2000, LCHPRO / Aislamientos La Mancha, Ignitegra, Sol Sureste, AMS Instalaciones, ASM Aislamientos y Sistemas Modulares y Montajes Implalusa. Todas incluyen descripción, web y localización con precisión municipal. Goextín y Star Foc conservan su descripción no vacía y los demás datos guardados. No se crean fichas por marcas o delegaciones.
 
-Estas trece candidatas necesitan una evidencia concreta antes de otra escritura. No se les asigna actividad negativa ni se confunden con trece altas aprobadas. Los enlaces llevan a la oferta o identidad que debe conciliarse; cada reconsulta y antecedente consta en el seguimiento JSON.
+## Cinco dudas pendientes
 
-| Candidata | Qué falta para resolverla |
-|---|---|
-| [PYL Bages](https://pylbages.es/) | CIF/NIF en fuente primaria. La ejecución está acreditada; B09713207 sigue como pista secundaria. No aparecer en VIES no demuestra que el NIF español sea inválido. |
-| [CRM Gia](https://crmgia.com/politica-de-privacidad/) | Titular jurídico completo y CIF/NIF: la privacidad identifica la marca, con partes de plantilla. |
-| [Ignitegra](https://ignitegra.com/) | Fuente fiscal primaria que enlace B19693639 con el operador de la web; la ejecución sí está descrita. |
-| [Asturfire](https://asturfire.es/) | Atribución fiscal primaria de la marca a Aislamientos e Ignifugaciones Asturias; B74385097 no se toma de un directorio para darla de alta. |
-| [Aislamientos La Mancha / LCHPRO](https://www.aislamientoslamancha.com/aviso-legal/) | Corregir o corroborar el CIF del aviso: publica B02538593, perteneciente a una agencia web. La pista B02385441 de LCHPRO no queda confirmada por VIES. |
-| [Goextín](https://goextin.es/politica-privacidad/) | Conciliar el aviso contradictorio con las fichas existentes: Goextín, B92574854 (2428), y Servihogar Málaga, B92603372 (1438). VIES diferencia los nombres, pero no sustituye la atribución de la ejecución al titular efectivo del sitio. |
-| [Solsureste Aislamientos](https://solsuresteaislamientos.com/) | CIF/NIF primario del ejecutor. No confundir con Solsureste Distribuciones o SABE Renovables por el nombre. |
-| [Confort Home](https://www.conforthome.net/) | Identidad fiscal del operador de Mallorca/Ibiza; las delegaciones no son dos empresas. |
-| [Grup Star / Starfoc](https://grupstar.com/) | Separar la ejecución entre las sociedades del grupo; una oferta compartida no acredita todos los CIF. |
-| [AMS Madrid / ASM Andalucía](https://grupo-ams.com/) | Identificar fiscalmente a cada operador ejecutor, sin trasladar a todos la actividad del grupo. |
-| [Ignífugos Muñoz](https://ignifugosproyectados.com/) | Titular y CIF/NIF de la empresa de Madrid. No confundir con Ignifugaciones Salinas Muñoz de Yecla. |
-| [Ignifugados.cat](https://ignifugados.cat/) | Titular fiscal: la web ofrece ejecución, pero conserva apartados de plantilla y no identifica al operador. |
-| [Montajes Implalusa](https://montajesimplalusa.com/aviso-legal/) | Identificador fiscal completo: el aviso publica `23456353`, sin letra ni CIF válido. No completar el dato por inferencia. |
+| Candidata | Resultado de la revisión | Qué falta exactamente |
+|---|---|---|
+| [PYL Bages](https://pylbages.es/) | BORME confirma sociedad y cambio de domicilio a Monistrol; AD’IP enlaza razón social y dominio. La web no publica NIF, VIES no confirma ROI y GLEIF/RELIC/PSCP no devuelven coincidencia en las consultas acotadas. Pista fiscal: PLACAS YESO LAMINADO DEL BAGES, S.L. / B09713207; CIF solo en fuentes secundarias. | Documento fiscal primario que publique el NIF completo junto a la razón social, como certificado fiscal/REA o documento corporativo identificativo. |
+| [CRM Gia](https://crmgia.com/politica-de-privacidad/) | Privacidad recuperada en navegador: marca y domicilio de Ciudad Real, sin titular completo ni CIF/NIF; partes de plantilla. Los contactos de Olías y la pista Trasteros GIA no prueban identidad fiscal. | Titular real y CIF/NIF en documento fiscal o corporativo que enlace la actividad y el dominio; no basta el nombre comercial. |
+| [Asturfire](https://asturfire.es/) | Contratación del SEPEPA confirma nombre y NIF de la sociedad de Siero, pero no los vincula con Asturfire. La web usa referencias a Gijón/Oviedo/Avilés y correo asturfire.com sin identificación fiscal. Pista fiscal: AISLAMIENTOS E IGNIFUGACIONES ASTURIAS, S.L. / B74385097; vínculo con la marca no acreditado. | Documento que enlace expresamente Asturfire/dominio con el titular ejecutor y su CIF; el NIF de la sociedad de Siero ya cuenta con fuente pública, pero falta la atribución a la marca. |
+| [Ignífugos Muñoz](https://ignifugosproyectados.com/contactar) | Web propia sin titular fiscal. El teléfono y domicilio de Villamanta aportan una pista de Yesos Muñoz e Hijos; fuentes públicas históricas ubican ese nombre allí. VIES no confirma ROI y no se obtiene NIF primario enlazado a la marca. No se confunde con Ignifugaciones Salinas Muñoz de Yecla. Pista fiscal: YESOS MUÑOZ E HIJOS, S.L. / B13209671, pista secundaria. | Documento fiscal/corporativo del operador de ignifugosproyectados.com que publique su CIF/NIF; la coincidencia histórica de domicilio no basta para dar de alta B13209671. |
+| [Ignifugados.cat](https://www.ignifugados.cat/contact) | Servicios y contacto recuperados: Mas Estaper 4, Granollers, teléfono y correo. No aparece titular fiscal; permanecen textos de plantilla. Las consultas nominales en contratación de Cataluña no devuelven coincidencias. | Identidad fiscal completa del titular de la web y del equipo ejecutor, en aviso o documento corporativo identificativo. |
 
-## Cobertura y límites de esta pasada
+VIES sin confirmación de ROI no demuestra que el NIF español sea inválido ni determina estado SABI. Una consulta sin coincidencias en GLEIF, RELIC o contratación tampoco demuestra ausencia de empresa o actividad. Las cinco no reciben altas ni revisiones negativas por falta de prueba.
 
-Se consultan **11 fuentes asociativas**: AISLA, AD’IP, CLÚSIC, AVACOI, Tecnifuego, Cepreven, APICI, ASIME, AENAGA y CIF Cantabria, además de ANSPI-FNEP. Se realizan **76 búsquedas** en las **17 comunidades y Ceuta/Melilla**, sobre ignifugación, puertas/cortinas y conductos resistentes al fuego. No se infiere pasiva de ventilación o extracción genérica.
+## Verificación y alcance
 
-AD’IP y CLÚSIC permiten leer 70 y 97 perfiles respectivamente. AENAGA aporta 494 entradas nominales en 42 páginas, con cribado de nombres y consulta de 20 perfiles relacionados. AVACOI se recupera en navegador con 24 miembros. ANSPI permite recorrer sus 22 páginas tras reintentar errores, pero su ordenación aleatoria produce duplicados y muchos perfiles de detalle fallan. APICI no publica un directorio equivalente en la ruta antigua y ASIME no muestra listado en la página recuperada. Estos límites impiden presentar el barrido como un censo exhaustivo.
+Se comprueban nueve CIF únicos, sus fichas y descripciones en producción, 16 combinaciones de actividades y exportación de 350 confirmadas. Repetir devuelve sin_cambios=9, sin nuevas auditorías. Se conservan por huella los campos ajenos a pasiva de las existentes, cuentas y CRM; permanecen 23.620 filas financieras. No se importa SABI ni se modifica el modelo de actividad.
 
-Se consolidan y reconsultan técnicamente **147 dominios con incidencias de seguimientos anteriores**. Cuatro se resuelven en este lote; otros ya estaban confirmados. Una reconsulta HTTP no equivale a validación manual completa: el seguimiento distingue ambas y conserva los motivos del resto. Las trece dudas de arriba son la prioridad para el repaso, no todo el archivo técnico.
+AMS y ASM comparten web corporativa con dos CIF distintos acreditados. El importador exige declarar recíprocamente todos los CIF y la fuente común, además de identidad fiscal primaria para cada alta; queda auditado. La excepción no admite una marca o sede como empresa nueva ni autoriza extender la ejecución a otros miembros del grupo.
 
-Entre las cincuenta provincias, **Zamora** sigue sin confirmadas domiciliadas. También permanecen sin ficha confirmada domiciliada **Ceuta y Melilla**. Una página que anuncie cobertura de una zona no prueba una sede ni una empresa distinta.
-
-Quedan fuera de alta por el criterio de ejecución los captadores de leads `mantenimientopuertascortafuego.es` e `ignifugacionindustrial.es`. Intisi remite expresamente a instaladores externos; Forsa Sur, Asturmadi y Novoferm no aportan en este corte montaje propio suficiente. Esto no es una revisión negativa de actividad en la base.
+Esta pasada se limita a las trece dudas. El [barrido anterior](pasiva-ampliacion11-seguimiento-2026-10-25.json) conserva once fuentes asociativas, 17 comunidades, Ceuta y Melilla y sus límites de acceso; no se da por revisado de nuevo todo el archivo técnico. Zamora sigue sin confirmadas domiciliadas entre las cincuenta provincias, además de Ceuta y Melilla; el cero no descarta oferta.

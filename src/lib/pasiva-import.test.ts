@@ -21,6 +21,26 @@ describe("Plan de alta y enriquecimiento", () => {
     expect(planificarPasiva([{ ...fila, permitirAlta: false }], [])[0].accion).toBe("revisar");
     expect(planificarPasiva([fila], [])[0].accion).toBe("alta");
   });
+  it("admite sociedades distintas con dominio compartido solo con todos los CIF y evidencia recíproca", () => {
+    const compartir = { cifs: [fila.cif, "B12345678"], fuenteUrl: "https://www.controlignifugo.es/grupo/" };
+    const una = { ...fila, dominioCompartidoValidado: compartir };
+    const otra = { ...una, cif: "B12345678", nombre: "Otra instaladora SL" };
+    expect(planificarPasiva([una, otra], []).map(p => p.accion)).toEqual(["alta", "alta"]);
+    expect(planificarPasiva([otra, una], []).map(p => p.accion)).toEqual(["alta", "alta"]);
+    const creadas = planificarPasiva([una, otra], []).map((p, i) => {
+      if (p.accion === "revisar") throw new Error(p.motivo);
+      return { ...empresa, id: i + 1, cif: p.fila.cif, nombre: p.fila.nombre, ...p.cambios };
+    });
+    expect(planificarPasiva([una, otra], creadas).map(p => p.accion)).toEqual(["sin_cambios", "sin_cambios"]);
+    expect(planificarPasiva([una], [{ ...empresa, cif: otra.cif, nombre: otra.nombre }])[0].accion).toBe("alta");
+    expect(planificarPasiva([una], [])[0].accion).toBe("revisar");
+    expect(planificarPasiva([una, { ...otra, dominioCompartidoValidado: undefined }], [])[0].accion).toBe("revisar");
+    expect(planificarPasiva([una, { ...otra, identidadMetodo: "universo_cif_dominio" }], [])[0].accion).toBe("revisar");
+    expect(planificarPasiva([una, { ...otra, dominioCompartidoValidado: { ...compartir, fuenteUrl: "https://otra.es/grupo/" } }], [])[0].accion).toBe("revisar");
+    expect(planificarPasiva([{ ...una, dominioCompartidoValidado: { ...compartir, cifs: [fila.cif, fila.cif] } }, otra], [])[0].accion).toBe("revisar");
+    expect(planificarPasiva([una], [{ ...empresa, cif: otra.cif, esAnonima: true }])[0].accion).toBe("revisar");
+    expect(planificarPasiva([una, otra], [{ ...empresa, cif: "B87654321" }])[0].accion).toBe("revisar");
+  });
   it("no pisa revisiones negativas ni leads anónimos", () => {
     expect(planificarPasiva([fila], [{ ...empresa, proteccionPasiva: false }])[0].accion).toBe("revisar");
     expect(planificarPasiva([fila], [{ ...empresa, esAnonima: true }])[0].accion).toBe("revisar");

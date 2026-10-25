@@ -12,6 +12,10 @@ export const FilaPasivaSchema = z.object({
   identidadMetodo: z.enum(["aviso_legal", "documento_corporativo", "registro_publico", "universo_cif_dominio"]),
   permitirAlta: z.boolean().default(false),
   completarVacios: z.boolean().default(false),
+  dominioCompartidoValidado: z.object({
+    cifs: z.array(z.string().transform(normalizeCif).refine(looksLikeCif, "CIF no válido")).min(2),
+    fuenteUrl: url,
+  }).optional(),
   servicios: z.array(z.enum(Object.keys(SERVICIOS_PASIVA) as [keyof typeof SERVICIOS_PASIVA, ...Array<keyof typeof SERVICIOS_PASIVA>])).default([]),
   evidencias: z.array(EvidenciaPasivaSchema).min(1),
   direccion: z.string().optional(),
@@ -56,7 +60,6 @@ export function planificarPasiva(filas: FilaPasiva[], empresas: EmpresaParaPasiv
     porCif.set(key, [...(porCif.get(key) ?? []), e]);
   }
   const usados = new Set<string>();
-  const altas = new Map<string, string>();
   return filas.map((fila) => {
     if (usados.has(fila.cif)) throw new Error(`CIF repetido en el lote: ${fila.cif}`);
     usados.add(fila.cif);
@@ -70,12 +73,25 @@ export function planificarPasiva(filas: FilaPasiva[], empresas: EmpresaParaPasiv
     if (!existente) {
       if (!fila.permitirAlta || fila.identidadMetodo === "universo_cif_dominio") return bloqueo("Alta no validada fiscalmente");
       const dominio = dominioPasiva(fila.web);
-      if (empresas.some((e) => dominio && dominioPasiva(e.web) === dominio)) return bloqueo("El dominio ya pertenece a otro CIF; resolver identidad");
-      if (dominio && altas.has(dominio)) return bloqueo("El dominio se repite para dos altas del mismo lote; resolver identidad");
+      const paresExistentes = empresas.filter((e) => dominio && dominioPasiva(e.web) === dominio);
+      const paresLote = filas.filter((f) => dominio && dominioPasiva(f.web) === dominio);
+      const cifsDominio = [...new Set([...paresExistentes.map((e) => normalizeCif(e.cif)), ...paresLote.map((f) => f.cif)])].sort();
+      const compartir = fila.dominioCompartidoValidado;
+      // Una web de grupo puede representar sociedades distintas ya contrastadas.
+      // La excepción enumera exactamente sus CIF y exige corroboración recíproca.
+      const compartidoResuelto = compartir &&
+        new Set(compartir.cifs).size === compartir.cifs.length &&
+        JSON.stringify([...compartir.cifs].sort()) === JSON.stringify(cifsDominio) &&
+        paresExistentes.every((e) => !e.esAnonima) &&
+        paresLote.every((f) => f.identidadMetodo !== "universo_cif_dominio" &&
+          f.dominioCompartidoValidado?.fuenteUrl === compartir.fuenteUrl &&
+          JSON.stringify([...f.dominioCompartidoValidado.cifs].sort()) === JSON.stringify(cifsDominio));
+      if (compartir && !compartidoResuelto) return bloqueo("El dominio compartido requiere todos los CIF contrastados y una fuente corporativa común");
+      if (paresExistentes.length && !compartidoResuelto) return bloqueo("El dominio ya pertenece a otro CIF; resolver identidad");
+      if (paresLote.length > 1 && !compartidoResuelto) return bloqueo("El dominio se repite para dos altas del mismo lote; resolver identidad");
       const nombre = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/\b(SL|SA|SLU|SAU)\b|[^A-Z0-9]/g, "");
       if (empresas.some((e) => nombre(e.nombre) === nombre(fila.nombre))) return bloqueo("El nombre coincide con otro CIF; revisar antes de alta");
       if (!fila.localidad || !fila.provincia || !fila.ccaa || fila.lat == null || fila.lng == null) return bloqueo("Falta localización contrastada para mapa y tabla");
-      if (dominio) altas.set(dominio, fila.cif);
     }
     const evidencias = fusionarEvidenciasPasiva(existente?.pasivaEvidencias, fila.evidencias);
     const servicios = [...new Set([...(existente?.pasivaServicios ?? []), ...fila.servicios])].sort();

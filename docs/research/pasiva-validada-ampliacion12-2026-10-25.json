@@ -1,0 +1,422 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "alcance": "Decimocuarta tanda: revisión fiscal y corporativa de las 13 dudas prioritarias; ocho casos resueltos generan siete altas y dos enriquecimientos. El caso AMS/ASM identifica dos sociedades distintas.",
+  "criterio": "Fuentes fiscales primarias, atribución específica de ejecución y cruce por CIF, nombre y dominio. Descripción inicial en toda alta; conservación de datos ajenos a pasiva en existentes.",
+  "geocodificacion": "Centros municipales de sedes publicadas; precisión municipal, sin atribuir dirección de portal donde no queda contrastada.",
+  "empresas": [
+    {
+      "cif": "B57834095",
+      "nombre": "DESIGN ARKON 2000, S.L.",
+      "web": "https://www.conforthome.net/",
+      "identidadUrl": "https://www.conforthome.net/wp-content/uploads/2015/03/IMPER-POOL-CH.pdf",
+      "identidadMetodo": "documento_corporativo",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.conforthome.net/ignifugacion/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Confort Home declara aplicación e instalación propias en Mallorca e Ibiza de protección pasiva: pintura intumescente, morteros ignífugos y sellados/collarines de penetraciones."
+        }
+      ],
+      "localidad": "Palma",
+      "provincia": "Baleares",
+      "ccaa": "Baleares",
+      "direccion": "Carrer Son Oliva, 12A",
+      "codigoPostal": "07004",
+      "descripcion": "Confort Home realiza impermeabilizaciones, tratamientos de humedades y aislamientos en Mallorca e Ibiza. Aplica protección pasiva con pinturas intumescentes, morteros ignífugos y sellados de penetraciones.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.conforthome.net/wp-content/uploads/2015/03/IMPER-POOL-CH.pdf",
+        "https://www.calvia.com/ca/recursos/document-files/64219",
+        "https://www.conforthome.net/contacto/"
+      ],
+      "observaciones": "Ficha técnica propia con razón social, CIF, dominio, correo y el mismo teléfono que la web vigente; contratación municipal de Calvià corrobora nombre y CIF. Palma corresponde a la sede operativa publicada; no se crea otra ficha por la delegación de Ibiza ni se presenta la dirección operativa como certificación del domicilio registral.",
+      "lat": 39.5695818,
+      "lng": 2.6500745,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Palma%2C+Baleares%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Palma, Illes Balears, España",
+        "osmType": "relation",
+        "osmId": 341321
+      }
+    },
+    {
+      "cif": "B02385441",
+      "nombre": "LCHPRO, S.L.",
+      "web": "https://www.aislamientoslamancha.com/",
+      "identidadUrl": "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?cifrado=QUC1GjXXSiLkydRHJBmbpw%3D%3D&DocumentIdParam=DL0oQnlVBmYEu5MOdoO%2B7VtqC9tRsPgZ9yXCjMp8oR1Qs8SrBYDypdtOjRpfgTLF0xxRyz9nbhSew0ThMHHm%2B%2BQFudyL9pQQNMRcNu6%2BHnF7QB3HKyQaFUExmUVQCerk",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.aislamientoslamancha.com/ignifugacion/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa ofrece ejecución de ignifugación y publica trabajos propios sobre estructuras metálicas y forjados de garaje, además de revestimientos ignífugos de madera."
+        }
+      ],
+      "localidad": "La Gineta",
+      "provincia": "Albacete",
+      "ccaa": "Castilla-La Mancha",
+      "direccion": "Autovía de Alicante A-31, salidas 55-56",
+      "codigoPostal": "02110",
+      "descripcion": "Aislamientos La Mancha ejecuta aislamientos térmicos y acústicos, impermeabilizaciones y revestimientos proyectados. Su oferta incluye ignifugación y protección pasiva de estructuras.",
+      "fuentesIdentidadLocalizacion": [
+        "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?cifrado=QUC1GjXXSiLkydRHJBmbpw%3D%3D&DocumentIdParam=DL0oQnlVBmYEu5MOdoO%2B7VtqC9tRsPgZ9yXCjMp8oR1Qs8SrBYDypdtOjRpfgTLF0xxRyz9nbhSew0ThMHHm%2B%2BQFudyL9pQQNMRcNu6%2BHnF7QB3HKyQaFUExmUVQCerk",
+        "https://www.aislamientoslamancha.com/aviso-legal/"
+      ],
+      "observaciones": "Adjudicación oficial del expediente 1535072W: nombre Aislamientos La Mancha/LCHPRO, NIF B02385441 y correo tecnico@aislamientoslamancha.com. Se resuelve así el CIF B02538593 de la agencia web que figura erróneamente en el aviso. El resultado VIES no confirma ROI y no se interpreta como invalidez del NIF.",
+      "lat": 39.1152257,
+      "lng": -1.9962065,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=La+Gineta%2C+Albacete%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "La Gineta, Albacete, Castilla-La Mancha, 02110, España",
+        "osmType": "relation",
+        "osmId": 342424
+      }
+    },
+    {
+      "cif": "B19693639",
+      "nombre": "IGNITEGRA, S.L.",
+      "web": "https://ignitegra.com/",
+      "identidadUrl": "https://api.gleif.org/api/v1/lei-records/894500RV4FK07CSLTH69",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://ignitegra.com/nuestros-servicios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa ejecuta aplicación de pintura intumescente, morteros de lana de roca y perlita, y sellados de penetraciones con collarines, almohadillas, masillas y lana de roca."
+        },
+        {
+          "url": "https://ignitegra.com/la-empresa/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Presenta su ejecución de trabajos de ignifugación y revestimientos, con proyectos propios y equipo de aplicación."
+        }
+      ],
+      "localidad": "Albolote",
+      "provincia": "Granada",
+      "ccaa": "Andalucía",
+      "direccion": "Calle Huétor Vega, 135, puerta 18, polígono Juncaril",
+      "codigoPostal": "18220",
+      "descripcion": "Aplicadora de revestimientos y protección pasiva contra incendios. Ejecuta ignifugación de estructuras con pinturas intumescentes y morteros proyectados de lana de roca y perlita, además de sellados cortafuegos.",
+      "fuentesIdentidadLocalizacion": [
+        "https://api.gleif.org/api/v1/lei-records/894500RV4FK07CSLTH69",
+        "https://ignitegra.com/contacto/",
+        "https://ignitegra.com/aviso-legal/"
+      ],
+      "observaciones": "GLEIF enlaza expresamente el NIF B19693639 con IGNITEGRA, S.L. y Huétor Vega 135 puerta 18 en Albolote; la web abrevia la dirección al número 18. Se usa el domicilio completo de GLEIF. No se confunde con el registro LEI histórico 959800B5AJP9BXUVN896 ni se atribuye a esta sociedad la antigüedad comercial de 1999.",
+      "lat": 37.3051688,
+      "lng": -3.6615056,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Albolote%2C+Granada%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Albolote, Comarca de la Vega de Granada, Granada, Andalucía, España",
+        "osmType": "relation",
+        "osmId": 343443
+      }
+    },
+    {
+      "cif": "B73086043",
+      "nombre": "SOL SURESTE, S.L.",
+      "web": "https://solsuresteaislamientos.com/",
+      "identidadUrl": "https://www.solsureste.com/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://solsuresteaislamientos.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Solsureste Aislamientos ejecuta protección pasiva proyectada de vigas, pilares, forjados y cerchas con lana mineral y cemento; publica RF30 a RF180 según el sistema y espesor."
+        }
+      ],
+      "localidad": "Murcia",
+      "provincia": "Murcia",
+      "ccaa": "Murcia",
+      "direccion": "Calle Alarilla, 3, bajo",
+      "codigoPostal": "30002",
+      "descripcion": "Instaladora de sistemas de aislamiento térmico y acústico, con insuflado, proyectados y tratamiento de humedades. Ejecuta protección pasiva de estructuras mediante proyección de lana mineral y cemento.",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.solsureste.com/politica-privacidad/",
+        "https://solsuresteaislamientos.com/",
+        "https://api.gleif.org/api/v1/lei-records/959800V331AF8KKX9G64",
+        "https://ec.europa.eu/taxation_customs/vies/#/vat-validation"
+      ],
+      "observaciones": "El aviso de solsureste.com publica razón social, CIF y Alarilla 3; coincide con dirección, teléfono y dominio de correo de Solsureste Aislamientos. GLEIF confirma Alarilla 3 como sede operativa y distingue el domicilio legal de Molina de Segura. VIES valida nombre y NIF. No se confunde con Solsureste Distribuciones ni SABE Renovables.",
+      "lat": 37.9347521,
+      "lng": -1.1131029,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Murcia%2C+Murcia%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Murcia, Área Metropolitana de Murcia, Región de Murcia, España",
+        "osmType": "relation",
+        "osmId": 340611
+      }
+    },
+    {
+      "cif": "B91141465",
+      "nombre": "AISLAMIENTOS E INSTALACIONES MODULARES DEL SUR, S.L.",
+      "web": "https://www.grupo-ams.com/",
+      "identidadUrl": "https://ec.europa.eu/taxation_customs/vies/#/vat-validation",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.grupo-ams.com/el-grupo/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La estructura corporativa identifica AMS Instalaciones como ejecutora de sistemas interiores y soluciones de protección pasiva en Madrid, con plantilla propia y sede operativa en Coslada."
+        },
+        {
+          "url": "https://www.grupo-ams.com/proyectos/hotel-en-madrid-san-fermin-bb/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La obra corporativa del hotel B&B en Madrid atribuye expresamente a AMS Instalaciones la ejecución de soluciones de compartimentación de protección pasiva."
+        },
+        {
+          "url": "https://www.grupo-ams.com/especialidades/proteccion-pasiva/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Oferta corporativa de compartimentación, protección estructural, conductos resistentes al fuego y sellados de penetraciones."
+        }
+      ],
+      "dominioCompartidoValidado": {
+        "cifs": [
+          "B91141465",
+          "B91571158"
+        ],
+        "fuenteUrl": "https://www.grupo-ams.com/el-grupo/"
+      },
+      "localidad": "Sevilla",
+      "provincia": "Sevilla",
+      "ccaa": "Andalucía",
+      "direccion": "Calle Pino Salgareño, 2",
+      "codigoPostal": "41016",
+      "descripcion": "AMS Instalaciones ejecuta sistemas de construcción seca, aislamientos, falsos techos y revestimientos interiores. Su actividad en Madrid incluye compartimentación y otras soluciones de protección pasiva contra incendios.",
+      "fuentesIdentidadLocalizacion": [
+        "https://ec.europa.eu/taxation_customs/vies/#/vat-validation",
+        "https://www.grupo-ams.com/el-grupo/"
+      ],
+      "observaciones": "VIES valida nombre, NIF, calle Pino Salgareño 2, CP y Sevilla. Se distingue domicilio fiscal en Sevilla de sede operativa en Coslada, cuyo CP publicado no se traslada por inconsistente. AMS y ASM son dos sociedades reales con CIF distintos y dominio de grupo compartido: las dos se enumeran y documentan expresamente; no son dos altas por provincias.",
+      "lat": 37.3886303,
+      "lng": -5.9953403,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Sevilla%2C+Sevilla%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Sevilla, Andalucía, España",
+        "osmType": "relation",
+        "osmId": 342563
+      }
+    },
+    {
+      "cif": "B91571158",
+      "nombre": "AISLAMIENTOS Y SISTEMAS MODULARES, S.L.",
+      "web": "https://www.grupo-ams.com/",
+      "identidadUrl": "https://ec.europa.eu/taxation_customs/vies/#/vat-validation",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.grupo-ams.com/el-grupo/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "El logotipo y la estructura corporativa identifican ASM Aislamientos y Sistemas Modulares, S.L. como instaladora de Andalucía Occidental, con plantilla propia y soluciones de protección pasiva."
+        },
+        {
+          "url": "https://www.grupo-ams.com/especialidades/proteccion-pasiva/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Oferta corporativa de compartimentación, protección estructural, conductos resistentes al fuego y sellados de penetraciones."
+        }
+      ],
+      "dominioCompartidoValidado": {
+        "cifs": [
+          "B91141465",
+          "B91571158"
+        ],
+        "fuenteUrl": "https://www.grupo-ams.com/el-grupo/"
+      },
+      "localidad": "Sevilla",
+      "provincia": "Sevilla",
+      "ccaa": "Andalucía",
+      "codigoPostal": "41016",
+      "descripcion": "ASM instala sistemas de yeso laminado, aislamientos, falsos techos y revestimientos en Andalucía Occidental. Ejecuta soluciones de protección pasiva contra incendios dentro de la oferta técnica del Grupo AMS.",
+      "fuentesIdentidadLocalizacion": [
+        "https://ec.europa.eu/taxation_customs/vies/#/vat-validation",
+        "https://www.grupo-ams.com/el-grupo/",
+        "https://www.grupo-ams.com/wp-content/uploads/2025/08/Logo-11.png"
+      ],
+      "observaciones": "VIES valida denominación, CIF, CP 41016 y Sevilla. No valida las calles ensayadas: se omite dirección de portal en el alta. La identificación de ejecución es específica para ASM en la estructura corporativa, separada de AMS Madrid y de Facutec. Dominio de grupo compartido con el CIF B91141465, ambos contrastados.",
+      "lat": 37.3886303,
+      "lng": -5.9953403,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Sevilla%2C+Sevilla%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Sevilla, Andalucía, España",
+        "osmType": "relation",
+        "osmId": 342563
+      }
+    },
+    {
+      "cif": "B65954398",
+      "nombre": "MONTAJES IMPLALUSA, S.L.",
+      "web": "https://montajesimplalusa.com/",
+      "identidadUrl": "https://analisi.transparenciacatalunya.cat/resource/ybgg-dgi6.json?%24where=upper%28denominacio_adjudicatari%29+like+%27%25IMPLALUSA%25%27&%24select=identificacio_adjudicatari%2Cdenominacio_adjudicatari%2Cdenominacio%2Cnom_organ%2Ccodi_expedient%2Cenllac_publicacio&%24limit=15",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://montajesimplalusa.com/nosotros/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa describe ejecución propia de placa de yeso laminado, aislamientos y protección pasiva al fuego. Identifica a la SL de 2013 como sucesora de la actividad anterior en SCP; se confirma actividad general sin inventar especialidades."
+        }
+      ],
+      "localidad": "Barcelona",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Calle Miguel Hernández, 14, 6.º 1.ª",
+      "codigoPostal": "08042",
+      "descripcion": "Empresa de construcción seca, falsos techos y sistemas de placa de yeso laminado. Ejecuta aislamientos térmicos y acústicos, acondicionamiento acústico y protección pasiva frente al fuego.",
+      "fuentesIdentidadLocalizacion": [
+        "https://analisi.transparenciacatalunya.cat/resource/ybgg-dgi6.json?%24where=upper%28denominacio_adjudicatari%29+like+%27%25IMPLALUSA%25%27&%24select=identificacio_adjudicatari%2Cdenominacio_adjudicatari%2Cdenominacio%2Cnom_organ%2Ccodi_expedient%2Cenllac_publicacio&%24limit=15",
+        "https://contractaciopublica.cat/ca/detall-publicacio/3693e0ae-2062-422a-8f39-8f8d3cfddb60/300741925",
+        "https://ec.europa.eu/taxation_customs/vies/#/vat-validation",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2017-76-08",
+        "https://montajesimplalusa.com/nosotros/"
+      ],
+      "observaciones": "El conjunto oficial de contratación pública de Cataluña identifica B65954398 en el expediente 4313250006-2026-0000082 de Rodonyà. VIES valida nombre, NIF y dirección de Barcelona, concordante con BORME 2017 y web propia. No se utiliza el identificador incompleto del aviso ni el CIF de la antigua SCP.",
+      "lat": 41.3825802,
+      "lng": 2.177073,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Barcelona%2C+Barcelona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Barcelona, Barcelonès, Barcelona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 347950
+      }
+    },
+    {
+      "cif": "B92574854",
+      "nombre": "GOEXTIN, S.L.",
+      "web": "https://goextin.es/",
+      "identidadUrl": "https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?DocumentIdParam=757823df-eb0d-4bee-a7cb-fa8fbc1c8d94&cmpntname=GetDocumentsById&source=library&srv=cmpnt",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://goextin.es/servicios-de-ignifugacion/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Goextín ofrece ejecución de ignifugación de estructuras, maderas y textiles para locales y naves industriales."
+        }
+      ],
+      "empresaIdEsperada": 2428,
+      "observaciones": "Contrato oficial IMV Málaga 2021/30, página 1, y VIES validan B92574854, GOEXTIN y Caleta de Vélez 43-A, el domicilio del sitio. El CIF B92603372 del aviso corresponde en VIES a Servihogar Málaga; no se le atribuye pasiva. Se conserva toda la identidad y descripción guardadas de Goextín."
+    },
+    {
+      "cif": "B61445607",
+      "nombre": "STAR FOC ANOIA, S.L.U.",
+      "web": "https://www.grupstar.com/",
+      "identidadUrl": "https://www.starfoc.com/politica-de-calidad-y-sst",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "reaccion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.starfoc.com/prevencion-seguridad-activa-pasiva/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La web ofrece aplicación de pintura intumescente y morteros sobre estructuras, tratamientos de madera y textiles e instalación de puertas cortafuegos."
+        },
+        {
+          "url": "https://www.starfoc.com/politica-de-calidad-y-sst",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La política corporativa de calidad y SST identifica expresamente a Star Foc Anoia, S.L., titular de la ficha del dominio de grupo que remite a starfoc.com."
+        }
+      ],
+      "empresaIdEsperada": 2128,
+      "observaciones": "El único CIF que comparte el dominio normalizado en el universo es B61445607. La política de calidad identifica la sociedad de Anoia; no se extiende la actividad a otras empresas por marca o cobertura territorial ni se crea una ficha por Manresa, Lleida o Berga. Se conserva la descripción inicial no vacía."
+    }
+  ]
+}

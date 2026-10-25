@@ -48,7 +48,7 @@ async function main() {
         entityType: "empresa", entityId: String(empresa.id),
         before: p.existente ? JSON.parse(JSON.stringify(Object.fromEntries(Object.keys(p.cambios).map((key) => [key, p.existente![key as keyof typeof p.existente] ?? null])))) : Prisma.JsonNull,
         after: JSON.parse(JSON.stringify(cambios)),
-        metadata: { lote: path.basename(ruta!), identidadUrl: p.fila.identidadUrl, identidadMetodo: p.fila.identidadMetodo, aplicadoEn: ahora.toISOString() },
+        metadata: { lote: path.basename(ruta!), identidadUrl: p.fila.identidadUrl, identidadMetodo: p.fila.identidadMetodo, ...(p.fila.dominioCompartidoValidado ? { dominioCompartidoValidado: p.fila.dominioCompartidoValidado } : {}), aplicadoEn: ahora.toISOString() },
       } });
     }
     return informe;
