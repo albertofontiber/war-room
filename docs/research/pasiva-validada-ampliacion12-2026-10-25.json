@@ -60,7 +60,8 @@
       "completarVacios": false,
       "servicios": [
         "estructura",
-        "reaccion"
+        "compartimentacion",
+        "sellados"
       ],
       "evidencias": [
         {
@@ -68,7 +69,7 @@
           "fuente": "Web corporativa",
           "tipo": "web_corporativa",
           "fecha": "2026-10-25",
-          "descripcion": "La empresa ofrece ejecución de ignifugación y publica trabajos propios sobre estructuras metálicas y forjados de garaje, además de revestimientos ignífugos de madera."
+          "descripcion": "Ejecuta ignifugación de estructuras mediante morteros y pinturas intumescentes, instalación de paneles incombustibles y sellado de huecos y penetraciones. Publica trabajos propios sobre estructuras metálicas y forjados de garaje."
         }
       ],
       "localidad": "La Gineta",
@@ -81,7 +82,7 @@
         "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?cifrado=QUC1GjXXSiLkydRHJBmbpw%3D%3D&DocumentIdParam=DL0oQnlVBmYEu5MOdoO%2B7VtqC9tRsPgZ9yXCjMp8oR1Qs8SrBYDypdtOjRpfgTLF0xxRyz9nbhSew0ThMHHm%2B%2BQFudyL9pQQNMRcNu6%2BHnF7QB3HKyQaFUExmUVQCerk",
         "https://www.aislamientoslamancha.com/aviso-legal/"
       ],
-      "observaciones": "Adjudicación oficial del expediente 1535072W: nombre Aislamientos La Mancha/LCHPRO, NIF B02385441 y correo tecnico@aislamientoslamancha.com. Se resuelve así el CIF B02538593 de la agencia web que figura erróneamente en el aviso. El resultado VIES no confirma ROI y no se interpreta como invalidez del NIF.",
+      "observaciones": "Adjudicación oficial del expediente 1535072W: nombre Aislamientos La Mancha/LCHPRO, NIF B02385441 y correo tecnico@aislamientoslamancha.com. Se resuelve así el CIF B02538593 de la agencia web que figura erróneamente en el aviso. El resultado VIES no confirma ROI y no se interpreta como invalidez del NIF. Rectificación final de especialidades: se retira reacción al fuego, atribuida inicialmente sin evidencia de tratamiento de madera; se documentan compartimentación y sellados que sí ofrece la página.",
       "lat": 39.1152257,
       "lng": -1.9962065,
       "geocodificacion": {

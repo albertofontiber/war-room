@@ -33,7 +33,7 @@ VIES sin confirmación de ROI no demuestra que el NIF español sea inválido ni 
 
 ## Verificación y alcance
 
-Se comprueban nueve CIF únicos, sus fichas y descripciones en producción, 16 combinaciones de actividades y exportación de 350 confirmadas. Repetir devuelve sin_cambios=9, sin nuevas auditorías. Se conservan por huella los campos ajenos a pasiva de las existentes, cuentas y CRM; permanecen 23.620 filas financieras. No se importa SABI ni se modifica el modelo de actividad.
+Se comprueban nueve CIF únicos, sus fichas y descripciones en producción, 16 combinaciones de actividades y exportación de 350 confirmadas. Repetir devuelve sin_cambios=9, sin nuevas auditorías. El primer pase genera nueve auditorías; la [rectificación final de especialidades de LCHPRO](pasiva-correccion-servicios-ampliacion12-2026-10-25.json) añade una décima: estructura, compartimentación y sellados quedan acreditados, y se retira reacción al fuego sin evidencia suficiente. Se conservan por huella los campos ajenos a pasiva de las existentes, cuentas y CRM; permanecen 23.620 filas financieras. No se importa SABI ni se modifica el modelo de actividad.
 
 AMS y ASM comparten web corporativa con dos CIF distintos acreditados. El importador exige declarar recíprocamente todos los CIF y la fuente común, además de identidad fiscal primaria para cada alta; queda auditado. La excepción no admite una marca o sede como empresa nueva ni autoriza extender la ejecución a otros miembros del grupo.
 

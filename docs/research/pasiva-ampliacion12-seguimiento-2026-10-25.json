@@ -277,7 +277,7 @@
     },
     "api": {
       "base": "https://warroom.fontiber.com",
-      "fecha": "2026-10-25T21:39:23.243Z",
+      "fecha": "2026-10-25T21:46:35.068Z",
       "sinSesion": 401,
       "empresas": 5295,
       "combinacionesVerificadas": [
@@ -478,7 +478,36 @@
           "modo": "cualquiera",
           "total": 218
         }
-      ]
+      ],
+      "serviciosExactosAltasVerificados": 7
+    },
+    "auditoriasRectificacion": 1,
+    "auditoriasTotales": 10,
+    "rectificacionServicios": {
+      "fechaRevision": "2026-10-25",
+      "empresaId": 5952,
+      "cif": "B02385441",
+      "fuenteUrl": "https://www.aislamientoslamancha.com/ignifugacion/",
+      "motivo": "La página acredita protección estructural, paneles incombustibles y sellado de penetraciones, pero no tratamiento de madera. Se corrige una atribución errónea del primer pase; no es revisión negativa de la empresa.",
+      "serviciosAnteriores": [
+        "estructura",
+        "reaccion"
+      ],
+      "serviciosCorregidos": [
+        "compartimentacion",
+        "estructura",
+        "sellados"
+      ],
+      "evidenciasCorregidas": [
+        {
+          "url": "https://www.aislamientoslamancha.com/ignifugacion/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta ignifugación de estructuras mediante morteros y pinturas intumescentes, instalación de paneles incombustibles y sellado de huecos y penetraciones. Publica trabajos propios sobre estructuras metálicas y forjados de garaje."
+        }
+      ],
+      "camposAjenosConservadosPorHuella": true
     }
   },
   "limites": [
