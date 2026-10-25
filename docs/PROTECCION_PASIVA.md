@@ -1,10 +1,28 @@
 # Protección pasiva: actividad transversal y ampliación del universo
 
-Revisión: **25/10/2026, Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y cinco lotes están aplicados en producción: **257 entidades con pasiva confirmada**.
+Revisión: **25/10/2026, Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y seis lotes están aplicados en producción: **269 entidades con pasiva confirmada**.
 
 ## Resultado aplicado
 
-La quinta tanda incorpora **13 altas y 5 enriquecimientos**, con altas en **7 comunidades autónomas**. El [quinto lote aplicado](research/pasiva-validada-ampliacion3-2026-10-25.json) conserva identidad fiscal primaria, ejecución, localización y fuentes. El [seguimiento vigente](research/pasiva-ampliacion3-seguimiento-2026-10-25.json) distingue 111 dominios, decisiones manuales, rastreo sin validación final y pendientes heredados sin reconsulta. Los dominios no equivalen a sociedades ni a revisiones manuales completas.
+La sexta tanda incorpora **11 altas y 4 enriquecimientos**, con altas en **8 comunidades autónomas**. El [sexto lote aplicado](research/pasiva-validada-ampliacion4-2026-10-25.json) conserva fuentes fiscales, actividad, ubicación municipal y un primer perfil de la oferta. El [seguimiento vigente](research/pasiva-ampliacion4-seguimiento-2026-10-25.json) distingue 143 dominios, 41 con decisión manual en esta tanda y el resto con resultados históricos o rastreo sin validación final. No son 143 sociedades nuevas ni un censo.
+
+Las **11 empresas nuevas** son Sistemplac, Aislamientos Rogilcar, Centropuertas Norte 2007, Puertas Automaticos Ángel, Lemara Restauraciones, Riomader, Noratek, J. L. Holanda Fernández, Politex Aislamientos, Campón Gibello y CYPSA / Cerramiento y Protección. No existían por CIF en las 5.855 empresas de partida; el universo pasa a **5.866**. Todas entran fuera de perímetro y con estado SABI sin consultar.
+
+Las **4 fichas enriquecidas** son Securitas Seguridad España (327), NTCI (1576), Diaterm Foc (5805) y Orsei (2622). Securitas se confirma por primera vez; NTCI amplía sellados y puertas, Diaterm Foc incorpora puertas y Orsei amplía sellados. Por ello, 15 fichas trabajadas añaden **12 confirmaciones: 257 → 269**. No se extiende la evidencia de Securitas a otras sociedades de su grupo ni la de Diaterm Foc a las distribuidoras Diaterm.
+
+Quedan resueltos **Sistemplac y Rogilcar**. La formalización original ENAIRE BAC 179/2023 vincula a Sistemplac con su NIF y correo corporativo; actividad y domicilio operativo de Sabadell proceden de su web. El aviso y privacidad de `rogilcar.com` identifican Rogilcar frente al CIF de plantilla de la landing comercial. CYPSA y Campón Gibello cuentan con identidad fiscal oficial y correspondencia de dominio/correo; la instalación de CYPSA y la ignifugación ejecutada por Campón en el Casino de Badajoz se contrastan en sus webs.
+
+Se amplía el rastreo a puertas, sellados y tratamientos de madera, priorizando La Rioja, Extremadura y Cantabria. Riomader se confirma por **ignifugado de madera**, sin atribuirle instalación de las puertas de su catálogo. Centropuertas atiende Logroño pero su domicilio fiscal está en Oyón, Álava; no se crea otra ficha por territorio atendido. Los desacuerdos de calle de J. L. Holanda Fernández quedan documentados, con municipio y código postal comunes.
+
+La carga deja **15 auditorías**; repetir el lote devuelve `sin_cambios=15` sin nuevas escrituras. Se conservan las huellas de los campos ajenos a pasiva, cuentas, CRM y recuentos de tareas/notas/contactos de las cuatro fichas anteriores y las **23.620** filas financieras. La API de producción verifica los 15 CIF una sola vez en lite/full, sus 15 fichas, 16 combinaciones y la exportación de **269** con fuentes.
+
+### Primer perfil de la oferta
+
+Las 15 fichas de esta tanda tienen `perfilOfertaPasiva` en el lote y seguimiento, con criterio, fuente y fecha: **3 con especialización declarada** (CYPSA, Noratek y Diaterm Foc) y **12 con oferta diversificada**. La primera categoría recoge una presentación comercial centrada en soluciones de pasiva; la segunda combina pasiva con aislamiento, pintura, reformas, madera, puertas, materiales, PCI activa o seguridad. Esta distinción sirve para investigar targets: no mide facturación, exclusividad ni independencia. El resto del universo aún no tiene este perfil revisado.
+
+### Quinta tanda
+
+La quinta tanda incorpora **13 altas y 5 enriquecimientos**, con altas en **7 comunidades autónomas**. El [quinto lote aplicado](research/pasiva-validada-ampliacion3-2026-10-25.json) conserva identidad fiscal primaria, ejecución, localización y fuentes. El [seguimiento de la quinta tanda](research/pasiva-ampliacion3-seguimiento-2026-10-25.json) distingue 111 dominios, decisiones manuales, rastreo sin validación final y pendientes heredados sin reconsulta. Los dominios no equivalen a sociedades ni a revisiones manuales completas.
 
 Las **13 empresas nuevas** son Pladiser, Isaphone, Grupo Endozer, Igniwool, Julio Barbero Moreno, Aislamientos Insuflados, Pinturas Sabi, Pinturas Marcelino González, Gusolin Utrera, Varmany, La Plana Techos y Tabiques, Protec-Alba y Pintores González y León. No existían por CIF en las 5.842 empresas de partida; el universo pasa a **5.855**. Sus coordenadas son centros municipales y entran fuera de perímetro, con estado SABI sin consultar.
 
@@ -124,6 +142,6 @@ Las evidencias se tipifican como `web_corporativa`, `asociacion` o `calificacion
 
 Carboline y KaviDoors quedan fuera de este lote por su rol de fabricante sin instalación propia validada; Intertek por ensayos/certificación y Cepreven por ser asociación. No se crean fichas por marca, delegación o landing de ciudad.
 
-Las ampliaciones por asociaciones y búsqueda regional están realizadas y aplicadas en los lotes fechados; no se mantienen como una tarea genérica sin empezar. Las **257 confirmadas no agotan el mercado**. La continuidad consiste en resolver los casos concretos del seguimiento vigente, recuperar accesos, investigar sociedades sin web y ampliar redes de aplicadores o territorios con evidencia adicional. Las webs comerciales de cobertura nacional no se cuentan como sedes en cada región. Conesam no recibe el CIF de su proveedor de protección de datos; las redes VKM/VKS quedan sin atribución de ejecución propia. No se aplican revisiones negativas.
+Las ampliaciones por asociaciones y búsqueda regional están realizadas y aplicadas en los lotes fechados; no se mantienen como una tarea genérica sin empezar. Las **269 confirmadas no agotan el mercado**. La continuidad consiste en resolver los casos concretos del seguimiento vigente, recuperar accesos, investigar sociedades sin web y ampliar redes de aplicadores o territorios con evidencia adicional. Sistemplac y Rogilcar ya están incorporadas; PYL Bages, Solsureste, Ignifugaciones del Norte, Ignitegra y la sociedad ejecutora de Aplicanor siguen requiriendo identidad o atribución concluyentes. Las webs comerciales de cobertura nacional no se cuentan como sedes en cada región. Conesam no recibe el CIF de su proveedor de protección de datos; las redes VKM/VKS quedan sin atribución de ejecución propia. No se aplican revisiones negativas.
 
 Para cada nueva tanda: validar actividad e identidad, cruzar CIF exacto, resolver dominios compartidos, simular, aplicar únicamente las filas validadas y verificar idempotencia. Los enriquecimientos no alteran perímetro, responsable, etapa, financieros, grupo o fuente original. Una empresa pendiente permanece `null`, nunca se transforma por defecto en «no hace pasiva».
