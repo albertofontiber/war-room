@@ -1,0 +1,1878 @@
+{
+  "fechaRevision": "2026-10-25",
+  "alcance": "Quinta tanda: continuación por asociaciones y regiones. Instaladoras y aplicadoras en España; cobertura parcial.",
+  "lote": "pasiva-validada-ampliacion3-2026-10-25.json",
+  "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+  "metodo": "CIF exacto frente a 5.842 empresas de partida, más bloqueo de nombres y dominios por el importador. Identidad fiscal primaria, ejecución y localización manuales. Se distingue validación manual de rastreo técnico y pendientes heredados sin reconsulta.",
+  "fuentesAsociativas": [
+    {
+      "nombre": "AD’IP",
+      "url": "https://www.adip-as.com/asociados/",
+      "detalle": "Reconsulta de candidatas y perfiles de instaladoras: Pladiser, Isaphone, Gusolin y La Plana quedan validadas. Ser miembro no acredita por sí solo actividad de pasiva."
+    },
+    {
+      "nombre": "AISLA",
+      "url": "https://www.aisla.org/instaladores/",
+      "detalle": "Reconsulta del directorio como pista, con contraste en la web de cada empresa; sin atribución general a todos los instaladores."
+    },
+    {
+      "nombre": "ANSPI",
+      "url": "https://anspi-fnep.com/",
+      "detalle": "Continuidad en aplicadoras de pintura. González y León declara pertenencia en su web; su ejecución e identidad se validan en páginas corporativas, sin convertir la pertenencia en homologación."
+    },
+    {
+      "nombre": "Asociación DIR",
+      "url": "https://asociaciondir.org/aplicadores/",
+      "detalle": "Vía adicional de descubrimiento revisada; Qromia ya estaba confirmada y no se cuenta como alta."
+    },
+    {
+      "nombre": "Red Experta",
+      "url": "https://www.aplicadoresexperta.es/aplicadores/proteccion-contra-el-fuego/buscar-aplicador",
+      "detalle": "Directorio de aplicadores de protección frente al fuego. Procaval ya tenía ficha 5812: solo se enriquece, sin duplicar."
+    }
+  ],
+  "regionesConAltas": [
+    "Andalucía",
+    "C. Valenciana",
+    "Cantabria",
+    "Castilla y León",
+    "Castilla-La Mancha",
+    "Cataluña",
+    "Madrid"
+  ],
+  "resumen": {
+    "entidadesAplicadas": 18,
+    "altas": 13,
+    "fichasExistentesEnriquecidas": 5,
+    "existentesConfirmadasPorPrimeraVez": 1,
+    "existentesYaConfirmadasConMasEvidencia": 4,
+    "pasivaAntes": 243,
+    "pasivaDespues": 257,
+    "universoAntes": 5842,
+    "universoDespues": 5855,
+    "auditorias": 18,
+    "repeticionAplicada": "sin_cambios=18, sin nuevas auditorías",
+    "camposProtegidosAlterados": 0,
+    "financieros": 23620,
+    "relacionesCRM": "Campos ajenos a pasiva, cuentas, CRM y recuentos de tareas/notas/contactos de las cinco fichas existentes conservan las mismas huellas."
+  },
+  "entidades": [
+    {
+      "cif": "A08861221",
+      "nombre": "ISAPHONE, S.A.",
+      "empresaId": 5873,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "A39087887",
+      "nombre": "PINTURAS SABI, S.A.",
+      "empresaId": 5874,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B02509636",
+      "nombre": "PROTEC-ALBA",
+      "empresaId": 5875,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B05119144",
+      "nombre": "JULIO BARBERO MORENO, S.L.",
+      "empresaId": 5876,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B12681623",
+      "nombre": "LA PLANA TECHOS Y TABIQUES, S.L.",
+      "empresaId": 5877,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B13669676",
+      "nombre": "GRUPO ENDOZER, S.L.U.",
+      "empresaId": 5878,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B14220073",
+      "nombre": "SINELEC FIRE PROTECCION, S.L",
+      "empresaId": 2346,
+      "accion": "enriquecimiento",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B45813565",
+      "nombre": "AISLAMIENTOS INSUFLADOS",
+      "empresaId": 5879,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B47370705",
+      "nombre": "PINTURAS MARCELINO GONZÁLEZ, S.L.",
+      "empresaId": 5880,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B54593710",
+      "nombre": "ENESA CONTINENTAL SL",
+      "empresaId": 5803,
+      "accion": "enriquecimiento",
+      "clasificacionAnterior": true
+    },
+    {
+      "cif": "B56082860",
+      "nombre": "IGESUR SOLUCIONES TECNICAS SL",
+      "empresaId": 5804,
+      "accion": "enriquecimiento",
+      "clasificacionAnterior": true
+    },
+    {
+      "cif": "B64976954",
+      "nombre": "VARMANY, S.L.",
+      "empresaId": 5881,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B85095701",
+      "nombre": "PLADISER MONTAJES E INSTALACIONES, S.L.",
+      "empresaId": 5882,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B90413287",
+      "nombre": "PINTORES GONZÁLEZ Y LEÓN, S.L.",
+      "empresaId": 5883,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B91732289",
+      "nombre": "GUSOLIN UTRERA, S.L.",
+      "empresaId": 5884,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "B98892631",
+      "nombre": "PROYECTOS Y SERVICIOS CAVAL SL",
+      "empresaId": 5812,
+      "accion": "enriquecimiento",
+      "clasificacionAnterior": true
+    },
+    {
+      "cif": "B98961600",
+      "nombre": "IGNIWOOL, S.L.U.",
+      "empresaId": 5885,
+      "accion": "alta",
+      "clasificacionAnterior": null
+    },
+    {
+      "cif": "E42824722",
+      "nombre": "ESCADUR",
+      "empresaId": 5853,
+      "accion": "enriquecimiento",
+      "clasificacionAnterior": true
+    }
+  ],
+  "resueltosDeSeguimientosAnteriores": [
+    "pladiser-mi.com",
+    "isaphone.es",
+    "gusolin.es",
+    "laplanatechosytabiques.es"
+  ],
+  "marcasAgrupadas": [
+    {
+      "cif": "E42824722",
+      "empresaId": 5853,
+      "marcas": [
+        "Escadur",
+        "Ignaria",
+        "Proyecta Verm",
+        "Ignisol"
+      ],
+      "detalle": "Las webs adicionales publican el mismo CIF. No son altas nuevas; el domicilio previo se conserva."
+    },
+    {
+      "cif": "B98892631",
+      "empresaId": 5812,
+      "marcas": [
+        "Procaval",
+        "Proyectos y Servicios Caval"
+      ],
+      "detalle": "Una sola ficha existente por CIF."
+    }
+  ],
+  "verificacion": {
+    "testsPasiva": 11,
+    "simulacionSinAmbiguedades": true,
+    "idempotenciaSinEscrituras": true,
+    "camposProtegidosSinCambios": true,
+    "apiProduccion": {
+      "url": "https://warroom.fontiber.com",
+      "empresasGeograficas": 5223,
+      "cifsLoteUnicos": 18,
+      "fichasConFuente": 18,
+      "exportacionPasiva": 257,
+      "combinacionesActividades": 16,
+      "accesoAnonimo": 401
+    }
+  },
+  "limites": "Cobertura parcial, no censo. Los dominios son pistas o marcas, no un recuento de sociedades. Sin revisiones negativas ni inferencia de independencia, tamaño, estado legal, RIPCI o calificaciones a partir de la web. Coordenadas de centro municipal, no de portal. Los estados de fuentes secundarias no se importan. Los seguimientos anteriores se conservan como cortes históricos; este resuelve los casos indicados.",
+  "dominios": [
+    {
+      "dominio": "a24seguridad.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "ejecucion_pendiente",
+      "motivoAnterior": "Descripción general de protección pasiva y productos; no prueba suficiente de instalación propia en las páginas revisadas.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "acromapintores.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "acceso_no_recuperado",
+      "motivo": "La web devuelve 403 en la consulta; no se completa la identidad ni la actividad a partir de textos secundarios.",
+      "revisionManual": true,
+      "fuentesConsultadas": [],
+      "consultasSinContenido": [
+        "https://acromapintores.com/"
+      ]
+    },
+    {
+      "dominio": "acusfoc.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Identidad fiscal en acta municipal de 2017; domicilio de Alaquàs en BORME de 2013, concordante con directorios actuales. Son fuentes históricas de identidad/localización, sin inferir vigencia legal.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "aislamientoignifugoproyectado.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "enriquecida",
+      "motivo": "Proyecta Verm / Ignisol / Ignaria comparten CIF E42824722. Se enriquece la ficha 5853; no se crea una empresa por cada marca o web. La identificación fiscal de las webs alternativas se conserva como fuente de la revisión, sin sustituir el dominio actual.",
+      "revisionManual": true,
+      "cif": "E42824722",
+      "empresaId": 5853,
+      "fuenteFiscal": "https://vermiculitaproyectada.com/empresa/",
+      "fuenteActividad": "https://vermiculitaproyectada.com/empresa/",
+      "fuentesConsultadas": [
+        "https://www.aislamientoignifugoproyectado.com/",
+        "https://www.aislamientoignifugoproyectado.com/aviso-legal/",
+        "https://aislamientoignifugoproyectado.com/contacto/",
+        "https://aislamientoignifugoproyectado.com/zonas/",
+        "https://aislamientoignifugoproyectado.com/politica-de-privacidad/",
+        "https://www.aislamientoignifugoproyectado.com/zonas/",
+        "https://www.aislamientoignifugoproyectado.com/politica-de-privacidad/",
+        "https://aislamientoignifugoproyectado.com/empresa/",
+        "https://www.aislamientoignifugoproyectado.com/empresa/",
+        "https://aislamientoignifugoproyectado.com/",
+        "https://aislamientoignifugoproyectado.com/aviso-legal/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "aislamientosinsuflados.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "Se conserva el nombre publicado junto al CIF sin inventar forma social. La privacidad identifica Calle Buena Vista 20; se utiliza la oficina operativa de Illescas publicada en el pie corporativo. No se crean entidades por cada servicio o web comercial.",
+      "revisionManual": true,
+      "cif": "B45813565",
+      "empresaId": 5879,
+      "fuenteFiscal": "https://aislamientosinsuflados.es/politica-de-privacidad/",
+      "fuenteActividad": "https://aislamientosinsuflados.es/aislamiento-ignifugo/ignifugado-de-estructuras-en-naves-y-edificios/",
+      "fuentesConsultadas": [
+        "https://aislamientosinsuflados.es/avisos-legales/",
+        "https://aislamientosinsuflados.es/aislamiento/pintura-intumescente/?portfolioCats=14",
+        "https://aislamientosinsuflados.es/aislamiento/aislamiento-ignifugo-de-perlita-y-vermiculita/",
+        "https://aislamientosinsuflados.es/servicios/aislamientos-ignifugos/",
+        "https://aislamientosinsuflados.es/politica-de-privacidad/",
+        "https://aislamientosinsuflados.es/aislamiento-ignifugo/",
+        "https://aislamientosinsuflados.es/aislamiento-ignifugo/ignifugado-de-estructuras-en-naves-y-edificios/",
+        "https://aislamientosinsuflados.es/aislamiento-ignifugo/franja-cortafuegos/",
+        "https://aislamientosinsuflados.es/servicios/materiales-de-aislamiento/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "aislamientospro.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_contradictoria",
+      "motivo": "El pie publica Aislamientos Rogilcar B50502368 y dirección en Zuera; el cuerpo legal conserva CIF de plantilla B-99XXXXXX y otro domicilio. Se exige conciliar el titular actual; no se transforma cada landing aragonesa en una empresa.",
+      "revisionManual": true,
+      "fuentesConsultadas": [
+        "https://aislamientospro.es/",
+        "https://aislamientospro.es/ignifugacion/illueca",
+        "https://aislamientospro.es/ignifugacion/mallen",
+        "https://aislamientospro.es/ignifugacion/tauste",
+        "https://aislamientospro.es/ignifugacion/tarazona",
+        "https://aislamientospro.es/aviso-legal",
+        "https://aislamientospro.es/privacidad",
+        "https://aislamientospro.es/ignifugacion/borja",
+        "https://aislamientospro.es/ignifugacion/pedrola"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "aislamientossanfelices.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Los dominios .es y .net comparten CIF y domicilio; se agrupan. Se conserva el nombre fiscal publicado, sin inventar forma social.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "aislamientossanfelices.net",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Los dominios .es y .net comparten CIF y domicilio; se agrupan. Se conserva el nombre fiscal publicado, sin inventar forma social.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "aislapol.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "decision_anterior_sin_reconsulta",
+      "motivo": "Se conserva la decisión histórica del antecedente, sin nueva validación ni atribución de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "titular_persona_fisica",
+      "motivoAnterior": "Publica titular persona física. No se inventa una sociedad ni se transforma una secuencia de texto en un CIF societario.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "alfatorres.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": [
+        "https://alfatorres.es/"
+      ]
+    },
+    {
+      "dominio": "almericolor.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "ejecucion_pendiente",
+      "motivo": "No se recupera contenido corporativo útil; la tienda y las fichas de productos no acreditan instalación propia.",
+      "revisionManual": true,
+      "fuentesConsultadas": [],
+      "consultasSinContenido": [
+        "https://almericolor.com/empresa/"
+      ]
+    },
+    {
+      "dominio": "an4.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "acceso_no_recuperado",
+      "motivoAnterior": "Pista en AD’IP; no se recuperó contenido útil de la web para validar identidad.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "angelmir.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": [
+        "https://angelmir.com/es/"
+      ]
+    },
+    {
+      "dominio": "aplicacionesalagon.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "El aviso legal y contacto difieren en el número 23/24 de Monasterio de Piedra; se omite la calle hasta conciliarla. No se inventa forma social.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "aplicanor.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "atribucion_fiscal_pendiente",
+      "motivo": "Ejecución explícita de ignifugaciones; la política identifica varios CIF. Falta atribuir los trabajos a una sociedad concreta del grupo. No se crean ocho empresas con la misma evidencia.",
+      "revisionManual": true,
+      "estadoAnterior": "atribucion_fiscal_pendiente",
+      "motivoAnterior": "La política identifica varias entidades del grupo; no se distribuye la misma actividad automáticamente entre todos los CIF.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://www.aplicanor.com/sobre-nosotros-13",
+        "https://www.aplicanor.com/servicios/ignifugaciones-y-aislamientos",
+        "https://www.aplicanor.com/servicios",
+        "https://www.aplicanor.com/aviso-legal",
+        "https://www.aplicanor.com/politica-de-privacidad",
+        "https://www.aplicanor.com/servicios/impermeabilizaciones",
+        "https://www.aplicanor.com/servicios/pavimentos-continuos",
+        "https://www.aplicanor.com/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "aplytec.eu",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Resytec remite a Aplytec para esta ejecución. Se valida a Aplytec, sin atribuir automáticamente la actividad al gestor de residuos.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "asturfire.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://www.asturfire.es/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "bodustecnica.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "fuentesConsultadas": [
+        "https://www.bodustecnica.com/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "codisl.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_y_ejecucion_pendientes",
+      "motivo": "El aviso atribuye el CIF B70580923 a EASY CLIENT, proveedor web en Narón, mientras la actividad y contacto son CODI en Valencia. No se da de alta la agencia como instaladora; falta además evidencia específica de ejecución de pasiva.",
+      "revisionManual": true,
+      "fuentesConsultadas": [
+        "https://codisl.es/",
+        "https://codisl.es/aviso-legal/",
+        "https://codisl.es/contacto/",
+        "https://codisl.es/politica-privacidad/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "conforthome.net",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://www.conforthome.net/contacto/",
+        "https://www.conforthome.net/ignifugaciones-proteccion-pasiva-mallorca/",
+        "https://www.conforthome.net/morteros-ignifugos-perlita-vermiculita-lana-de-roca-mallorca/",
+        "https://www.conforthome.net/",
+        "https://www.conforthome.net/refuerzo-estructural-hormigon-pasivado-armaduras-hierro/",
+        "https://www.conforthome.net/pintura-intumescente-mallorca/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "construdecor.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "ejecucion_pendiente",
+      "motivo": "El aviso publica B67233650 junto a referencias residuales a otra web. No se acredita ejecución específica de pasiva.",
+      "revisionManual": true,
+      "fuentesConsultadas": [
+        "https://www.construdecor.es/sobre-nosotros/",
+        "https://www.construdecor.es/",
+        "https://www.construdecor.es/aviso-legal/",
+        "https://www.construdecor.es/contacto/",
+        "https://www.construdecor.es/poliitica-de-privacidad//"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "daysersistemas.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "fuentesConsultadas": [
+        "https://www.daysersistemas.es/cgi-sys/suspendedpage.cgi"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "decoplak.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "fuentesConsultadas": [],
+      "consultasSinContenido": [
+        "http://www.decoplak.com/"
+      ]
+    },
+    {
+      "dominio": "diseyco.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "decision_anterior_sin_reconsulta",
+      "motivo": "Se conserva la decisión histórica del antecedente, sin nueva validación ni atribución de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "suministro_sin_ejecucion",
+      "motivoAnterior": "Comercializa materiales y asesora; no se acreditó montaje propio de pasiva.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "endozer.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y ejecución validadas; coincidencia exacta por CIF y carga auditada.",
+      "revisionManual": true,
+      "cif": "B13669676",
+      "empresaId": 5878,
+      "fuenteFiscal": "https://www.endozer.com/aviso-legal/",
+      "fuenteActividad": "https://www.endozer.com/sobre-nosotros/",
+      "fuentesConsultadas": [
+        "https://www.endozer.com/contacto/",
+        "https://www.endozer.com/politica-de-privacidad/",
+        "https://www.endozer.com/sobre-nosotros/",
+        "https://www.endozer.com/",
+        "https://www.endozer.com/aviso-legal/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "enesacontinental.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "enriquecida",
+      "motivo": "Cruce con el dominio ya vinculado a la ficha 5803. La obra de Gijón añade evidencia; no implica una nueva sede ni una nueva empresa.",
+      "revisionManual": true,
+      "cif": "B54593710",
+      "empresaId": 5803,
+      "fuenteFiscal": "https://enesacontinental.com/",
+      "fuenteActividad": "https://enesacontinental.com/portfolio/planta-de-regasificacion",
+      "fuentesConsultadas": [
+        "https://enesacontinental.com/empresa-de-pintura-industrial-enesa-continental",
+        "https://enesacontinental.com/category/ignifugacion-valencia",
+        "https://enesacontinental.com/ignifugacion-naves-industriales",
+        "https://enesacontinental.com/category/expertos-en-ignifugacion",
+        "https://enesacontinental.com/servicios",
+        "https://enesacontinental.com/ignifugacion-proteccion-pasiva-contra-el-fuego",
+        "https://enesacontinental.com/portfolio/planta-de-regasificacion",
+        "https://enesacontinental.com/sistemas-de-ignifugacion-enesa-continental",
+        "https://enesacontinental.com/empresa",
+        "https://enesacontinental.com/proyectos",
+        "https://enesacontinental.com/servicios/limpieza-con-agua-a-presion",
+        "https://enesacontinental.com/portfolio/ignifugacion-facultad-ceu",
+        "https://enesacontinental.com/privacy-policy",
+        "https://enesacontinental.com/",
+        "https://enesacontinental.com/contacto",
+        "https://enesacontinental.com/metodos-de-ignifugacion-para-acero-enesa-continental"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "espaibcn.net",
+      "fechaRevision": "2026-10-25",
+      "estado": "ejecucion_pendiente",
+      "motivo": "CIF corporativo B59987339 recuperado, sin evidencia específica suficiente de ejecución de pasiva en las páginas consultadas.",
+      "revisionManual": true,
+      "fuentesConsultadas": [
+        "https://www.espaibcn.net/politica-de-privacidad-14",
+        "https://www.espaibcn.net/aviso-legal-10",
+        "https://www.espaibcn.net/contacto-6",
+        "https://www.espaibcn.net/",
+        "https://www.espaibcn.net/formulario-de-contacto-7"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "fagonsa.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "ejecucion_pendiente",
+      "motivoAnterior": "Instaladora de seguridad con pasiva en catálogo, pendiente de atribución específica de montaje o aplicación.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "firex.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "enriquecida",
+      "motivoAnterior": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "gernikaplac.net",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "fuentesConsultadas": [
+        "http://www.gernikaplac.net/",
+        "http://www.gernikaplac.net/politica-de-proteccion-de-datos/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "grupo-martinez.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://grupo-martinez.es/proteccion-pasiva-contra-incendios/proyectados-para-proteccion-pasiva/",
+        "https://grupo-martinez.es/aviso-legal/",
+        "https://grupo-martinez.es/nosotros-martinez-soluciones-constructivas/",
+        "https://grupo-martinez.es/nuestras-marcas/mecor-tecresa/",
+        "https://grupo-martinez.es/proteccion-pasiva-contra-incendios/",
+        "https://grupo-martinez.es/politica-de-privacidad/",
+        "https://grupo-martinez.es/proteccion-pasiva-contra-incendios/sistemas-de-proteccion-pasiva-contra-el-fuego/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "grupojuliobarbero.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y ejecución validadas; coincidencia exacta por CIF y carga auditada.",
+      "revisionManual": true,
+      "cif": "B05119144",
+      "empresaId": 5876,
+      "fuenteFiscal": "https://grupojuliobarbero.com/aviso-legal/",
+      "fuenteActividad": "https://grupojuliobarbero.com/proteccion-pasiva/",
+      "fuentesConsultadas": [
+        "https://grupojuliobarbero.com/",
+        "https://grupojuliobarbero.com/contacto/",
+        "https://grupojuliobarbero.com/proteccion-pasiva/",
+        "https://grupojuliobarbero.com/aviso-legal/",
+        "https://grupojuliobarbero.com/politica-de-privacidad/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "gusolin.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y ejecución validadas; coincidencia exacta por CIF y carga auditada.",
+      "revisionManual": true,
+      "cif": "B91732289",
+      "empresaId": 5884,
+      "fuenteFiscal": "http://www.gusolin.es/legal/2/",
+      "fuenteActividad": "http://www.gusolin.es/pladur-en-sevilla/5/0/la-empresa/",
+      "fuentesConsultadas": [
+        "http://www.gusolin.es/pladur-en-sevilla/25/0/trabaja-con-nosotros/",
+        "http://www.gusolin.es/",
+        "http://www.gusolin.es/pladur-en-sevilla/5/0/la-empresa/",
+        "http://www.gusolin.es/legal/3/",
+        "http://www.gusolin.es/legal/2/",
+        "http://www.gusolin.es/legal/28/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "igesur.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "enriquecida",
+      "motivo": "Identidad y ejecución validadas; coincidencia exacta por CIF y carga auditada.",
+      "revisionManual": true,
+      "cif": "B56082860",
+      "empresaId": 5804,
+      "fuenteFiscal": "https://www.igesur.com/politica-de-privacidad/",
+      "fuenteActividad": "https://www.igesur.com/",
+      "fuentesConsultadas": [
+        "https://www.igesur.com/proteccion-pasiva/pinturas-y-barnices/",
+        "https://www.igesur.com/proteccion-pasiva/aislamientos-ignifugos/",
+        "https://www.igesur.com/proteccion-pasiva/pinturas-y-barnices/pintura-ignifuga/malaga/",
+        "https://www.igesur.com/revestimientos-recubrimientos-industriales/aislamientos-en-malaga/",
+        "https://www.igesur.com/sobre-nosotros/",
+        "https://www.igesur.com/politica-de-privacidad/",
+        "https://www.igesur.com/proteccion-pasiva/",
+        "https://www.igesur.com/contacto/",
+        "https://www.igesur.com/proteccion-pasiva/pinturas-y-barnices/pintura-intumescente/",
+        "https://www.igesur.com/ads-ignifugaciones/",
+        "https://www.igesur.com/proteccion-pasiva/pinturas-y-barnices/pintura-ablativa/",
+        "https://www.igesur.com/",
+        "https://www.igesur.com/aviso-legal/"
+      ],
+      "consultasSinContenido": [
+        "https://www.igesur.com/politica-privacidad/",
+        "https://www.igesur.com/contactar-ahora/"
+      ]
+    },
+    {
+      "dominio": "ignidec.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugacionbarcelona.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "ignifugacionbarcelona.com e ignifugacioneslotor.com publican el mismo CIF: una sola alta.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugaciones.barcelona",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugaciones.cat",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugacionesandalucia.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugacionesbarna.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugacionesdelnorte.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_primaria_pendiente",
+      "motivo": "Publica ejecución propia y cobertura regional, pero no se recupera CIF fiscal primario; quedan textos residuales de plantilla. No se cuenta una empresa por provincia.",
+      "revisionManual": true,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://ignifugacionesdelnorte.com/leon/",
+        "https://ignifugacionesdelnorte.com/ignifugaciones-cantabria/",
+        "https://ignifugacionesdelnorte.com/sobre-nosotros/",
+        "https://ignifugacionesdelnorte.com/",
+        "https://ignifugacionesdelnorte.com/contacto/",
+        "https://ignifugacionesdelnorte.com/ignifugaciones-bilbao/",
+        "https://ignifugacionesdelnorte.com/asturias/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugacioneslotor.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "ignifugacionbarcelona.com e ignifugacioneslotor.com publican el mismo CIF: una sola alta.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugacionesmadrid.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugacionesvalencia.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "decision_anterior_sin_reconsulta",
+      "motivo": "Se conserva la decisión histórica del antecedente, sin nueva validación ni atribución de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "intermediacion",
+      "motivoAnterior": "El aviso del titular describe intermediación entre clientes y aplicadoras, sin ejecución propia.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugacionindustrial.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "intermediacion",
+      "motivoAnterior": "Explica expresamente que deriva solicitudes a aplicadoras y no aplica materiales.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://ignifugacionindustrial.es/ignifugacion-estructura-metalica/",
+        "https://ignifugacionindustrial.es/",
+        "https://ignifugacionindustrial.es/privacidad/",
+        "https://ignifugacionindustrial.es/aviso-legal/",
+        "https://ignifugacionindustrial.es/como-elegimos-las-empresas/",
+        "https://ignifugacionindustrial.es/proteccion-pasiva-contra-incendios/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugados.cat",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugados.net",
+      "fechaRevision": "2026-10-25",
+      "estado": "enriquecida",
+      "motivo": "Proyecta Verm / Ignisol / Ignaria comparten CIF E42824722. Se enriquece la ficha 5853; no se crea una empresa por cada marca o web. La identificación fiscal de las webs alternativas se conserva como fuente de la revisión, sin sustituir el dominio actual.",
+      "revisionManual": true,
+      "cif": "E42824722",
+      "empresaId": 5853,
+      "fuenteFiscal": "https://vermiculitaproyectada.com/empresa/",
+      "fuenteActividad": "https://vermiculitaproyectada.com/empresa/",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugadosalbacete.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugadosborja.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://www.ignifugadosborja.es/es/aislamiento-de-poliuretano-ecija",
+        "https://www.ignifugadosborja.es/galeria",
+        "https://www.ignifugadosborja.es/politica-de-privacidad",
+        "https://www.ignifugadosborja.es/es/proteccion-ignifuga-ecija",
+        "https://www.ignifugadosborja.es/productos",
+        "https://www.ignifugadosborja.es/",
+        "https://www.ignifugadosborja.es/es/proteccion-ignifuga-cordoba",
+        "https://www.ignifugadosborja.es/saber-mas",
+        "https://www.ignifugadosborja.es/videos",
+        "https://www.ignifugadosborja.es/es/proteccion-pasiva-contra-incendios-ecija",
+        "https://www.ignifugadosborja.es/servicios"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugadosjaen.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugadosmurcia.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignifugartela.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": [
+        "https://ignifugartela.com/ignifugaciones-zaragoza/",
+        "https://ignifugartela.com/"
+      ]
+    },
+    {
+      "dominio": "ignifugosproyectados.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignitegra.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "operador_actual_pendiente",
+      "motivo": "Actividad ejecutora clara en Granada; el aviso no recupera CIF utilizable. Las referencias societarias históricas no resuelven por sí solas el operador actual de la marca. No se asigna automáticamente el CIF de otra instaladora granadina.",
+      "revisionManual": true,
+      "fuentesConsultadas": [
+        "https://ignitegra.com/la-empresa/",
+        "https://ignitegra.com/nuestros-servicios/",
+        "https://ignitegra.com/aviso-legal/",
+        "https://ignitegra.com/politica-de-privacidad/",
+        "https://ignitegra.com/",
+        "https://ignitegra.com/en/politica-de-privacidad/",
+        "https://ignitegra.com/en/aviso-legal/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ignival.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "igniwool.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "Una sola alta en el domicilio fiscal de Valencia; las páginas regionales de cobertura no se convierten en empresas ni sedes independientes. No se atribuye calificación de instalador por declaraciones comerciales.",
+      "revisionManual": true,
+      "cif": "B98961600",
+      "empresaId": 5885,
+      "fuenteFiscal": "https://igniwool.com/politica-de-privacidad/",
+      "fuenteActividad": "https://igniwool.com/delegaciones/zaragoza/",
+      "fuentesConsultadas": [
+        "https://igniwool.com/politica-de-privacidad/",
+        "https://igniwool.com/delegaciones/zaragoza/",
+        "https://igniwool.com/servicios/ignifugaciones-metalicas/",
+        "https://igniwool.com/aviso-legal/",
+        "https://igniwool.com/servicios/ignifugaciones-madera/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "imadsa.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "fuentesConsultadas": [
+        "https://www.imadsa.es/nosotros/",
+        "https://www.imadsa.es/contacto/",
+        "https://www.imadsa.es/",
+        "https://www.imadsa.es/aviso-legal/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "imperespumamalaga.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "incopac90.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "ejecucion_pendiente",
+      "motivoAnterior": "Identidad fiscal obtenida, pero las páginas consultadas mezclan productos y servicios sin precisar instalación propia de pasiva.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "indecamposta.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://www.indecamposta.com/servicios-constructivos-indec-amposta",
+        "https://www.indecamposta.com/servicios-indec-instalaciones-amposta",
+        "https://www.indecamposta.com/aviso-legal",
+        "https://www.indecamposta.com/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "isaphone.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "El NIF se contrasta en contratos de CCMA de 2015 y 2017; son fuentes históricas de identidad, no prueba de actividad pasiva ni de vigencia legal. Ejecución y domicilio actuales en la web corporativa.",
+      "revisionManual": true,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "cif": "A08861221",
+      "empresaId": 5873,
+      "fuenteFiscal": "https://statics.3cat.cat/multimedia/pdf/3/9/1444304193993.pdf",
+      "fuenteActividad": "https://isaphone.es/productos/proteccion-pasiva-contra-el-fuego/",
+      "fuentesConsultadas": [
+        "https://isaphone.es/",
+        "https://isaphone.es/productos/proteccion-pasiva-contra-el-fuego/",
+        "https://isaphone.es/aviso-legal/",
+        "https://isaphone.es/ca/avis-legal/",
+        "https://isaphone.es/acerca-de-nosotros/",
+        "https://isaphone.es/ca/productes/proteccio-pasiva-contra-el-foc/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "josmagsl.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "enriquecida",
+      "motivoAnterior": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "jplac.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "fuentesConsultadas": [
+        "https://jplac.es/",
+        "https://jplac.es/quienes-somos",
+        "https://jplac.es/contacto"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "kronopore.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "fuentesConsultadas": [
+        "https://www.kronopore.com/politica-de-privacidad/",
+        "https://www.kronopore.com/contacto/",
+        "https://www.kronopore.com/servicios/",
+        "https://www.kronopore.com/",
+        "https://www.kronopore.com/aviso-legal/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "lainstaladoradesistemas.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Se utiliza el domicilio fiscal publicado en LSSIYCE; la página de contacto publica centro operativo en Cornellà. Una sola entidad por CIF.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://www.lainstaladoradesistemas.es/politica-de-cookies/",
+        "https://www.lainstaladoradesistemas.es/sobre-nosotros/",
+        "https://www.lainstaladoradesistemas.es/informacion-legal-lssiyce/",
+        "https://www.lainstaladoradesistemas.es/contacto/",
+        "https://www.lainstaladoradesistemas.es/",
+        "https://www.lainstaladoradesistemas.es/proteccion-pasiva-contra-incendios/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "laplanatechosytabiques.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "La evidencia permite confirmar actividad, pero no identificar un sistema concreto; no se infieren especialidades.",
+      "revisionManual": true,
+      "cif": "B12681623",
+      "empresaId": 5877,
+      "fuenteFiscal": "https://www.laplanatechosytabiques.es/aviso-legal.html",
+      "fuenteActividad": "https://www.laplanatechosytabiques.es/",
+      "fuentesConsultadas": [
+        "https://www.laplanatechosytabiques.es/",
+        "https://www.laplanatechosytabiques.es/aviso-legal.html",
+        "https://www.laplanatechosytabiques.es/index.html"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "mercorlv.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "enriquecida",
+      "motivoAnterior": "El aviso atribuye el dominio a Tecresa Protección Pasiva B48983746, ficha 699. No se crea otra sociedad por la marca Mercor LV ni se confunde con Técnicas de Refractarios A48190839.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "montajesimplalusa.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "pendiente_anterior_sin_reconsulta",
+      "motivoAnterior": "Pendiente del seguimiento anterior sin reconsulta útil en esta tanda; se conserva su estado y no se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://montajesimplalusa.com/aviso-legal/",
+        "http://montajesimplalusa.com.mialias.net/",
+        "https://montajesimplalusa.com/servicios/",
+        "https://montajesimplalusa.com/contacto/",
+        "https://montajesimplalusa.com/",
+        "https://montajesimplalusa.com/politicadeprivacidad/",
+        "https://montajesimplalusa.com/nosotros/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "olidetec.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pimed.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "La política corporativa de calidad identifica PIMED con Azul Cobalto Decoración SL, resolviendo el texto residual SCOEL del aviso. Illescas pertenece a Toledo; se corrige el rótulo provincial Madrid del aviso.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pintoresgonzalezleon.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "La web declara pertenencia a ANSPI; no se convierte en calificación de pasiva. Aviso legal y contacto discrepan en el número 14/12 de Adolfo Suárez: se omite la calle.",
+      "revisionManual": true,
+      "cif": "B90413287",
+      "empresaId": 5883,
+      "fuenteFiscal": "https://pintoresgonzalezleon.com/avisos-legales/",
+      "fuenteActividad": "https://pintoresgonzalezleon.com/tratamientos-de-ingnifugados-e-intumescentes/",
+      "fuentesConsultadas": [
+        "https://pintoresgonzalezleon.com/tratamientos-de-ingnifugados-e-intumescentes/",
+        "https://pintoresgonzalezleon.com/quienes-somos/",
+        "https://pintoresgonzalezleon.com/avisos-legales/",
+        "https://pintoresgonzalezleon.com/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pintoreshermanosalba.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "identidad_pendiente",
+      "motivoAnterior": "Aplicación de intumescentes explícita; no se recuperó identidad fiscal primaria societaria.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pinturapro.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "contenido_editorial",
+      "motivo": "La página se identifica como blog vinculado a una tienda de pinturas. Las guías de intumescentes no acreditan ejecución propia.",
+      "revisionManual": true,
+      "estadoAnterior": "contenido_editorial",
+      "motivoAnterior": "Guías y contenidos sobre pintura; no ejecutora validada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://pinturapro.es/category/intumescente/",
+        "https://pinturapro.es/about/",
+        "https://pinturapro.es/aviso-legal/",
+        "https://pinturapro.es/politica-de-privacidad/",
+        "https://pinturapro.es/contact/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pinturasaplicor.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "acceso_no_recuperado",
+      "motivo": "La página exige JavaScript y no permite recuperar identidad fiscal ni comprobar ejecución en esta tanda.",
+      "revisionManual": true,
+      "fuentesConsultadas": [],
+      "consultasSinContenido": [
+        "https://pinturasaplicor.es/contacto"
+      ]
+    },
+    {
+      "dominio": "pinturasindalo.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_de_plantilla",
+      "motivo": "Servicio de ignifugación explícito, pero el aviso publica B12345678. No se utiliza un CIF de ejemplo como identidad fiscal.",
+      "revisionManual": true,
+      "fuentesConsultadas": [
+        "https://www.pinturasindalo.es/servicios/pintura-intumescente-ignifuga-proteccion-contra-incendios/",
+        "https://www.pinturasindalo.es/politica-privacidad/",
+        "https://www.pinturasindalo.es/aviso-legal/",
+        "https://www.pinturasindalo.es/sobre-nosotros/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pinturasmgonzalez.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "La web no detalla el sistema de protección pasiva; no se asignan especialidades a partir de la actividad genérica de pintura industrial.",
+      "revisionManual": true,
+      "cif": "B47370705",
+      "empresaId": 5880,
+      "fuenteFiscal": "https://www.pinturasmgonzalez.es/aviso-legal",
+      "fuenteActividad": "https://www.pinturasmgonzalez.es/",
+      "fuentesConsultadas": [
+        "https://www.pinturasmgonzalez.es/",
+        "https://www.pinturasmgonzalez.es/politica-de-privacidad",
+        "https://www.pinturasmgonzalez.es/aviso-legal",
+        "https://www.pinturasmgonzalez.es/contacto"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pinturassabi.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "Identidad y ejecución validadas; coincidencia exacta por CIF y carga auditada.",
+      "revisionManual": true,
+      "cif": "A39087887",
+      "empresaId": 5874,
+      "fuenteFiscal": "https://www.pinturassabi.com/aviso-legal/",
+      "fuenteActividad": "https://www.pinturassabi.com/servicios/",
+      "fuentesConsultadas": [
+        "https://www.pinturassabi.com/quienes-somos/",
+        "https://www.pinturassabi.com/servicios/",
+        "https://www.pinturassabi.com/aviso-legal/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pinturastrillo.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "placasyaislamientos.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "decision_anterior_sin_reconsulta",
+      "motivo": "Se conserva la decisión histórica del antecedente, sin nueva validación ni atribución de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "suministro_sin_ejecucion",
+      "motivoAnterior": "Distribución de materiales a instaladores, sin aplicación propia acreditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pladiser-mi.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "Pendiente fiscal resuelto con el aviso legal corporativo en PDF. No se deducen especialidades de la mera instalación de placa de yeso.",
+      "revisionManual": true,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "cif": "B85095701",
+      "empresaId": 5882,
+      "fuenteFiscal": "https://pladiser-mi.com/Media/pladisermi/dayvo/Privacidad%20y%20Aviso%20Legal%20-%20Pladiser.pdf",
+      "fuenteActividad": "https://pladiser-mi.com/",
+      "fuentesConsultadas": [
+        "https://pladiser-mi.com/contacto",
+        "http://pladiser-mi.com/Media/pladisermi/dayvo/Privacidad%20y%20Aviso%20Legal%20-%20Pladiser.pdf",
+        "https://pladiser-mi.com/",
+        "https://pladiser-mi.com/Media/pladisermi/dayvo/Privacidad%20y%20Aviso%20Legal%20-%20Pladiser.pdf",
+        "https://pladiser-mi.com/empresa-instalacion-pladur-alcorcon"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pladurbilbao.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "pendiente_anterior_sin_reconsulta",
+      "motivoAnterior": "Pendiente del seguimiento anterior sin reconsulta útil en esta tanda; se conserva su estado y no se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pladurlleida.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "identidad_y_ejecucion_pendientes",
+      "motivoAnterior": "Descubierta mediante DECO-TEBA’S en AD’IP; no se acredita aún titular fiscal y ejecución específica de pasiva.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://pladurlleida.com/"
+      ],
+      "consultasSinContenido": [
+        "https://pladurlleida.com/aviso-legal",
+        "https://pladurlleida.com/politica-de-privacidad",
+        "https://pladurlleida.com/contacto",
+        "https://pladurlleida.com/deco-tebas/que-hacemos/"
+      ]
+    },
+    {
+      "dominio": "pladutrera.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "fuentesConsultadas": [
+        "https://pladutrera.com/contacto/",
+        "https://pladutrera.com/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "plakanarias.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_primaria_pendiente",
+      "motivo": "Titular presentado como profesional individual en la pista asociativa, sin NIF primario recuperado. No se inventa una sociedad ni se descarta su actividad por su forma jurídica.",
+      "revisionManual": true,
+      "fuentesConsultadas": [
+        "http://plakanarias.com/construccion-aislamiento-revestimiento-tenerife/",
+        "http://plakanarias.com/aviso-legal-politica-de-privacidad-y-cookies/",
+        "http://plakanarias.com/empresa-construccion-tenerife-diseno-innovacion-sostenibilidad/",
+        "http://plakanarias.com/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "procaval.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "enriquecida",
+      "motivo": "Se enriquece la ficha 5812 existente; Procaval es la marca de Proyectos y Servicios Caval. No se da de alta otra empresa.",
+      "revisionManual": true,
+      "cif": "B98892631",
+      "empresaId": 5812,
+      "fuenteFiscal": "https://procaval.es/politica-de-privacidad-y-cookies/",
+      "fuenteActividad": "https://procaval.es/",
+      "fuentesConsultadas": [
+        "https://procaval.es/politica-de-privacidad-y-cookies/",
+        "https://procaval.es/contacto/",
+        "https://procaval.es/aislamientos-ignifugos/",
+        "https://procaval.es/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "proind.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Domicilio fiscal del aviso en Imárcoain, municipio de Noáin. El contacto muestra además centro operativo en Barbatáin; no se confunden sedes con entidades. Nombre conservado tal como figura en la fuente.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "proinse.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "enriquecida",
+      "motivoAnterior": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "protecalba.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "Se conserva el nombre comercial publicado junto al CIF; no se inventa denominación social.",
+      "revisionManual": true,
+      "cif": "B02509636",
+      "empresaId": 5875,
+      "fuenteFiscal": "https://protecalba.com/aviso-legal/",
+      "fuenteActividad": "https://protecalba.com/proteccion-pasiva-contra-incendios/",
+      "fuentesConsultadas": [
+        "https://protecalba.com/politica-de-privacidad/",
+        "https://protecalba.com/aviso-legal/",
+        "https://protecalba.com/empresa/",
+        "https://protecalba.com/nuestros-trabajos/",
+        "https://protecalba.com/proteccion-pasiva-contra-incendios/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "pylbages.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_primaria_pendiente",
+      "motivo": "La web y AD’IP indican ejecución; el CIF B09713207 aparece en fuentes secundarias. BORME confirma denominación y domicilio, pero no el CIF en la pieza recuperada. No se da de alta sin fuente fiscal primaria.",
+      "revisionManual": true,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://pylbages.es/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "qromia.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "El mismo aviso contiene dos calles diferentes en Son Castelló; solo se incorpora el municipio y código postal comunes. La referencia comercial a Carboline no se transforma en calificación Cepreven.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": [
+        "https://www.qromia.com/proteccion-pasiva-contra-el-fuego-carboline/"
+      ]
+    },
+    {
+      "dominio": "refripeca.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "resytec.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "decision_anterior_sin_reconsulta",
+      "motivo": "Se conserva la decisión histórica del antecedente, sin nueva validación ni atribución de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "ejecutor_resuelto_en_otro_cif",
+      "motivoAnterior": "La web remite a Aplytec para las aplicaciones industriales. Se da de alta Aplytec B09570748, sin atribuir la ejecución al gestor de residuos.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "rogilcar.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_actual_pendiente",
+      "motivo": "La web corporativa acredita ejecución de ignifugaciones. Falta conciliar el titular fiscal vigente con la identidad contradictoria de la web comercial aislamientospro.es antes de alta.",
+      "revisionManual": true,
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "rprevestimientos.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://rprevestimientos.com/project/protecciones-pasivas-ei120/",
+        "https://rprevestimientos.com/",
+        "https://rprevestimientos.com/project/protecciones-pasivas-ei120/nggallery/slideshow"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "sinelec.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "enriquecida",
+      "motivo": "Identidad y ejecución validadas; coincidencia exacta por CIF y carga auditada.",
+      "revisionManual": true,
+      "cif": "B14220073",
+      "empresaId": 2346,
+      "fuenteFiscal": "https://sinelec.com/politica-de-privacidad/",
+      "fuenteActividad": "https://sinelec.com/sistemas-de-proteccion-pasiva-contra-el-fuego/",
+      "fuentesConsultadas": [
+        "https://sinelec.com/contacto/",
+        "https://sinelec.com/aviso-legal/",
+        "https://sinelec.com/",
+        "https://sinelec.com/politica-de-privacidad/",
+        "https://sinelec.com/sistemas-de-proteccion-pasiva-contra-el-fuego/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "sintec-sll.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "pendiente_anterior_sin_reconsulta",
+      "motivo": "Se conserva el resultado histórico sin afirmar una nueva validación. Consultar antecedente y motivoAnterior.",
+      "revisionManual": false,
+      "estadoAnterior": "ejecucion_pendiente",
+      "motivoAnterior": "Identidad resuelta, pero no se acredita específicamente aplicación propia de pasiva.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "sistemplac.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_primaria_pendiente",
+      "motivo": "La pista fiscal B63711865 procede de agregadores de contratación. El acta de ENAIRE consultada nombra a Aislamientos Sistemplac, sin resolver el NIF en el documento recuperado; la web requiere JavaScript. No se usa como fuente primaria el agregador ni se confunde con Sistemplac Interiores.",
+      "revisionManual": true,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": [
+        "https://sistemplac.es/",
+        "http://www.sistemplac.es/",
+        "http://sistemplac.es/ignifugacion/"
+      ]
+    },
+    {
+      "dominio": "solsuresteaislamientos.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "identidad_primaria_pendiente",
+      "motivo": "Ejecuta aislamiento y protección pasiva; el aviso legal deja el NIE vacío y contiene una referencia a una web ajena. Se conserva pendiente de identidad primaria.",
+      "revisionManual": true,
+      "fuentesConsultadas": [
+        "https://solsuresteaislamientos.com/quienes-somos/",
+        "https://solsuresteaislamientos.com/aviso-legal/",
+        "https://solsuresteaislamientos.com/politica-privacidad/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "soluciond3.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "fuentesConsultadas": [
+        "https://www.soluciond3.com/",
+        "https://www.soluciond3.com/contacto"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "sostre-estan.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "fuentesConsultadas": [
+        "https://sostre-estan.com/sobre-nosotros/",
+        "https://sostre-estan.com/politica-de-privacidad/",
+        "https://sostre-estan.com/",
+        "https://sostre-estan.com/servicios-pladur-y-escayola/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "tabicomac.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "ejecucion_pendiente",
+      "motivo": "CIF corporativo B67483818 recuperado. Construcción seca y pertenencia a AD’IP no bastan por sí solas para acreditar pasiva.",
+      "revisionManual": true,
+      "fuentesConsultadas": [
+        "https://www.tabicomac.es/",
+        "https://www.tabicomac.es/servicios",
+        "https://www.tabicomac.es/aviso-legal",
+        "https://www.tabicomac.es/sobre-nosotros",
+        "https://www.tabicomac.es/politica-de-privacidad"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "tabitecvigo.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "reconsulta_no_concluyente",
+      "motivoAnterior": "Se conserva el pendiente anterior: las páginas recuperadas no resolvieron identidad, ejecución o atribución fiscal. No se aplica clasificación negativa.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://tabitecvigo.com/servicios/tabiqueria-seca/",
+        "https://tabitecvigo.com/",
+        "https://tabitecvigo.com/aviso-legal/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "techosytabiques.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "rastreo_sin_validacion_final",
+      "motivo": "Hay reconsulta técnica, pero no validación manual suficiente para alta o clasificación. El rastreo no equivale a ausencia de actividad.",
+      "revisionManual": false,
+      "fuentesConsultadas": [],
+      "consultasSinContenido": [
+        "http://www.techosytabiques.es/"
+      ]
+    },
+    {
+      "dominio": "tespatech.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "decision_anterior_sin_reconsulta",
+      "motivo": "Se conserva la decisión histórica del antecedente, sin nueva validación ni atribución de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "fabricante_sin_ejecucion",
+      "motivoAnterior": "Desarrolla y fabrica productos de protección pasiva; no se acreditó aplicación propia.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ubipsl.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "suministro_sin_ejecucion",
+      "motivo": "El contenido de mortero ignífugo corresponde a camisas y rotores para máquinas de proyección. No acredita que el proveedor ejecute protección pasiva.",
+      "revisionManual": true,
+      "fuentesConsultadas": [
+        "https://ubipsl.com/camisas-y-rotores-para-mortero-ignifugo/",
+        "https://ubipsl.com/aviso-legal/",
+        "https://ubipsl.com/politica-de-privacidad/",
+        "https://ubipsl.com/contactar-con-ubip/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "varmany.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "alta_aplicada",
+      "motivo": "La página de servicio de Terrassa pertenece a la entidad domiciliada en Montcada i Reixac; no se crea una ficha de sede por localidad atendida.",
+      "revisionManual": true,
+      "cif": "B64976954",
+      "empresaId": 5881,
+      "fuenteFiscal": "https://varmany.com/aviso-legal/",
+      "fuenteActividad": "https://varmany.com/ignifugaciones-terrassa/",
+      "fuentesConsultadas": [
+        "https://varmany.com/reformas-integrales/",
+        "https://varmany.com/pintores-parking-terrassa/",
+        "https://varmany.com/ignifugaciones-terrassa/",
+        "https://varmany.com/politica-de-privacidad/",
+        "https://varmany.com/aviso-legal/",
+        "https://varmany.com/ignifugaciones/",
+        "https://varmany.com/empresa-pintores/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "ventasuelos.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Identidad y actividad validadas; cruce exacto por CIF y aplicación auditada.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "vermiculitaproyectada.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "enriquecida",
+      "motivo": "Proyecta Verm / Ignisol / Ignaria comparten CIF E42824722. Se enriquece la ficha 5853; no se crea una empresa por cada marca o web. La identificación fiscal de las webs alternativas se conserva como fuente de la revisión, sin sustituir el dominio actual.",
+      "revisionManual": true,
+      "cif": "E42824722",
+      "empresaId": 5853,
+      "fuenteFiscal": "https://vermiculitaproyectada.com/empresa/",
+      "fuenteActividad": "https://vermiculitaproyectada.com/empresa/",
+      "fuentesConsultadas": [
+        "https://vermiculitaproyectada.com/politica-de-privacidad/",
+        "https://vermiculitaproyectada.com/empresa/",
+        "https://vermiculitaproyectada.com/aviso-legal/",
+        "https://vermiculitaproyectada.com/contacto/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "vimat-ignifugats.com",
+      "fechaRevision": "2026-10-25",
+      "estado": "confirmada_en_tanda_anterior",
+      "motivo": "Caso resuelto y aplicado en el lote anterior; no se vuelve a contar como alta ni como pendiente.",
+      "revisionManual": false,
+      "estadoAnterior": "alta_aplicada",
+      "motivoAnterior": "Privacidad publica B17944034 y aviso legal B62174677. La adjudicación municipal identifica expresamente a Vimat con B17944034; el otro CIF no se da de alta.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [
+        "https://vimat-ignifugats.com/empresa-vimat-ignifugats/",
+        "https://vimat-ignifugats.com/aviso-legal/",
+        "https://vimat-ignifugats.com/politica-privacidad/",
+        "https://vimat-ignifugats.com/ca/empresa/"
+      ],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "vkscontraincendioscislascanarias.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "decision_anterior_sin_reconsulta",
+      "motivo": "Se conserva la decisión histórica del antecedente, sin nueva validación ni atribución de actividad.",
+      "revisionManual": false,
+      "estadoAnterior": "intermediacion",
+      "motivoAnterior": "Red de colaboradores y derivación; no una sociedad ejecutora por landing provincial.",
+      "antecedente": "pasiva-ampliacion2-seguimiento-2026-10-24.json",
+      "fuentesConsultadas": [],
+      "consultasSinContenido": []
+    },
+    {
+      "dominio": "zenko.es",
+      "fechaRevision": "2026-10-25",
+      "estado": "ejecucion_pendiente",
+      "motivo": "Identidad fiscal corporativa recuperada; no se acredita ejecución específica de pasiva en las páginas consultadas. No se aplica clasificación negativa.",
+      "revisionManual": true,
+      "fuentesConsultadas": [
+        "https://zenko.es/aviso-legal/",
+        "https://zenko.es/politica-de-privacidad/",
+        "https://zenko.es/contacto/",
+        "https://zenko.es/quienes-somos/",
+        "https://zenko.es/tiendas/"
+      ],
+      "consultasSinContenido": []
+    }
+  ]
+}
