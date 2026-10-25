@@ -1,0 +1,689 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "alcance": "Sexta tanda: ampliación por fuentes asociativas y regiones; instaladoras/aplicadoras en España. Cobertura parcial.",
+  "criterio": "Identidad fiscal primaria, ejecución acreditada y cruce por CIF normalizado con el universo. No se crean fichas por marcas, delegaciones o páginas regionales.",
+  "geocodificacion": "Centroides de municipios de domicilios contrastados; no geolocalización exacta de las direcciones.",
+  "empresas": [
+    {
+      "cif": "A28933083",
+      "nombre": "CERRAMIENTO Y PROTECCIÓN, S.A.",
+      "web": "https://cypsa.net/",
+      "identidadUrl": "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?DocumentIdParam=ZCYyQfv6W98%2FHpc8Dxepj9coiviZLlo5EswsIXNvFI3TP08hHH9xzs2fTPvngHfiPw%2FHL8LoIL%2BqhWK785hMS7b2SxE%2FVXoO2OMJwyqJKZ33GVhXrFFqN7yFncy7YfRK&cifrado=QUC1GjXXSiLkydRHJBmbpw%3D%3D",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://cypsa.net/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "CYPSA se presenta como especialista en puertas cortafuegos: comercializa, instala y mantiene puertas resistentes al fuego con equipo técnico de instalación y asistencia."
+        }
+      ],
+      "localidad": "Griñón",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle Perú, 3, Polígono Las Naciones",
+      "codigoPostal": "28971",
+      "fuentesIdentidadLocalizacion": [
+        "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?DocumentIdParam=ZCYyQfv6W98%2FHpc8Dxepj9coiviZLlo5EswsIXNvFI3TP08hHH9xzs2fTPvngHfiPw%2FHL8LoIL%2BqhWK785hMS7b2SxE%2FVXoO2OMJwyqJKZ33GVhXrFFqN7yFncy7YfRK&cifrado=QUC1GjXXSiLkydRHJBmbpw%3D%3D",
+        "https://cypsa.net/aviso-legal/",
+        "https://cypsa.net/contacto/"
+      ],
+      "descubrimiento": "https://cypsa.net/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "especializacion_declarada",
+        "motivo": "Su presentación principal declara especialización en puertas cortafuegos, junto a puertas residenciales y control de accesos; no implica facturación exclusiva de pasiva.",
+        "fuente": "https://cypsa.net/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "La formalización oficial MAD-238/2024 identifica A28933083, domicilio y correo @cypsa.net. El aviso usa CERRAMIENTOS en plural; se conserva la denominación singular del documento oficial. Distinta de otras sociedades que usan CYPSA.",
+      "lat": 40.2136607,
+      "lng": -3.8581479,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Gri%C3%B1%C3%B3n%2C+Madrid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Griñón, Comunidad de Madrid, 28971, España",
+        "osmType": "relation",
+        "osmId": 345226
+      }
+    },
+    {
+      "cif": "A79252219",
+      "nombre": "SECURITAS SEGURIDAD ESPAÑA S.A",
+      "web": "https://www.securitas.es/",
+      "identidadUrl": "https://www.securitas.es/sobre-nosotros/politica-de-privacidad/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "servicios": [
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.securitas.es/servicios/seguridad-contra-incendios/instalacion-de-sistemas-pci/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Dentro de su oferta de seguridad, declara instalación con técnicos propios de PCI activa y pasiva, incluidas barreras cortafuegos y sellados técnicos."
+        }
+      ],
+      "empresaIdEsperada": 327,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.securitas.es/sobre-nosotros/politica-de-privacidad/"
+      ],
+      "descubrimiento": "https://www.securitas.es/servicios/seguridad-contra-incendios/instalacion-de-sistemas-pci/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "Seguridad presencial, electrónica y protección activa y pasiva contra incendios.",
+        "fuente": "https://www.securitas.es/servicios/seguridad-contra-incendios/instalacion-de-sistemas-pci/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "Se confirma actividad en la ficha 327 por su dominio único ya vinculado; la política identifica expresamente a Securitas Seguridad España SA como responsable. No se distribuye esta evidencia entre SCI, Techco ni otras sociedades del grupo; no se modifica su sector, fuente o perímetro."
+    },
+    {
+      "cif": "B10242188",
+      "nombre": "CAMPÓN GIBELLO, S.L.",
+      "web": "https://www.campongibello.com/",
+      "identidadUrl": "https://boe.es/boe/dias/2025/11/19/pdfs/BOE-B-2025-42549.pdf",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.campongibello.com/proteccion-pasiva-de-incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Además de distribuir materiales, ejecuta protección pasiva: publica la proyección de mortero de vermiculita por su equipo sobre una estructura metálica del Casino de Badajoz."
+        }
+      ],
+      "localidad": "Casar de Cáceres",
+      "provincia": "Cáceres",
+      "ccaa": "Extremadura",
+      "direccion": "Ronda de los Llanos, 2",
+      "codigoPostal": "10190",
+      "fuentesIdentidadLocalizacion": [
+        "https://boe.es/boe/dias/2025/11/19/pdfs/BOE-B-2025-42549.pdf",
+        "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?DocumentIdParam=BnMAtr04dL3Mbv0ORsCd7PaSkhTTxbg0Ykdxh56SwcKfhwLYvXkmczE2sZzSexSPjCNbcX2xysEnnHdagCkV0NdZBrTdIKlICGX9PEzQAkIZyAJWGsSt0OzTSTyw9JAs&cifrado=QUC1GjXXSiLkydRHJBmbpw%3D%3D"
+      ],
+      "descubrimiento": "https://www.campongibello.com/proteccion-pasiva-de-incendios/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "Distribución de materiales de construcción junto a una línea de ejecución de protección pasiva.",
+        "fuente": "https://www.campongibello.com/proteccion-pasiva-de-incendios/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "BOE identifica CIF; el anuncio oficial de Azuaga confirma domicilio y correo corporativo. Son adjudicaciones de suministro usadas solo para identidad/localización. La ejecución de pasiva se acredita por obra propia corporativa, sin convertir cualquier distribuidor en aplicador.",
+      "lat": 39.5614765,
+      "lng": -6.4171236,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Casar+de+C%C3%A1ceres%2C+C%C3%A1ceres%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Casar de Cáceres, Cáceres, Extremadura, 10190, España",
+        "osmType": "relation",
+        "osmId": 1909133
+      }
+    },
+    {
+      "cif": "B10338192",
+      "nombre": "POLITEX AISLAMIENTOS, S.L.",
+      "web": "https://www.politexaislamientos.es/",
+      "identidadUrl": "https://www.politexaislamientos.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.politexaislamientos.es/obras/colegio-registradores-alcala-540-madrid/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplicadora de aislamiento y protección pasiva con equipo propio. Publica la ejecución de mortero ignífugo de lana de roca en forjado reticular del Colegio de Registradores de Madrid."
+        },
+        {
+          "url": "https://www.politexaislamientos.es/franjas-cortafuego/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su oferta de instalación incluye franjas cortafuegos para sectorización y encuentros de cubierta con medianería."
+        }
+      ],
+      "localidad": "Navalmoral de la Mata",
+      "provincia": "Cáceres",
+      "ccaa": "Extremadura",
+      "direccion": "Calle Antonio Concha, 6, 2º B",
+      "codigoPostal": "10300",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.politexaislamientos.es/politica-de-privacidad/",
+        "https://www.politexaislamientos.es/",
+        "https://www.politexaislamientos.es/franjas-cortafuego/",
+        "https://www.politexaislamientos.es/contacto/"
+      ],
+      "descubrimiento": "https://www.coaatcaceres.es/FTP/Tablon%20Anuncios/Politex%20Aislamientos.pdf",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "La presentación corporativa combina aislamiento, protección pasiva e impermeabilización.",
+        "fuente": "https://www.politexaislamientos.es/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "La pista del colegio profesional se completa con identidad, domicilio y obras de la web corporativa; la pertenencia o mención asociativa no se transforma en habilitación. Una obra en Madrid no genera sede adicional.",
+      "lat": 39.8915481,
+      "lng": -5.540719,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Navalmoral+de+la+Mata%2C+C%C3%A1ceres%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Navalmoral de la Mata, Cáceres, Extremadura, 10300, España",
+        "osmType": "relation",
+        "osmId": 346106
+      }
+    },
+    {
+      "cif": "B26161547",
+      "nombre": "RIOMADER, S.L.",
+      "web": "https://riomader.com/",
+      "identidadUrl": "https://riomader.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://riomader.com/servicios-madera-logrono/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta tratamientos de ignifugado de madera junto con otros servicios de carpintería y tratamiento. La confirmación se apoya en ese servicio, sin atribuirle instalación de las puertas de su catálogo."
+        }
+      ],
+      "localidad": "Logroño",
+      "provincia": "La Rioja",
+      "ccaa": "La Rioja",
+      "direccion": "Camino Viejo de Alberite, 47-49",
+      "codigoPostal": "26006",
+      "fuentesIdentidadLocalizacion": [
+        "https://riomader.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://riomader.com/servicios-madera-logrono/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "Madera, carpintería, fabricación y tratamientos, entre ellos ignifugado.",
+        "fuente": "https://riomader.com/servicios-madera-logrono/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "Tratamiento aplicado sobre madera: no se deduce resistencia estructural, ni instalación de puertas cortafuegos a partir de una ficha de producto.",
+      "lat": 42.4661196,
+      "lng": -2.4396676,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Logro%C3%B1o%2C+La+Rioja%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Logroño, La Rioja, España",
+        "osmType": "relation",
+        "osmId": 340516
+      }
+    },
+    {
+      "cif": "B26431866",
+      "nombre": "CENTROPUERTAS NORTE 2007, S.L.",
+      "web": "https://centropuertasnorte.es/",
+      "identidadUrl": "https://centropuertasnorte.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://centropuertasnorte.es/puertas-cortafuegos/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Suministra puertas cortafuegos y declara que su propio equipo realiza la instalación y ofrece mantenimiento; combina esta actividad con puertas y automatismos generales."
+        }
+      ],
+      "localidad": "Oyón-Oion",
+      "provincia": "Álava",
+      "ccaa": "País Vasco",
+      "direccion": "Calle Paso el Prao, Polígono Los Castaños",
+      "codigoPostal": "01320",
+      "fuentesIdentidadLocalizacion": [
+        "https://centropuertasnorte.es/aviso-legal/"
+      ],
+      "descubrimiento": "https://centropuertasnorte.es/puertas-cortafuegos/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "Instala puertas automáticas, residenciales e industriales, incluidas cortafuegos.",
+        "fuente": "https://centropuertasnorte.es/puertas-industrial/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "La web se dirige al mercado de Logroño, pero el domicilio fiscal publicado está en Oyón, Álava. No se crea otra empresa ni sede por La Rioja o Navarra.",
+      "lat": 42.506553,
+      "lng": -2.4357886,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Oy%C3%B3n-Oion%2C+%C3%81lava%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Oyón-Oion, Arabako Errioxa, Araba / Álava, Euskadi, España",
+        "osmType": "relation",
+        "osmId": 339901
+      }
+    },
+    {
+      "cif": "B26571133",
+      "nombre": "PUERTAS AUTOMATICOS ÁNGEL, S.L.U.",
+      "web": "https://puertasautomaticasangel.es/",
+      "identidadUrl": "https://puertasautomaticasangel.es/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://puertasautomaticasangel.es/puertas-automaticas-y-automatismos-angel-logrono",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Montador de puertas y automatismos que incluye expresamente cortafuegos Pierre entre los sistemas que monta para clientes industriales y particulares."
+        }
+      ],
+      "localidad": "Logroño",
+      "provincia": "La Rioja",
+      "ccaa": "La Rioja",
+      "direccion": "Calle Circunde, 43, 3º",
+      "codigoPostal": "26006",
+      "fuentesIdentidadLocalizacion": [
+        "https://puertasautomaticasangel.es/aviso-legal"
+      ],
+      "descubrimiento": "https://puertasautomaticasangel.es/puertas-automaticas-y-automatismos-angel-logrono",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "Puertas, automatismos y persianas junto con sistemas cortafuegos.",
+        "fuente": "https://puertasautomaticasangel.es/puertas-automaticas-y-automatismos-angel-logrono",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "Se conserva la denominación fiscal publicada, aunque difiera del nombre comercial Puertas Automáticas Ángel. Se usa el domicilio de Circunde; la oficina de Fuenmayor no se cuenta como otra entidad. La declaración comercial de montador no se convierte en calificación Cepreven.",
+      "lat": 42.4661196,
+      "lng": -2.4396676,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Logro%C3%B1o%2C+La+Rioja%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Logroño, La Rioja, España",
+        "osmType": "relation",
+        "osmId": 340516
+      }
+    },
+    {
+      "cif": "B39663109",
+      "nombre": "J. L. HOLANDA FERNÁNDEZ, S.L.",
+      "web": "https://www.holandafernandez.com/",
+      "identidadUrl": "https://www.holandafernandez.com/copia-de-contacto",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.holandafernandez.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Empresa de pintura y reformas que se presenta como instaladora de sistemas Placo e incluye expresamente protección pasiva contra el fuego entre sus soluciones."
+        }
+      ],
+      "localidad": "Castañeda",
+      "provincia": "Cantabria",
+      "ccaa": "Cantabria",
+      "codigoPostal": "39650",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.holandafernandez.com/copia-de-contacto",
+        "https://www.holandafernandez.com/servicios",
+        "https://www.holandafernandez.com/contacto"
+      ],
+      "descubrimiento": "https://www.holandafernandez.com/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "Pintura, revestimientos, reformas y sistemas de construcción seca junto a protección frente al fuego.",
+        "fuente": "https://www.holandafernandez.com/servicios",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "La privacidad publica La Cueva 84 y contacto La Cueva 106; se conserva municipio y código postal comunes y se omite la calle. No se infiere un sistema concreto por la mera instalación de placa de yeso.",
+      "lat": 43.3174975,
+      "lng": -3.9260653,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Casta%C3%B1eda%2C+Cantabria%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Castañeda, Cantabria, 39660, España",
+        "osmType": "relation",
+        "osmId": 339834
+      }
+    },
+    {
+      "cif": "B45630126",
+      "nombre": "NUEVAS TECNOLOGIAS CONTRA INCENDIOS, S.L.",
+      "web": "https://www.ntci.es/",
+      "identidadUrl": "https://www.ntci.es/instalacion/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.ntci.es/instalacion/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su instalación de pasiva incluye sellado de pasos de cables y tuberías, compartimentación con placas, morteros e intumescentes y puertas cortafuegos; se amplían las especialidades ya documentadas."
+        }
+      ],
+      "empresaIdEsperada": 1576,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.ntci.es/instalacion/"
+      ],
+      "descubrimiento": "https://www.ntci.es/instalacion/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "Ingeniería e instalación de PCI activa y pasiva, con sistemas de detección y extinción además de compartimentación.",
+        "fuente": "https://www.ntci.es/instalacion/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      }
+    },
+    {
+      "cif": "B48545172",
+      "nombre": "NORATEK, S.L.",
+      "web": "https://noratek.es/",
+      "identidadUrl": "https://noratek.es/aviso-legal-y-ypolitica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://noratek.es/portfolio-item/pabellon-reyno-de-navarra-pamplona/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Especialista declarado en soluciones contra el fuego. Publica una instalación propia de un ventanal cortafuegos en el Pabellón Reyno de Navarra de Pamplona, fechada en 2012."
+        }
+      ],
+      "localidad": "Galdakao",
+      "provincia": "Vizcaya",
+      "ccaa": "País Vasco",
+      "direccion": "Polígono Bekea, pabellón 3",
+      "codigoPostal": "48960",
+      "fuentesIdentidadLocalizacion": [
+        "https://noratek.es/aviso-legal-y-ypolitica-de-privacidad/",
+        "https://www.euskadi.eus/anuncio_contratacion/e-p-suministro-e-instalacion-puerta-cortafuegos/web01-tramite/es/"
+      ],
+      "descubrimiento": "https://noratek.es/portfolio-item/pabellon-reyno-de-navarra-pamplona/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "especializacion_declarada",
+        "motivo": "Se presenta como referente de protección pasiva y centra su oferta en soluciones cortafuegos, junto a automatismos y accesos. No implica exclusividad ni cuota de facturación.",
+        "fuente": "https://noratek.es/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "El perfil oficial de contratación de Getxo confirma NIF y ejecución en 2024. Se usa domicilio del aviso corporativo de Galdakao frente al domicilio histórico de Zamudio del contrato; Pamplona es ubicación de una obra, no otra sede.",
+      "lat": 43.2314113,
+      "lng": -2.844051,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Galdakao%2C+Vizcaya%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Galdakao, Bizkaia, Euskadi, 48960, España",
+        "osmType": "relation",
+        "osmId": 347735
+      }
+    },
+    {
+      "cif": "B50502368",
+      "nombre": "AISLAMIENTOS ROGILCAR, S.L.",
+      "web": "https://rogilcar.com/",
+      "identidadUrl": "https://rogilcar.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://rogilcar.com/servicios/poteccion-pasiva-contra-el-fuego/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Dentro de su oferta de aislamiento y recubrimientos, aplica protección de estructuras con pinturas intumescentes, morteros y paneles ignífugos."
+        }
+      ],
+      "localidad": "Zuera",
+      "provincia": "Zaragoza",
+      "ccaa": "Aragón",
+      "direccion": "Calle Italia, 13, Polígono El Campillo",
+      "codigoPostal": "50800",
+      "fuentesIdentidadLocalizacion": [
+        "https://rogilcar.com/aviso-legal/",
+        "https://rogilcar.com/politica-de-privacidad/",
+        "https://rogilcar.com/servicios/"
+      ],
+      "descubrimiento": "https://rogilcar.com/servicios/poteccion-pasiva-contra-el-fuego/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "Ofrece aislamiento térmico, impermeabilización, ignifugación y suelos epoxi.",
+        "fuente": "https://rogilcar.com/servicios/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "El aviso y privacidad del dominio corporativo identifican B50502368, frente al CIF de plantilla de aislamientospro.es. Se usa domicilio fiscal de Calle Italia 13; el contacto publica centro en Grecia 8, mismo municipio. No se deduce estado legal de la web ni se importan estados de agregadores.",
+      "lat": 41.8659094,
+      "lng": -0.7886383,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Zuera%2C+Zaragoza%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Zuera, Zaragoza, Aragón, España",
+        "osmType": "relation",
+        "osmId": 345733
+      }
+    },
+    {
+      "cif": "B61849295",
+      "nombre": "DIATERM FOC SL",
+      "web": "https://diatermfoc.com/",
+      "identidadUrl": "https://diatermfoc.com/otros-productos/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://diatermfoc.com/otros-productos/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su oferta de instalación y distribución de productos contra el fuego incluye puertas cortafuegos batientes, correderas y de guillotina; se añade esta especialidad a su ficha existente."
+        }
+      ],
+      "empresaIdEsperada": 5805,
+      "fuentesIdentidadLocalizacion": [
+        "https://diatermfoc.com/otros-productos/"
+      ],
+      "descubrimiento": "https://diatermfoc.com/otros-productos/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "especializacion_declarada",
+        "motivo": "Oferta centrada en soluciones de instalación de protección pasiva contra el fuego.",
+        "fuente": "https://diatermfoc.com/otros-productos/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "Se enriquece Diaterm Foc, no se atribuye la instalación automáticamente a otras distribuidoras del grupo Diaterm."
+    },
+    {
+      "cif": "B63711865",
+      "nombre": "AISLAMIENTOS SISTEMPLAC, S.L.",
+      "web": "https://sistemplac.es/",
+      "identidadUrl": "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?cifrado=QUC1GjXXSiLkydRHJBmbpw%3D%3D&DocumentIdParam=agYmbbOoDcjMdGjXBWETpike2dZSEELfDBNCrcyfPAq8SQIgoSUdcq0G9Zaq7z1fNo/srgU/DenakXyNhtoAMXALh/sHCgA0CDPxZmldA0I%3D",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://sistemplac.es/ignifugacion/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Instala sistemas de protección pasiva contra el fuego con equipo técnico propio, como parte de su oferta de construcción seca, aislamiento y revestimientos."
+        }
+      ],
+      "localidad": "Sabadell",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Calle Pereda, 19-21",
+      "codigoPostal": "08204",
+      "fuentesIdentidadLocalizacion": [
+        "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?cifrado=QUC1GjXXSiLkydRHJBmbpw%3D%3D&DocumentIdParam=agYmbbOoDcjMdGjXBWETpike2dZSEELfDBNCrcyfPAq8SQIgoSUdcq0G9Zaq7z1fNo/srgU/DenakXyNhtoAMXALh/sHCgA0CDPxZmldA0I%3D",
+        "https://sistemplac.es/sobre-nosotros/",
+        "https://sistemplac.es/contacto/"
+      ],
+      "descubrimiento": "https://www.adip-as.com/asociados/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "La presentación corporativa incluye construcción seca, aislamiento, revestimientos y protección pasiva.",
+        "fuente": "https://sistemplac.es/sobre-nosotros/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "Pendiente fiscal resuelto con formalización oficial ENAIRE BAC 179/2023, que vincula NIF y correo @sistemplac.es. La contratación es de aislamiento acústico y solo acredita identidad. El domicilio operativo actual de Sabadell procede de la web corporativa; no se copia la dirección del órgano contratante de Madrid ni el domicilio histórico de Badia. Distinta de Sistemplac Interiores.",
+      "lat": 41.5460801,
+      "lng": 2.1083214,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Sabadell%2C+Barcelona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Sabadell, Vallès Occidental, Barcelona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 344202
+      }
+    },
+    {
+      "cif": "B74337304",
+      "nombre": "SISTEMAS DE PROTECCION ORSEI SL",
+      "web": "https://orsei.es/",
+      "identidadUrl": "https://orsei.es/sistemas-de-proteccion-pasiva/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://orsei.es/sistemas-de-proteccion-pasiva/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Además de morteros, intumescentes y franjas, declara que su equipo instala selladores ignífugos, recubrimientos y paneles. Se incorpora la especialidad de sellados a su ficha existente."
+        }
+      ],
+      "empresaIdEsperada": 2622,
+      "fuentesIdentidadLocalizacion": [
+        "https://orsei.es/sistemas-de-proteccion-pasiva/"
+      ],
+      "descubrimiento": "https://orsei.es/sistemas-de-proteccion-pasiva/",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "Instala y mantiene sistemas de protección activa y ofrece aplicación e instalación de pasiva.",
+        "fuente": "https://orsei.es/sistemas-de-proteccion-pasiva/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      }
+    },
+    {
+      "cif": "B96716212",
+      "nombre": "LEMARA RESTAURACIONES, S.L.",
+      "web": "https://www.lemara.es/",
+      "identidadUrl": "https://www.lemara.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.lemara.es/sellado-ignifugo/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece servicios de sellado ignífugo de pasos de instalaciones y huecos entre sectores, dentro de su actividad de tratamientos e impermeabilización de construcciones."
+        }
+      ],
+      "localidad": "Paiporta",
+      "provincia": "Valencia",
+      "ccaa": "C. Valenciana",
+      "direccion": "Calle Jaume I, 90",
+      "codigoPostal": "46200",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.lemara.es/politica-de-privacidad/"
+      ],
+      "descubrimiento": "https://www.asociaciondir.es/index.php/contactos-aplicadores-reparacion-proteccion-hormigon",
+      "perfilOfertaPasiva": {
+        "clasificacion": "oferta_diversificada",
+        "motivo": "La oferta combina inyecciones, impermeabilización, reparación y refuerzo con sellado ignífugo.",
+        "fuente": "https://www.lemara.es/sellado-ignifugo/",
+        "fecha": "2026-10-25",
+        "alcance": "Describe la oferta publicada; no mide facturación, exclusividad ni independencia."
+      },
+      "observaciones": "El directorio DIR es pista de aplicador de reparación, no acreditación automática de pasiva. La actividad y el CIF se contrastan en páginas corporativas.",
+      "lat": 39.4279722,
+      "lng": -0.4184254,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Paiporta%2C+Valencia%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Paiporta, l'Horta Sud, València / Valencia, Comunitat Valenciana, 46200, España",
+        "osmType": "relation",
+        "osmId": 342678
+      }
+    }
+  ]
+}
