@@ -1,6 +1,6 @@
 # Operación y despliegues seguros
 
-Revisado: **2026-10-24**. Estado de datos y migraciones comprobadas en [Estado actual](PROJECT_STATUS.md). Los comandos de escritura se ejecutan contra el entorno elegido y con el plan de migración/importación revisado.
+Revisado: **2026-10-25**. Estado de datos y migraciones comprobadas en [Estado actual](PROJECT_STATUS.md). Los comandos de escritura se ejecutan contra el entorno elegido y con el plan de migración/importación revisado.
 
 ## Panel de Operación
 
@@ -87,7 +87,7 @@ Los nulos no pisan cifras previas, los años íntegramente a cero no se cargan y
 El lote y sus fuentes están en [Protección pasiva](PROTECCION_PASIVA.md). La migración aditiva de pasiva debe estar aplicada antes de desplegar código que lea esas columnas. El script no descubre empresas automáticamente: recibe filas previamente revisadas.
 
 ```powershell
-node --env-file=.env.local --import tsx scripts/import-pasiva.ts docs/research/pasiva-validada-ampliacion2-2026-10-24.json
+node --env-file=.env.local --import tsx scripts/import-pasiva.ts docs/research/pasiva-validada-ampliacion3-2026-10-25.json
 ```
 
 Simula por defecto. La escritura requiere `--apply`, revalida el cruce en una transacción y usa un advisory lock para serializar importaciones de pasiva. Si queda una fila `revisar`, se aborta todo el lote. Bloquea CIF duplicados o ambiguos, dominios asociados a otro CIF, leads anónimos y revisiones negativas previas. Las altas exigen identidad fiscal, localización y `permitirAlta=true`; se crean fuera de perímetro y con estado SABI sin consultar.

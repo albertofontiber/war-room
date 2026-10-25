@@ -1,8 +1,22 @@
 # Protección pasiva: actividad transversal y ampliación del universo
 
-Revisión: **24/10/2026, 20:35 Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y cuatro lotes están aplicados en producción: **243 entidades con pasiva confirmada**.
+Revisión: **25/10/2026, Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y cinco lotes están aplicados en producción: **257 entidades con pasiva confirmada**.
 
 ## Resultado aplicado
+
+La quinta tanda incorpora **13 altas y 5 enriquecimientos**, con altas en **7 comunidades autónomas**. El [quinto lote aplicado](research/pasiva-validada-ampliacion3-2026-10-25.json) conserva identidad fiscal primaria, ejecución, localización y fuentes. El [seguimiento vigente](research/pasiva-ampliacion3-seguimiento-2026-10-25.json) distingue 111 dominios, decisiones manuales, rastreo sin validación final y pendientes heredados sin reconsulta. Los dominios no equivalen a sociedades ni a revisiones manuales completas.
+
+Las **13 empresas nuevas** son Pladiser, Isaphone, Grupo Endozer, Igniwool, Julio Barbero Moreno, Aislamientos Insuflados, Pinturas Sabi, Pinturas Marcelino González, Gusolin Utrera, Varmany, La Plana Techos y Tabiques, Protec-Alba y Pintores González y León. No existían por CIF en las 5.842 empresas de partida; el universo pasa a **5.855**. Sus coordenadas son centros municipales y entran fuera de perímetro, con estado SABI sin consultar.
+
+Las **5 fichas existentes enriquecidas** son Sinelec (2346), Enesa Continental (5803), Igesur (5804), Procaval / Proyectos y Servicios Caval (5812) y Escadur / Ignaria (5853). Sinelec pasa a pasiva confirmada; las otras cuatro ya estaban confirmadas y amplían evidencia o servicios. Así, 18 fichas trabajadas añaden 14 confirmaciones: **243 → 257**. Procaval no genera otra empresa por su marca; Proyecta Verm e Ignisol se agrupan con Escadur por el CIF `E42824722`, conservando su ficha y domicilio anteriores.
+
+Quedan resueltos Pladiser, Isaphone, Gusolin y La Plana del rastreo asociativo anterior. Pladiser publica el CIF en un aviso legal PDF; Isaphone se identifica fiscalmente en contratos públicos históricos de CCMA y acredita ejecución y localización actuales en su web. Se omite la calle de González y León por discrepancia 12/14 entre contacto y aviso. La búsqueda amplía las vías de AD’IP y AISLA con ANSPI, DIR y Red Experta, sin atribuir actividad a todos sus miembros ni dar de alta fabricantes, proveedores o blogs por hablar de materiales ignífugos.
+
+Sistemplac y PYL Bages siguen pendientes de recuperar el CIF en fuente primaria; Aplicanor requiere atribuir la ejecución a una sociedad de su grupo. CODI no recibe el CIF de su agencia web. Rogilcar conserva una discrepancia de titular fiscal en la web comercial y Pinturas Indalo publica un CIF de plantilla; ambos requieren resolver identidad antes de alta. Los casos no concluyentes no reciben una revisión negativa.
+
+La carga deja **18 auditorías**; repetir el lote devuelve `sin_cambios=18` sin nuevas escrituras. Las huellas de campos protegidos, cuentas, CRM y recuentos de tareas/notas/contactos de las cinco fichas existentes se conservan. La API de producción verifica los 18 CIF exactamente una vez en lite/full, sus 18 fichas, 16 combinaciones de actividades y la exportación de **257** con fuentes. Se mantienen **23.620** filas financieras.
+
+### Cuarta tanda
 
 La cuarta tanda incorpora **18 altas y 4 enriquecimientos**, con presencia de las altas en **11 comunidades autónomas**. El [lote aplicado](research/pasiva-validada-ampliacion2-2026-10-24.json) conserva identidad fiscal primaria, ejecución, localización y fuentes; el [nuevo seguimiento](research/pasiva-ampliacion2-seguimiento-2026-10-24.json) distingue 67 dominios de candidatas y marcas, sus resultados y los pendientes anteriores no resueltos. No se cuentan como empresas adicionales las webs alternativas de Lotor o Aislamientos San Felices.
 
@@ -110,6 +124,6 @@ Las evidencias se tipifican como `web_corporativa`, `asociacion` o `calificacion
 
 Carboline y KaviDoors quedan fuera de este lote por su rol de fabricante sin instalación propia validada; Intertek por ensayos/certificación y Cepreven por ser asociación. No se crean fichas por marca, delegación o landing de ciudad.
 
-Las ampliaciones por asociaciones y búsqueda regional están realizadas y aplicadas en los lotes fechados; no se mantienen como una tarea genérica sin empezar. Las **243 confirmadas no agotan el mercado**. La continuidad consiste en resolver los casos concretos del seguimiento más reciente, recuperar accesos, investigar sociedades sin web y ampliar redes de aplicadores o territorios con evidencia adicional. Las webs comerciales de cobertura nacional no se cuentan como sedes en cada región. Conesam no recibe el CIF de su proveedor de protección de datos; las redes VKM/VKS quedan sin atribución de ejecución propia. No se aplican revisiones negativas.
+Las ampliaciones por asociaciones y búsqueda regional están realizadas y aplicadas en los lotes fechados; no se mantienen como una tarea genérica sin empezar. Las **257 confirmadas no agotan el mercado**. La continuidad consiste en resolver los casos concretos del seguimiento vigente, recuperar accesos, investigar sociedades sin web y ampliar redes de aplicadores o territorios con evidencia adicional. Las webs comerciales de cobertura nacional no se cuentan como sedes en cada región. Conesam no recibe el CIF de su proveedor de protección de datos; las redes VKM/VKS quedan sin atribución de ejecución propia. No se aplican revisiones negativas.
 
 Para cada nueva tanda: validar actividad e identidad, cruzar CIF exacto, resolver dominios compartidos, simular, aplicar únicamente las filas validadas y verificar idempotencia. Los enriquecimientos no alteran perímetro, responsable, etapa, financieros, grupo o fuente original. Una empresa pendiente permanece `null`, nunca se transforma por defecto en «no hace pasiva».

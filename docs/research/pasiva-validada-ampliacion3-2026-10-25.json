@@ -1,0 +1,683 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "alcance": "Quinta tanda: ampliación por fuentes asociativas y regiones; instaladoras/aplicadoras en España. Cobertura parcial.",
+  "criterio": "Identidad fiscal primaria, ejecución acreditada y cruce por CIF normalizado con el universo. No se crean fichas por marcas, delegaciones o páginas regionales.",
+  "geocodificacion": "Centroides de municipios de domicilios contrastados; no geolocalización exacta de las direcciones.",
+  "empresas": [
+    {
+      "cif": "A08861221",
+      "nombre": "ISAPHONE, S.A.",
+      "web": "https://isaphone.es/",
+      "identidadUrl": "https://statics.3cat.cat/multimedia/pdf/3/9/1444304193993.pdf",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "conductos",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://isaphone.es/productos/proteccion-pasiva-contra-el-fuego/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Instaladora de sistemas interiores que ejecuta protección de estructuras con placas, compartimentación, revestimiento de conductos y sellado de huecos."
+        }
+      ],
+      "localidad": "Barberà del Vallès",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Gorcs Lladó, 160, nave 11",
+      "codigoPostal": "08210",
+      "fuentesIdentidadLocalizacion": [
+        "https://statics.3cat.cat/multimedia/pdf/3/9/1444304193993.pdf",
+        "https://isaphone.es/acerca-de-nosotros/",
+        "https://statics.3cat.cat/multimedia/pdf/6/6/1507620541666.pdf",
+        "https://isaphone.es/"
+      ],
+      "descubrimiento": "https://www.adip-as.com/asociados/",
+      "observaciones": "El NIF se contrasta en contratos de CCMA de 2015 y 2017; son fuentes históricas de identidad, no prueba de actividad pasiva ni de vigencia legal. Ejecución y domicilio actuales en la web corporativa.",
+      "lat": 41.5172534,
+      "lng": 2.1265942,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=Barber%C3%A0+del+Vall%C3%A8s&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Barberà del Vallès, Vallès Occidental, Barcelona, Catalunya, 08210, España",
+        "osmType": "relation",
+        "osmId": 341730
+      }
+    },
+    {
+      "cif": "A39087887",
+      "nombre": "PINTURAS SABI, S.A.",
+      "web": "https://www.pinturassabi.com/",
+      "identidadUrl": "https://www.pinturassabi.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.pinturassabi.com/servicios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplica pintura intumescente y mortero ignífugo y realiza sellado de penetraciones como servicios de protección pasiva contra incendios."
+        }
+      ],
+      "localidad": "San Felices de Buelna",
+      "provincia": "Cantabria",
+      "ccaa": "Cantabria",
+      "direccion": "Barrio La Agüera, s/n",
+      "codigoPostal": "39409",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.pinturassabi.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://www.pinturassabi.com/servicios/",
+      "lat": 43.2663088,
+      "lng": -4.0303292,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?city=San+Felices+de+Buelna&country=Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "San Felices de Buelna, Cantabria, 39409, España",
+        "osmType": "relation",
+        "osmId": 345146
+      }
+    },
+    {
+      "cif": "B02509636",
+      "nombre": "PROTEC-ALBA",
+      "web": "https://protecalba.com/",
+      "identidadUrl": "https://protecalba.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://protecalba.com/proteccion-pasiva-contra-incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Empresa aplicadora de servicios de construcción que ejecuta trabajos de protección pasiva contra incendios para proteger edificios y estructuras."
+        }
+      ],
+      "localidad": "Chinchilla de Monte-Aragón",
+      "provincia": "Albacete",
+      "ccaa": "Castilla-La Mancha",
+      "direccion": "Calle La Habana, parcela E2-2, nave 4, Polígono Montearagón",
+      "codigoPostal": "02520",
+      "fuentesIdentidadLocalizacion": [
+        "https://protecalba.com/aviso-legal/",
+        "https://protecalba.com/empresa/"
+      ],
+      "descubrimiento": "https://protecalba.com/proteccion-pasiva-contra-incendios/",
+      "observaciones": "Se conserva el nombre comercial publicado junto al CIF; no se inventa denominación social.",
+      "lat": 38.8804873,
+      "lng": -1.5891138,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Chinchilla+de+Montearag%C3%B3n%2C+Albacete%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Chinchilla de Montearagón, Albacete, Castilla-La Mancha, España",
+        "osmType": "relation",
+        "osmId": 346063
+      }
+    },
+    {
+      "cif": "B05119144",
+      "nombre": "JULIO BARBERO MORENO, S.L.",
+      "web": "https://grupojuliobarbero.com/",
+      "identidadUrl": "https://grupojuliobarbero.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://grupojuliobarbero.com/proteccion-pasiva/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece protección de elementos estructurales metálicos y de hormigón y de conductos de ventilación y extracción mediante mortero y pintura intumescente."
+        }
+      ],
+      "localidad": "Burgohondo",
+      "provincia": "Ávila",
+      "ccaa": "Castilla y León",
+      "direccion": "Calle Los Bonales, 10",
+      "codigoPostal": "05113",
+      "fuentesIdentidadLocalizacion": [
+        "https://grupojuliobarbero.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://grupojuliobarbero.com/proteccion-pasiva/",
+      "lat": 40.414358,
+      "lng": -4.785769,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Burgohondo%2C+%C3%81vila%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Burgohondo, Ávila, Castilla y León, 05113, España",
+        "osmType": "relation",
+        "osmId": 344995
+      }
+    },
+    {
+      "cif": "B12681623",
+      "nombre": "LA PLANA TECHOS Y TABIQUES, S.L.",
+      "web": "https://www.laplanatechosytabiques.es/",
+      "identidadUrl": "https://www.laplanatechosytabiques.es/aviso-legal.html",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.laplanatechosytabiques.es/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Instaladora de sistemas constructivos que incluye expresamente protección contra el fuego entre los trabajos que ofrece."
+        }
+      ],
+      "localidad": "Altura",
+      "provincia": "Castellón",
+      "ccaa": "C. Valenciana",
+      "direccion": "Calle Doctores López y Terrada, 9",
+      "codigoPostal": "12410",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.laplanatechosytabiques.es/aviso-legal.html"
+      ],
+      "descubrimiento": "https://www.adip-as.com/asociados/",
+      "observaciones": "La evidencia permite confirmar actividad, pero no identificar un sistema concreto; no se infieren especialidades.",
+      "lat": 39.8512304,
+      "lng": -0.5128608,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Altura%2C+Castell%C3%B3n%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Altura, l'Alt Palància, Castelló / Castellón, Comunitat Valenciana, España",
+        "osmType": "relation",
+        "osmId": 339540
+      }
+    },
+    {
+      "cif": "B13669676",
+      "nombre": "GRUPO ENDOZER, S.L.U.",
+      "web": "https://www.endozer.com/",
+      "identidadUrl": "https://www.endozer.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.endozer.com/sobre-nosotros/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta con personal propio pintura intumescente sobre estructuras metálicas, con control de espesores y documentación de aplicación."
+        }
+      ],
+      "localidad": "Madrid",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Paseo de la Castellana, 194, bajo B",
+      "codigoPostal": "28046",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.endozer.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://www.endozer.com/sobre-nosotros/",
+      "lat": 40.416782,
+      "lng": -3.703507,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Madrid%2C+Madrid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Madrid, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 5326784
+      }
+    },
+    {
+      "cif": "B14220073",
+      "nombre": "SINELEC FIRE PROTECCION, S.L",
+      "web": "https://sinelec.com/",
+      "identidadUrl": "https://sinelec.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://sinelec.com/sistemas-de-proteccion-pasiva-contra-el-fuego/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Instala elementos constructivos de protección pasiva, desde barreras contra el fuego a pintura intumescente para estructuras y puertas cortafuegos."
+        }
+      ],
+      "empresaIdEsperada": 2346,
+      "fuentesIdentidadLocalizacion": [
+        "https://sinelec.com/politica-de-privacidad/"
+      ],
+      "descubrimiento": "https://sinelec.com/sistemas-de-proteccion-pasiva-contra-el-fuego/"
+    },
+    {
+      "cif": "B45813565",
+      "nombre": "AISLAMIENTOS INSUFLADOS",
+      "web": "https://aislamientosinsuflados.es/",
+      "identidadUrl": "https://aislamientosinsuflados.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://aislamientosinsuflados.es/aislamiento-ignifugo/ignifugado-de-estructuras-en-naves-y-edificios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Realiza ignifugación de estructuras mediante pinturas intumescentes y morteros proyectados y ejecuta franjas cortafuegos."
+        }
+      ],
+      "localidad": "Illescas",
+      "provincia": "Toledo",
+      "ccaa": "Castilla-La Mancha",
+      "direccion": "Calle Herreros, 6, 1º",
+      "codigoPostal": "45200",
+      "fuentesIdentidadLocalizacion": [
+        "https://aislamientosinsuflados.es/politica-de-privacidad/",
+        "https://aislamientosinsuflados.es/aislamiento-ignifugo/franja-cortafuegos/",
+        "https://aislamientosinsuflados.es/servicios/aislamientos-ignifugos/"
+      ],
+      "descubrimiento": "https://aislamientosinsuflados.es/aislamiento-ignifugo/ignifugado-de-estructuras-en-naves-y-edificios/",
+      "observaciones": "Se conserva el nombre publicado junto al CIF sin inventar forma social. La privacidad identifica Calle Buena Vista 20; se utiliza la oficina operativa de Illescas publicada en el pie corporativo. No se crean entidades por cada servicio o web comercial.",
+      "lat": 40.1248436,
+      "lng": -3.8492688,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Illescas%2C+Toledo%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Illescas, Toledo, Castilla-La Mancha, 45200, España",
+        "osmType": "relation",
+        "osmId": 342230
+      }
+    },
+    {
+      "cif": "B47370705",
+      "nombre": "PINTURAS MARCELINO GONZÁLEZ, S.L.",
+      "web": "https://www.pinturasmgonzalez.es/",
+      "identidadUrl": "https://www.pinturasmgonzalez.es/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.pinturasmgonzalez.es/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Empresa de pintura industrial que ofrece expresamente protección pasiva contra el fuego entre los trabajos que ejecuta para sus clientes."
+        }
+      ],
+      "localidad": "Valladolid",
+      "provincia": "Valladolid",
+      "ccaa": "Castilla y León",
+      "direccion": "Calle Helio, 28, Polígono San Cristóbal",
+      "codigoPostal": "47012",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.pinturasmgonzalez.es/aviso-legal"
+      ],
+      "descubrimiento": "https://www.pinturasmgonzalez.es/",
+      "observaciones": "La web no detalla el sistema de protección pasiva; no se asignan especialidades a partir de la actividad genérica de pintura industrial.",
+      "lat": 41.6200024,
+      "lng": -4.7259906,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Valladolid%2C+Valladolid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Valladolid, Castilla y León, España",
+        "osmType": "relation",
+        "osmId": 348849
+      }
+    },
+    {
+      "cif": "B54593710",
+      "nombre": "ENESA CONTINENTAL SL",
+      "web": "https://enesacontinental.com/",
+      "identidadUrl": "https://enesacontinental.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://enesacontinental.com/portfolio/planta-de-regasificacion",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Obra ejecutada en la planta de regasificación El Musel de Gijón: aplicación de mortero sobre estructuras metálicas para protección pasiva frente a fuego de hidrocarburos."
+        }
+      ],
+      "empresaIdEsperada": 5803,
+      "fuentesIdentidadLocalizacion": [
+        "https://enesacontinental.com/"
+      ],
+      "descubrimiento": "https://enesacontinental.com/portfolio/planta-de-regasificacion",
+      "observaciones": "Cruce con el dominio ya vinculado a la ficha 5803. La obra de Gijón añade evidencia; no implica una nueva sede ni una nueva empresa."
+    },
+    {
+      "cif": "B56082860",
+      "nombre": "IGESUR SOLUCIONES TECNICAS SL",
+      "web": "https://www.igesur.com/",
+      "identidadUrl": "https://www.igesur.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.igesur.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta franjas y sectorizaciones, sellados de instalaciones, morteros y pinturas intumescentes y tratamientos de reacción al fuego con barniz y pintura ablativa."
+        }
+      ],
+      "empresaIdEsperada": 5804,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.igesur.com/politica-de-privacidad/"
+      ],
+      "descubrimiento": "https://www.igesur.com/"
+    },
+    {
+      "cif": "B64976954",
+      "nombre": "VARMANY, S.L.",
+      "web": "https://varmany.com/",
+      "identidadUrl": "https://varmany.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://varmany.com/ignifugaciones-terrassa/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplica sistemas de protección pasiva con pintura intumescente y ablativa y emite documentación de los tratamientos realizados."
+        }
+      ],
+      "localidad": "Montcada i Reixac",
+      "provincia": "Barcelona",
+      "ccaa": "Cataluña",
+      "direccion": "Calle Aragón, 14, bajos",
+      "codigoPostal": "08110",
+      "fuentesIdentidadLocalizacion": [
+        "https://varmany.com/aviso-legal/",
+        "https://varmany.com/reformas-integrales/"
+      ],
+      "descubrimiento": "https://varmany.com/ignifugaciones-terrassa/",
+      "observaciones": "La página de servicio de Terrassa pertenece a la entidad domiciliada en Montcada i Reixac; no se crea una ficha de sede por localidad atendida.",
+      "lat": 41.4800754,
+      "lng": 2.187009,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Montcada+i+Reixac%2C+Barcelona%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Montcada i Reixac, Vallès Occidental, Barcelona, Catalunya, España",
+        "osmType": "relation",
+        "osmId": 346037
+      }
+    },
+    {
+      "cif": "B85095701",
+      "nombre": "PLADISER MONTAJES E INSTALACIONES, S.L.",
+      "web": "https://pladiser-mi.com/",
+      "identidadUrl": "https://pladiser-mi.com/Media/pladisermi/dayvo/Privacidad%20y%20Aviso%20Legal%20-%20Pladiser.pdf",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://pladiser-mi.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Instaladora de construcción seca que ofrece expresamente soluciones de protección pasiva contra incendios dentro de sus trabajos."
+        }
+      ],
+      "localidad": "Alcorcón",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle Físicas, 65, local, Polígono Urtinsa",
+      "codigoPostal": "28923",
+      "fuentesIdentidadLocalizacion": [
+        "https://pladiser-mi.com/Media/pladisermi/dayvo/Privacidad%20y%20Aviso%20Legal%20-%20Pladiser.pdf"
+      ],
+      "descubrimiento": "https://www.adip-as.com/asociados/",
+      "observaciones": "Pendiente fiscal resuelto con el aviso legal corporativo en PDF. No se deducen especialidades de la mera instalación de placa de yeso.",
+      "lat": 40.3492998,
+      "lng": -3.8284295,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Alcorc%C3%B3n%2C+Madrid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Alcorcón, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 345877
+      }
+    },
+    {
+      "cif": "B90413287",
+      "nombre": "PINTORES GONZÁLEZ Y LEÓN, S.L.",
+      "web": "https://pintoresgonzalezleon.com/",
+      "identidadUrl": "https://pintoresgonzalezleon.com/avisos-legales/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://pintoresgonzalezleon.com/tratamientos-de-ingnifugados-e-intumescentes/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Empresa de aplicaciones de pintura con equipo propio que ofrece tratamientos ignífugos e intumescentes como protección pasiva contra incendios."
+        }
+      ],
+      "localidad": "Villaverde del Río",
+      "provincia": "Sevilla",
+      "ccaa": "Andalucía",
+      "codigoPostal": "41318",
+      "fuentesIdentidadLocalizacion": [
+        "https://pintoresgonzalezleon.com/avisos-legales/",
+        "https://pintoresgonzalezleon.com/quienes-somos/"
+      ],
+      "descubrimiento": "https://pintoresgonzalezleon.com/",
+      "observaciones": "La web declara pertenencia a ANSPI; no se convierte en calificación de pasiva. Aviso legal y contacto discrepan en el número 14/12 de Adolfo Suárez: se omite la calle.",
+      "lat": 37.591905,
+      "lng": -5.875939,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Villaverde+del+R%C3%ADo%2C+Sevilla%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Villaverde del Río, Sevilla, Andalucía, 41318, España",
+        "osmType": "relation",
+        "osmId": 343861
+      }
+    },
+    {
+      "cif": "B91732289",
+      "nombre": "GUSOLIN UTRERA, S.L.",
+      "web": "http://www.gusolin.es/",
+      "identidadUrl": "http://www.gusolin.es/legal/2/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "http://www.gusolin.es/pladur-en-sevilla/5/0/la-empresa/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Empresa instaladora de tabiquería seca y aislamiento que incluye expresamente protección pasiva contra el fuego en sus trabajos."
+        }
+      ],
+      "localidad": "Utrera",
+      "provincia": "Sevilla",
+      "ccaa": "Andalucía",
+      "direccion": "Calle Fabricantas, 16, Polígono La Morera",
+      "codigoPostal": "41710",
+      "fuentesIdentidadLocalizacion": [
+        "http://www.gusolin.es/legal/2/"
+      ],
+      "descubrimiento": "https://www.adip-as.com/asociados/",
+      "lat": 37.1824646,
+      "lng": -5.7817506,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Utrera%2C+Sevilla%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Utrera, Sevilla, Andalucía, España",
+        "osmType": "relation",
+        "osmId": 342567
+      }
+    },
+    {
+      "cif": "B98892631",
+      "nombre": "PROYECTOS Y SERVICIOS CAVAL SL",
+      "web": "https://procaval.es/",
+      "identidadUrl": "https://procaval.es/politica-de-privacidad-y-cookies/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "servicios": [
+        "estructura",
+        "sellados",
+        "reaccion",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://procaval.es/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Procaval ejecuta protección pasiva de estructuras, sellados y revestimiento de conductos; publica obras propias en túneles de AVE, industria, edificios y centros comerciales."
+        }
+      ],
+      "empresaIdEsperada": 5812,
+      "fuentesIdentidadLocalizacion": [
+        "https://procaval.es/politica-de-privacidad-y-cookies/"
+      ],
+      "descubrimiento": "https://procaval.es/",
+      "observaciones": "Se enriquece la ficha 5812 existente; Procaval es la marca de Proyectos y Servicios Caval. No se da de alta otra empresa."
+    },
+    {
+      "cif": "B98961600",
+      "nombre": "IGNIWOOL, S.L.U.",
+      "web": "https://igniwool.com/",
+      "identidadUrl": "https://igniwool.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "servicios": [
+        "estructura",
+        "reaccion",
+        "compartimentacion",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://igniwool.com/delegaciones/zaragoza/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplica protección de estructuras metálicas y de madera, sellados cortafuegos, sistemas de compartimentación y protección de conductos."
+        }
+      ],
+      "localidad": "Valencia",
+      "provincia": "Valencia",
+      "ccaa": "C. Valenciana",
+      "direccion": "Calle Doctor Cerveró, 18",
+      "fuentesIdentidadLocalizacion": [
+        "https://igniwool.com/politica-de-privacidad/"
+      ],
+      "descubrimiento": "https://igniwool.com/delegaciones/zaragoza/",
+      "observaciones": "Una sola alta en el domicilio fiscal de Valencia; las páginas regionales de cobertura no se convierten en empresas ni sedes independientes. No se atribuye calificación de instalador por declaraciones comerciales.",
+      "lat": 39.4697065,
+      "lng": -0.3763353,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Valencia%2C+Valencia%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "València, Comarca de València, València / Valencia, Comunitat Valenciana, España",
+        "osmType": "relation",
+        "osmId": 344953
+      }
+    },
+    {
+      "cif": "E42824722",
+      "nombre": "ESCADUR",
+      "web": "https://ignifugados.net/",
+      "identidadUrl": "https://vermiculitaproyectada.com/empresa/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://vermiculitaproyectada.com/empresa/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Proyecta Verm ejecuta proyección de mortero de vermiculita y perlita sobre estructuras y publica el mismo CIF de Escadur, ya incorporado como Ignaria."
+        }
+      ],
+      "empresaIdEsperada": 5853,
+      "fuentesIdentidadLocalizacion": [
+        "https://vermiculitaproyectada.com/empresa/",
+        "https://aislamientoignifugoproyectado.com/politica-de-privacidad/",
+        "https://vermiculitaproyectada.com/politica-de-privacidad/",
+        "https://vermiculitaproyectada.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://aislamientoignifugoproyectado.com/",
+      "observaciones": "Proyecta Verm / Ignisol / Ignaria comparten CIF E42824722. Se enriquece la ficha 5853; no se crea una empresa por cada marca o web. La identificación fiscal de las webs alternativas se conserva como fuente de la revisión, sin sustituir el dominio actual."
+    }
+  ]
+}

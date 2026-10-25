@@ -1,6 +1,6 @@
 # Estado actual del proyecto
 
-Corte: **24 de octubre de 2026, 20:35 Europe/Madrid**. Base de código: [#196](https://github.com/albertofontiber/war-room/pull/196), fusionada en `b35e1c8`. Datos: cuarto lote de pasiva aplicado y verificado en producción. Es una instantánea fechada, no un contador en vivo.
+Corte: **25 de octubre de 2026, Europe/Madrid**. Base de código: [#197](https://github.com/albertofontiber/war-room/pull/197), fusionada en `4cae40b`. Datos: quinto lote de pasiva aplicado y verificado en producción. Es una instantánea fechada, no un contador en vivo.
 
 ## Datos comprobados
 
@@ -8,22 +8,22 @@ Consulta a la base configurada para producción mediante Prisma dentro de una tr
 
 | Métrica | Resultado | Definición |
 |---|---:|---|
-| Empresas del universo | 5.842 | `Empresa` con `esAnonima=false` |
-| Sector PCI | 4.604 | Valor `PCI` |
+| Empresas del universo | 5.855 | `Empresa` con `esAnonima=false` |
+| Sector PCI | 4.617 | Valor `PCI` |
 | Seguridad electrónica | 770 | Valor `seguridad_electronica` |
 | Mixtas | 468 | PCI y seguridad electrónica; no significa activa y pasiva |
-| Pasiva confirmada | 243 | `proteccionPasiva=true`; cobertura parcial, no censo del mercado |
+| Pasiva confirmada | 257 | `proteccionPasiva=true`; cobertura parcial, no censo del mercado |
 | Actividad PCI activa | 4.994 | Universo PCI/mixto previo y categorías RIPCI válidas; excluye altas de investigación pasiva sin evidencia de activa |
 | Actividad seguridad electrónica | 1.238 | Sectores `seguridad_electronica` o `mixto` |
-| PCI activa y PCI pasiva | 163 | Ambas actividades; pueden prestar también seguridad electrónica |
+| PCI activa y PCI pasiva | 164 | Ambas actividades; pueden prestar también seguridad electrónica |
 | Las tres actividades | 23 | PCI activa, PCI pasiva y seguridad electrónica |
-| Solo PCI pasiva acreditada | 79 | Lista de actividades con únicamente pasiva; no constituye revisión negativa de las otras actividades |
+| Solo PCI pasiva acreditada | 92 | Lista de actividades con únicamente pasiva; no constituye revisión negativa de las otras actividades |
 | Años de cuentas | 23.620 | Filas de `Financiero`; no número de empresas |
 | Cuentas del ejercicio 2025 | 2.725 | Filas con `anio=2025`, todas las fuentes |
 | Años de cuentas de la extracción SABI de octubre | 15.766 | Filas con `fuente=sabi_2610` |
-| Empresas con web no nula | 3.407 | El dato no acredita que todas las webs funcionen o estén validadas |
+| Empresas con web no nula | 3.420 | El dato no acredita que todas las webs funcionen o estén validadas |
 | En perímetro sin web | 1.492 | `enPerimetro=true`, web nula o vacía y no anónima |
-| Empresas con coordenadas en las API de mapa/tabla | 5.210 | Las listas geográficas excluyen coordenadas nulas; no es el total del universo |
+| Empresas con coordenadas en las API de mapa/tabla | 5.223 | Las listas geográficas excluyen coordenadas nulas; no es el total del universo |
 | Empresas con áreas Cepreven de pasiva guardadas | 3 | Algún código `PAS-COMP`, `PAS-REAC` o `PAS-ESTR`; separado de la nueva actividad transversal |
 
 ### Estado legal SABI
@@ -39,13 +39,19 @@ Consulta a la base configurada para producción mediante Prisma dentro de una tr
 | Inactiva | 9 |
 | Situación desconocida | 46 |
 | No encontrada en SABI | 1.278 |
-| Sin consultar | 79 |
+| Sin consultar | 92 |
 
 El total de estados coincide con el universo del corte. No encontrada en SABI no implica inactividad. Las altas de pasiva conservan `estado=null` hasta una consulta SABI; no se han clasificado como activas por su web. Las métricas de actividad se solapan y no deben sumarse como sectores excluyentes. Su [criterio compartido](ACTIVIDADES.md) incorpora la aclaración de Alberto del 24/10 sobre PCI activa en el universo previo.
 
 Las diez migraciones versionadas hasta `20261023140000_proteccion_pasiva` constan aplicadas, sin pendientes. La presencia de estados y filas `sabi_2610` acredita la carga de octubre en la base.
 
 ### Cambio respecto al corte anterior
+
+La quinta tanda del 25/10 aplica **13 altas y 5 enriquecimientos**, pasando de **5.842 a 5.855 empresas** y de **243 a 257 con PCI pasiva confirmada**. Las altas se reparten por siete comunidades y no existían por CIF, nombre o dominio en el universo de partida. Se resuelven Pladiser, Isaphone, Gusolin y La Plana del rastreo anterior. Los [detalles por entidad y fuentes](research/pasiva-validada-ampliacion3-2026-10-25.json) y el [seguimiento vigente](research/pasiva-ampliacion3-seguimiento-2026-10-25.json) sustituyen esos pendientes concretos.
+
+Sinelec (ficha 2346) se confirma por primera vez. Enesa Continental (5803), Igesur (5804), Procaval / Proyectos y Servicios Caval (5812) y Escadur / Ignaria (5853) amplían evidencia o servicios. Proyecta Verm e Ignisol se vinculan a Escadur por su CIF, sin duplicar su ficha. Por ello, 18 fichas trabajadas suman 14 confirmaciones. Sus campos ajenos a pasiva, cuentas, CRM y recuentos de tareas/notas/contactos conservan las mismas huellas. Las 13 altas quedan fuera de perímetro y sin estado SABI; se conservan 23.620 filas financieras. La aplicación deja 18 auditorías; repetirla devuelve `sin_cambios=18` sin nuevas escrituras.
+
+### Corte histórico de la cuarta tanda
 
 El corte de las 13:30 recogía 5.824 empresas y 222 con pasiva confirmada. La cuarta tanda aplica **18 altas y 4 enriquecimientos** en fichas existentes: Josmag, Firex y Tecresa Protección Pasiva pasan a confirmadas; Proinse, ya confirmada, amplía evidencia. Resultado: **5.842 empresas y 243 con PCI pasiva confirmada**. Las altas cubren 11 comunidades autónomas y tienen CIF primario y localización contrastada; una sola entidad agrupa los dominios alternativos de Lotor y Aislamientos San Felices.
 
@@ -89,11 +95,13 @@ Versiones declaradas: Next.js 15.5.18, React/React DOM 19.2.4, Prisma 5.22, Next
 - Segunda tanda (24/10, datos y documentación): **11 tests de pasiva/importador correctos**, simulación sin ambigüedades, aplicación auditada y repetición sin cambios. Sin modificación del código de aplicación ni del esquema.
 - Tercera tanda: **11 tests de pasiva/importador correctos**, 33 altas y 5 enriquecimientos sin filas ambiguas, 38 auditorías y repetición aplicada sin cambios. Se preservan 23.620 filas financieras y los campos protegidos de las cinco fichas anteriores.
 - Cuarta tanda: **11 tests de pasiva/importador correctos**, simulación de 18 altas y 4 enriquecimientos sin ambigüedades, aplicación auditada y repetición final `sin_cambios=22`. Huellas de campos protegidos y relaciones de las cuatro fichas conservadas; las 18 altas tienen fuente de investigación, coordenadas y estado SABI nulo.
+- Quinta tanda: **11 tests de pasiva/importador correctos**, simulación de 13 altas y 5 enriquecimientos sin ambigüedades, 18 auditorías y repetición aplicada `sin_cambios=18`. Campos protegidos y relaciones de las cinco fichas conservados, con 23.620 filas financieras sin cambios. Sin modificación de código de aplicación ni del esquema.
+- API de producción tras la quinta tanda: **5.223** registros geográficos, **257** con pasiva, los **18 CIF** del lote exactamente una vez en lite/full, sus 18 fichas y exportación con fuentes y actividades coherentes. Se verifican 16 combinaciones selección/modo y conteos del pipeline; acceso anónimo 401. La comprobación no valida el flujo de contraseña.
 - API de producción tras la cuarta tanda: **5.210** registros geográficos, **243** con pasiva, los **22 CIF** del lote exactamente una vez en lite/full, 22 fichas y exportación con actividades coherentes. Se verifican 16 combinaciones selección/modo y los conteos de pipeline contra consulta de solo lectura; acceso anónimo 401. La comprobación no valida el flujo de contraseña.
 - Filtro de actividades: **713 tests correctos en 63 archivos**, TypeScript y build locales correctos. Las pruebas cubren todas las combinaciones de las tres actividades, ambas modalidades, exclusión de activa en altas de pasiva sin RIPCI, consistencia de lite/full/ficha/exportación y filtrado/conteos de pipeline. Sin migración ni nuevas escrituras de datos.
 - Verificación histórica de APIs en #195, antes de la cuarta tanda: 5.192 registros, 16 combinaciones coherentes, 22 con las tres actividades, 160 con activa y pasiva y 222 con pasiva. Fichas de Plasfoc, Naes, IPS, Sella2, Técnicas de Refractarios y Project TGN y exportación coherentes; acceso anónimo 401.
 - Verificación visual de #195, antes de la cuarta tanda: 22 con las tres, 160 con activa y pasiva, 222 con pasiva y 5.192 al elegir cualquiera de las tres. Controles y resultados revisados en 375 px, 768 px y escritorio; sin desbordamiento del nuevo control. La tabla completa conserva su desplazamiento horizontal en tablet. #196 verifica en esos tamaños la posición y el color de «Limpiar» junto a Actividades y que no borre la provincia. La cuarta tanda modifica datos/documentación, sin cambios de UI.
-- API de producción de la tercera tanda: lite/full y exportación con **222** de pasiva y los 38 CIF exactamente una vez; fichas de Plasfoc, Naes, Blinders, IPS Incendio, Gestiplac, Brapesa Canarias, Sella2, Técnicas de Refractarios, Escadur y Project TGN verificadas. Es una comprobación histórica, anterior al recuento actual de 243.
+- API de producción de la tercera tanda: lite/full y exportación con **222** de pasiva y los 38 CIF exactamente una vez; fichas de Plasfoc, Naes, Blinders, IPS Incendio, Gestiplac, Brapesa Canarias, Sella2, Técnicas de Refractarios, Escadur y Project TGN verificadas. Es una comprobación histórica, anterior al recuento actual de 257.
 - La CI del repositorio aplica migraciones, compara el esquema y ejecuta tests, typecheck y build; su resultado y el despliegue se enlazan desde la PR de esta entrega.
 - Repositorio público en este corte. La confidencialidad de los datos depende de la autenticación y permisos de la aplicación.
 
@@ -101,6 +109,7 @@ Versiones declaradas: Next.js 15.5.18, React/React DOM 19.2.4, Prisma 5.22, Next
 
 | Fecha | Entrega | Evidencia |
 |---|---|---|
+| 25/10/2026 | Tercera ampliación asociativa/regional: 13 altas en 7 comunidades y 5 enriquecimientos; 257 confirmadas acumuladas | [Quinto lote](research/pasiva-validada-ampliacion3-2026-10-25.json), [seguimiento vigente](research/pasiva-ampliacion3-seguimiento-2026-10-25.json) |
 | 24/10/2026 | Segunda ampliación asociativa/regional: 18 altas en 11 comunidades y 4 enriquecimientos; 243 confirmadas acumuladas | [Cuarto lote](research/pasiva-validada-ampliacion2-2026-10-24.json), [seguimiento actual](research/pasiva-ampliacion2-seguimiento-2026-10-24.json) |
 | 24/10/2026 | Actividades combinables PCI activa, PCI pasiva y seguridad electrónica, con todas/cualquiera; sustituye el filtro «Mixto» | [Criterio y flujo](ACTIVIDADES.md), sin reclasificación del universo |
 | 24/10/2026 | Asociaciones y búsqueda por las 17 comunidades: 33 altas y 5 enriquecimientos aplicados; 222 confirmadas acumuladas | [Seguimiento regional](research/pasiva-asociaciones-regiones-2026-10-24.json), [tercer lote](research/pasiva-validada-regional-2026-10-24.json) |
