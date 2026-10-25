@@ -1,0 +1,546 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "alcance": "Octava tanda: ampliación por fuentes asociativas y regiones; instaladoras/aplicadoras en España. Cobertura parcial.",
+  "criterio": "Identidad fiscal primaria, ejecución acreditada y cruce por CIF/NIF normalizado con el universo. No se crean fichas por marcas, delegaciones o páginas regionales.",
+  "geocodificacion": "Centroides de municipios de domicilios contrastados; no geolocalización exacta de las direcciones.",
+  "empresas": [
+    {
+      "cif": "04218768Q",
+      "nombre": "SAMUEL MARTINEZ ARRIERO",
+      "web": "https://conesam.com/",
+      "identidadUrl": "https://bop.diputoledo.es/webEbop/DocGet?anexo=0&bop=208&insert_year=2015&publication_date=11092015",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": false,
+      "completarVacios": true,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "puertas",
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://conesam.com/ignifugaciones.php",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Conesam ejecuta ignifugaciones con morteros, intumescentes y placas, sectorizaciones, puertas/cortinas resistentes al fuego y sellados de pasos de instalaciones y cables."
+        }
+      ],
+      "empresaIdEsperada": 4078,
+      "fuentesIdentidadLocalizacion": [
+        "https://bop.diputoledo.es/webEbop/DocGet?anexo=0&bop=208&insert_year=2015&publication_date=11092015",
+        "https://conesam.com/"
+      ],
+      "descubrimiento": "https://conesam.com/ignifugaciones.php",
+      "observaciones": "Pendiente Conesam resuelto en la ficha 4078. La web identifica expresamente la marca como propiedad de Samuel Martínez Arriero; BOP Toledo 208/2015 confirma nombre y NIF, impreso sin cero inicial (4218768Q), coincidente con 04218768Q del universo. Solo se completa web vacía: se conserva Argés frente a la ubicación comercial de Talavera/Pepino. No se incorpora el CIF del proveedor de privacidad ni se transfiere actividad a EXSECON SL."
+    },
+    {
+      "cif": "71008164B",
+      "nombre": "MIGUEL ÁNGEL CARRASCO BORGES / CARRASCO PINTORES",
+      "web": "https://www.carrascopintores.com/",
+      "identidadUrl": "https://www.carrascopintores.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.carrascopintores.com/areas-de-actuacion/trabajos-industriales/aplicaciones-industriales",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplica pinturas intumescentes e ignífugas e instala placas cortafuego para techos, divisiones y pilares dentro de sus trabajos de pintura y recubrimientos industriales."
+        }
+      ],
+      "localidad": "Pinto",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle Milanos, 8, nave 35, Polígono Industrial La Estación",
+      "codigoPostal": "28320",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.carrascopintores.com/aviso-legal",
+        "https://www.carrascopintores.com/areas-de-actuacion/trabajos-industriales/aplicaciones-industriales-exteriores"
+      ],
+      "descubrimiento": "https://www.carrascopintores.com/areas-de-actuacion/trabajos-industriales/aplicaciones-industriales",
+      "observaciones": "El aviso identifica al titular autónomo. Se da de alta bajo su NIF real, igual que otros titulares de PCI activa; no se inventa una sociedad Carrasco Pintores.",
+      "lat": 40.240985,
+      "lng": -3.7005072,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Pinto%2C+Madrid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Pinto, Comunidad de Madrid, 28320, España",
+        "osmType": "relation",
+        "osmId": 347321
+      }
+    },
+    {
+      "cif": "B13556030",
+      "nombre": "PRYCO REVESTIMIENTOS, S.L.",
+      "web": "https://www.prycorevestimientos.com/",
+      "identidadUrl": "https://www.prycorevestimientos.com/legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.prycorevestimientos.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Aplicadora de protección pasiva: pinturas intumescentes sobre acero y ejecución de cortafuegos rígidos o semirrígidos con placas y proyección de mortero ignífugo."
+        }
+      ],
+      "localidad": "Tomelloso",
+      "provincia": "Ciudad Real",
+      "ccaa": "Castilla-La Mancha",
+      "codigoPostal": "13700",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.prycorevestimientos.com/legal",
+        "https://www.prycorevestimientos.com/cortafuegos",
+        "https://www.prycorevestimientos.com/pinturas-intumescentes",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2026-60-13"
+      ],
+      "descubrimiento": "https://www.infoconstruccion.es/empresas/pryco-revestimientos-sl",
+      "observaciones": "El aviso identifica B13556030. Publica Cirilo Villena s/n; el cambio de domicilio BORME del 27/03/2026 publica el número 20, y el pie comercial conserva General Margallo 60. Se conservan municipio y código postal comunes y se omite calle hasta conciliación. La fuente secundaria sirve solo para descubrimiento.",
+      "lat": 39.1585549,
+      "lng": -3.0214851,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Tomelloso%2C+Ciudad+Real%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Tomelloso, Ciudad Real, Castilla-La Mancha, 13700, España",
+        "osmType": "relation",
+        "osmId": 344646
+      }
+    },
+    {
+      "cif": "B15847262",
+      "nombre": "INCOGA NORTE, S.L.",
+      "web": "https://www.aplicanor.com/",
+      "identidadUrl": "https://www.aplicanor.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.aplicanor.com/proyecto/centro-de-formacion-profesional-del-grupo-ilerna",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su marca Aplicanor publica la ejecución de protección pasiva con mortero de lana de roca en cubierta y perlita/vermiculita sobre estructura metálica en el centro iLERNA de A Coruña."
+        }
+      ],
+      "localidad": "A Coruña",
+      "provincia": "A Coruña",
+      "ccaa": "Galicia",
+      "direccion": "Carretera Baños de Arteixo, 33",
+      "codigoPostal": "15008",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.aplicanor.com/aviso-legal",
+        "https://www.incoga.com/es/aviso-legal",
+        "https://www.aplicanor.com/wp-content/uploads/2024/07/certificado-perlita-y-vermiculita-2024-07-09.pdf",
+        "https://www.aplicanor.com/descargas"
+      ],
+      "descubrimiento": "https://www.aplicanor.com/wp-content/uploads/2024/07/certificado-perlita-y-vermiculita-2024-07-09.pdf",
+      "observaciones": "Pendiente Aplicanor resuelto. El aviso identifica como titular a Incoga Norte SL y B15847262; el certificado de Perlita y Vermiculita nombra expresamente a Incoga Norte como aplicadora. Venció el 08/07/2026: se usa como atribución histórica, no como calificación vigente. No se da de alta a todas las sociedades de la privacidad del grupo ni una entidad adicional por incoga.com.",
+      "lat": 43.3454621,
+      "lng": -8.4138519,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=A+Coru%C3%B1a%2C+A+Coru%C3%B1a%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "A Coruña, Galicia, España",
+        "osmType": "relation",
+        "osmId": 346810
+      }
+    },
+    {
+      "cif": "B18577015",
+      "nombre": "BERBELPORCEL ASOCIADOS S.L.",
+      "web": "https://berbelporcel.com/",
+      "identidadUrl": "https://berbelporcel.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "reaccion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://berbelporcel.com/project/ignifugacion-barniz-discoteca-granada/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Publica trabajos propios de aplicación de barniz ignífugo sobre revestimientos decorativos de madera en la discoteca Mae West de Granada. Se incorpora reacción al fuego a sus servicios documentados."
+        }
+      ],
+      "empresaIdEsperada": 1855,
+      "fuentesIdentidadLocalizacion": [
+        "https://berbelporcel.com/"
+      ],
+      "descubrimiento": "https://berbelporcel.com/project/ignifugacion-barniz-discoteca-granada/",
+      "observaciones": "Se amplía la ficha 1855 con una aplicación en revestimientos decorativos, sin confundirla con resistencia estructural ni inferir una clase de reacción no publicada."
+    },
+    {
+      "cif": "B22404370",
+      "nombre": "SOMONPLAK, S.L.",
+      "web": "https://somonplak.com/",
+      "identidadUrl": "https://somonplak.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion"
+      ],
+      "evidencias": [
+        {
+          "url": "https://somonplak.com/servicio/franjas-cortafuegos-en-instalaciones-industriales/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Instala franjas cortafuegos con placas o mortero proyectado y protege estructuras metálicas mediante morteros o pinturas intumescentes."
+        }
+      ],
+      "localidad": "Barbastro",
+      "provincia": "Huesca",
+      "ccaa": "Aragón",
+      "direccion": "Polígono Industrial Valle del Cinca, Calle B, 10",
+      "codigoPostal": "22300",
+      "fuentesIdentidadLocalizacion": [
+        "https://somonplak.com/aviso-legal/",
+        "https://somonplak.com/empresa/",
+        "https://somonplak.com/servicio/proteccion-de-estructuras-metalicas/",
+        "https://somonplak.com/contacto/"
+      ],
+      "descubrimiento": "https://somonplak.com/servicio/franjas-cortafuegos-en-instalaciones-industriales/",
+      "observaciones": "Huesca partía sin fichas positivas. El aviso publica NIF y domicilio coincidentes con contacto actual; contiene una errata en el dominio antiguo, no se crean fichas por sus localidades de servicio.",
+      "lat": 42.0366952,
+      "lng": 0.127238,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Barbastro%2C+Huesca%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Barbastro, Somontano de Barbastro, Huesca, Aragón, 22300, España",
+        "osmType": "relation",
+        "osmId": 343510
+      }
+    },
+    {
+      "cif": "B32498917",
+      "nombre": "THERMO METAL, S.L.",
+      "web": "https://thermo-metal.com/",
+      "identidadUrl": "https://thermo-metal.com/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://thermo-metal.com/proteccion-pasiva-contra-incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Proyecta mortero ignífugo de lana de roca sobre vigas, pilares, forjados y otros elementos constructivos como protección contra el fuego."
+        }
+      ],
+      "localidad": "Bande",
+      "provincia": "Orense",
+      "ccaa": "Galicia",
+      "direccion": "Calle Lamas Calvelo, 30",
+      "codigoPostal": "32840",
+      "fuentesIdentidadLocalizacion": [
+        "https://thermo-metal.com/politica-de-privacidad/"
+      ],
+      "descubrimiento": "https://thermo-metal.com/proteccion-pasiva-contra-incendios/",
+      "observaciones": "Identidad fiscal y domicilio de la privacidad corporativa. Ourense/Orense se agrupan solo para el análisis de cobertura; no se reescribe la provincia de otras fichas.",
+      "lat": 42.0226108,
+      "lng": -7.9477755,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Bande%2C+Orense%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Bande, A Baixa Limia, Ourense, Galicia, España",
+        "osmType": "relation",
+        "osmId": 340675
+      }
+    },
+    {
+      "cif": "B39355508",
+      "nombre": "RIAL SANTANDER, S.L.",
+      "web": "https://rialaislamientos.com/",
+      "identidadUrl": "https://rialaislamientos.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "conductos"
+      ],
+      "evidencias": [
+        {
+          "url": "https://rialaislamientos.com/proteccion-pasiva-contra-el-fuego-en-cantabria/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ejecuta protección pasiva con proyección de morteros y pinturas intumescentes, franjas y sectorización, sellados de pasos y protección de conductos de chapa."
+        }
+      ],
+      "localidad": "Los Corrales de Buelna",
+      "provincia": "Cantabria",
+      "ccaa": "Cantabria",
+      "direccion": "Polígono Industrial de Barros, parcela 29-7",
+      "codigoPostal": "39400",
+      "fuentesIdentidadLocalizacion": [
+        "https://rialaislamientos.com/aviso-legal/",
+        "https://rialaislamientos.com/contacto/"
+      ],
+      "descubrimiento": "https://rialaislamientos.com/proteccion-pasiva-contra-el-fuego-en-cantabria/",
+      "observaciones": "Una sola ficha para Rial Santander y Rial Aislamientos. Municipio y código postal proceden del aviso y contacto corporativo; Barros es el núcleo dentro de Los Corrales de Buelna. Las landings de Asturias, Santander y Bizkaia no generan sedes o entidades adicionales.",
+      "lat": 43.2619686,
+      "lng": -4.0667653,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Los+Corrales+de+Buelna%2C+Cantabria%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Los Corrales de Buelna, Cantabria, España",
+        "osmType": "relation",
+        "osmId": 344573
+      }
+    },
+    {
+      "cif": "B42185520",
+      "nombre": "PINTURAS LA DEMANDA, S.L.",
+      "web": "https://www.pinturaslademanda.com/",
+      "identidadUrl": "https://www.pinturaslademanda.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.pinturaslademanda.com/servicios",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Además de vender materiales, ofrece trabajos de pintura industrial y aplicación de pinturas intumescentes para la protección contra incendios de estructuras metálicas."
+        }
+      ],
+      "localidad": "Soria",
+      "provincia": "Soria",
+      "ccaa": "Castilla y León",
+      "direccion": "Calle Patios de Don Vela, 1",
+      "codigoPostal": "42001",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.pinturaslademanda.com/aviso-legal"
+      ],
+      "descubrimiento": "https://www.pinturaslademanda.com/servicios",
+      "observaciones": "El aviso escribe el CIF con puntos y guion; se normaliza a B42185520. La incorporación se apoya en su oferta de trabajos de aplicación, no solo en su tienda.",
+      "lat": 41.7633842,
+      "lng": -2.4642041,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Soria%2C+Soria%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Soria, Castilla y León, España",
+        "osmType": "relation",
+        "osmId": 340050
+      }
+    },
+    {
+      "cif": "B44258911",
+      "nombre": "SEGUPROT GOBER, S.L.",
+      "web": "https://seguprot.com/",
+      "identidadUrl": "https://seguprot.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://seguprot.com/incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Incluye sistemas de protección pasiva en su oferta propia de instalación y mantenimiento de protección contra incendios en Teruel. La fuente no detalla una especialidad concreta."
+        }
+      ],
+      "empresaIdEsperada": 2465,
+      "fuentesIdentidadLocalizacion": [
+        "https://seguprot.com/"
+      ],
+      "descubrimiento": "https://seguprot.com/incendios/",
+      "observaciones": "Nueva confirmación en la ficha 2465 por su dominio único ya vinculado. Se mantiene su sector mixto y no se deducen servicios de aplicación o suministro concretos por las imágenes de categoría."
+    },
+    {
+      "cif": "B48229306",
+      "nombre": "INDUPIME, S.L.",
+      "web": "https://www.indupime.com/",
+      "identidadUrl": "https://www.indupime.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.indupime.com/rehabilitacion-de-fachadas/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Incluye aplicación propia de pinturas intumescentes entre sus trabajos de pintura y rehabilitación. Se confirma esta actividad sin inferir un sistema o sustrato concretos."
+        }
+      ],
+      "localidad": "Sondika",
+      "provincia": "Vizcaya",
+      "ccaa": "País Vasco",
+      "direccion": "Iberre Kalea, 3, pabellón 5, Polígono Industrial Sangroniz",
+      "codigoPostal": "48150",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.indupime.com/aviso-legal/"
+      ],
+      "descubrimiento": "https://www.indupime.com/rehabilitacion-de-fachadas/",
+      "observaciones": "La fuente de actividad es la oferta de aplicación de intumescentes, no la protección pasiva frente a corrosión descrita en su artículo de silicatos. No se asignan especialidades por falta de sustrato o sistema detallado; el aviso llama NIE al identificador, cuyo valor fiscal es B48229306.",
+      "lat": 43.2979405,
+      "lng": -2.9272819,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Sondika%2C+Vizcaya%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Sondika, Bizkaia, Euskadi, 48150, España",
+        "osmType": "relation",
+        "osmId": 340648
+      }
+    },
+    {
+      "cif": "B85618700",
+      "nombre": "SOLUCIONES CONTRA INCENDIOS S.L.U.",
+      "web": "https://sci-sl.com/",
+      "identidadUrl": "https://sci-sl.com/privacy-policy/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "estructura",
+        "compartimentacion",
+        "sellados",
+        "conductos",
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://sci-sl.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara suministro, instalación y mantenimiento de pasiva: conductos cortafuegos, trasdosados, protección estructural, sellados, cortinas y vidrios cortafuegos. Publica obras propias de instalación."
+        }
+      ],
+      "empresaIdEsperada": 294,
+      "fuentesIdentidadLocalizacion": [
+        "https://sci-sl.com/privacy-policy/",
+        "https://sci-sl.com/soluciones-contra-incendios/conductos-de-ventilacion/",
+        "https://sci-sl.com/soluciones-contra-incendios/sellado-de-penetraciones/"
+      ],
+      "descubrimiento": "https://sci-sl.com/",
+      "observaciones": "Nueva confirmación en la ficha 294, con CIF corporativo B85618700. No se confunde la sigla SCI con otras sociedades de Securitas; no se crean fichas por sus delegaciones de Bizkaia y Madrid."
+    },
+    {
+      "cif": "B85747707",
+      "nombre": "AISLA Y AHORRA, S.L.",
+      "web": "https://aislayahorra.es/",
+      "identidadUrl": "https://aislayahorra.es/registro-de-actividades-de-tratamiento/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://aislayahorra.es/proteccion-pasiva-contra-incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara aplicación propia de Promaspray F250, lana mineral proyectada con cemento y agua, para proteger estructuras frente al fuego; diferencia este producto del aislamiento exclusivamente térmico."
+        }
+      ],
+      "localidad": "Colmenarejo",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle Las Colmenas, 14",
+      "codigoPostal": "28270",
+      "fuentesIdentidadLocalizacion": [
+        "https://aislayahorra.es/registro-de-actividades-de-tratamiento/",
+        "https://aislayahorra.es/quienes-somos/",
+        "https://aislayahorra.es/empresas-de-aislamiento/"
+      ],
+      "descubrimiento": "https://aislayahorra.es/proteccion-pasiva-contra-incendios/",
+      "observaciones": "Su registro corporativo de tratamiento identifica CIF y domicilio. La red de franquicias/aplicadores se usa para descubrimiento: no se atribuye pasiva a todos sus miembros por pertenecer a ella, ni se confunde aislamiento térmico con resistencia al fuego.",
+      "lat": 40.5607257,
+      "lng": -4.0165248,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Colmenarejo%2C+Madrid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Colmenarejo, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 347003
+      }
+    },
+    {
+      "cif": "B97642284",
+      "nombre": "ACUSFOC, S.L.",
+      "web": "https://www.acusfoc.com/",
+      "identidadUrl": "https://www.acusfoc.com/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "sellados"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.acusfoc.com/ignifugacion/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Su oferta de ejecución y certificación incluye rejillas, collarines y masillas intumescentes para sellado de pasos de instalaciones. Se añade sellados a la protección estructural ya documentada."
+        }
+      ],
+      "empresaIdEsperada": 5871,
+      "fuentesIdentidadLocalizacion": [
+        "https://www.acusfoc.com/"
+      ],
+      "descubrimiento": "https://www.acusfoc.com/ignifugacion/",
+      "observaciones": "Se amplía la ficha 5871. No se añaden calificaciones ni vigencias por declaraciones comerciales."
+    }
+  ]
+}

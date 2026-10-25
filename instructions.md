@@ -1,6 +1,6 @@
 # Fontiber War Room — Instrucciones de desarrollo
 
-Revisado: **2026-10-24**, tras pasiva transversal y el filtro de actividades combinables.
+Revisado: **2026-10-25**, tras la aclaración del alcance de enriquecimiento y las nuevas validaciones de pasiva.
 
 Convenciones vigentes para cualquier colaborador. Consultar [README](README.md), [estado actual](docs/PROJECT_STATUS.md), [arquitectura](docs/ARCHITECTURE.md), [operación](docs/OPERATIONS.md) y [trabajo abierto](docs/ROADMAP.md). Los recuentos, versiones exactas y resultados de verificación pertenecen al estado fechado; no duplicarlos aquí.
 
