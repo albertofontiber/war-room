@@ -87,7 +87,7 @@ Los nulos no pisan cifras previas, los años íntegramente a cero no se cargan y
 El lote y sus fuentes están en [Protección pasiva](PROTECCION_PASIVA.md). La migración aditiva de pasiva debe estar aplicada antes de desplegar código que lea esas columnas. El script no descubre empresas automáticamente: recibe filas previamente revisadas.
 
 ```powershell
-node --env-file=.env.local --import tsx scripts/import-pasiva.ts docs/research/pasiva-validada-ampliacion4-2026-10-25.json
+node --env-file=.env.local --import tsx scripts/import-pasiva.ts docs/research/pasiva-validada-ampliacion5-2026-10-25.json
 ```
 
 Simula por defecto. La escritura requiere `--apply`, revalida el cruce en una transacción y usa un advisory lock para serializar importaciones de pasiva. Si queda una fila `revisar`, se aborta todo el lote. Bloquea CIF duplicados o ambiguos, dominios asociados a otro CIF, leads anónimos y revisiones negativas previas. Las altas exigen identidad fiscal, localización y `permitirAlta=true`; se crean fuera de perímetro y con estado SABI sin consultar.
@@ -96,7 +96,9 @@ Los enriquecimientos conservan sector, perímetro, CRM, cuentas y fuente origina
 
 Cada escritura deja `AuditLog` con valores anteriores y posteriores, lote e identidad de fuente. Disponer de un respaldo de los campos afectados y revisar el informe antes de aplicar. Repetir la misma versión del lote debe devolver `sin_cambios` para todas las filas; no ejecutar la importación como cron. En el corte actual ya está aplicada.
 
-La sexta tanda añade `perfilOfertaPasiva` como metadato de investigación del lote y seguimiento, con fuente y fecha. Se consulta en esos documentos; el importador mantiene sus cuatro campos de pasiva y no añade una columna ni un nuevo filtro. La clasificación describe la oferta publicada y no el peso económico de la actividad.
+Alberto confirma continuar con los campos actuales de actividad, servicios y fuentes. Se retira la propuesta de extender la clasificación de especialización/oferta diversificada; sus metadatos de la sexta tanda quedan como histórico, sin continuación ni nuevo filtro. La información de tamaño y cuentas queda para una carga SABI específica.
+
+El identificador admite CIF y NIF, como el universo de PCI activa. La séptima tanda resuelve Ignifugados Borja como negocio de su titular persona física: una sola ficha bajo su NIF público profesional, sin crear una SL ficticia ni confundirlo con QDQ, proveedor de la web.
 
 ## Configuración del chat
 

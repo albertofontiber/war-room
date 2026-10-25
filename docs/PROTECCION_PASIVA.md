@@ -1,10 +1,20 @@
 # Protección pasiva: actividad transversal y ampliación del universo
 
-Revisión: **25/10/2026, Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y seis lotes están aplicados en producción: **269 entidades con pasiva confirmada**.
+Revisión: **25/10/2026, Europe/Madrid**. Alcance: instaladoras y aplicadoras en España, incluidas las empresas existentes que también hacen pasiva. La actividad transversal y siete lotes están aplicados en producción: **274 entidades con pasiva confirmada**.
 
 ## Resultado aplicado
 
-La sexta tanda incorpora **11 altas y 4 enriquecimientos**, con altas en **8 comunidades autónomas**. El [sexto lote aplicado](research/pasiva-validada-ampliacion4-2026-10-25.json) conserva fuentes fiscales, actividad, ubicación municipal y un primer perfil de la oferta. El [seguimiento vigente](research/pasiva-ampliacion4-seguimiento-2026-10-25.json) distingue 143 dominios, 41 con decisión manual en esta tanda y el resto con resultados históricos o rastreo sin validación final. No son 143 sociedades nuevas ni un censo.
+La séptima tanda del 25/10 aplica **5 altas y 4 enriquecimientos**, pasando de **5.866 a 5.871 empresas** y de **269 a 274 con PCI pasiva confirmada**. Se incorporan Mecosa, New-Totmatic, Therman, Veliol e Ignifugados Borja. Este último pendiente se resuelve bajo el NIF de su titular autónomo, sin inventar una sociedad y siguiendo el modelo que ya admite personas físicas en PCI activa. Las cinco altas no tenían coincidencia por CIF/NIF, nombre o dominio. El [séptimo lote](research/pasiva-validada-ampliacion5-2026-10-25.json) conserva identidad, ejecución y ubicación municipal; el [seguimiento vigente](research/pasiva-ampliacion5-seguimiento-2026-10-25.json) documenta 24 decisiones por dominio y remite al antecedente para los casos no reconsultados.
+
+Ignofoc (2191) añade compartimentación y puertas; Atenúa (5827), estructura y sellados; SIEF-2 (946), sellados; RSI Tenerife (5842), conductos. Las cuatro ya estaban confirmadas, por lo que nueve registros trabajados añaden cinco confirmaciones. Se preservan por huella todos sus campos ajenos a pasiva, cuentas, CRM y recuentos de tareas/notas/contactos; se conservan las **23.620** filas financieras. Se generan nueve auditorías y la repetición devuelve `sin_cambios=9`. Las altas quedan fuera de perímetro y sin estado SABI.
+
+La API de producción confirma los nueve CIF/NIF una sola vez, nueve fichas con fuentes, 16 combinaciones y exportación de las **274** confirmadas. El rastreo no convierte una palabra en el menú ni una página de catálogo en prueba de ejecución. CRM Gia sigue sin identidad fiscal primaria; Incopac 90, sin montaje propio contrastado; los casos no reconsultados conservan sus resultados históricos.
+
+Alberto confirma continuar con los campos actuales de actividad, servicios y fuentes. Se retira la propuesta de extender la clasificación de especialización/oferta diversificada; sus metadatos de la sexta tanda quedan como histórico, sin continuación ni nuevo filtro. La información de tamaño y cuentas queda para una carga SABI específica.
+
+### Sexta tanda (histórico)
+
+La sexta tanda incorpora **11 altas y 4 enriquecimientos**, con altas en **8 comunidades autónomas**. El [sexto lote aplicado](research/pasiva-validada-ampliacion4-2026-10-25.json) conserva fuentes fiscales, actividad, ubicación municipal y un primer perfil de la oferta. El [seguimiento de la sexta tanda](research/pasiva-ampliacion4-seguimiento-2026-10-25.json) distingue 143 dominios, 41 con decisión manual en esta tanda y el resto con resultados históricos o rastreo sin validación final. No son 143 sociedades nuevas ni un censo.
 
 Las **11 empresas nuevas** son Sistemplac, Aislamientos Rogilcar, Centropuertas Norte 2007, Puertas Automaticos Ángel, Lemara Restauraciones, Riomader, Noratek, J. L. Holanda Fernández, Politex Aislamientos, Campón Gibello y CYPSA / Cerramiento y Protección. No existían por CIF en las 5.855 empresas de partida; el universo pasa a **5.866**. Todas entran fuera de perímetro y con estado SABI sin consultar.
 
@@ -16,9 +26,9 @@ Se amplía el rastreo a puertas, sellados y tratamientos de madera, priorizando 
 
 La carga deja **15 auditorías**; repetir el lote devuelve `sin_cambios=15` sin nuevas escrituras. Se conservan las huellas de los campos ajenos a pasiva, cuentas, CRM y recuentos de tareas/notas/contactos de las cuatro fichas anteriores y las **23.620** filas financieras. La API de producción verifica los 15 CIF una sola vez en lite/full, sus 15 fichas, 16 combinaciones y la exportación de **269** con fuentes.
 
-### Primer perfil de la oferta
+### Exploración histórica de perfiles, sin continuación
 
-Las 15 fichas de esta tanda tienen `perfilOfertaPasiva` en el lote y seguimiento, con criterio, fuente y fecha: **3 con especialización declarada** (CYPSA, Noratek y Diaterm Foc) y **12 con oferta diversificada**. La primera categoría recoge una presentación comercial centrada en soluciones de pasiva; la segunda combina pasiva con aislamiento, pintura, reformas, madera, puertas, materiales, PCI activa o seguridad. Esta distinción sirve para investigar targets: no mide facturación, exclusividad ni independencia. El resto del universo aún no tiene este perfil revisado.
+El lote de la sexta tanda conserva `perfilOfertaPasiva` en 15 filas, con fuente y fecha: **3 con especialización declarada** y **12 con oferta diversificada**. Fue un metadato exploratorio de investigación, nunca un campo de ficha. La propuesta de extenderlo se retira tras la aclaración de Alberto del 25/10; no es una tarea pendiente ni se utiliza en la séptima tanda.
 
 ### Quinta tanda
 
@@ -99,7 +109,7 @@ Las altas usan `sector=PCI`, `fuente=investigacion_pasiva_202610`, `enPerimetro=
 | `pasivaEvidencias` | Fuentes con URL, tipo, fecha y descripción; no incluye contactos personales |
 | `pasivaRevisadaAt` | Fecha de la revisión conservada |
 
-Pasiva es una actividad transversal. No modifica los sectores `PCI`, `seguridad_electronica` o `mixto`; este último sigue significando PCI y seguridad electrónica. Una misma empresa de activa y pasiva conserva un solo CIF y una sola ficha.
+Pasiva es una actividad transversal. No modifica los sectores `PCI`, `seguridad_electronica` o `mixto`; este último sigue significando PCI y seguridad electrónica. Una misma empresa de activa y pasiva conserva un solo CIF/NIF y una sola ficha. El modelo admite titulares autónomos, como ya ocurre en PCI activa; se registra su identidad real, sin convertir una marca en sociedad.
 
 - Filtro **Actividades** compartido por mapa y tabla y disponible en pipeline: **PCI activa**, **PCI pasiva** y **Seguridad electrónica**, con todas/cualquiera. Sustituye el antiguo filtro de sector; el estado de revisión de pasiva permanece separado. Ver [criterio de actividades](ACTIVIDADES.md).
 - Distintivo en tabla y tooltip del mapa. La ficha muestra estado, servicios, revisión y fuentes desplegables.
@@ -136,12 +146,12 @@ Las evidencias se tipifican como `web_corporativa`, `asociacion` o `calificacion
 | Dominios compartidos y redirecciones | Emacs, Starfoc y las redirecciones a Gefisa, Eurofesa e Incotex requieren atribución por sociedad. |
 | Resto del seguimiento | Identidad o ejecución pendientes, webs sin acceso o evidencia insuficiente, con motivo y URLs fechadas por candidata. |
 | Aplicanor | La política identifica varias sociedades del grupo; atribuir los trabajos al CIF ejecutor antes de incorporar. |
-| Ignifugados Borja y otras candidatas regionales | Hay indicios de ejecución; falta CIF en fuente primaria recuperable. Acusfoc y Vimat están resueltas en la cuarta tanda. |
+| Otras candidatas regionales | Borja ya está resuelto e incorporado en la séptima tanda bajo el NIF de su titular. PYL Bages y otras identidades no resueltas conservan su pendiente específico. Acusfoc y Vimat están resueltas en la cuarta tanda. |
 | Kaixo, Elexar y otros suministradores | Identidad resuelta, pero falta prueba específica de montaje/aplicación propia en pasiva. |
 | Blinders | Actividad y CIF confirmados en ficha existente; conciliar aparte Ontinyent frente al domicilio fiscal web de Badalona. |
 
 Carboline y KaviDoors quedan fuera de este lote por su rol de fabricante sin instalación propia validada; Intertek por ensayos/certificación y Cepreven por ser asociación. No se crean fichas por marca, delegación o landing de ciudad.
 
-Las ampliaciones por asociaciones y búsqueda regional están realizadas y aplicadas en los lotes fechados; no se mantienen como una tarea genérica sin empezar. Las **269 confirmadas no agotan el mercado**. La continuidad consiste en resolver los casos concretos del seguimiento vigente, recuperar accesos, investigar sociedades sin web y ampliar redes de aplicadores o territorios con evidencia adicional. Sistemplac y Rogilcar ya están incorporadas; PYL Bages, Solsureste, Ignifugaciones del Norte, Ignitegra y la sociedad ejecutora de Aplicanor siguen requiriendo identidad o atribución concluyentes. Las webs comerciales de cobertura nacional no se cuentan como sedes en cada región. Conesam no recibe el CIF de su proveedor de protección de datos; las redes VKM/VKS quedan sin atribución de ejecución propia. No se aplican revisiones negativas.
+Las ampliaciones por asociaciones y búsqueda regional están realizadas y aplicadas en los lotes fechados; no se mantienen como una tarea genérica sin empezar. Las **274 confirmadas no agotan el mercado**. La continuidad consiste en resolver los casos concretos del seguimiento vigente, recuperar accesos, investigar sociedades sin web y ampliar redes de aplicadores o territorios con evidencia adicional. Borja, Sistemplac y Rogilcar ya están incorporadas; PYL Bages, Solsureste, Ignifugaciones del Norte, Ignitegra y la sociedad ejecutora de Aplicanor siguen requiriendo identidad o atribución concluyentes. Las webs comerciales de cobertura nacional no se cuentan como sedes en cada región. Conesam no recibe el CIF de su proveedor de protección de datos; las redes VKM/VKS quedan sin atribución de ejecución propia. No se aplican revisiones negativas.
 
 Para cada nueva tanda: validar actividad e identidad, cruzar CIF exacto, resolver dominios compartidos, simular, aplicar únicamente las filas validadas y verificar idempotencia. Los enriquecimientos no alteran perímetro, responsable, etapa, financieros, grupo o fuente original. Una empresa pendiente permanece `null`, nunca se transforma por defecto en «no hace pasiva».
