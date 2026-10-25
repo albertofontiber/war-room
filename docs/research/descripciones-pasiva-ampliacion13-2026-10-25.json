@@ -1,0 +1,24 @@
+{
+  "fechaRevision": "2026-10-25",
+  "criterio": "Completar solo resúmenes vacíos con síntesis de actividad contrastada; conservar todos los textos previos no vacíos.",
+  "empresas": [
+    {
+      "empresaId": 2747,
+      "cif": "B60185931",
+      "descripcion": "Instala y mantiene sistemas de protección contra incendios en el Maresme y comarcas próximas. Suministra e instala puertas cortafuegos de madera y metálicas, además de equipos de extinción y señalización.",
+      "fuentes": [
+        "https://tallafoc.com/empresa/",
+        "https://tallafoc.com/productos/"
+      ]
+    },
+    {
+      "empresaId": 3147,
+      "cif": "A08411175",
+      "descripcion": "Suministra, instala y revisa sistemas de protección contra incendios. Su oferta incluye detección, extinción, protección pasiva, control de humos y señalización, con presencia en Barcelona y Vidreres.",
+      "fuentes": [
+        "https://alvifoc.com/serveis",
+        "https://alvifoc.com/avis-legal"
+      ]
+    }
+  ]
+}

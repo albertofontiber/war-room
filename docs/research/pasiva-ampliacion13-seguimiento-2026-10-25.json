@@ -1,0 +1,725 @@
+{
+  "fechaRevision": "2026-10-25",
+  "alcance": "Decimoquinta tanda: APA/FEMPA, pistas de AD’IP y búsqueda regional; contraste de webs de empresas existentes y reconsulta fiscal de las cinco dudas prioritarias. No es un censo ni una revalidación manual de todo el archivo técnico.",
+  "resumen": {
+    "altas": 11,
+    "enriquecimientos": 11,
+    "nuevasConfirmaciones": 22,
+    "descripcionesCompletadasEnExistentes": 2,
+    "dudasPrioritariasRevisadas": 5,
+    "dudasPrioritariasResueltas": 0,
+    "dudasPrioritariasPendientes": 5,
+    "perfilesApaCortafuego": 12
+  },
+  "universoAntes": {
+    "total": 5927,
+    "pasiva": 350,
+    "web": 3494,
+    "sinWebPerimetro": 1491,
+    "geo": 5295,
+    "financieros": 23620,
+    "fin2025": 2725,
+    "finSabi": 15766
+  },
+  "universoDespues": {
+    "total": 5938,
+    "pasiva": 372,
+    "web": 3505,
+    "sinWebPerimetro": 1491,
+    "geo": 5306,
+    "financieros": 23620,
+    "fin2025": 2725,
+    "finSabi": 15766
+  },
+  "actividades": {
+    "fecha": "2026-10-25T22:22:06.415Z",
+    "universo": {
+      "total": 5938,
+      "pci_activa": 4994,
+      "pci_pasiva": 372,
+      "seguridad_electronica": 1238,
+      "activaYPasiva": 195,
+      "tres": 31,
+      "soloPasiva": 175
+    },
+    "geografico": {
+      "total": 5306,
+      "pci_activa": 4380,
+      "pci_pasiva": 372,
+      "seguridad_electronica": 1220,
+      "activaYPasiva": 195,
+      "tres": 31,
+      "soloPasiva": 175
+    }
+  },
+  "global": {
+    "fecha": "2026-10-25T22:22:04.743Z",
+    "confirmadas": 372,
+    "descripcionesVacias": 0,
+    "descripcionesPreviasConservadas": 350,
+    "cifsUnicos": 372
+  },
+  "fuentesAsociativas": [
+    {
+      "nombre": "APA",
+      "url": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas",
+      "resultado": "Filtro Cortafuego revisado en navegador: 12 fichas individuales; 6 altas, 1 enriquecimiento, 1 ya confirmada y 4 sin alta.",
+      "decisiones": [
+        {
+          "nombre": "ALEDRIS",
+          "accion": "alta",
+          "cif": "B87408985",
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/aledris-interiores-y-reformas-s.l."
+        },
+        {
+          "nombre": "INSTELEC Lorca",
+          "accion": "alta",
+          "cif": "B30443113",
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/instelec"
+        },
+        {
+          "nombre": "Hergoy",
+          "accion": "alta",
+          "cif": "B85306314",
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/hergoy-cerrajeros-electricistas-s.l"
+        },
+        {
+          "nombre": "Automatismos Blasco",
+          "accion": "alta",
+          "cif": "A53710463",
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/automatismos-blasco"
+        },
+        {
+          "nombre": "Automáticas Ontiveros",
+          "accion": "alta",
+          "cif": "B70853627",
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/automaticas-ontiveros-s.l.u."
+        },
+        {
+          "nombre": "Disaut Levante",
+          "accion": "alta",
+          "cif": "B03735339",
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/disaut-levante"
+        },
+        {
+          "nombre": "SIMI Seguridad",
+          "accion": "enriquecer",
+          "cif": "B24439697",
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/simi-seguridad"
+        },
+        {
+          "nombre": "Securitas Seguridad España",
+          "accion": "ya_confirmada",
+          "cif": "A79252219",
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/securitas-seguridad-espana-s.a."
+        },
+        {
+          "nombre": "Metálicas Octavio Serrano",
+          "accion": "pendiente_fiscal",
+          "cif": null,
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/metalicas-octavio-serrano"
+        },
+        {
+          "nombre": "Puertas Move",
+          "accion": "pendiente_operador_actual",
+          "cif": null,
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/puertas-move"
+        },
+        {
+          "nombre": "Mecánica General Hospitalaria",
+          "accion": "pendiente_fiscal",
+          "cif": null,
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/mecanica-general-hospitalaria-s.l.u."
+        },
+        {
+          "nombre": "Bayfer",
+          "accion": "pendiente_atribucion_corporativa",
+          "cif": null,
+          "fuente": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/bayfer-s.l.u."
+        }
+      ]
+    },
+    {
+      "nombre": "FEMPA",
+      "url": "https://www.fempa.es/servicios/servicios-generales/buscador-de-empresas",
+      "resultado": "Directorio y vías de carpintería/puertas como descubrimiento; certificado específico de Hergoy corrobora NIF y alcance de puertas. Una certificación general no se extiende a cortafuegos."
+    },
+    {
+      "nombre": "AD’IP",
+      "url": "https://www.adip-as.com/",
+      "resultado": "Nuevas pistas nominales (Dravok, Deco Teba’s y Montatek BDN); se separan de ejecución específica y fiscalidad todavía pendientes."
+    },
+    {
+      "nombre": "AERME",
+      "url": "https://aerme.com/listado-asociados/",
+      "resultado": "Listado restringido a socios; no se crea cuenta ni se elude la restricción."
+    }
+  ],
+  "aplicadas": [
+    {
+      "empresaId": 5958,
+      "cif": "B87052205",
+      "nombre": "TORRESFIRE, S.L.",
+      "accion": "alta",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://www.torresfire.es/aviso-legal/",
+      "evidencias": [
+        "https://www.torresfire.es/servicios/"
+      ]
+    },
+    {
+      "empresaId": 5959,
+      "cif": "B06741698",
+      "nombre": "EMPRESAS QUIN XI, S.L.",
+      "accion": "alta",
+      "servicios": [
+        "estructura"
+      ],
+      "identidadUrl": "https://empresasquin.com/aviso-legal",
+      "evidencias": [
+        "https://empresasquin.com/servicios/"
+      ]
+    },
+    {
+      "empresaId": 5960,
+      "cif": "B75642181",
+      "nombre": "PUERTAS AUTOMÁTICAS SORIA, S.L.",
+      "accion": "alta",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://cys-puertasautomaticassoria.com/aviso-legal",
+      "evidencias": [
+        "https://cys-puertasautomaticassoria.com/"
+      ]
+    },
+    {
+      "empresaId": 5961,
+      "cif": "B12396727",
+      "nombre": "PROYES CASTELLÓN, S.L.",
+      "accion": "alta",
+      "servicios": [],
+      "identidadUrl": "https://www.proyescastellon.com/aviso-legal/",
+      "evidencias": [
+        "https://www.proyescastellon.com/proteccion-pasiva-contra-el-fuego/"
+      ]
+    },
+    {
+      "empresaId": 5962,
+      "cif": "B87408985",
+      "nombre": "ALEDRIS INTERIORES Y REFORMAS, S.L.",
+      "accion": "alta",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://aledris.es/aviso-legal/",
+      "evidencias": [
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/aledris-interiores-y-reformas-s.l."
+      ]
+    },
+    {
+      "empresaId": 5963,
+      "cif": "B85306314",
+      "nombre": "HERGOY CERRAJEROS ELECTRICISTAS, S.L.",
+      "accion": "alta",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://hergoy.es/aviso-legal/",
+      "evidencias": [
+        "https://hergoy.es/puertas-cortafuegos/",
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/hergoy-cerrajeros-electricistas-s.l"
+      ]
+    },
+    {
+      "empresaId": 5964,
+      "cif": "A53710463",
+      "nombre": "AUTOMATISMOS BLASCO, S.A.U.",
+      "accion": "alta",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://automatismosblasco.com/aviso-legal/",
+      "evidencias": [
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/automatismos-blasco"
+      ]
+    },
+    {
+      "empresaId": 5965,
+      "cif": "B30443113",
+      "nombre": "LORCA INSTELEC, S.L.",
+      "accion": "alta",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://puertaautomatica.es/aviso-legal/",
+      "evidencias": [
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/instelec",
+        "https://puertaautomatica.es/servicios/instalacion/"
+      ]
+    },
+    {
+      "empresaId": 5966,
+      "cif": "B70853627",
+      "nombre": "AUTOMÁTICAS ONTIVEROS, S.L.U.",
+      "accion": "alta",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://www.tragsa.es/es/Documents/contratos%20menores/tragsa/2025/tr2-junio-2025-tragsa.pdf",
+      "evidencias": [
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/automaticas-ontiveros-s.l.u.",
+        "https://automaticasontiveros.com/puertas-cortafuegos/"
+      ]
+    },
+    {
+      "empresaId": 5967,
+      "cif": "B03735339",
+      "nombre": "DISAUT LEVANTE, S.L.",
+      "accion": "alta",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://disaut.es/politica-de-privacidad/",
+      "evidencias": [
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/disaut-levante"
+      ]
+    },
+    {
+      "empresaId": 5968,
+      "cif": "B04298584",
+      "nombre": "EXTINTORES ALMERÍA, S.L.",
+      "accion": "alta",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://www.contraincendiosalmeria.com/aviso-legal",
+      "evidencias": [
+        "https://www.contraincendiosalmeria.com/"
+      ]
+    },
+    {
+      "empresaId": 2854,
+      "cif": "B24439697",
+      "nombre": "SIMI SEGURIDAD, SL",
+      "accion": "enriquecer",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://simiseguridad.es/aviso-legal",
+      "evidencias": [
+        "https://simiseguridad.es/puertas",
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/simi-seguridad"
+      ]
+    },
+    {
+      "empresaId": 4442,
+      "cif": "B59068395",
+      "nombre": "INSTALACIONES PEREZ SERRANO S.L.",
+      "accion": "enriquecer",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://www.instalacionesperezserrano.com/aviso-legal/",
+      "evidencias": [
+        "https://www.instalacionesperezserrano.com/"
+      ]
+    },
+    {
+      "empresaId": 2747,
+      "cif": "B60185931",
+      "nombre": "Tallafoc S.L.",
+      "accion": "enriquecer",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://tallafoc.com/aviso-legal/",
+      "evidencias": [
+        "https://tallafoc.com/productos/"
+      ]
+    },
+    {
+      "empresaId": 3147,
+      "cif": "A08411175",
+      "nombre": "ALVIFOC SA",
+      "accion": "enriquecer",
+      "servicios": [],
+      "identidadUrl": "https://alvifoc.com/avis-legal",
+      "evidencias": [
+        "https://alvifoc.com/serveis"
+      ]
+    },
+    {
+      "empresaId": 1753,
+      "cif": "B02444545",
+      "nombre": "ACECHO SEGURIDAD, S.L.",
+      "accion": "enriquecer",
+      "servicios": [],
+      "identidadUrl": "https://www.acecho.es/aviso-legal/",
+      "evidencias": [
+        "https://www.acecho.es/servicios-contraincendio/"
+      ]
+    },
+    {
+      "empresaId": 3072,
+      "cif": "B76633882",
+      "nombre": "EXTINTORES ASTRO, S.L.",
+      "accion": "enriquecer",
+      "servicios": [
+        "estructura"
+      ],
+      "identidadUrl": "https://extintoresastro.es/aviso-legal/",
+      "evidencias": [
+        "https://extintoresastro.es/servicios/aplicaciones-de-morteros-y-pinturas/"
+      ]
+    },
+    {
+      "empresaId": 2491,
+      "cif": "B24202574",
+      "nombre": "PROTEXT SEGURIDAD SL",
+      "accion": "enriquecer",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://protextseguridad.com/incendios/",
+      "evidencias": [
+        "https://protextseguridad.com/incendios/"
+      ]
+    },
+    {
+      "empresaId": 2859,
+      "cif": "B02022093",
+      "nombre": "PROSEIM, S.L.",
+      "accion": "enriquecer",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://www.proseim.com/textos-legales",
+      "evidencias": [
+        "https://www.proseim.com",
+        "https://www.proseim.com/servicios"
+      ]
+    },
+    {
+      "empresaId": 1882,
+      "cif": "B03775194",
+      "nombre": "EXTINFUEGO, S.L.",
+      "accion": "enriquecer",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://www.extinfuegosl.com",
+      "evidencias": [
+        "https://www.extinfuegosl.com",
+        "https://www.extinfuegosl.com/producto-servicio/puertas-cortafuegos/00005/"
+      ]
+    },
+    {
+      "empresaId": 1812,
+      "cif": "B81108235",
+      "nombre": "COMERCIAL NORPAL PALOMARES, S.L.",
+      "accion": "enriquecer",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://extintoresnorpal.com/politica-privacidad/",
+      "evidencias": [
+        "https://extintoresnorpal.com/"
+      ]
+    },
+    {
+      "empresaId": 2555,
+      "cif": "B93362564",
+      "nombre": "SEGURIDAD Y CONTRAINCENDIOS DEL SUR SL",
+      "accion": "enriquecer",
+      "servicios": [
+        "puertas"
+      ],
+      "identidadUrl": "https://secosur.com/aviso-legal/",
+      "evidencias": [
+        "https://secosur.com/sistemas-de-deteccion-y-extincion-de-incendios/"
+      ]
+    }
+  ],
+  "coberturaAltas": {
+    "comunidades": [
+      "Andalucía",
+      "C. Valenciana",
+      "Castilla y León",
+      "Extremadura",
+      "Madrid",
+      "Murcia"
+    ],
+    "provincias": [
+      "Alicante",
+      "Almería",
+      "Badajoz",
+      "Castellón",
+      "Granada",
+      "Madrid",
+      "Murcia",
+      "Soria"
+    ],
+    "nota": "Cobertura por domicilio validado, no territorio atendido ni censo. Sin nuevas confirmadas domiciliadas en Zamora, Ceuta o Melilla."
+  },
+  "cincoDudasPrioritarias": [
+    {
+      "candidata": "PYL Bages",
+      "estado": "pendiente",
+      "dominio": "pylbages.es",
+      "pistaFiscal": "PLACAS YESO LAMINADO DEL BAGES, S.L. / B09713207; CIF solo en fuentes secundarias",
+      "resultado": "BORME confirma sociedad y cambio de domicilio a Monistrol; AD’IP enlaza razón social y dominio. La web no publica NIF, VIES no confirma ROI y GLEIF/RELIC/PSCP no devuelven coincidencia en las consultas acotadas.",
+      "falta": "Documento fiscal primario que publique el NIF completo junto a la razón social, como certificado fiscal/REA o documento corporativo identificativo.",
+      "fuentes": [
+        "https://pylbages.es/",
+        "https://www.adip-as.com/porfolio/placas-yeso-laminado-del-bages-sl/",
+        "https://www.boe.es/diario_borme/txt.php?id=BORME-A-2026-53-08"
+      ],
+      "sinEscritura": true,
+      "revisionActual": "Búsqueda corporativa y fiscal adicional por nombre, dominio, NIF candidato y contactos públicos; no se obtiene el enlace primario que falta. No se repite VIES ni se interpreta el resultado histórico como invalidez del NIF.",
+      "accion": "sin_alta"
+    },
+    {
+      "candidata": "CRM Gia",
+      "estado": "pendiente",
+      "dominio": "crmgia.com",
+      "pistaFiscal": null,
+      "resultado": "Privacidad recuperada en navegador: marca y domicilio de Ciudad Real, sin titular completo ni CIF/NIF; partes de plantilla. Los contactos de Olías y la pista Trasteros GIA no prueban identidad fiscal.",
+      "falta": "Titular real y CIF/NIF en documento fiscal o corporativo que enlace la actividad y el dominio; no basta el nombre comercial.",
+      "fuentes": [
+        "https://crmgia.com/politica-de-privacidad/",
+        "https://crmgia.com/contacto/"
+      ],
+      "sinEscritura": true,
+      "revisionActual": "Búsqueda corporativa y fiscal adicional por nombre, dominio, NIF candidato y contactos públicos; no se obtiene el enlace primario que falta. No se repite VIES ni se interpreta el resultado histórico como invalidez del NIF.",
+      "accion": "sin_alta"
+    },
+    {
+      "candidata": "Asturfire",
+      "estado": "pendiente",
+      "dominio": "asturfire.es",
+      "pistaFiscal": "AISLAMIENTOS E IGNIFUGACIONES ASTURIAS, S.L. / B74385097; vínculo con la marca no acreditado",
+      "resultado": "Contratación del SEPEPA confirma nombre y NIF de la sociedad de Siero, pero no los vincula con Asturfire. La web usa referencias a Gijón/Oviedo/Avilés y correo asturfire.com sin identificación fiscal.",
+      "falta": "Documento que enlace expresamente Asturfire/dominio con el titular ejecutor y su CIF; el NIF de la sociedad de Siero ya cuenta con fuente pública, pero falta la atribución a la marca.",
+      "fuentes": [
+        "https://asturfire.es/",
+        "https://miprincipado.asturias.es/documents/37450/330138/Relaciones%2BTrimestrales%2BContratos%2BMenores%2BSERVICIO%2BPUBLICO%2BEMPLEO%2BPRINCIPADO%2BDE%2BASTURIAS%2B%2B%28SEPPEPA%29%2B4T-2023.pdf/7a6fbdc4-0530-1d37-d9bc-164d1546bff8?t=1709023249312"
+      ],
+      "sinEscritura": true,
+      "revisionActual": "Búsqueda corporativa y fiscal adicional por nombre, dominio, NIF candidato y contactos públicos; no se obtiene el enlace primario que falta. No se repite VIES ni se interpreta el resultado histórico como invalidez del NIF.",
+      "accion": "sin_alta"
+    },
+    {
+      "candidata": "Ignífugos Muñoz",
+      "estado": "pendiente",
+      "dominio": "ignifugosproyectados.com",
+      "pistaFiscal": "YESOS MUÑOZ E HIJOS, S.L. / B13209671: identidad fiscal y ejecución histórica acreditadas en contratación pública; vínculo con la marca pendiente.",
+      "resultado": "Se localiza el contrato 135/2018/00044, M201804162, del Ayuntamiento de Madrid: reparación del material ignífugo de vigas para SAMUR. La página 57 identifica conjuntamente B13209671 y Yesos Muñoz e Hijos, S.L.; se renderiza y revisa la tabla. No publica correo, dominio ni teléfono del operador y no resuelve la titularidad de ignifugosproyectados.com.",
+      "falta": "Documento primario que enlace expresamente ignifugosproyectados.com / Ignífugos Muñoz con la sociedad ejecutora. Ya no falta una fuente pública del CIF B13209671; la coincidencia de dirección histórica sigue sin bastar para atribuir la marca.",
+      "fuentes": [
+        "https://ignifugosproyectados.com/contactar",
+        "https://origin-www.bocm.es/boletin/CM_Orden_BOCM/2010/09/14/BOCM-20100914-36.PDF",
+        "https://www.madrid.es/UnidadesDescentralizadas/PerfilContratante/Contenidos/Fase1/Promocionales/Transparencia/Listado%20acumulado%20contratos%20menores%20a%2031-12-2018%282019%29.pdf"
+      ],
+      "sinEscritura": true,
+      "revisionActual": "Se comprueba la contratación pública y se buscan expediente, CIF, teléfono, marca y dirección; no aparece documento que enlace el dominio con el adjudicatario.",
+      "accion": "sin_alta"
+    },
+    {
+      "candidata": "Ignifugados.cat",
+      "estado": "pendiente",
+      "dominio": "ignifugados.cat",
+      "pistaFiscal": null,
+      "resultado": "Servicios y contacto recuperados: Mas Estaper 4, Granollers, teléfono y correo. No aparece titular fiscal; permanecen textos de plantilla. Las consultas nominales en contratación de Cataluña no devuelven coincidencias.",
+      "falta": "Identidad fiscal completa del titular de la web y del equipo ejecutor, en aviso o documento corporativo identificativo.",
+      "fuentes": [
+        "https://www.ignifugados.cat/contact",
+        "https://www.ignifugados.cat/services"
+      ],
+      "sinEscritura": true,
+      "revisionActual": "Búsqueda corporativa y fiscal adicional por nombre, dominio, NIF candidato y contactos públicos; no se obtiene el enlace primario que falta. No se repite VIES ni se interpreta el resultado histórico como invalidez del NIF.",
+      "accion": "sin_alta"
+    }
+  ],
+  "otrosCasosSinAlta": [
+    {
+      "nombre": "Mecánica General Hospitalaria",
+      "dominio": "mghospitalaria.com",
+      "estado": "pendiente_fiscal",
+      "resultado": "APA y la web propia acreditan instalación y mantenimiento de puertas y herrajes cortafuegos; no se obtiene CIF/NIF primario. El cambio de domicilio en BORME 2022 confirma la sociedad, pero no identifica el NIF.",
+      "falta": "CIF/NIF completo en documento fiscal o corporativo primario; no atribuir datos por el enlace residual a barnatek.com.",
+      "fuentes": [
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/mecanica-general-hospitalaria-s.l.u.",
+        "https://mghospitalaria.com/",
+        "https://www.boe.es/borme/dias/2022/10/20/pdfs/BORME-A-2022-201-08.pdf"
+      ]
+    },
+    {
+      "nombre": "Metálicas Octavio Serrano",
+      "dominio": "octavioserrano.com",
+      "estado": "pendiente_fiscal",
+      "resultado": "APA documenta actividad instaladora/mantenedora con puertas cortafuego; la web devuelve 403 en la lectura técnica y no se contrasta su identidad fiscal primaria.",
+      "falta": "Identidad del operador y CIF/NIF primarios.",
+      "fuentes": [
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/metalicas-octavio-serrano",
+        "https://www.octavioserrano.com/"
+      ]
+    },
+    {
+      "nombre": "Puertas Move",
+      "dominio": "puertasmove.es",
+      "estado": "pendiente_operador_actual",
+      "resultado": "La ficha APA documenta la marca y actividad, pero no da CIF. La web no se recupera y el NIF B54308838 procede de pistas secundarias con antecedentes que requieren revisión, no de una identificación corporativa actual.",
+      "falta": "Atribuir la marca a un titular fiscal actual y contrastar su NIF; no importar automáticamente una sociedad histórica.",
+      "fuentes": [
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/puertas-move",
+        "https://www.puertasmove.es/"
+      ]
+    },
+    {
+      "nombre": "Bayfer",
+      "dominio": "bayfer.es",
+      "estado": "pendiente_atribucion_corporativa",
+      "resultado": "La web redirige a Orona; la ficha APA de Bayfer no autoriza atribuir automáticamente esa actividad a cualquier sociedad de Orona ni recuperar una entidad histórica como operador actual.",
+      "falta": "Titular ejecutor y NIF actual de la actividad cortafuegos de Bayfer.",
+      "fuentes": [
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/bayfer-s.l.u.",
+        "https://www.bayfer.es/"
+      ]
+    },
+    {
+      "nombre": "Ezkaba",
+      "dominio": "prevencionezkaba.com",
+      "empresaId": 3013,
+      "estado": "identidad_contradictoria",
+      "resultado": "La oferta actual declara instalación de puertas cortafuegos. La privacidad publica J71055347 frente al CIF B71020788 de la ficha; no se traslada la actividad hasta conciliar la identidad.",
+      "falta": "Documento fiscal primario que aclare el operador o sucesión; no sobrescribir el CIF existente.",
+      "fuentes": [
+        "https://prevencionezkaba.com/deteccion-de-incendios/",
+        "https://prevencionezkaba.com/politica-privacidad/"
+      ]
+    },
+    {
+      "nombre": "Tu Demana",
+      "dominio": "tudemana.com",
+      "empresaId": 3300,
+      "estado": "atribucion_pendiente",
+      "resultado": "El contenido actual usa PCI TUDEMANA 2021 S.L. frente al nombre y CIF de la ficha previa. La página de puertas mezcla venta y una atribución de instalaciones dirigida a CCTV.",
+      "falta": "Atribución fiscal de la oferta actual y ejecución específica de puertas al mismo operador.",
+      "fuentes": [
+        "https://tudemana.com/servicios/puertas-cortafuegos-luminarias-y-cctv"
+      ]
+    },
+    {
+      "nombre": "Apaga-Foc / Sima Segur",
+      "dominio": "apagafoc.com",
+      "empresaId": 1574,
+      "estado": "atribucion_ejecucion_pendiente",
+      "resultado": "El aviso publica B07681794 y B57479503 para dos sociedades. La sección de pasiva detalla almacén y productos, sin atribución específica de ejecución a uno de los CIF.",
+      "falta": "Ejecución de pasiva atribuida al CIF correspondiente; no clasificar las dos sociedades por compartir web.",
+      "fuentes": [
+        "https://www.apagafoc.com/es/incendios",
+        "https://www.apagafoc.com/es/aviso-legal"
+      ]
+    },
+    {
+      "nombre": "NOEGA Grupo Avance",
+      "dominio": "noegagrupoavance.es",
+      "estado": "operador_actual_pendiente",
+      "resultado": "La web no se recupera; aparecen pistas de integración societaria. No se crea una ficha adicional por la marca ni se modifica el estado legal desde fuentes secundarias.",
+      "falta": "Atribución primaria del operador actual y su ejecución de puertas; el conducto E600 genérico no acredita por sí solo conducto resistente al fuego.",
+      "fuentes": [
+        "https://www.noegagrupoavance.es/"
+      ]
+    },
+    {
+      "nombre": "Instalaciones Valcarce",
+      "dominio": "instalacionesvalcarce.com",
+      "estado": "incidencia_tecnica_y_fiscal",
+      "resultado": "La página de puertas se recupera junto a contenido de apuestas ajeno al servicio y los avisos fiscales no resultan utilizables. No se siguen esos enlaces ni se da de alta sin identidad primaria.",
+      "falta": "Identidad fiscal primaria y una fuente limpia de ejecución.",
+      "fuentes": [
+        "https://instalacionesvalcarce.com/puertas-cortafuegos"
+      ]
+    },
+    {
+      "nombre": "Deco Teba’s",
+      "dominio": "pladurlleida.com",
+      "estado": "identidad_y_pasiva_pendientes",
+      "resultado": "La web acredita instalación de yeso laminado y aislamientos generales; los avisos enlazados devuelven 404. La pertenencia a AD’IP no acredita por sí misma trabajos de pasiva.",
+      "falta": "CIF primario y ejecución específica de soluciones resistentes al fuego.",
+      "fuentes": [
+        "https://www.pladurlleida.com/",
+        "https://www.adip-as.com/deco-tebas-nueva-empresa-asociada/"
+      ]
+    },
+    {
+      "nombre": "Dravok S.Coop.",
+      "dominio": null,
+      "estado": "ejecucion_y_fiscalidad_pendientes",
+      "resultado": "Localizada por AD’IP; no se obtiene web corporativa con prueba de ejecución específica ni CIF primario en esta consulta acotada.",
+      "falta": "Web o documento corporativo, identidad fiscal y trabajos específicos de pasiva.",
+      "fuentes": [
+        "https://www.adip-as.com/dravok-scoop-nueva-empresa-asociada/"
+      ]
+    },
+    {
+      "nombre": "Montatek BDN",
+      "dominio": null,
+      "estado": "ejecucion_y_fiscalidad_pendientes",
+      "resultado": "Localizada por AD’IP; no se confunde con una cooperativa homónima dedicada a otras soluciones. El perfil de asociación por sí solo no acredita ejecución específica de pasiva.",
+      "falta": "Identidad fiscal y ejecución específica del titular correcto.",
+      "fuentes": [
+        "https://www.adip-as.com/montatek-nueva-empresa-asociada/"
+      ]
+    }
+  ],
+  "limites": "El rastreo adicional de webs de empresas existentes no equivale a validar toda mención antigua. Airfeu, Extisan y otras ofertas con productos o documentación genérica quedan sin nueva clasificación cuando no se cierra la atribución específica de ejecución en esta tanda. Las incidencias de acceso conservan su estado de investigación; no se marcan como revisión negativa.",
+  "verificacion": {
+    "simulacion": {
+      "alta": 11,
+      "enriquecer": 11,
+      "revisar": 0
+    },
+    "repeticionActividad": {
+      "sin_cambios": 22
+    },
+    "repeticionDescripciones": {
+      "sin_cambios": 2
+    },
+    "auditoriasActividad": 22,
+    "auditoriasDescripcion": 2,
+    "camposProtegidosAlterados": [],
+    "financierosConservados": 23620,
+    "testsPasiva": 12,
+    "api": {
+      "base": "https://warroom.fontiber.com",
+      "fecha": "2026-10-25T22:22:20.221Z",
+      "sinSesion": 401,
+      "cifsUnicos": 22,
+      "fichasConDescripcion": 22,
+      "combinaciones": 16,
+      "exportadas": 372,
+      "pipeline": [
+        {
+          "modo": "todas",
+          "total": 16
+        },
+        {
+          "modo": "cualquiera",
+          "total": 218
+        }
+      ]
+    },
+    "descripcionesGlobal": {
+      "fecha": "2026-10-25T22:22:04.743Z",
+      "confirmadas": 372,
+      "descripcionesVacias": 0,
+      "descripcionesPreviasConservadas": 350,
+      "cifsUnicos": 372
+    }
+  },
+  "criterio": "Nuevas altas fuera de perímetro, sin estado SABI ni PCI activa inferida. Una sola empresa por CIF validado, sin altas por marca, sede o landing. Ningún cambio en datos CRM, grupos o cuentas. Las tres filas sin especialidad confirmada conservan servicios=[]; no se añaden categorías por inferencia."
+}

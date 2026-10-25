@@ -1,0 +1,743 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "alcance": "Decimoquinta tanda: registro sectorial APA/FEMPA, búsqueda regional y contraste de empresas existentes; revisión documental adicional de las cinco dudas prioritarias.",
+  "criterio": "Identidad fiscal primaria para altas, ejecución específica y cruce por CIF, nombre y dominio. Descripción inicial en toda alta, y en existentes que carecían de ella. Sin inferir activa, habilitaciones ni especialidades no documentadas.",
+  "geocodificacion": "Centros municipales de sedes publicadas; precisión municipal, sin atribuir portal exacto.",
+  "empresas": [
+    {
+      "cif": "B87052205",
+      "nombre": "TORRESFIRE, S.L.",
+      "web": "https://www.torresfire.es/",
+      "identidadUrl": "https://www.torresfire.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.torresfire.es/servicios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La sección de montaje declara instalación de puertas cortafuegos en obra; su personal técnico instala los herrajes. También ofrece mantenimiento específico."
+        }
+      ],
+      "descripcion": "Diseña, fabrica e instala puertas cortafuegos para edificios. Ofrece puertas batientes, correderas y vidriadas, montaje en obra, instalación de herrajes y mantenimiento.",
+      "localidad": "Madrid",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle de Padilla, 29",
+      "codigoPostal": "28006",
+      "observaciones": "Aviso legal y servicios leídos en navegador tras la comprobación automática del servidor. Se acredita instalación propia, además de fabricación; no se infieren otras especialidades por el catálogo.",
+      "lat": 40.416782,
+      "lng": -3.703507,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Madrid%2C+Madrid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Madrid, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 5326784
+      }
+    },
+    {
+      "cif": "B06741698",
+      "nombre": "EMPRESAS QUIN XI, S.L.",
+      "web": "https://empresasquin.com/",
+      "identidadUrl": "https://empresasquin.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://empresasquin.com/servicios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara experiencia propia en aplicación de pinturas intumescentes y otros revestimientos resistentes al fuego para edificios industriales y públicos."
+        }
+      ],
+      "descripcion": "Aplicadora de pinturas y revestimientos industriales y residenciales en Extremadura. Realiza tratamientos anticorrosivos y protección pasiva contra incendios mediante pinturas intumescentes y otros revestimientos.",
+      "localidad": "Talavera la Real",
+      "provincia": "Badajoz",
+      "ccaa": "Extremadura",
+      "direccion": "Avenida de Extremadura, 64",
+      "codigoPostal": "06140",
+      "observaciones": "Identidad fiscal y servicios leídos en navegador. Anticorrosivos Extremadura es una línea de la misma empresa; no se crea otra ficha por la marca ni por el centro de Calamonte.",
+      "lat": 38.876694,
+      "lng": -6.7722332,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Talavera+la+Real%2C+Badajoz%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Talavera la Real, Badajoz, Extremadura, 06140, España",
+        "osmType": "relation",
+        "osmId": 340012
+      }
+    },
+    {
+      "cif": "B75642181",
+      "nombre": "PUERTAS AUTOMÁTICAS SORIA, S.L.",
+      "web": "https://cys-puertasautomaticassoria.com/",
+      "identidadUrl": "https://cys-puertasautomaticassoria.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://cys-puertasautomaticassoria.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La web declara fabricación e instalación propias e incluye puertas cortafuegos entre sus servicios."
+        }
+      ],
+      "descripcion": "Fabrica e instala puertas automáticas, industriales y de garaje en Soria. Su oferta incluye puertas cortafuegos, automatismos, mantenimiento y reparación.",
+      "localidad": "Garray",
+      "provincia": "Soria",
+      "ccaa": "Castilla y León",
+      "direccion": "Calle Real, 14",
+      "codigoPostal": "42162",
+      "fuentesIdentidadLocalizacion": [
+        "https://cys-puertasautomaticassoria.com/aviso-legal",
+        "https://puertasautomaticassoria.com/aviso-legal"
+      ],
+      "observaciones": "Los dos dominios publican el mismo CIF: una sola sociedad. Se usa la localidad fiscal de Garray; el taller de Soria no genera otra alta. La oferta completa se revisa en el cuerpo de la página y en navegador, no solo en el primer bloque HTML.",
+      "lat": 41.8150617,
+      "lng": -2.4460875,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Garray%2C+Soria%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Garray, Soria, Castilla y León, 42162, España",
+        "osmType": "relation",
+        "osmId": 340496
+      }
+    },
+    {
+      "cif": "B12396727",
+      "nombre": "PROYES CASTELLÓN, S.L.",
+      "web": "https://www.proyescastellon.com/",
+      "identidadUrl": "https://www.proyescastellon.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.proyescastellon.com/proteccion-pasiva-contra-el-fuego/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Describe evaluación, elección de material y ejecución de protección pasiva por aplicación manual o proyección, con revisión del trabajo y emisión de certificados."
+        }
+      ],
+      "descripcion": "Realiza aislamientos térmicos, sistemas SATE, insuflado de lana de roca y corcho proyectado en Castellón y Valencia. Ejecuta protección pasiva contra el fuego mediante aplicación manual o proyectada de materiales ignífugos.",
+      "localidad": "Castellón de la Plana",
+      "provincia": "Castellón",
+      "ccaa": "C. Valenciana",
+      "direccion": "Calle de Prim, 69, bajo",
+      "codigoPostal": "12003",
+      "observaciones": "Se confirma ejecución de pasiva; la página no distingue suficientemente las seis especialidades del modelo y se conserva la lista de servicios vacía en vez de inferir estructura, sellados o reacción.",
+      "lat": 39.9860347,
+      "lng": -0.0377354,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Castell%C3%B3n+de+la+Plana%2C+Castell%C3%B3n%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Castelló de la Plana / Castellón de la Plana, la Plana Alta, Castelló / Castellón, Comunitat Valenciana, España",
+        "osmType": "relation",
+        "osmId": 344858
+      }
+    },
+    {
+      "cif": "B87408985",
+      "nombre": "ALEDRIS INTERIORES Y REFORMAS, S.L.",
+      "web": "https://aledris.es/",
+      "identidadUrl": "https://aledris.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/aledris-interiores-y-reformas-s.l.",
+          "fuente": "Registro sectorial APA",
+          "tipo": "asociacion",
+          "fecha": "2026-10-25",
+          "descripcion": "La ficha específica documenta empresa instaladora y mantenedora de puertas cortafuego y documentación presentada en noviembre de 2025."
+        }
+      ],
+      "descripcion": "Empresa de gestión técnica y mantenimiento de inmuebles, adecuaciones y reformas. Su actividad incluye instalación y mantenimiento de puertas cortafuegos.",
+      "localidad": "Rivas-Vaciamadrid",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle Marie Curie, 5, edificio Alfa, oficina 4.7",
+      "codigoPostal": "28521",
+      "observaciones": "La acreditación específica y la actividad se consultan en la ficha individual, no se deducen de la mera condición de asociada. La privacidad y aviso propios identifican razón social, NIF y sede; APA completa edificio y oficina.",
+      "lat": 40.3536054,
+      "lng": -3.5310879,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Rivas-Vaciamadrid%2C+Madrid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Rivas-Vaciamadrid, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 343293
+      }
+    },
+    {
+      "cif": "B85306314",
+      "nombre": "HERGOY CERRAJEROS ELECTRICISTAS, S.L.",
+      "web": "https://hergoy.es/",
+      "identidadUrl": "https://hergoy.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://hergoy.es/puertas-cortafuegos/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara instalación propia de puertas cortafuegos conforme al ensayo y mantenimiento de hojas, cierres, holguras, bisagras, herrajes y juntas."
+        },
+        {
+          "url": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/hergoy-cerrajeros-electricistas-s.l",
+          "fuente": "Registro sectorial APA",
+          "tipo": "asociacion",
+          "fecha": "2026-10-25",
+          "descripcion": "La ficha individual incluye actividad instaladora y mantenedora para puertas cortafuego."
+        }
+      ],
+      "descripcion": "Instala y mantiene puertas cortafuegos y puertas de garaje en Madrid. Revisa cierres, herrajes, barras antipánico y juntas intumescentes, además de realizar trabajos de cerrajería.",
+      "localidad": "Alcorcón",
+      "provincia": "Madrid",
+      "ccaa": "Madrid",
+      "direccion": "Calle Carballino, 29, portal 3, 7º A",
+      "codigoPostal": "28925",
+      "fuentesIdentidadLocalizacion": [
+        "https://hergoy.es/aviso-legal/",
+        "https://hergoy.es/wp-content/uploads/2026/05/CERT.-HERGOY-EMPRESA-INSTALADORA-MANTENEDORA-DE-PUERTAS-DE-CORTAFUEGOS.pdf"
+      ],
+      "lat": 40.3492998,
+      "lng": -3.8284295,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Alcorc%C3%B3n%2C+Madrid%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Alcorcón, Comunidad de Madrid, España",
+        "osmType": "relation",
+        "osmId": 345877
+      }
+    },
+    {
+      "cif": "A53710463",
+      "nombre": "AUTOMATISMOS BLASCO, S.A.U.",
+      "web": "https://automatismosblasco.com/",
+      "identidadUrl": "https://automatismosblasco.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/automatismos-blasco",
+          "fuente": "Registro sectorial APA",
+          "tipo": "asociacion",
+          "fecha": "2026-10-25",
+          "descripcion": "La ficha atribuye expresamente fabricación, instalación y mantenimiento de puertas peatonales y cortafuegos, además de las industriales, comerciales y residenciales."
+        }
+      ],
+      "descripcion": "Fabrica, instala y mantiene puertas automáticas industriales, comerciales, residenciales y cortafuegos. Realiza trabajos de carpintería metálica y automatización, principalmente en Alicante.",
+      "localidad": "La Nucía",
+      "provincia": "Alicante",
+      "ccaa": "C. Valenciana",
+      "direccion": "Calle Alfaz del Pi, 4",
+      "codigoPostal": "03530",
+      "observaciones": "La ficha diferencia el tipo de puertas de su certificado general. Se usa la declaración explícita de ejecución y no se extiende el alcance de un certificado industrial a cortafuegos. No se confunde con Electricidad Industrial Blasco de Barcelona.",
+      "lat": 38.6133727,
+      "lng": -0.1257319,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=La+Nuc%C3%ADa%2C+Alicante%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "la Nucia, la Marina Baixa, Alacant / Alicante, Comunitat Valenciana, España",
+        "osmType": "relation",
+        "osmId": 341996
+      }
+    },
+    {
+      "cif": "B30443113",
+      "nombre": "LORCA INSTELEC, S.L.",
+      "web": "https://puertaautomatica.es/",
+      "identidadUrl": "https://puertaautomatica.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/instelec",
+          "fuente": "Registro sectorial APA",
+          "tipo": "asociacion",
+          "fecha": "2026-10-25",
+          "descripcion": "Documenta instalación y mantenimiento de puertas cortafuego y actividad en Murcia y Almería. El dominio y sede de Lorca coinciden con el aviso propio."
+        },
+        {
+          "url": "https://puertaautomatica.es/servicios/instalacion/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa ofrece instalación propia de puertas automáticas."
+        }
+      ],
+      "descripcion": "INSTELEC fabrica, instala, repara y mantiene puertas automáticas en Murcia y Almería. Su oferta incluye puertas cortafuegos y automatismos para usos industriales, comerciales y residenciales.",
+      "localidad": "Lorca",
+      "provincia": "Murcia",
+      "ccaa": "Murcia",
+      "direccion": "Calle San Ramón, 5, bajo",
+      "codigoPostal": "30800",
+      "observaciones": "No es Instalaciones Eléctricas Coruñesas (instelec.es), ni Instalaciones Eléctricas Eduardo. La oficina de Garrucha no se da de alta como sociedad adicional.",
+      "lat": 37.6951954,
+      "lng": -1.772291,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Lorca%2C+Murcia%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Lorca, Alto Guadalentín, Región de Murcia, España",
+        "osmType": "relation",
+        "osmId": 346913
+      }
+    },
+    {
+      "cif": "B70853627",
+      "nombre": "AUTOMÁTICAS ONTIVEROS, S.L.U.",
+      "web": "https://automaticasontiveros.com/",
+      "identidadUrl": "https://www.tragsa.es/es/Documents/contratos%20menores/tragsa/2025/tr2-junio-2025-tragsa.pdf",
+      "identidadMetodo": "registro_publico",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/automaticas-ontiveros-s.l.u.",
+          "fuente": "Registro sectorial APA",
+          "tipo": "asociacion",
+          "fecha": "2026-10-25",
+          "descripcion": "La ficha individual documenta instalador y mantenedor de puertas cortafuego, con sede y dominio coincidentes."
+        },
+        {
+          "url": "https://automaticasontiveros.com/puertas-cortafuegos/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Publica puertas cortafuegos peatonales e industriales entre sus soluciones de instalación."
+        }
+      ],
+      "descripcion": "Instala, mantiene y repara puertas automáticas residenciales, industriales y para edificios públicos. Su catálogo de instalación incluye puertas cortafuegos peatonales e industriales en Granada y Andalucía.",
+      "localidad": "Pulianas",
+      "provincia": "Granada",
+      "ccaa": "Andalucía",
+      "direccion": "Carretera de Pulianas, 10",
+      "codigoPostal": "18197",
+      "fuentesIdentidadLocalizacion": [
+        "https://www.tragsa.es/es/Documents/contratos%20menores/tragsa/2025/tr2-junio-2025-tragsa.pdf",
+        "https://automaticasontiveros.com/aviso-legal",
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/automaticas-ontiveros-s.l.u."
+      ],
+      "observaciones": "TRAGSA, contratos menores abril-junio de 2025, página 52, publica nombre exacto y CIF en dos reparaciones de automatismos; tabla renderizada y revisada. Se enlaza la sociedad con la web por nombre, sede y ficha APA. No se confunde con Talleres Mecánicos Ontiveros ni con Grupo Ontiveros, y no se atribuye vigencia al ISO vencido mencionado en APA.",
+      "lat": 37.2226481,
+      "lng": -3.6080146,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Pulianas%2C+Granada%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Pulianas, Comarca de la Vega de Granada, Granada, Andalucía, 18197, España",
+        "osmType": "relation",
+        "osmId": 342243
+      }
+    },
+    {
+      "cif": "B03735339",
+      "nombre": "DISAUT LEVANTE, S.L.",
+      "web": "https://disaut.es/",
+      "identidadUrl": "https://disaut.es/politica-de-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/disaut-levante",
+          "fuente": "Registro sectorial APA",
+          "tipo": "asociacion",
+          "fecha": "2026-10-25",
+          "descripcion": "La ficha identifica a Disaut Levante como instaladora y mantenedora e incluye puertas cortafuego en su actividad, junto al dominio histórico disaut.com y la misma sede y teléfono."
+        }
+      ],
+      "descripcion": "Instala y mantiene automatismos y puertas automáticas en Alicante y Murcia. Su actividad sectorial incluye puertas cortafuegos, además de puertas industriales, comerciales y de garaje.",
+      "localidad": "Sant Joan d’Alacant",
+      "provincia": "Alicante",
+      "ccaa": "C. Valenciana",
+      "direccion": "Calle del Salt, 5",
+      "codigoPostal": "03550",
+      "fuentesIdentidadLocalizacion": [
+        "https://disaut.es/politica-de-privacidad/",
+        "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/disaut-levante"
+      ],
+      "observaciones": "La privacidad del dominio actual publica razón social, NIF, dirección y teléfono. El aviso contiene referencias de plantilla a tabulacion.es: no se usan para atribuir la identidad. El enlace del dominio histórico se corrobora mediante nombre, dirección y teléfono en APA.",
+      "lat": 38.4014162,
+      "lng": -0.4359957,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Sant+Joan+d%E2%80%99Alacant%2C+Alicante%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Sant Joan d'Alacant, l'Alacantí, Alacant / Alicante, Comunitat Valenciana, 03550, España",
+        "osmType": "relation",
+        "osmId": 340928
+      }
+    },
+    {
+      "cif": "B04298584",
+      "nombre": "EXTINTORES ALMERÍA, S.L.",
+      "web": "https://www.contraincendiosalmeria.com/",
+      "identidadUrl": "https://www.contraincendiosalmeria.com/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": true,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.contraincendiosalmeria.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa declara expresamente que realiza instalaciones de puertas cortafuegos."
+        }
+      ],
+      "descripcion": "Realiza instalación y mantenimiento de extintores y sistemas de detección de incendios en Almería, además de señalización y venta de material. También instala puertas cortafuegos.",
+      "localidad": "Almería",
+      "provincia": "Almería",
+      "ccaa": "Andalucía",
+      "direccion": "Calle Pío Baroja, 21",
+      "codigoPostal": "04006",
+      "observaciones": "El CIF del aviso y de la privacidad identifica al ejecutor. No se deriva PCI activa automáticamente de esta alta de investigación ni se importa habilitación desde la descripción comercial.",
+      "lat": 36.8685739,
+      "lng": -2.3120282,
+      "geocodificacion": {
+        "fuente": "OpenStreetMap / Nominatim",
+        "url": "https://nominatim.openstreetmap.org/search?q=Almer%C3%ADa%2C+Almer%C3%ADa%2C+Espa%C3%B1a&format=jsonv2&addressdetails=1&limit=10&countrycodes=es",
+        "precision": "municipio",
+        "fecha": "2026-10-25",
+        "resultado": "Almería, Andalucía, España",
+        "osmType": "relation",
+        "osmId": 347796
+      }
+    },
+    {
+      "cif": "B24439697",
+      "nombre": "SIMI SEGURIDAD, SL",
+      "web": "https://www.simiseguridad.es",
+      "empresaIdEsperada": 2854,
+      "identidadUrl": "https://simiseguridad.es/aviso-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://simiseguridad.es/puertas",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece instalación y mantenimiento de puertas, con apartado específico de puertas cortafuegos y cierre automático."
+        },
+        {
+          "url": "https://www.asociacionpuertasautomaticas.com/registro-de-empresa/empresas-registradas/simi-seguridad",
+          "fuente": "Registro sectorial APA",
+          "tipo": "asociacion",
+          "fecha": "2026-10-25",
+          "descripcion": "Documenta empresa instaladora y mantenedora para puertas cortafuego en su ficha individual."
+        }
+      ],
+      "observaciones": "Se conservan los datos y la descripción existentes; la actividad se atribuye exclusivamente a este CIF."
+    },
+    {
+      "cif": "B59068395",
+      "nombre": "INSTALACIONES PEREZ SERRANO S.L.",
+      "web": "https://www.instalacionesperezserrano.com",
+      "empresaIdEsperada": 4442,
+      "identidadUrl": "https://www.instalacionesperezserrano.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.instalacionesperezserrano.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La empresa declara fabricación a medida de puertas cortafuegos e instalación propia en viviendas, comunidades y negocios."
+        }
+      ],
+      "observaciones": "Se conservan los datos y la descripción existentes; la actividad se atribuye exclusivamente a este CIF."
+    },
+    {
+      "cif": "B60185931",
+      "nombre": "Tallafoc S.L.",
+      "web": "https://www.tallafoc.com",
+      "empresaIdEsperada": 2747,
+      "identidadUrl": "https://tallafoc.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://tallafoc.com/productos/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Ofrece expresamente suministro e instalación de puertas cortafuego en madera y metálicas."
+        }
+      ],
+      "observaciones": "Conserva Pineda de Mar y los demás datos existentes frente al contacto operativo de Palafolls. Se completa la descripción inicial vacía mediante lote separado y auditado."
+    },
+    {
+      "cif": "A08411175",
+      "nombre": "ALVIFOC SA",
+      "web": "https://www.alvifoc.com",
+      "empresaIdEsperada": 3147,
+      "identidadUrl": "https://alvifoc.com/avis-legal",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://alvifoc.com/serveis",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Incluye expresamente protección pasiva entre los sistemas que suministra, instala y revisa."
+        }
+      ],
+      "observaciones": "Se confirma pasiva sin inferir especialidades: cortinas de humo y exutorios genéricos no prueban puertas/cortinas cortafuegos ni conductos resistentes al fuego. Se completa el resumen vacío mediante lote auditado."
+    },
+    {
+      "cif": "B02444545",
+      "nombre": "ACECHO SEGURIDAD, S.L.",
+      "web": "https://www.acecho.es",
+      "empresaIdEsperada": 1753,
+      "identidadUrl": "https://www.acecho.es/aviso-legal/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [],
+      "evidencias": [
+        {
+          "url": "https://www.acecho.es/servicios-contraincendio/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara instalación con equipo propio de sistemas de protección pasiva, además de detección y extinción. No detalla las especialidades de pasiva."
+        }
+      ],
+      "observaciones": "Nombre corporativo explícito y dominio único del CIF existente; el aviso no publica NIF completo. Se confirma por la página de servicio, no por el artículo que llama erróneamente pasiva a la detección de humo. No se cambian los datos previos."
+    },
+    {
+      "cif": "B76633882",
+      "nombre": "EXTINTORES ASTRO, S.L.",
+      "web": "https://www.extintoresastro.es",
+      "empresaIdEsperada": 3072,
+      "identidadUrl": "https://extintoresastro.es/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "estructura"
+      ],
+      "evidencias": [
+        {
+          "url": "https://extintoresastro.es/servicios/aplicaciones-de-morteros-y-pinturas/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Se declara experta en aplicación propia de morteros y pinturas resistentes al fuego sobre estructuras. Se omiten otras especialidades no atribuibles de forma inequívoca."
+        }
+      ],
+      "observaciones": "La ficha de servicio confirma ejecución. El enlace titulado puertas cortafuegos conduce a detección de CO: no se usa para añadir puertas. No se importa una habilitación por la etiqueta de la web."
+    },
+    {
+      "cif": "B24202574",
+      "nombre": "PROTEXT SEGURIDAD SL",
+      "web": "https://www.protextseguridad.com",
+      "empresaIdEsperada": 2491,
+      "identidadUrl": "https://protextseguridad.com/incendios/",
+      "identidadMetodo": "universo_cif_dominio",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://protextseguridad.com/incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "En Puertas RF declara expresamente instalación y suministro de puertas y otros sistemas de barrera contra incendios para compartimentación de espacios."
+        }
+      ],
+      "observaciones": "Se conservan los datos y la descripción existentes; la actividad se atribuye exclusivamente a este CIF."
+    },
+    {
+      "cif": "B02022093",
+      "nombre": "PROSEIM, S.L.",
+      "web": "https://www.proseim.com",
+      "empresaIdEsperada": 2859,
+      "identidadUrl": "https://www.proseim.com/textos-legales",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.proseim.com",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Declara suministro e instalación de equipos, sistemas y materiales PCI con equipo propio."
+        },
+        {
+          "url": "https://www.proseim.com/servicios",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Incluye puertas cortafuegos entre los servicios de instalación PCI ofrecidos por la misma empresa."
+        }
+      ],
+      "observaciones": "Se conservan los datos y la descripción existentes; la actividad se atribuye exclusivamente a este CIF."
+    },
+    {
+      "cif": "B03775194",
+      "nombre": "EXTINFUEGO, S.L.",
+      "web": "https://www.extinfuegosl.com",
+      "empresaIdEsperada": 1882,
+      "identidadUrl": "https://www.extinfuegosl.com",
+      "identidadMetodo": "documento_corporativo",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://www.extinfuegosl.com",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La web identifica Extinfuego y su CIF, declara instalación y mantenimiento e incluye puertas cortafuegos entre sus soluciones propias."
+        },
+        {
+          "url": "https://www.extinfuegosl.com/producto-servicio/puertas-cortafuegos/00005/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "Página específica del servicio de puertas resistentes al fuego."
+        }
+      ],
+      "observaciones": "Se conservan los datos y la descripción existentes; la actividad se atribuye exclusivamente a este CIF."
+    },
+    {
+      "cif": "B81108235",
+      "nombre": "COMERCIAL NORPAL PALOMARES, S.L.",
+      "web": "https://www.extintoresnorpal.com",
+      "empresaIdEsperada": 1812,
+      "identidadUrl": "https://extintoresnorpal.com/politica-privacidad/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://extintoresnorpal.com/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La sección corporativa identifica Comercial Norpal Palomares y declara expresamente instalación de puertas cortafuego de diversas medidas."
+        }
+      ],
+      "observaciones": "Servicios y privacidad revisados en navegador: razón social y CIF coinciden con la ficha 1812. Se conservan descripción y resto de campos."
+    },
+    {
+      "cif": "B93362564",
+      "nombre": "SEGURIDAD Y CONTRAINCENDIOS DEL SUR SL",
+      "web": "https://www.secosur.com",
+      "empresaIdEsperada": 2555,
+      "identidadUrl": "https://secosur.com/aviso-legal/",
+      "identidadMetodo": "aviso_legal",
+      "permitirAlta": false,
+      "completarVacios": false,
+      "servicios": [
+        "puertas"
+      ],
+      "evidencias": [
+        {
+          "url": "https://secosur.com/sistemas-de-deteccion-y-extincion-de-incendios/",
+          "fuente": "Web corporativa",
+          "tipo": "web_corporativa",
+          "fecha": "2026-10-25",
+          "descripcion": "La oferta de instalación y mantenimiento incluye puertas cortafuego entre los sistemas disponibles. Se confirma solo puertas; la explicación general sobre pintura no acredita aplicación propia de protección estructural."
+        }
+      ],
+      "observaciones": "Se conservan los datos y la descripción existentes; la actividad se atribuye exclusivamente a este CIF."
+    }
+  ]
+}
