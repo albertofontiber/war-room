@@ -71,7 +71,7 @@
         }
       ],
       "localidad": "Arbeca",
-      "provincia": "Lleida",
+      "provincia": "Lérida",
       "ccaa": "Cataluña",
       "direccion": "Avenida Miralcamp, 1",
       "codigoPostal": "25140",
@@ -80,7 +80,7 @@
         "https://www.aillamentspirineu.com/es/aviso-legal"
       ],
       "descubrimiento": "https://www.aisla.org/instaladores/",
-      "observaciones": "El aviso y la política identifican expresamente al titular autónomo y su NIF profesional público. Se conserva la forma abreviada Josep M. publicada por el titular; no se inventa una denominación social.",
+      "observaciones": "El aviso y la política identifican expresamente al titular autónomo y su NIF profesional público. Se conserva la forma abreviada Josep M. publicada por el titular; no se inventa una denominación social. Etiqueta geográfica normalizada al nombre usado por los filtros actuales; el domicilio y las coordenadas se conservan.",
       "lat": 41.5342106,
       "lng": 0.9396108,
       "geocodificacion": {
@@ -820,7 +820,7 @@
       ],
       "localidad": "Berriozar",
       "provincia": "Navarra",
-      "ccaa": "Comunidad Foral de Navarra",
+      "ccaa": "Navarra",
       "direccion": "Paseo de la Habana, 1-3",
       "descripcion": "Instalación, reparación y mantenimiento de puertas y automatismos industriales y residenciales. Incluye puertas y cortinas cortafuegos, muelles de carga, persianas y barreras de acceso.",
       "fuentesIdentidadLocalizacion": [
@@ -828,7 +828,7 @@
         "https://bydoors.es/contacto/"
       ],
       "descubrimiento": "https://bydoors.es/servicios/instalacion-de-puertas-automaticas/",
-      "observaciones": "Se usa el centro operativo de Berriozar publicado en Contacto. El aviso fiscal conserva otro domicilio en Camino del Soto, 1, 31195 Navarra; se omite CP del centro operativo para no mezclar direcciones.",
+      "observaciones": "Se usa el centro operativo de Berriozar publicado en Contacto. El aviso fiscal conserva otro domicilio en Camino del Soto, 1, 31195 Navarra; se omite CP del centro operativo para no mezclar direcciones. Etiqueta geográfica normalizada al nombre usado por los filtros actuales; el domicilio y las coordenadas se conservan.",
       "lat": 42.83565,
       "lng": -1.6745719,
       "geocodificacion": {
@@ -892,7 +892,7 @@
       ],
       "localidad": "Madrid",
       "provincia": "Madrid",
-      "ccaa": "Comunidad de Madrid",
+      "ccaa": "Madrid",
       "direccion": "Calle Berlanas, 5, local B",
       "codigoPostal": "28047",
       "descripcion": "Aplicación de pavimentos continuos, revestimientos y pintura industrial. Ejecuta protección pasiva de estructuras y forjados con morteros y pinturas intumescentes, y sellados cortafuegos.",
@@ -901,7 +901,7 @@
         "https://www.rfuturo.es/contacto/"
       ],
       "descubrimiento": "https://www.rfuturo.es/ppci/",
-      "observaciones": "El aviso contiene marcadores en los datos registrales, que no se usan. Nombre, CIF, domicilio y contacto están completos y coinciden con la web corporativa.",
+      "observaciones": "El aviso contiene marcadores en los datos registrales, que no se usan. Nombre, CIF, domicilio y contacto están completos y coinciden con la web corporativa. Etiqueta geográfica normalizada al nombre usado por los filtros actuales; el domicilio y las coordenadas se conservan.",
       "lat": 40.416782,
       "lng": -3.703507,
       "geocodificacion": {
@@ -978,7 +978,7 @@
         }
       ],
       "localidad": "Gernika-Lumo",
-      "provincia": "Bizkaia",
+      "provincia": "Vizcaya",
       "ccaa": "País Vasco",
       "direccion": "Ibarra Kalea, 19, pabellón 11",
       "codigoPostal": "48300",
@@ -987,7 +987,7 @@
         "https://www.euskadi.eus/entidad/gernikaplac-s-coop/web01-ejeduki/eu/"
       ],
       "descubrimiento": "https://www.adip-as.com/asociados/",
-      "observaciones": "Resuelve Gernikaplac mediante el registro primario de cooperativas de Euskadi, que identifica F95644803 y Gernika-Lumo. Se utiliza el domicilio operativo publicado por la cooperativa. El estado del registro no se traslada al campo SABI.",
+      "observaciones": "Resuelve Gernikaplac mediante el registro primario de cooperativas de Euskadi, que identifica F95644803 y Gernika-Lumo. Se utiliza el domicilio operativo publicado por la cooperativa. El estado del registro no se traslada al campo SABI. Etiqueta geográfica normalizada al nombre usado por los filtros actuales; el domicilio y las coordenadas se conservan.",
       "lat": 43.3143976,
       "lng": -2.6778593,
       "geocodificacion": {

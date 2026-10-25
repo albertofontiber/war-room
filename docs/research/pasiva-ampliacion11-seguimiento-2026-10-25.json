@@ -5,6 +5,7 @@
   "lote": "pasiva-validada-ampliacion11-2026-10-25.json",
   "loteDescripciones": "descripciones-pasiva-ampliacion11-2026-10-25.json",
   "anexoFiscal": "pasiva-verificacion-fiscal-vies-2026-10-25.json",
+  "anexoGeografico": "pasiva-normalizacion-geografica-ampliacion11-2026-10-25.json",
   "antecedente": "pasiva-ampliacion10-seguimiento-2026-10-25.json",
   "criterio": "Titular fiscal primario, ejecución propia, cruce por CIF/NIF, nombre y dominio y descripción inicial. Fabricantes con montaje propio pueden entrar; captadores de leads y fabricantes sin ejecución acreditada no. Sin revisiones negativas ni carga SABI.",
   "resumen": {
@@ -1853,7 +1854,6 @@
   "coberturaProvincial": {
     "metodo": "Domicilio publicado de ficha, no territorio comercial ni censo de empresas; alias normalizados solo en este análisis.",
     "sinConfirmadasAntes": [
-      "Bizkaia",
       "Zamora"
     ],
     "sinConfirmadasDespues": [
@@ -1926,11 +1926,6 @@
         "provincia": "Barcelona",
         "pasivaAntes": 38,
         "pasivaDespues": 41
-      },
-      {
-        "provincia": "Bizkaia",
-        "pasivaAntes": 0,
-        "pasivaDespues": 1
       },
       {
         "provincia": "Burgos",
@@ -2120,7 +2115,7 @@
       {
         "provincia": "Vizcaya",
         "pasivaAntes": 8,
-        "pasivaDespues": 8
+        "pasivaDespues": 9
       },
       {
         "provincia": "Zamora",
@@ -3443,7 +3438,7 @@
         }
       ],
       "estado": "alta_aplicada",
-      "motivo": "Resuelve Gernikaplac mediante el registro primario de cooperativas de Euskadi, que identifica F95644803 y Gernika-Lumo. Se utiliza el domicilio operativo publicado por la cooperativa. El estado del registro no se traslada al campo SABI.",
+      "motivo": "Resuelve Gernikaplac mediante el registro primario de cooperativas de Euskadi, que identifica F95644803 y Gernika-Lumo. Se utiliza el domicilio operativo publicado por la cooperativa. El estado del registro no se traslada al campo SABI. Etiqueta geográfica normalizada al nombre usado por los filtros actuales; el domicilio y las coordenadas se conservan.",
       "revisionManual": true,
       "cif": "F95644803",
       "empresaId": 5950,
@@ -8024,7 +8019,7 @@
       "dominio": "aillamentspirineu.com",
       "candidata": "JOSEP M. PUIG PRATS / AÏLLAMENTS PIRINEU",
       "estado": "alta_aplicada",
-      "motivo": "El aviso y la política identifican expresamente al titular autónomo y su NIF profesional público. Se conserva la forma abreviada Josep M. publicada por el titular; no se inventa una denominación social.",
+      "motivo": "El aviso y la política identifican expresamente al titular autónomo y su NIF profesional público. Se conserva la forma abreviada Josep M. publicada por el titular; no se inventa una denominación social. Etiqueta geográfica normalizada al nombre usado por los filtros actuales; el domicilio y las coordenadas se conservan.",
       "revisionManual": true,
       "cif": "39646668G",
       "empresaId": 5933,
@@ -8301,7 +8296,7 @@
       "dominio": "bydoors.es",
       "candidata": "BY DOORS2022, S.L.U.",
       "estado": "alta_aplicada",
-      "motivo": "Se usa el centro operativo de Berriozar publicado en Contacto. El aviso fiscal conserva otro domicilio en Camino del Soto, 1, 31195 Navarra; se omite CP del centro operativo para no mezclar direcciones.",
+      "motivo": "Se usa el centro operativo de Berriozar publicado en Contacto. El aviso fiscal conserva otro domicilio en Camino del Soto, 1, 31195 Navarra; se omite CP del centro operativo para no mezclar direcciones. Etiqueta geográfica normalizada al nombre usado por los filtros actuales; el domicilio y las coordenadas se conservan.",
       "revisionManual": true,
       "cif": "B71461115",
       "empresaId": 5947,
@@ -8330,7 +8325,7 @@
       "dominio": "rfuturo.es",
       "candidata": "REVESTIMIENTOS PARA EL FUTURO, S.L.",
       "estado": "alta_aplicada",
-      "motivo": "El aviso contiene marcadores en los datos registrales, que no se usan. Nombre, CIF, domicilio y contacto están completos y coinciden con la web corporativa.",
+      "motivo": "El aviso contiene marcadores en los datos registrales, que no se usan. Nombre, CIF, domicilio y contacto están completos y coinciden con la web corporativa. Etiqueta geográfica normalizada al nombre usado por los filtros actuales; el domicilio y las coordenadas se conservan.",
       "revisionManual": true,
       "cif": "B80190556",
       "empresaId": 5948,
@@ -8361,7 +8356,7 @@
       "dominio": "gernikaplac.net",
       "candidata": "GERNIKAPLAC, S. COOP.",
       "estado": "alta_aplicada",
-      "motivo": "Resuelve Gernikaplac mediante el registro primario de cooperativas de Euskadi, que identifica F95644803 y Gernika-Lumo. Se utiliza el domicilio operativo publicado por la cooperativa. El estado del registro no se traslada al campo SABI.",
+      "motivo": "Resuelve Gernikaplac mediante el registro primario de cooperativas de Euskadi, que identifica F95644803 y Gernika-Lumo. Se utiliza el domicilio operativo publicado por la cooperativa. El estado del registro no se traslada al campo SABI. Etiqueta geográfica normalizada al nombre usado por los filtros actuales; el domicilio y las coordenadas se conservan.",
       "revisionManual": true,
       "cif": "F95644803",
       "empresaId": 5950,
@@ -8968,6 +8963,15 @@
     "repeticionActividad": "sin_cambios=25",
     "repeticionDescripciones": "sin_cambios=2",
     "auditoriasDescripcion": 2,
+    "normalizacionGeografica": {
+      "auditorias": 4,
+      "repeticion": "sin_cambios=4",
+      "campos": [
+        "provincia",
+        "ccaa"
+      ],
+      "criterio": "Cuatro etiquetas de las altas normalizadas a Madrid, Navarra, Vizcaya y Lérida para los filtros existentes; sin modificar otros campos."
+    },
     "camposProtegidos": "Seis existentes conservados por huella, salvo descripcion inicialmente vacía de Visufoc y Seyman completada en lote separado; las 317 descripciones confirmadas previas se conservan exactamente.",
     "testsPasivaImportador": 11,
     "financierosAntes": 23620,

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "fechaRevision": "2026-10-25",
+  "criterio": "Normalización semántica de cuatro etiquetas de las altas de esta tanda para usar los nombres existentes en los filtros de PCI activa. Sin cambiar domicilio, código postal, coordenadas ni otros datos.",
+  "empresas": [
+    {
+      "empresaId": 5933,
+      "cif": "39646668G",
+      "campo": "provincia",
+      "antes": "Lleida",
+      "despues": "Lérida"
+    },
+    {
+      "empresaId": 5947,
+      "cif": "B71461115",
+      "campo": "ccaa",
+      "antes": "Comunidad Foral de Navarra",
+      "despues": "Navarra"
+    },
+    {
+      "empresaId": 5948,
+      "cif": "B80190556",
+      "campo": "ccaa",
+      "antes": "Comunidad de Madrid",
+      "despues": "Madrid"
+    },
+    {
+      "empresaId": 5950,
+      "cif": "F95644803",
+      "campo": "provincia",
+      "antes": "Bizkaia",
+      "despues": "Vizcaya"
+    }
+  ]
+}

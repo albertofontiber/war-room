@@ -2,6 +2,8 @@
 
 Corte: **25/10/2026, Europe/Madrid**. Decimotercera tanda aplicada: **19 altas y 6 enriquecimientos**, hasta **341 confirmadas**. Las 19 nuevas tienen descripción inicial; Visufoc y Seyman completan la que tenían vacía. Se conservan los 317 resúmenes anteriores. [Lote](pasiva-validada-ampliacion11-2026-10-25.json) y [seguimiento completo](pasiva-ampliacion11-seguimiento-2026-10-25.json).
 
+Las etiquetas de las altas usan Madrid, Navarra, Vizcaya y Lérida conforme a los filtros existentes. Los [cuatro ajustes de nomenclatura](pasiva-normalizacion-geografica-ampliacion11-2026-10-25.json) quedan auditados y conservan domicilio y coordenadas.
+
 ## Lo que queda resuelto
 
 - **Tecfire Continental, S.L.**: alta 5943, B45841814. VIES confirma coincidencia de nombre y dirección; BORME documenta el cambio de denominación. Obras propias en Santander y Alicante acreditan ejecución.
