@@ -111,7 +111,7 @@ export default function PipelineFiltros({
         onClear={() => onChange({ ...filters, provincia: [] })}
       />
 
-      <FiltroActividades seleccion={filters.actividades} modo={filters.actividadesModo}
+      <FiltroActividades inline seleccion={filters.actividades} modo={filters.actividadesModo}
         onSeleccionChange={(actividades) => onChange({ ...filters, actividades })}
         onModoChange={(actividadesModo) => onChange({ ...filters, actividadesModo })} />
 
@@ -238,7 +238,7 @@ function MultiSelect({
               <button
                 key={opt.value}
                 onClick={() => onChange(opt.value)}
-                className={`w-full flex items-center gap-2 px-2 py-1 text-[11px] text-left transition-colors ${
+                className={`w-full flex items-center gap-2 px-2 py-1 text-[10px] text-left transition-colors ${
                   checked ? "bg-wr-blue/10 text-wr-text" : "text-wr-muted hover:bg-wr-surface2 hover:text-wr-text"
                 }`}
               >

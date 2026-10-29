@@ -22,8 +22,6 @@ export default function WarRoomMobileMenu() {
   const {
     sidebarMobileOpen,
     setSidebarMobileOpen,
-    sizeMetric,
-    setSizeMetric,
     modoPresentacion,
     toggleModoPresentacion,
     setFiltersMobileOpen,
@@ -120,7 +118,7 @@ export default function WarRoomMobileMenu() {
             Grupos
           </NavButton>
           <NavButton active={onPipelinePage} onClick={goToPipeline}>
-            Pipeline
+            CRM
           </NavButton>
           <NavButton onClick={openFilters}>
             {activeFilterCount ? `Filtros (${activeFilterCount})` : "Filtros"}
@@ -135,26 +133,6 @@ export default function WarRoomMobileMenu() {
           <NavButton onClick={goToMonitoring}>Operación</NavButton>
 
           <div className="pt-2 mt-2 border-t border-wr-border space-y-2">
-            <NavSectionLabel>Tamaño en mapa</NavSectionLabel>
-            <div className="flex bg-wr-surface2 border border-wr-border rounded-md p-0.5">
-              <button
-                onClick={() => setSizeMetric("ingresos")}
-                className={`tap-target-h flex-1 px-2.5 py-1.5 text-xs rounded transition-colors ${
-                  sizeMetric === "ingresos" ? "bg-wr-surface text-wr-text" : "text-wr-muted"
-                }`}
-              >
-                Ingresos
-              </button>
-              <button
-                onClick={() => setSizeMetric("ebitda")}
-                className={`tap-target-h flex-1 px-2.5 py-1.5 text-xs rounded transition-colors ${
-                  sizeMetric === "ebitda" ? "bg-wr-surface text-wr-text" : "text-wr-muted"
-                }`}
-              >
-                EBITDA
-              </button>
-            </div>
-
             <button
               onClick={() => {
                 toggleModoPresentacion();
