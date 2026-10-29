@@ -14,7 +14,7 @@ import NotificationsBell from "@/components/NotificationsBell";
 export default function Navbar() {
   const {
     modoPresentacion, toggleModoPresentacion,
-    sizeMetric, setSizeMetric, setSearchQuery,
+    setSearchQuery,
     empresasGeoJSON, hydrateEmpresas, setFlyToEmpresaId,
     toggleSidebarMobile,
     setFiltersMobileOpen,
@@ -46,6 +46,26 @@ export default function Navbar() {
       setVista(v);
     }
   }, [onPipelinePage, router, setVista]);
+
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const actionsRef = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    const closeOutside = (event: PointerEvent) => {
+      if (!actionsRef.current?.contains(event.target as Node)) actionsRef.current?.removeAttribute("open");
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && actionsRef.current?.open) {
+        actionsRef.current.removeAttribute("open");
+        actionsRef.current.querySelector("summary")?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
 
   const [inputValue, setInputValue] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -159,16 +179,16 @@ export default function Navbar() {
       </button>
 
       {/* Wordmark — link al inicio (clear search params, vuelve al mapa).
-          Versión completa en lg+, abreviada en <lg. */}
+          Versión completa en xl+, abreviada por debajo para priorizar la búsqueda. */}
       <Link
         href="/"
         title="Volver al inicio"
         className="flex shrink-0 items-center gap-2 mr-1 group"
       >
-        <span className="hidden lg:inline text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2.5 py-1 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
+        <span className="hidden xl:inline text-xs font-semibold tracking-[0.15em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2.5 py-1 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
           Fontiber War Room
         </span>
-        <span className="lg:hidden h-8 flex items-center text-xs font-semibold tracking-[0.1em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
+        <span className="xl:hidden h-8 flex items-center text-xs font-semibold tracking-[0.1em] text-wr-blue uppercase bg-wr-blue/10 border border-wr-blue/20 px-2 rounded-md transition-colors group-hover:bg-wr-blue/20 group-hover:border-wr-blue/40">
           WR
         </span>
       </Link>
@@ -176,7 +196,7 @@ export default function Navbar() {
       {/* Search: ocupa todo el espacio disponible hasta max-w-3xl. Sin separador
          flex-1 detrás (rompía el max-width al competir por el espacio); en su
          lugar, ml-auto en el primer elemento del cluster derecho. */}
-      <div className="flex-1 min-w-0 max-w-3xl relative">
+      <div className="flex-1 min-w-0 lg:min-w-[240px] max-w-3xl relative">
         <div className="relative">
           <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 text-wr-hint" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
@@ -184,6 +204,7 @@ export default function Navbar() {
           <input
             ref={inputRef}
             type="text"
+            aria-label="Buscar empresa o CIF"
             value={inputValue}
             onChange={(e) => { setInputValue(e.target.value); setDropdownOpen(true); setSelectedIdx(-1); }}
             onFocus={() => inputValue.trim() && setDropdownOpen(true)}
@@ -205,7 +226,7 @@ export default function Navbar() {
         {dropdownOpen && results.length > 0 && (
           <div
             ref={dropdownRef}
-            className="absolute top-full left-0 right-0 mt-1 bg-wr-surface border border-wr-border rounded-lg shadow-xl z-50 overflow-hidden"
+            className="fixed top-12 left-3 right-3 lg:absolute lg:top-full lg:left-0 lg:right-auto lg:w-full lg:min-w-[320px] mt-1 bg-wr-surface border border-wr-border rounded-lg shadow-xl z-50 overflow-hidden"
           >
             {results.map((r, i) => (
               <button
@@ -246,16 +267,16 @@ export default function Navbar() {
 
       {/* Modo presentación */}
       {modoPresentacion && (
-        <span className="ml-auto text-xs font-semibold tracking-widest text-wr-amber border border-wr-amber/30 bg-wr-amber/10 px-2.5 py-1 rounded-md uppercase">
+        <span className="hidden 2xl:inline ml-auto shrink-0 text-xs font-semibold tracking-widest text-wr-amber border border-wr-amber/30 bg-wr-amber/10 px-2.5 py-1 rounded-md uppercase">
           Modo Presentación
         </span>
       )}
 
-      {/* Toggle Mapa / Tabla / Operaciones / Grupos / Pipeline.
+      {/* Navegación Mapa / Tabla / Operaciones / Grupos / CRM.
           Solo visible en lg+: en mobile la navegación vive en el drawer.
           ml-auto empuja todo el cluster derecho hacia la derecha cuando no
           hay banner de Modo Presentación (que ya tiene su propio ml-auto). */}
-      <div className={`${modoPresentacion ? "" : "ml-auto"} hidden lg:flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5`}>
+      <div className={`${modoPresentacion ? "" : "ml-auto"} hidden lg:flex shrink-0 items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5`}>
         <button
           onClick={() => goToVista("mapa")}
           className={`px-3 py-1 text-xs rounded transition-colors ${
@@ -304,89 +325,80 @@ export default function Navbar() {
               : "text-wr-muted hover:text-wr-text"
           }`}
         >
-          Pipeline
+          CRM
         </button>
       </div>
 
-      {/* Toggle métrica tamaño — solo lg+ (en mobile vive en el drawer). */}
-      <div className="hidden lg:flex items-center bg-wr-surface2 border border-wr-border rounded-md p-0.5">
-        <button
-          onClick={() => setSizeMetric("ingresos")}
-          className={`px-2.5 py-1 text-xs rounded transition-colors ${
-            sizeMetric === "ingresos"
-              ? "bg-wr-surface text-wr-text"
-              : "text-wr-muted hover:text-wr-text"
-          }`}
-        >
-          Ingresos
-        </button>
-        <button
-          onClick={() => setSizeMetric("ebitda")}
-          className={`px-2.5 py-1 text-xs rounded transition-colors ${
-            sizeMetric === "ebitda"
-              ? "bg-wr-surface text-wr-text"
-              : "text-wr-muted hover:text-wr-text"
-          }`}
-        >
-          EBITDA
-        </button>
-      </div>
+      <details ref={actionsRef} className="relative shrink-0">
+        <summary aria-label={`Herramientas${unreadNotifications ? ` (${unreadNotifications} notificaciones sin leer)` : ""}`} title="Herramientas" className="relative h-9 w-9 max-lg:tap-target flex cursor-pointer list-none items-center justify-center rounded-md border border-wr-border text-wr-muted hover:text-wr-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wr-blue [&::-webkit-details-marker]:hidden">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <circle cx="5" cy="12" r="2" /><circle cx="12" cy="12" r="2" /><circle cx="19" cy="12" r="2" />
+          </svg>
+          {unreadNotifications > 0 && <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-wr-red border border-wr-surface" aria-hidden="true" />}
+        </summary>
+        <div className="absolute right-0 top-full mt-2 z-50 flex items-center gap-2 rounded-lg border border-wr-border bg-wr-surface p-2 shadow-xl" aria-label="Herramientas del War Room">
+          {/* Toggle modo presentación */}
+          <button
+            onClick={toggleModoPresentacion}
+            title={modoPresentacion ? "Desactivar modo presentación" : "Modo presentación"}
+            aria-label={modoPresentacion ? "Desactivar modo presentación" : "Modo presentación"}
+            aria-pressed={modoPresentacion}
+            className={`h-9 w-9 max-lg:tap-target flex items-center justify-center rounded-md transition-colors border ${
+              modoPresentacion
+                ? "border-wr-amber/40 text-wr-amber bg-wr-amber/10"
+                : "border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted"
+            }`}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" />
+              <path d="M8 21h8M12 17v4" />
+            </svg>
+          </button>
 
-      {/* Toggle modo presentación — solo lg+ (en mobile vive en el drawer). */}
-      <button
-        onClick={toggleModoPresentacion}
-        title={modoPresentacion ? "Desactivar modo presentación" : "Modo presentación"}
-        className={`hidden lg:block p-1.5 rounded-md transition-colors border ${
-          modoPresentacion
-            ? "border-wr-amber/40 text-wr-amber bg-wr-amber/10"
-            : "border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted"
-        }`}
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="2" y="3" width="20" height="14" rx="2" />
-          <path d="M8 21h8M12 17v4" />
-        </svg>
-      </button>
+          {/* Notificaciones */}
+          <NotificationsBell compact inToolbarMenu onUnreadCountChange={setUnreadNotifications} />
 
-      {/* Notificaciones */}
-      <NotificationsBell compact />
+          {/* Admin: gestión de finders */}
+          <button
+            onClick={() => router.push("/finders")}
+            title="Gestión de finders"
+            aria-label="Gestión de finders"
+            className="h-9 w-9 max-lg:tap-target flex items-center justify-center rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </button>
 
-      {/* Admin: gestión de finders — solo lg+ (en mobile vive en el drawer). */}
-      <button
-        onClick={() => router.push("/finders")}
-        title="Gestión de finders"
-        className="hidden lg:block p-1.5 rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      </button>
+          {/* Admin: usuarios del war room */}
+          <button
+            onClick={() => router.push("/usuarios")}
+            title="Usuarios del war room"
+            aria-label="Usuarios del war room"
+            className="h-9 w-9 max-lg:tap-target flex items-center justify-center rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="7.5" cy="15.5" r="5.5" />
+              <path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3" />
+            </svg>
+          </button>
 
-      {/* Admin: usuarios del war room — solo lg+ (en mobile vive en el drawer). */}
-      <button
-        onClick={() => router.push("/usuarios")}
-        title="Usuarios del war room"
-        className="hidden lg:block p-1.5 rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="7.5" cy="15.5" r="5.5" />
-          <path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3" />
-        </svg>
-      </button>
-
-      {/* Avatar usuario */}
-      <button
-        onClick={() => router.push("/monitoring")}
-        title="Operación"
-        className="hidden lg:block p-1.5 rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 3v18h18" />
-          <path d="m7 16 4-5 3 3 5-7" />
-        </svg>
-      </button>
+          {/* Monitorización */}
+          <button
+            onClick={() => router.push("/monitoring")}
+            title="Operación"
+            aria-label="Operación"
+            className="h-9 w-9 max-lg:tap-target flex items-center justify-center rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 3v18h18" />
+              <path d="m7 16 4-5 3 3 5-7" />
+            </svg>
+          </button>
+        </div>
+      </details>
 
       {/* Avatar: menú con Mi cuenta y Cerrar sesión. */}
       <div ref={userMenuRef} className="relative flex-shrink-0">

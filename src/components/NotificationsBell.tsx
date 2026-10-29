@@ -44,7 +44,9 @@ function timeAgo(iso: string): string {
 export default function NotificationsBell({
   endpoint = "/api/notificaciones",
   compact = false,
-}: { endpoint?: string; compact?: boolean } = {}) {
+  inToolbarMenu = false,
+  onUnreadCountChange,
+}: { endpoint?: string; compact?: boolean; inToolbarMenu?: boolean; onUnreadCountChange?: (count: number) => void } = {}) {
   const router = useRouter();
   const [items, setItems] = useState<Notificacion[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -52,6 +54,10 @@ export default function NotificationsBell({
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    onUnreadCountChange?.(unreadCount);
+  }, [unreadCount, onUnreadCountChange]);
 
   const fetchNotifs = useCallback(async () => {
     try {
@@ -83,8 +89,15 @@ export default function NotificationsBell({
         setOpen(false);
       }
     };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
     document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("keydown", onKey);
+    };
   }, [open]);
 
   const markAllRead = useCallback(async () => {
@@ -123,11 +136,13 @@ export default function NotificationsBell({
   );
 
   return (
-    <div className="relative">
+    <div className={inToolbarMenu ? "static" : "relative"}>
       <button
         ref={buttonRef}
         onClick={() => setOpen((v) => !v)}
         title="Notificaciones"
+        aria-label={`Notificaciones${unreadCount ? ` (${unreadCount} sin leer)` : ""}`}
+        aria-expanded={open}
         className={`${compact ? "h-9 w-9 max-lg:tap-target" : "tap-target"} relative flex items-center justify-center rounded-md border border-wr-border text-wr-muted hover:text-wr-text hover:border-wr-muted transition-colors`}
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -144,7 +159,7 @@ export default function NotificationsBell({
       {open && (
         <div
           ref={dropdownRef}
-          className="absolute right-0 top-full mt-2 w-[360px] max-w-[92vw] bg-wr-surface border border-wr-border rounded-lg shadow-2xl z-50 overflow-hidden"
+          className={`${inToolbarMenu ? "fixed right-4 top-28 lg:absolute lg:right-0 lg:top-full" : "absolute right-0 top-full"} mt-2 w-[360px] max-w-[calc(100vw-2rem)] bg-wr-surface border border-wr-border rounded-lg shadow-2xl z-50 overflow-hidden`}
         >
           <div className="px-4 py-2.5 border-b border-wr-border flex items-center justify-between">
             <span className="text-xs font-semibold text-wr-text">Notificaciones</span>

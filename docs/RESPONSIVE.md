@@ -89,3 +89,19 @@ La tipografía utiliza las variables de `next/font` (`--font-sans`, `--font-mono
 - Recuperación del viewport tras el chat y protección de transiciones: #158–#159.
 
 El antiguo aviso de overflow de tooltip no tenía reproducción vigente ni ticket enlazado. Se retira del backlog activo; si se reproduce, registrar viewport, pasos y captura antes de abrir una incidencia nueva.
+
+## Ajuste de barra y CRM — 29/10/2026
+
+La barra conserva un mínimo de 240 px para la búsqueda en escritorio y abrevia
+la marca a WR entre `lg` y `xl`. La navegación muestra «CRM» y mantiene la ruta
+`/pipeline`. Se retira el selector Ingresos/EBITDA tanto de la barra como del
+menú móvil; el tamaño del mapa conserva su valor inicial de ingresos.
+
+Presentación, notificaciones, finders, usuarios y operación se agrupan en un
+único desplegable Herramientas con controles del mismo tamaño. El disparador
+indica notificaciones pendientes; el menú se cierra al pulsar fuera o Escape.
+La cuenta personal mantiene su acceso independiente.
+
+El filtro de actividades del CRM usa la variante horizontal del componente
+compartido, con leyenda accesible y controles de coincidencia en la misma fila.
+Los filtros pueden saltar de línea sin desplazar verticalmente los demás.

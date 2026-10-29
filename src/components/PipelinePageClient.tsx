@@ -247,7 +247,7 @@ export default function PipelinePageClient() {
           mezclar filtros y acciones en el mismo flex-wrap. */}
       <div className="flex-shrink-0 px-3 sm:px-4 py-2.5 border-b border-wr-border bg-wr-surface flex items-center gap-2 sm:gap-3 flex-wrap">
         <h1 className="text-sm font-semibold uppercase tracking-wider text-wr-muted">
-          Pipeline
+          CRM
         </h1>
         <span className="text-xs text-wr-hint">
           {data.total} {data.total === 1 ? "empresa" : "empresas"}
