@@ -10,6 +10,7 @@ import {
   type ResourceKind,
 } from "@/lib/data-events";
 import { normalizeChatMarkdown } from "@/lib/normalize-chat-markdown";
+import { isIncompleteChatResponse } from "@/lib/chat-response-status";
 import { useMobileViewportRecovery } from "@/lib/use-mobile-viewport-recovery";
 import { RichTextEditor } from "@/components/RichTextEditor";
 
@@ -41,6 +42,7 @@ function actionForTool(toolName: string): "create" | "update" | undefined {
 export default function ChatIA() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
+  const [interrupted, setInterrupted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const recoverMobileViewport = useMobileViewportRecovery();
@@ -49,6 +51,13 @@ export default function ChatIA() {
 
   const { messages, sendMessage, setMessages, status, error } = useChat({
     transport,
+    onFinish: ({ message, isAbort, isError, finishReason }) => {
+      // Una conexión puede cerrarse sin error de red ni evento de finalización
+      // (por ejemplo, si la función alcanza su límite durante el streaming).
+      if (!isAbort && !isError && isIncompleteChatResponse(message.parts, finishReason)) {
+        setInterrupted(true);
+      }
+    },
   });
 
   const isLoading = status === "streaming" || status === "submitted";
@@ -77,6 +86,7 @@ export default function ChatIA() {
   // "Nueva conversación": borra el hilo en servidor y limpia el estado local.
   const nuevaConversacion = useCallback(async () => {
     if (isLoading) return;
+    setInterrupted(false);
     setMessages([]);
     try {
       await fetch("/api/chat/history", { method: "DELETE" });
@@ -225,6 +235,7 @@ export default function ChatIA() {
   // directamente. Mantenemos el guard de loading + trim para idempotencia.
   const onSubmit = useCallback(() => {
     if (!input.trim() || isLoading) return;
+    setInterrupted(false);
     sendMessage({ text: input });
     setInput("");
   }, [input, isLoading, sendMessage]);
@@ -337,6 +348,13 @@ export default function ChatIA() {
         {error && (
           <div className="text-wr-red text-sm sm:text-xs">
             Error: {error.message}
+          </div>
+        )}
+
+        {interrupted && (
+          <div role="alert" className="text-wr-red text-sm sm:text-xs">
+            La respuesta se ha interrumpido y puede estar incompleta. Si pediste
+            algún cambio, comprueba si se realizó antes de volver a intentarlo.
           </div>
         )}
       </div>

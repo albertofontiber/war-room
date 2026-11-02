@@ -13,9 +13,8 @@ import { buildChatTools } from "@/lib/chat-tools";
 import { saveChatThread } from "@/lib/chat-thread";
 
 export const dynamic = "force-dynamic";
-// 60s: con 16 pasos de tools posibles, 30s cortaba a medias las cadenas
-// largas (buscar → varias queries → crear → verificar).
-export const maxDuration = 60;
+// Las consultas que encadenan varios tools pueden superar los 60 segundos.
+export const maxDuration = 300;
 
 /**
  * POST /api/chat — agente del War Room (streaming).
