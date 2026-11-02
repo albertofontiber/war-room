@@ -40,16 +40,19 @@ export async function POST(req: NextRequest) {
   const hash = await bcrypt.hash(password, 10);
   const now = new Date();
 
-  await prisma.$transaction([
-    prisma.user.update({
+  const consumed = await prisma.$transaction(async (tx) => {
+    const claim = await tx.adminPasswordResetToken.updateMany({
+      where: { id: record.id, usedAt: null, expiresAt: { gt: now }, user: { active: true, role: "admin" } },
+      data: { usedAt: now },
+    });
+    if (claim.count !== 1) return false;
+    await tx.user.update({
       where: { id: record.userId },
       data: { passwordHash: hash, passwordSetAt: now },
-    }),
-    prisma.adminPasswordResetToken.update({
-      where: { id: record.id },
-      data: { usedAt: now },
-    }),
-  ]);
+    });
+    return true;
+  });
+  if (!consumed) return invalid;
 
   void auditLog({
     actorType: "admin",

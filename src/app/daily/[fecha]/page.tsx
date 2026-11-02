@@ -2,11 +2,14 @@
  * /daily/[fecha] — Server-rendered daily summary page.
  * fecha format: YYYY-MM-DD (e.g. 2026-04-01)
  *
- * Public on purpose (the middleware matcher excludes /daily) so the link in the
- * daily summary email opens without a session.
+ * Contiene información interna y requiere una sesión de administrador.
  */
 
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth";
+import { urlLogin } from "@/lib/login-destino";
 import { prisma } from "@/lib/prisma";
 import { fmtM as _fmtM } from "@/lib/format";
 import { hrefVista } from "@/lib/navegacion-url";
@@ -23,6 +26,8 @@ const TIPO_ORDER = BORME_TIPO_ORDER;
 
 const fmtM = (v: number | null | undefined) => _fmtM(v, "—");
 
+export const dynamic = "force-dynamic";
+
 function fmtDate(d: Date): string {
   return d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" });
 }
@@ -33,6 +38,10 @@ export default async function DailyPage(
   }
 ) {
   const params = await props.params;
+  const session = await getServerSession(authOptions);
+  if (session?.kind !== "admin") {
+    redirect(urlLogin("warroom", `/daily/${params.fecha}`));
+  }
   // Parse fecha param
   const match = params.fecha.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) {

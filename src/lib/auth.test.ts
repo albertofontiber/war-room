@@ -47,6 +47,21 @@ vi.mock("@/lib/logger", () => ({
 
 import { adminPasswordMatches, adminSessionActive, authOptions } from "./auth";
 
+describe("revocación de la sesión admin al cambiar la contraseña", () => {
+  it("solo acepta la versión de contraseña actual", async () => {
+    const changedAt = new Date("2026-11-01T10:00:00.000Z");
+    userFindUnique.mockResolvedValue({ active: true, role: "admin", passwordSetAt: changedAt });
+    const sessionCallback = authOptions.callbacks!.session!;
+    const invoke = (passwordVersion?: string) => sessionCallback({
+      session: { user: { email: "admin@example.com" }, expires: "2099-01-01" },
+      token: { email: "admin@example.com", kind: "admin", passwordVersion },
+    } as Parameters<typeof sessionCallback>[0]);
+    expect(await invoke(changedAt.toISOString())).toMatchObject({ kind: "admin" });
+    expect(await invoke("initial")).toEqual({});
+    expect(await invoke()).toEqual({});
+  });
+});
+
 type AuthorizeFn = (
   credentials: Record<string, string> | undefined,
   req: { headers?: Record<string, string | string[] | undefined> } | undefined

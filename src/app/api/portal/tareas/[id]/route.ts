@@ -47,6 +47,7 @@ export async function PATCH(req: NextRequest, props: { params: Promise<{ id: str
   const tarea = await prisma.tarea.findFirst({
     where: {
       id: tareaId,
+      empresa: { finderSourceId: finder.id, esAnonima: false },
       OR: [
         { autorFinderId: finder.id },
         { asignadoFinderId: finder.id },
@@ -237,7 +238,7 @@ export async function DELETE(_req: NextRequest, props: { params: Promise<{ id: s
   if (isNaN(tareaId)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
   const tarea = await prisma.tarea.findFirst({
-    where: { id: tareaId, autorFinderId: finder.id },
+    where: { id: tareaId, autorFinderId: finder.id, empresa: { finderSourceId: finder.id, esAnonima: false } },
     select: {
       id: true, completada: true, tipo: true, titulo: true,
       descripcion: true, resultado: true, fechaLimite: true, empresaId: true,

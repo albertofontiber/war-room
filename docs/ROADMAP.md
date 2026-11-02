@@ -65,7 +65,7 @@ El corte aplicado queda en **5.938 empresas y 372 confirmadas**, todas con descr
 | La cobertura de pasiva sigue siendo parcial | Quince tandas aplicadas y 372 confirmadas. El barrido conjunto de once fuentes y diecinueve territorios está realizado con límites de acceso; no es un censo exhaustivo. Quedan cinco dudas prioritarias de identidad/atribución, cuatro casos de APA y otras incidencias específicas del seguimiento. La pasiva de Ezkaba no se traslada entre el CIF guardado y el distinto publicado en su privacidad. Goextín y LCHPRO ya se han resuelto con documentos oficiales, sin utilizar los CIF ajenos de sus avisos. APICI, ASIME y los detalles de ANSPI tienen límites específicos. Zamora, Ceuta y Melilla siguen sin confirmadas domiciliadas; el cero no descarta mercado. |
 | Discrepancias de domicilio de Blinders y Conesam | Identidad y actividad resueltas; se conserva Ontinyent frente a Badalona para Blinders, y Argés frente a Talavera/Pepino para Conesam. Requieren conciliación registral separada; no impiden conservar la evidencia de actividad. |
 | Calendario recurrente se ingiere como serie | `calendar-task-matcher.ts`; una tarea por ocurrencia requeriría cambiar a `calendarView`. No está programado. |
-| Falta de URL de lectura del chat provoca fallback al cliente normal | `chat-db.ts`; comprobar configuración en cada entorno nuevo. El rol fue creado y documentado en #187; no volver a listar su creación como pendiente. |
+| Verificar URL de lectura del chat en cada entorno | `chat-db.ts` falla de forma segura si falta la URL. El rol fue creado y documentado en #187. |
 
 ## Propuestas históricas que necesitan nueva priorización
 

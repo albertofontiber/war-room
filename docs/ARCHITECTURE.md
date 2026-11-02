@@ -10,7 +10,7 @@ Hay dos zonas privadas y una publicación pública dentro del mismo despliegue:
 
 - `warroom.fontiber.com`: equipo interno con mapa, tabla, grupos, Operaciones, pipeline, finders, usuarios, cuenta y monitorización.
 - `portal.fontiber.com`: cada finder accede a sus targets, tareas, notas y propuestas con permisos restringidos.
-- `/daily/YYYY-MM-DD`: resumen público que se enlaza desde los correos diarios.
+- `/daily/YYYY-MM-DD`: resumen interno enlazado desde los correos diarios; requiere sesión admin.
 
 ## 2. Flujo general
 
@@ -109,7 +109,7 @@ El chat usa streaming, hilo persistido por usuario y un prompt con esquema y reg
 
 `movimientos_grupo` reconstruye incorporaciones a partir de BORME: la empresa no guarda fecha de entrada a un grupo. Devuelve evidencia y casos dudosos. `buscar_texto` cubre notas, tareas, correos, reuniones, fichas, contactos y registros relacionados, con normalización de tildes.
 
-`execute_sql` tiene dos barreras: validación de una sola sentencia de lectura y conexión con `warroom_chat_readonly`. El rol restringe tablas/columnas sensibles y duración de consulta. En `User` y `Finder` los permisos son por columna, excluyendo hashes. El atributo `BYPASSRLS` permite leer las tablas cuya Data API está cerrada; no concede escritura. El código conserva fallback a la conexión normal si falta `CHAT_READONLY_DATABASE_URL`: cada entorno debe configurarla expresamente.
+`execute_sql` tiene dos barreras: validación de una sola sentencia de lectura y conexión con `warroom_chat_readonly`. El rol restringe tablas/columnas sensibles y duración de consulta. En `User` y `Finder` los permisos son por columna, excluyendo hashes. El atributo `BYPASSRLS` permite leer las tablas cuya Data API está cerrada; no concede escritura. Si falta `CHAT_READONLY_DATABASE_URL`, la consulta SQL queda deshabilitada.
 
 Las herramientas que sí escriben utilizan los servicios de aplicación con autoría y auditoría; no escriben mediante SQL generado por el modelo.
 
@@ -121,7 +121,7 @@ El portal combina control del middleware, guards de página y autorización de e
 
 La edición propia se limita a 24 horas; completar tareas tiene sus propias reglas. Las propuestas no revelan duplicados al finder. Activar/desactivar y revocar sesiones son controles distintos; rotar contraseña también invalida sesiones anteriores. Las acciones del finder dejan trazabilidad y las mutaciones relevantes, auditoría.
 
-Crons exigen `CRON_SECRET` y fallan cerrados si no existe. Los secretos se configuran por entorno, nunca se documentan sus valores. La publicación `/daily` es pública por diseño; no debe contener campos reservados a la operativa privada.
+Crons exigen `CRON_SECRET` y fallan cerrados si no existe. Los secretos se configuran por entorno, nunca se documentan sus valores. `/daily` exige una sesión admin válida.
 
 ## 8. Entrega y mantenimiento
 

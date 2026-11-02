@@ -94,6 +94,7 @@ declare module "next-auth" {
     kind?: "admin" | "finder";
     finderId?: string | null;
     sessionVersion?: number | null;
+    passwordVersion?: string;
   }
 }
 
@@ -102,6 +103,7 @@ declare module "next-auth/jwt" {
     kind?: "admin" | "finder";
     finderId?: string | null;
     sessionVersion?: number | null;
+    passwordVersion?: string;
   }
 }
 
@@ -131,6 +133,7 @@ export const authOptions: NextAuthOptions = {
                 role: true,
                 active: true,
                 passwordHash: true,
+                passwordSetAt: true,
               },
             })
           : null;
@@ -163,6 +166,7 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           kind: "admin" as const,
           finderId: null,
+          passwordVersion: user.passwordSetAt?.toISOString() ?? "initial",
         };
       },
     }),
@@ -245,6 +249,7 @@ export const authOptions: NextAuthOptions = {
         token.finderId = user.finderId ?? null;
         // Sólo los finders llevan sessionVersion; los admin lo dejan undefined.
         token.sessionVersion = user.sessionVersion ?? null;
+        token.passwordVersion = user.passwordVersion;
       }
       return token;
     },
@@ -258,10 +263,15 @@ export const authOptions: NextAuthOptions = {
         const user = token.email
           ? await prisma.user.findUnique({
               where: { email: token.email },
-              select: { active: true, role: true },
+              select: { active: true, role: true, passwordSetAt: true },
             })
           : null;
         if (!adminSessionActive(user)) return {} as Session;
+        // Una contraseña nueva revoca los JWT anteriores. Los emitidos antes
+        // de introducir esta comprobación deben iniciar sesión de nuevo.
+        if (token.passwordVersion !== (user.passwordSetAt?.toISOString() ?? "initial")) {
+          return {} as Session;
+        }
       }
       if (session.user) session.user.name = token.name as string;
       session.kind = (token.kind as "admin" | "finder" | undefined) ?? "admin";

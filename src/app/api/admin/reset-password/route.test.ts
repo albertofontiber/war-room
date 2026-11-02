@@ -11,10 +11,10 @@ vi.mock("@/lib/prisma", () => ({
   prisma: {
     adminPasswordResetToken: {
       findUnique: (...args: unknown[]) => tokenFindUnique(...args),
-      update: (...args: unknown[]) => tokenUpdate(...args),
+      updateMany: (...args: unknown[]) => tokenUpdate(...args),
     },
     user: { update: (...args: unknown[]) => userUpdate(...args) },
-    $transaction: (operations: unknown[]) => transaction(operations),
+    $transaction: (fn: (tx: unknown) => unknown) => transaction(fn),
   },
 }));
 
@@ -60,7 +60,11 @@ describe("POST /api/admin/reset-password", () => {
     bcryptHash.mockReset();
     auditLog.mockReset();
     bcryptHash.mockResolvedValue("$2a$10$hash-nuevo");
-    transaction.mockResolvedValue([{}, {}]);
+    tokenUpdate.mockResolvedValue({ count: 1 });
+    transaction.mockImplementation((fn) => fn({
+      adminPasswordResetToken: { updateMany: tokenUpdate },
+      user: { update: userUpdate },
+    }));
     auditLog.mockResolvedValue(undefined);
   });
 
@@ -117,7 +121,7 @@ describe("POST /api/admin/reset-password", () => {
       },
     });
     expect(tokenUpdate).toHaveBeenCalledWith({
-      where: { id: "token-1" },
+      where: { id: "token-1", usedAt: null, expiresAt: { gt: expect.any(Date) }, user: { active: true, role: "admin" } },
       data: { usedAt: expect.any(Date) },
     });
     expect(transaction).toHaveBeenCalledTimes(1);
@@ -130,5 +134,12 @@ describe("POST /api/admin/reset-password", () => {
         metadata: { event: "password_reset_self" },
       })
     );
+  });
+
+  it("rechaza un token consumido simultáneamente sin cambiar la contraseña", async () => {
+    tokenFindUnique.mockResolvedValue(validRecord());
+    tokenUpdate.mockResolvedValue({ count: 0 });
+    expect((await POST(makeReq({ token: RAW_TOKEN, password: "contraseña-nueva" }))).status).toBe(400);
+    expect(userUpdate).not.toHaveBeenCalled();
   });
 });

@@ -102,7 +102,7 @@ describe("PATCH /api/portal/notas/[id]", () => {
     expect(res.status).toBe(404);
     // La query filtra por autorFinderId = sesión → no leak de notas de otros.
     expect(notaFindFirst).toHaveBeenCalledWith({
-      where: { id: 1, autorFinderId: "finder-1" },
+      where: { id: 1, autorFinderId: "finder-1", empresa: { finderSourceId: "finder-1", esAnonima: false } },
       select: { id: true, createdAt: true },
     });
   });

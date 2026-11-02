@@ -1,6 +1,7 @@
 import { withAuth } from "next-auth/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { urlLogin, type Zona } from "@/lib/login-destino";
+import { isTrustedMutation } from "@/lib/request-origin";
 
 /**
  * Middleware: dos zonas de servicio sobre el mismo deployment.
@@ -17,12 +18,12 @@ import { urlLogin, type Zona } from "@/lib/login-destino";
  * vuelve a ella tras entrar (ver `src/lib/login-destino.ts`).
  *
  * El matcher excluye rutas públicas: /api/auth, /api/cron, assets estáticos,
- * /daily (página pública del email diario) y /login (página de admin).
+ * /login (página de admin).
  */
 
 const PORTAL_HOST = "portal.fontiber.com";
 
-// Páginas del War Room que se abren sin sesión. /login y /daily ni siquiera
+// Páginas del War Room que se abren sin sesión. /login ni siquiera
 // pasan por aquí: las excluye el matcher.
 const WARROOM_PUBLIC_PAGES = new Set(["/forgot-password", "/reset-password"]);
 
@@ -53,6 +54,10 @@ export default withAuth(
     const token = req.nextauth.token;
     const portal = isPortalHost(req);
     const path = req.nextUrl.pathname;
+
+    if (path.startsWith("/api/") && !isTrustedMutation(req)) {
+      return NextResponse.json({ error: "Origen no permitido" }, { status: 403 });
+    }
 
     if (portal) {
       // Dentro del portal: si no hay sesión o no es finder → /portal/login.
@@ -134,13 +139,12 @@ export const config = {
     /*
      * Protege (o enruta) todo EXCEPTO rutas públicas y estáticos:
      * - /login (admin)
-     * - /daily (email público)
      * - /api/auth (NextAuth callbacks)
      * - /api/cron (bearer CRON_SECRET)
      * - /_next/static, /_next/image, /favicon.ico
      *
      * /portal/* va por el matcher; /portal/login se deja entrar en el código.
      */
-    "/((?!login|daily|api/auth|api/cron|_next/static|_next/image|favicon.ico).*)",
+    "/((?!login|api/auth|api/cron|_next/static|_next/image|favicon.ico).*)",
   ],
 };
