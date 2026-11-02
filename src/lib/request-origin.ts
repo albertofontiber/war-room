@@ -5,7 +5,14 @@ export function isTrustedMutation(request: Pick<Request, "method" | "headers" | 
   const origin = request.headers.get("origin");
   if (!origin) return true; // Clientes no navegador; la autenticación sigue siendo obligatoria.
   try {
-    return new URL(origin).origin === new URL(request.url).origin && origin !== "null";
+    const requestUrl = new URL(request.url);
+    // Next.js puede usar localhost internamente en request.url. Vercel entrega
+    // el Host público y el protocolo externo en estas cabeceras.
+    const host = request.headers.get("host") ?? requestUrl.host;
+    const proto = request.headers.get("x-forwarded-proto") ?? requestUrl.protocol.slice(0, -1);
+    if (!/^(https?)$/.test(proto) || /[\s,/@\\?#]/.test(host)) return false;
+    const expected = new URL(`${proto}://${host}`).origin;
+    return new URL(origin).origin === expected && origin !== "null";
   } catch {
     return false;
   }

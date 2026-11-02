@@ -15,4 +15,16 @@ describe("protección de origen en mutaciones", () => {
     }
     expect(isTrustedMutation(request("POST", { "sec-fetch-site": "cross-site" }))).toBe(false);
   });
+  it("compara con el host externo aunque Next.js use localhost internamente", () => {
+    const internal = new Request("http://localhost:3415/api/cuenta", {
+      method: "POST",
+      headers: { host: "warroom.fontiber.com", "x-forwarded-proto": "https", origin: "https://warroom.fontiber.com" },
+    });
+    expect(isTrustedMutation(internal)).toBe(true);
+    const foreign = new Request("http://localhost:3415/api/cuenta", {
+      method: "POST",
+      headers: { host: "warroom.fontiber.com", "x-forwarded-proto": "https", origin: "https://portal.fontiber.com" },
+    });
+    expect(isTrustedMutation(foreign)).toBe(false);
+  });
 });
