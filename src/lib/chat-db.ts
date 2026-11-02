@@ -5,17 +5,13 @@
 // una query esquivara el filtro, la BD rechazaría cualquier escritura.
 //
 // El rol se crea con `scripts/create-chat-readonly-role.ts`. La URL viene de
-// la env `CHAT_READONLY_DATABASE_URL`; si no está definida (p. ej. entorno
-// nuevo sin configurar), hacemos fallback al cliente normal con un warn para
-// no romper el chat — el guard de texto sigue activo.
+// la env `CHAT_READONLY_DATABASE_URL`. Sin ella se deshabilita execute_sql:
+// el filtro textual no sustituye los permisos de la base de datos.
 
 import { PrismaClient } from "@prisma/client";
-import { log } from "@/lib/logger";
-import { prisma } from "@/lib/prisma";
 
 const globalForChatDb = globalThis as unknown as {
   chatReadonlyDb?: PrismaClient;
-  chatDbFallbackWarned?: boolean;
 };
 
 function buildClient(): PrismaClient | null {
@@ -29,8 +25,7 @@ function buildClient(): PrismaClient | null {
 
 /**
  * Cliente Prisma para las queries del tool `execute_sql`. Solo lectura si
- * `CHAT_READONLY_DATABASE_URL` está configurada; si no, el cliente normal
- * (con warn una sola vez por proceso).
+ * `CHAT_READONLY_DATABASE_URL` está configurada; si no, falla de forma segura.
  */
 export function getChatDb(): PrismaClient {
   if (!globalForChatDb.chatReadonlyDb) {
@@ -38,14 +33,7 @@ export function getChatDb(): PrismaClient {
     if (client) {
       globalForChatDb.chatReadonlyDb = client;
     } else {
-      if (!globalForChatDb.chatDbFallbackWarned) {
-        globalForChatDb.chatDbFallbackWarned = true;
-        log.warn(
-          "chat-db",
-          "CHAT_READONLY_DATABASE_URL no configurada — execute_sql usa la conexión normal (sin barrera de solo lectura)"
-        );
-      }
-      return prisma;
+      throw new Error("Consulta SQL no disponible: falta configurar la conexión de solo lectura.");
     }
   }
   return globalForChatDb.chatReadonlyDb;

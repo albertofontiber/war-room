@@ -120,4 +120,4 @@ Los complementos de resumen son independientes de la importación de actividad d
 
 `CHAT_READONLY_DATABASE_URL` debe apuntar al rol de lectura del chat en cada entorno. No registrar la URL en logs. El rol y sus exclusiones están definidos en `scripts/create-chat-readonly-role.ts`; su creación ya se realizó (#187).
 
-Después de añadir columnas a `User` o `Finder`, revisar los grants por columna sin conceder acceso a hashes. La existencia del rol no prueba que un entorno nuevo tenga configurada su URL. El código conserva fallback a la conexión normal si falta la variable, por lo que hay que comprobar esta configuración explícitamente.
+Después de añadir columnas a `User` o `Finder`, revisar los grants por columna sin conceder acceso a hashes. La existencia del rol no prueba que un entorno nuevo tenga configurada su URL. Sin ella, `execute_sql` queda deshabilitado.

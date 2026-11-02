@@ -14,9 +14,8 @@
 const FORBIDDEN =
   /\b(INSERT|UPDATE|DELETE|MERGE|DROP|ALTER|CREATE|TRUNCATE|GRANT|REVOKE|EXEC|EXECUTE|COPY)\b/i;
 
-// Secretos y funciones de servidor. Mientras el rol read-only no esté activo,
-// la conexión del chat puede leerlo todo: hashes de contraseña, tokens de
-// reset o el vault de Supabase no deben poder salir por el chat.
+// Defensa adicional para secretos y funciones de servidor: la conexión tiene
+// permisos restringidos, y este filtro no sustituye a esos permisos.
 const SENSITIVE =
   /(passwordHash|tokenHash|PasswordResetToken|supabase_vault|\bvault\s*\.|\bpg_read_|\bpg_ls_dir|\blo_import|\blo_export|\bdblink|\bpg_sleep|\bset_config|\bpg_terminate_backend|\bpg_cancel_backend|\bpg_authid|\bpg_shadow)/i;
 

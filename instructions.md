@@ -65,11 +65,11 @@ Laterales: on_hold, muerto
 
 - NextAuth tiene providers `admin-credentials` y `finder-credentials`; `session.kind` separa ambas zonas.
 - El equipo accede mediante `User` activo, email y hash bcrypt. Los dos usuarios originales conservan fallback de entorno hasta fijar una contraseña propia. Las nuevas cuentas se invitan desde `/usuarios`.
-- La sesión admin revalida en base de datos que el usuario siga activo. La recuperación y las invitaciones utilizan tokens de un solo uso; no exponer hashes ni tokens al cliente, logs o chat.
+- La sesión admin revalida en base de datos que el usuario siga activo y que no haya cambiado su contraseña. La recuperación y las invitaciones utilizan tokens de un solo uso; no exponer hashes ni tokens al cliente, logs o chat.
 - `Finder.active` y `Finder.sessionVersion` se revalidan con los helpers de sesión. Cambiar contraseña o revocar sesiones invalida los JWT anteriores. Las páginas protegidas del portal también ejecutan el guard del servidor.
 - El middleware reconoce el portal por host y por `/portal/*` / `/api/portal/*`. No sustituye a la autorización en cada endpoint.
 - Tras login, preservar el destino con `urlLogin()` y validarlo con `destinoTrasLogin()`. Solo se admiten rutas de la propia zona; no dominios externos, APIs o bucles al login.
-- Una página pública nueva del War Room debe añadirse a `WARROOM_PUBLIC_PAGES`. `/daily/[fecha]` es público deliberadamente.
+- Una página pública nueva del War Room debe añadirse a `WARROOM_PUBLIC_PAGES`. `/daily/[fecha]` requiere sesión admin porque incluye información interna.
 
 ### Reglas del portal
 
@@ -111,7 +111,7 @@ Laterales: on_hold, muerto
 ## 8. Chat e integraciones
 
 - `src/lib/chat-tools/index.ts` compone las doce herramientas actuales. Si se añade una: documentarla en `chat-schema.ts`; si escribe, mapear su recurso para el refresco del cliente y conservar autoría/auditoría.
-- `execute_sql` utiliza `getChatDb()` y `CHAT_READONLY_DATABASE_URL`, con rol Postgres de lectura y timeout. El guard SQL es una segunda barrera, no un sustituto de permisos. El código conserva fallback al cliente normal si falta la variable: revisar la configuración de cada entorno.
+- `execute_sql` utiliza `getChatDb()` y `CHAT_READONLY_DATABASE_URL`, con rol Postgres de lectura y timeout. El guard SQL es una segunda barrera, no un sustituto de permisos. Sin esa variable, la consulta SQL queda deshabilitada.
 - No dar acceso del chat a tokens, `ChatThread` o hashes. En `User` y `Finder` seleccionar columnas explícitas. Revisar los grants al añadir columnas.
 - `WITH` está permitido dentro de una única consulta de lectura. Indicar truncamiento de resultados; serializar BigInt de forma segura.
 - Sin periodo especificado, contestar sobre el histórico disponible indicando su alcance. La fecha de la conversación se añade por petición, fuera del bloque estático cacheado.

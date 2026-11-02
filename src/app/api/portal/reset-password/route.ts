@@ -49,16 +49,19 @@ export async function POST(req: NextRequest) {
   const hash = await bcrypt.hash(password, 10);
   const now = new Date();
 
-  await prisma.$transaction([
-    prisma.finder.update({
-      where: { id: record.finderId },
-      data: { passwordHash: hash, passwordSetAt: now },
-    }),
-    prisma.passwordResetToken.update({
-      where: { id: record.id },
+  const consumed = await prisma.$transaction(async (tx) => {
+    const claim = await tx.passwordResetToken.updateMany({
+      where: { id: record.id, usedAt: null, expiresAt: { gt: now }, finder: { active: true } },
       data: { usedAt: now },
-    }),
-  ]);
+    });
+    if (claim.count !== 1) return false;
+    await tx.finder.update({
+      where: { id: record.finderId },
+      data: { passwordHash: hash, passwordSetAt: now, sessionVersion: { increment: 1 } },
+    });
+    return true;
+  });
+  if (!consumed) return invalid;
 
   void auditLog({
     actorType: "finder",

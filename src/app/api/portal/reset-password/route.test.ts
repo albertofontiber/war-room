@@ -19,12 +19,12 @@ vi.mock("@/lib/prisma", () => ({
   prisma: {
     passwordResetToken: {
       findUnique: (...a: unknown[]) => tokenFindUnique(...a),
-      update: (...a: unknown[]) => tokenUpdate(...a),
+      updateMany: (...a: unknown[]) => tokenUpdate(...a),
     },
     finder: {
       update: (...a: unknown[]) => finderUpdate(...a),
     },
-    $transaction: (ops: unknown[]) => txMock(ops),
+    $transaction: (fn: (tx: unknown) => unknown) => txMock(fn),
   },
 }));
 
@@ -56,7 +56,11 @@ describe("POST /api/portal/reset-password", () => {
     auditLogMock.mockReset();
     bcryptHash.mockReset();
     bcryptHash.mockResolvedValue("$2a$10$mock_bcrypt_hash");
-    txMock.mockResolvedValue([{}, {}]);
+    tokenUpdate.mockResolvedValue({ count: 1 });
+    txMock.mockImplementation((fn) => fn({
+      passwordResetToken: { updateMany: tokenUpdate },
+      finder: { update: finderUpdate },
+    }));
     auditLogMock.mockResolvedValue(undefined);
   });
 
@@ -154,10 +158,14 @@ describe("POST /api/portal/reset-password", () => {
     // bcrypt rounds=10 (igual que el endpoint admin de set-password).
     expect(bcryptHash).toHaveBeenCalledWith("una-pwd-nueva", 10);
 
-    // Se invocó la transacción exactamente una vez con un array de 2
-    // operaciones (update finder + update token).
     expect(txMock).toHaveBeenCalledTimes(1);
-    expect(txMock.mock.calls[0][0]).toHaveLength(2);
+    expect(tokenUpdate).toHaveBeenCalledWith({
+      where: { id: "tok-1", usedAt: null, expiresAt: { gt: expect.any(Date) }, finder: { active: true } },
+      data: { usedAt: expect.any(Date) },
+    });
+    expect(finderUpdate).toHaveBeenCalledWith(expect.objectContaining({
+      data: expect.objectContaining({ sessionVersion: { increment: 1 } }),
+    }));
 
     // Audit log con event=password_reset_self y actorType=finder.
     await new Promise((r) => setImmediate(r));
@@ -171,5 +179,12 @@ describe("POST /api/portal/reset-password", () => {
         metadata: { event: "password_reset_self" },
       })
     );
+  });
+
+  it("rechaza un token consumido simultáneamente sin cambiar la contraseña", async () => {
+    tokenFindUnique.mockResolvedValue({ id: "tok-1", finderId: "f1", expiresAt: new Date(Date.now() + 60_000), usedAt: null, finder: { active: true } });
+    tokenUpdate.mockResolvedValue({ count: 0 });
+    expect((await POST(makeReq({ token: RAW_TOKEN, password: "una-pwd-nueva" }))).status).toBe(400);
+    expect(finderUpdate).not.toHaveBeenCalled();
   });
 });

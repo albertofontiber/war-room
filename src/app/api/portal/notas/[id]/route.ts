@@ -23,7 +23,7 @@ async function loadOwnNota(
   if (isNaN(notaId)) return { error: "Invalid id", status: 400 };
 
   const nota = await prisma.nota.findFirst({
-    where: { id: notaId, autorFinderId: finderId },
+    where: { id: notaId, autorFinderId: finderId, empresa: { finderSourceId: finderId, esAnonima: false } },
     select: { id: true, createdAt: true },
   });
   if (!nota) return { error: "Not found", status: 404 };
