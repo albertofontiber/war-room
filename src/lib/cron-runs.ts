@@ -11,7 +11,9 @@
 import { CronRunStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { log } from "@/lib/logger";
-import { notifyAdmins } from "@/lib/notifications";
+import { notifyUser } from "@/lib/notifications";
+
+const CRON_FAILURE_RECIPIENT = "alberto@fontiber.com";
 
 export const CRON_JOBS = {
   borme: "borme",
@@ -73,7 +75,16 @@ async function safeRecord(
 
 async function notifyCronFailure(job: CronJob, runId: string | null): Promise<void> {
   try {
-    await notifyAdmins({
+    const recipient = await prisma.user.findFirst({
+      where: { email: { equals: CRON_FAILURE_RECIPIENT, mode: "insensitive" }, role: "admin", active: true },
+      select: { id: true },
+    });
+    if (!recipient) {
+      log.warn("cron-runs", "Cron failure recipient unavailable", { job, runId });
+      return;
+    }
+    await notifyUser({
+      userId: recipient.id,
       tipo: "cron_failed",
       titulo: `⚠️ Fallo en automatización: ${job}`,
       mensaje:
@@ -145,7 +156,7 @@ export async function completeCronRun(
   return durationMs;
 }
 
-/** Marca una ejecución como fallida y notifica al equipo. */
+/** Marca una ejecución como fallida y notifica al responsable. */
 export async function failCronRun(tracker: CronRunTracker, err: unknown): Promise<number> {
   const durationMs = Date.now() - tracker.startedMs;
   const errorCode = errorCodeOf(err);

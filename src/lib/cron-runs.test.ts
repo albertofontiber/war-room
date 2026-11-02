@@ -3,18 +3,19 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   create: vi.fn(),
   update: vi.fn(),
-  notifyAdmins: vi.fn(),
+  findFirst: vi.fn(),
+  notifyUser: vi.fn(),
   info: vi.fn(),
   warn: vi.fn(),
   error: vi.fn(),
 }));
 
 vi.mock("@/lib/prisma", () => ({
-  prisma: { cronRun: { create: mocks.create, update: mocks.update } },
+  prisma: { cronRun: { create: mocks.create, update: mocks.update }, user: { findFirst: mocks.findFirst } },
 }));
 
 vi.mock("@/lib/notifications", () => ({
-  notifyAdmins: mocks.notifyAdmins,
+  notifyUser: mocks.notifyUser,
 }));
 
 vi.mock("@/lib/logger", () => ({
@@ -28,7 +29,8 @@ describe("runCron", () => {
     vi.clearAllMocks();
     mocks.create.mockResolvedValue({ id: "run_1" });
     mocks.update.mockResolvedValue({});
-    mocks.notifyAdmins.mockResolvedValue(undefined);
+    mocks.findFirst.mockResolvedValue({ id: "alberto-id" });
+    mocks.notifyUser.mockResolvedValue(undefined);
   });
 
   it("registra una ejecución correcta con solo el resumen agregado", async () => {
@@ -49,10 +51,10 @@ describe("runCron", () => {
         summary: { alertasCreadas: 3 },
       }),
     }));
-    expect(mocks.notifyAdmins).not.toHaveBeenCalled();
+    expect(mocks.notifyUser).not.toHaveBeenCalled();
   });
 
-  it("marca el fallo y alerta a los administradores", async () => {
+  it("marca el fallo y alerta solo a Alberto", async () => {
     await expect(runCron({
       job: CRON_JOBS.dailySummary,
       source: "vercel",
@@ -63,11 +65,28 @@ describe("runCron", () => {
       where: { id: "run_1" },
       data: expect.objectContaining({ status: "FAILED", errorCode: "Error" }),
     }));
-    expect(mocks.notifyAdmins).toHaveBeenCalledWith(expect.objectContaining({
+    expect(mocks.findFirst).toHaveBeenCalledWith({
+      where: { email: { equals: "alberto@fontiber.com", mode: "insensitive" }, role: "admin", active: true },
+      select: { id: true },
+    });
+    expect(mocks.notifyUser).toHaveBeenCalledOnce();
+    expect(mocks.notifyUser).toHaveBeenCalledWith(expect.objectContaining({
+      userId: "alberto-id",
       tipo: "cron_failed",
       link: "/monitoring",
       email: true,
     }));
+  });
+
+  it("no avisa a otras personas si el destinatario no está disponible", async () => {
+    mocks.findFirst.mockResolvedValueOnce(null);
+    await expect(runCron({
+      job: CRON_JOBS.targetDocsCheck,
+      source: "vercel",
+      run: async () => { throw new Error("fallo original"); },
+    })).rejects.toThrow("fallo original");
+    expect(mocks.notifyUser).not.toHaveBeenCalled();
+    expect(mocks.warn).toHaveBeenCalled();
   });
 
   it("no bloquea el cron si el historial todavía no está disponible", async () => {
