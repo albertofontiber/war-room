@@ -29,7 +29,7 @@ Horarios en **UTC**, definidos en `vercel.json` y `.github/workflows/`. En Europ
 
 Todos exigen bearer `CRON_SECRET` y fallan cerrados si falta la variable. Correo y calendario deduplican por cursores e identificadores de origen. Sus workflows permiten backfill manual con ventana explícita; revisar el alcance antes de dispararlo.
 
-El resumen diario se dirige a usuarios activos con `emailDiario=true`. `SUMMARY_EMAIL_TO` ya no gobierna esa selección. El digest incluye tareas sin asignar cuyo autor sea admin, y puede incluir actividad de finders. No reintroducir Pipedrive ni un cron semanal independiente de Cepreven: ambos modelos de operación quedaron sustituidos.
+El resumen diario se dirige a usuarios activos con `emailDiario=true`; el aviso mensual de registros, a `emailRegistros=true`, la creación de carpetas/páginas (incluido el repaso semanal), a `emailCarpetas=true`, y las propuestas de finders, a `emailPropuestas=true`. Cada usuario los gestiona en Mi cuenta y están apagados para las cuentas nuevas. `SUMMARY_EMAIL_TO` y `NOTIFICATION_EMAIL_TO` ya no gobiernan esa selección. El digest incluye tareas sin asignar cuyo autor sea admin, y puede incluir actividad de finders. No reintroducir Pipedrive ni un cron semanal independiente de Cepreven: ambos modelos de operación quedaron sustituidos.
 
 ## Migraciones Prisma
 

@@ -188,9 +188,18 @@ export const CuentaPasswordSchema = z.object({
   newPassword: z.string().min(10, "La contraseña debe tener al menos 10 caracteres"),
 });
 
-export const CuentaPreferenciasSchema = z.object({
-  emailDiario: z.boolean(),
-});
+// Avisos por email (catálogo en src/lib/avisos-email.ts). Se cambian de uno en
+// uno desde Mi cuenta, así que todos son opcionales, pero hace falta alguno.
+export const CuentaPreferenciasSchema = z
+  .object({
+    emailDiario: z.boolean(),
+    emailRegistros: z.boolean(),
+    emailCarpetas: z.boolean(),
+    emailPropuestas: z.boolean(),
+  })
+  .partial()
+  .strict()
+  .refine((d) => Object.keys(d).length > 0, "Indica qué aviso quieres cambiar");
 
 export const FinderCreateSchema = z.object({
   email: z.string().trim().toLowerCase().email("Email inválido"),

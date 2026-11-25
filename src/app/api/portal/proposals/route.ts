@@ -84,8 +84,9 @@ export async function POST(req: NextRequest) {
     resourceId: String(proposal.id),
   });
 
-  // Notifica a los admins (in-app + email). Fire-and-forget: si falla, la
-  // propuesta ya está creada y registrada en el log; no bloqueamos al finder.
+  // Notifica a los admins (in-app + email a quien tenga el aviso activado).
+  // Fire-and-forget: si falla, la propuesta ya está creada y registrada en el
+  // log; no bloqueamos al finder.
   const dupSuffix = existe ? " (posible duplicado)" : "";
   const cifLine = cif ? `\nCIF: ${cif}` : "";
   notifyAdmins({
@@ -93,6 +94,7 @@ export async function POST(req: NextRequest) {
     titulo: `Nueva propuesta de ${finder.name}: ${body.companyName.trim()}${dupSuffix}`,
     mensaje: `${finder.name} ha propuesto un nuevo target.\n\nEmpresa: ${body.companyName.trim()}${cifLine}\n\nRevísala desde Propuestas de finders.`,
     link: "/finders/proposals?status=PENDING",
+    email: "emailPropuestas",
   }).catch((err) => {
     log.error("api/portal/proposals POST notifyAdmins", err);
   });

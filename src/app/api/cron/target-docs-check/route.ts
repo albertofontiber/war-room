@@ -181,8 +181,9 @@ export async function GET(req: NextRequest) {
         titulo: "📁 Repaso semanal de docs externos",
         mensaje: partes.join("\n\n"),
         link: "/pipeline",
-        // Solo email si hay creación o error (matched silencioso).
-        email: created > 0 || errors > 0,
+        // Solo email si hay creación o error (matched silencioso), y a quien
+        // tenga activado el aviso de carpetas en Mi cuenta.
+        email: created > 0 || errors > 0 ? "emailCarpetas" : false,
       });
     }
 

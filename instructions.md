@@ -118,6 +118,7 @@ Laterales: on_hold, muerto
 - El chat conserva el hilo por usuario. Se autentica como admin; los tools de tareas/contactos/etapas reciben el usuario actual.
 - Microsoft Graph ingesta correo saliente y entrante de contactos, y eventos de calendario. Los eventos recurrentes se tratan como serie, no una tarea por ocurrencia. Deduplicar por identificadores de origen y conservar ediciones manuales de tareas.
 - Inicializar Resend dentro de las funciones de envío. Los remitentes y las URLs se configuran por entorno; no copiar secretos a documentación.
+- Un aviso con correo a varios admins necesita su preferencia en `src/lib/avisos-email.ts` (columna `User.email*`, apagada por defecto) y se envía con `notifyAdmins({ email: "<preferencia>" })`. No mandar correos a todos los admins sin que puedan desactivarlos en Mi cuenta.
 
 ## 9. Desarrollo, migraciones y comprobaciones
 

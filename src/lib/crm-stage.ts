@@ -178,6 +178,7 @@ async function autoCreateDocsForFirstMeeting(empresaId: number): Promise<void> {
       titulo: `📁 Carpeta + página creadas para ${empresa.nombre}`,
       mensaje: `Avanzó a 1ª reunión y se creó automáticamente "${created.folder.name}" en OneDrive (con subcarpetas Analyses/NDA/IRL) y página simétrica en Notion.`,
       link: `/pipeline?empresa=${empresaId}`,
+      email: "emailCarpetas",
     });
   } catch (err) {
     log.error("stage-trigger", err, { empresaId });
@@ -188,6 +189,7 @@ async function autoCreateDocsForFirstMeeting(empresaId: number): Promise<void> {
         titulo: `⚠️ Error creando docs automáticamente (empresa #${empresaId})`,
         mensaje: `La empresa avanzó a 1ª reunión pero falló la creación de carpeta/página. Revisa el panel y crea manualmente con el botón "Crear carpeta y página". Detalle: ${err instanceof Error ? err.message : String(err)}`,
         link: `/pipeline?empresa=${empresaId}`,
+        email: "emailCarpetas",
       });
     } catch {
       // Si incluso notificar falla, ya hicimos log.error arriba.

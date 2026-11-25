@@ -347,8 +347,12 @@ model User {
   // sin guardar nunca la contraseña en texto plano.
   passwordHash  String?
   passwordSetAt DateTime?
-  // "Mi cuenta": recibir el email diario (BORME + perímetro).
-  emailDiario   Boolean   @default(true)
+  // "Mi cuenta": avisos por email que recibe cada usuario. Apagados por
+  // defecto; el catálogo está en src/lib/avisos-email.ts.
+  emailDiario     Boolean   @default(false) // BORME + perímetro, cada mañana
+  emailRegistros  Boolean   @default(false) // altas mensuales Cepreven/seguridad privada/RIPCI
+  emailCarpetas   Boolean   @default(false) // carpeta OneDrive + página Notion de targets
+  emailPropuestas Boolean   @default(false) // propuestas de finders
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

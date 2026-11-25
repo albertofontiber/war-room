@@ -95,7 +95,7 @@ export async function GET(req: NextRequest) {
         mensaje: aviso.mensaje,
         html: aviso.html,
         link: "/",
-        email: true,
+        email: "emailRegistros",
       });
     }
 

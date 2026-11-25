@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { fmtDate } from "@/lib/format";
+import { AVISOS_EMAIL, type AvisoEmail, type PreferenciasAvisos } from "@/lib/avisos-email";
 
 type Props = {
   name: string;
   email: string;
   passwordSetAt: string | null;
-  emailDiario: boolean;
+  avisos: PreferenciasAvisos;
 };
 
 function errorMessage(json: { error?: string; issues?: { message: string }[] }): string {
@@ -44,7 +45,7 @@ export default function CuentaClient(props: Props) {
         </section>
 
         <PasswordSection passwordSetAt={props.passwordSetAt} />
-        <AvisosSection emailDiario={props.emailDiario} />
+        <AvisosSection avisos={props.avisos} />
       </div>
     </div>
   );
@@ -149,28 +150,61 @@ function PasswordSection({ passwordSetAt }: { passwordSetAt: string | null }) {
   );
 }
 
-function AvisosSection({ emailDiario: initial }: { emailDiario: boolean }) {
-  const [emailDiario, setEmailDiario] = useState(initial);
+function AvisosSection({ avisos }: { avisos: PreferenciasAvisos }) {
+  return (
+    <section className="mt-8">
+      <h2 className="text-sm font-semibold">Avisos por email</h2>
+      <p className="mt-1 mb-3 text-xs text-wr-muted">
+        Elige qué emails recibes. Las notificaciones de la campana se muestran igualmente.
+      </p>
+      <div className="bg-wr-surface border border-wr-border rounded-lg divide-y divide-wr-border text-xs">
+        {AVISOS_EMAIL.map((aviso) => (
+          <AvisoToggle
+            key={aviso.campo}
+            campo={aviso.campo}
+            titulo={aviso.titulo}
+            descripcion={aviso.descripcion}
+            initial={avisos[aviso.campo]}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function AvisoToggle({
+  campo,
+  titulo,
+  descripcion,
+  initial,
+}: {
+  campo: AvisoEmail;
+  titulo: string;
+  descripcion: string;
+  initial: boolean;
+}) {
+  const [activo, setActivo] = useState(initial);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const labelId = `aviso-${campo}-label`;
 
   const toggle = async () => {
-    const next = !emailDiario;
-    setEmailDiario(next); // optimista; se revierte si falla
+    const next = !activo;
+    setActivo(next); // optimista; se revierte si falla
     setSaving(true);
     setError(null);
     try {
       const res = await fetch("/api/cuenta", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emailDiario: next }),
+        body: JSON.stringify({ [campo]: next }),
       });
       if (!res.ok) {
-        setEmailDiario(!next);
+        setActivo(!next);
         setError(errorMessage(await res.json()));
       }
     } catch (e) {
-      setEmailDiario(!next);
+      setActivo(!next);
       setError(String(e));
     } finally {
       setSaving(false);
@@ -178,39 +212,31 @@ function AvisosSection({ emailDiario: initial }: { emailDiario: boolean }) {
   };
 
   return (
-    <section className="mt-8">
-      <h2 className="text-sm font-semibold">Avisos por email</h2>
-      <p className="mt-1 mb-3 text-xs text-wr-muted">
-        Elige qué emails recibes. Las notificaciones de la campana se muestran igualmente.
-      </p>
-      <div className="bg-wr-surface border border-wr-border rounded-lg p-4 text-xs">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p id="email-diario-label" className="font-medium text-wr-text">Email diario del BORME</p>
-            <p className="mt-0.5 text-wr-muted">
-              Cada mañana, las señales del BORME y los cambios de perímetro del día anterior.
-            </p>
-          </div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={emailDiario}
-            aria-labelledby="email-diario-label"
-            onClick={toggle}
-            disabled={saving}
-            className={`relative mt-0.5 h-5 w-9 flex-shrink-0 rounded-full border transition-colors disabled:opacity-60 ${
-              emailDiario ? "bg-wr-blue border-wr-blue" : "bg-wr-surface2 border-wr-border"
-            }`}
-          >
-            <span
-              className={`absolute top-0.5 h-3.5 w-3.5 rounded-full bg-white transition-all ${
-                emailDiario ? "left-[18px]" : "left-0.5"
-              }`}
-            />
-          </button>
+    <div className="p-4">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p id={labelId} className="font-medium text-wr-text">{titulo}</p>
+          <p className="mt-0.5 text-wr-muted">{descripcion}</p>
         </div>
-        {error && <p className="mt-2 text-wr-red">{error}</p>}
+        <button
+          type="button"
+          role="switch"
+          aria-checked={activo}
+          aria-labelledby={labelId}
+          onClick={toggle}
+          disabled={saving}
+          className={`relative mt-0.5 h-5 w-9 flex-shrink-0 rounded-full border transition-colors disabled:opacity-60 ${
+            activo ? "bg-wr-blue border-wr-blue" : "bg-wr-surface2 border-wr-border"
+          }`}
+        >
+          <span
+            className={`absolute top-0.5 h-3.5 w-3.5 rounded-full bg-white transition-all ${
+              activo ? "left-[18px]" : "left-0.5"
+            }`}
+          />
+        </button>
       </div>
-    </section>
+      {error && <p className="mt-2 text-wr-red">{error}</p>}
+    </div>
   );
 }
