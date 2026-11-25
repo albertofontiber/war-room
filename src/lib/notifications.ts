@@ -6,15 +6,15 @@
  * propuesta de finder". Fire-and-forget: si Resend falla, las notificaciones
  * en BD se conservan; si la BD falla, el caller recibe la excepción y decide.
  *
- * Recipientes del email:
- *   - Por defecto los emails de los admins activos en BD.
- *   - Sobreescribible vía env `NOTIFICATION_EMAIL_TO` (CSV) — útil mientras
- *     Gabriel no quiera recibir o para testing.
+ * Destinatarios del email: los admins activos que tienen activado en Mi cuenta
+ * el aviso al que pertenece la notificación (`src/lib/avisos-email.ts`). La
+ * campanita la reciben todos igualmente.
  */
 
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
 import { log } from "@/lib/logger";
+import { SELECT_AVISOS_EMAIL, type AvisoEmail } from "@/lib/avisos-email";
 
 const FROM = process.env.SUMMARY_EMAIL_FROM ?? "warroom@fontiber.com";
 const BASE_URL =
@@ -30,8 +30,11 @@ export type NotifyAdminsInput = {
    */
   html?: string;
   link?: string | null;
-  /** Si false, no envía email — solo persiste in-app. Default true. */
-  email?: boolean;
+  /**
+   * Aviso de Mi cuenta al que pertenece el correo: solo lo reciben los admins
+   * que lo tienen activado. Sin aviso (o `false`), solo campanita.
+   */
+  email?: AvisoEmail | false;
 };
 
 export type NotifyUserInput = {
@@ -56,13 +59,14 @@ export type NotifyFinderInput = {
 };
 
 /**
- * Crea notificaciones in-app para todos los admins activos y, opcionalmente,
- * envía un email. No lanza si Resend falla — solo loguea.
+ * Crea notificaciones in-app para todos los admins activos y, si se indica el
+ * aviso, envía un email a quienes lo tienen activado. No lanza si Resend
+ * falla — solo loguea.
  */
 export async function notifyAdmins(input: NotifyAdminsInput): Promise<void> {
   const admins = await prisma.user.findMany({
     where: { role: "admin", active: true },
-    select: { id: true, email: true },
+    select: { id: true, email: true, ...SELECT_AVISOS_EMAIL },
   });
   if (admins.length === 0) return;
 
@@ -76,19 +80,17 @@ export async function notifyAdmins(input: NotifyAdminsInput): Promise<void> {
     })),
   });
 
-  if (input.email === false) return;
+  const aviso = input.email;
+  if (!aviso) return;
+
+  const to = admins.filter((a) => a[aviso]).map((a) => a.email);
+  if (to.length === 0) return;
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     log.warn("lib/notifications", "RESEND_API_KEY not set, skipping email");
     return;
   }
-
-  const override = process.env.NOTIFICATION_EMAIL_TO;
-  const to = override
-    ? override.split(",").map((s) => s.trim()).filter(Boolean)
-    : admins.map((a) => a.email);
-  if (to.length === 0) return;
 
   const link = input.link ? `${BASE_URL}${input.link}` : BASE_URL;
   const html = renderEmail({

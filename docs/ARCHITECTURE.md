@@ -88,7 +88,7 @@ La definición ejecutable está en `vercel.json` y `.github/workflows/`; la tabl
 - **BORME:** descarga y clasificación del boletín del día; detección de señales y actualización de cargos. Los alias de grupos ayudan a resolver denominaciones. Las señales no deben confundirse con prueba definitiva de una compra.
 - **Correo y calendario:** GitHub Actions llama endpoints protegidos de la app. Microsoft Graph cruza interlocutores con `Contacto`; solo los mensajes/eventos relevantes generan registros. Correo incluye entrada y salida, con deduplicación por identificadores de origen. Los cambios de calendario conservan las ediciones manuales de tareas.
 - **Documentación:** vinculación por nombre legal/comercial y creación de carpeta estándar en OneDrive y página Notion para las etapas que lo requieren.
-- **Emails:** resumen BORME, digest de tareas y actividad de finders, notificaciones e invitaciones/recuperación. El resumen diario respeta `User.emailDiario`.
+- **Emails:** resumen BORME, digest de tareas y actividad de finders, notificaciones e invitaciones/recuperación. Los avisos a admins (resumen diario, altas mensuales de registros, carpeta + página de targets, propuestas de finders) solo se envían a quien los activa en Mi cuenta: columnas `User.email*`, apagadas por defecto, con el catálogo en `src/lib/avisos-email.ts`. La campanita llega igualmente a todos los admins.
 - **Registros:** Cepreven, seguridad privada y RIPCI se refrescan juntos cada mes. Una fuente fallida no impide procesar las demás.
 
 No hay webhooks de Microsoft: se consulta mediante polling con cursores. Los eventos recurrentes de calendario se ingieren como serie; no hay una tarea por ocurrencia. Es una limitación vigente, no una migración programada.

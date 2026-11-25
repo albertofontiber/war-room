@@ -225,7 +225,9 @@ describe("PATCH /api/empresas/[id]/stage", () => {
         notionUrl: "https://notion/x",
       },
     });
-    expect(notifyAdmins).toHaveBeenCalled();
+    expect(notifyAdmins).toHaveBeenCalledWith(
+      expect.objectContaining({ tipo: "docs_creados", email: "emailCarpetas" })
+    );
   });
 
   it("entrar a primera_reunion con URLs ya pobladas: NO dispara auto-create", async () => {
@@ -274,6 +276,7 @@ describe("PATCH /api/empresas/[id]/stage", () => {
     );
     expect(errorCall).toBeDefined();
     expect(errorCall![0].mensaje).toContain("Graph API down");
+    expect(errorCall![0].email).toBe("emailCarpetas");
     expect(empresaUpdate).not.toHaveBeenCalled();
   });
 });

@@ -117,6 +117,7 @@ describe("POST /api/portal/proposals", () => {
 
     // Notifica admins (fire-and-forget, no se espera el resultado).
     expect(notifyAdmins).toHaveBeenCalled();
+    expect(notifyAdmins.mock.calls[0][0].email).toBe("emailPropuestas");
     expect(notifyAdmins.mock.calls[0][0].titulo).toContain("Pepe");
     expect(notifyAdmins.mock.calls[0][0].titulo).not.toContain("posible duplicado");
   });

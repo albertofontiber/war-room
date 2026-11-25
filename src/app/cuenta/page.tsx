@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getRequestingAdmin } from "@/lib/admin-users";
 import CuentaClient from "@/components/CuentaClient";
+import { SELECT_AVISOS_EMAIL } from "@/lib/avisos-email";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Mi cuenta" };
@@ -16,7 +17,7 @@ export default async function CuentaPage() {
 
   const cuenta = await prisma.user.findUnique({
     where: { id: me.id },
-    select: { name: true, email: true, passwordSetAt: true, emailDiario: true },
+    select: { name: true, email: true, passwordSetAt: true, ...SELECT_AVISOS_EMAIL },
   });
   if (!cuenta) redirect("/login");
 
@@ -25,7 +26,12 @@ export default async function CuentaPage() {
       name={cuenta.name}
       email={cuenta.email}
       passwordSetAt={cuenta.passwordSetAt?.toISOString() ?? null}
-      emailDiario={cuenta.emailDiario}
+      avisos={{
+        emailDiario: cuenta.emailDiario,
+        emailRegistros: cuenta.emailRegistros,
+        emailCarpetas: cuenta.emailCarpetas,
+        emailPropuestas: cuenta.emailPropuestas,
+      }}
     />
   );
 }

@@ -13,7 +13,9 @@ import {
   PortalTareaUpdateSchema,
   ProposalCreateSchema,
   ProposalReviewSchema,
+  CuentaPreferenciasSchema,
 } from "./validation";
+import { AVISOS_EMAIL } from "./avisos-email";
 
 describe("TareaCreateSchema", () => {
   it("acepta un body mínimo con titulo", () => {
@@ -288,5 +290,22 @@ describe("PerimetroPatchSchema", () => {
   it("rechaza truthy non-boolean", () => {
     expect(PerimetroPatchSchema.safeParse({ enPerimetro: "yes" }).success).toBe(false);
     expect(PerimetroPatchSchema.safeParse({ enPerimetro: 1 }).success).toBe(false);
+  });
+});
+
+describe("CuentaPreferenciasSchema", () => {
+  it("acepta cambiar un solo aviso", () => {
+    expect(CuentaPreferenciasSchema.safeParse({ emailCarpetas: true }).success).toBe(true);
+    expect(CuentaPreferenciasSchema.safeParse({ emailDiario: false }).success).toBe(true);
+  });
+  it("rechaza un cuerpo vacío o con campos ajenos", () => {
+    expect(CuentaPreferenciasSchema.safeParse({}).success).toBe(false);
+    expect(CuentaPreferenciasSchema.safeParse({ role: "admin" }).success).toBe(false);
+    expect(CuentaPreferenciasSchema.safeParse({ emailCarpetas: "si" }).success).toBe(false);
+  });
+  it("cubre todos los avisos de Mi cuenta", () => {
+    for (const aviso of AVISOS_EMAIL) {
+      expect(CuentaPreferenciasSchema.safeParse({ [aviso.campo]: true }).success).toBe(true);
+    }
   });
 });
